@@ -37,9 +37,25 @@ Each node in a `spec-sdl/**/*.graphml` file carries a `<data key="d5">` descript
 
 When the same label appears under two different `d5` values, those are **two distinct events** in the catalogue. Disambiguate with a `__from_<shape-class>` suffix on the event id.
 
-### SDL revision provenance (future)
+### SDL revision provenance
 
-The AX.25 v2.2 SDL figures use colour-coded version control: black is original published v2.2, red and green are errata that don't yet form part of the released spec. Today we treat all three as canonical; that's wrong and needs structuring. Tracked as future work — see Tom for the current plan.
+The AX.25 v2.2 SDL figures use colour-coded version control: black is original published v2.2, red and green are errata that don't yet form part of the released spec. We don't distinguish red from green — they're both "errata".
+
+Transcriptions are filed under a revision directory:
+
+- `spec-sdl/v2.2/` — clean published v2.2 (black-only). **Currently empty** — Tom will backfill once the errata variant is complete. Until then, the `Published` revision is unavailable to consumers.
+- `spec-sdl/v2.2-errata/` — v2.2 with all errata applied (black + red + green). This is what every existing `*.sdl.yaml` in the repo encodes.
+
+A page with no errata is transcribed identically into both directories. A future CI lint will enforce byte-identity for those pages unless the errata variant explicitly declares an errata is applied.
+
+**Package versioning** for `Packet.Ax25.Sdl` (and equivalents):
+
+- `MAJOR.MINOR` = WG-published spec revision (`2.2`, `2.3`, `3.0`). One package per spec revision; parallel lines possible (like Linux LTS).
+- `PATCH` = errata batch accumulation within that spec revision.
+- Each `PATCH` artefact is **complete** — ships both clean spec tables and errata-applied tables.
+- Consumers pick at runtime via `SdlRevision.{Published, WithErrata}`, defaulting to `Published`.
+
+The codegen + `SdlRevision` enum + namespace split are **Phase 2** work, deferred until the `v2.2/` baseline is transcribed. Until then, codegen recursively walks `spec-sdl/**` and emits a single set of tables (sourced from `v2.2-errata/`).
 
 ## Common commands
 

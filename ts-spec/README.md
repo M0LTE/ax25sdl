@@ -86,7 +86,7 @@ transcription's `coverage:` field declares whether it's `complete` or
 
 `DataLinkConnected` t38 (T1 expiry) and t39 (T3 expiry) both transition
 to a `TimerRecovery` state that has no transcribed page in
-`spec-sdl/data-link/`. The C# and TS runtimes register `TimerRecovery`
+`spec-sdl/v2.2-errata/data-link/`. The C# and TS runtimes register `TimerRecovery`
 with an empty transition map so the state-target lint passes (see the
 `StateTargetAllowList` entry in `tools/Packet.Sdl.CodeGen/Program.cs`),
 but any session that enters TimerRecovery currently has no exit path —
@@ -99,7 +99,7 @@ via the unmodelled state. Short-lived sessions never reach it.
 
 ### Subroutine status (figc4.7) — TS runtime
 
-13 subroutines are declared in `spec-sdl/data-link/subroutines.sdl.yaml`.
+13 subroutines are declared in `spec-sdl/v2.2-errata/data-link/subroutines.sdl.yaml`.
 The TS `SubroutineRegistry` (`web/ax25/src/sdl/subroutine-registry.ts`)
 ships the following coverage. The C# runtime's `DefaultSubroutineRegistry`
 in [`src/Packet.Ax25/Session/`](../src/Packet.Ax25/Session/) routes every

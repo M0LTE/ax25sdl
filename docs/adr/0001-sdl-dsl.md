@@ -44,7 +44,7 @@ event catalog lives at `/spec-sdl/events.yaml`.
 ### Worked example
 
 ```yaml
-# /spec-sdl/data-link/connected.sdl.yaml
+# /spec-sdl/v2.2-errata/data-link/connected.sdl.yaml
 machine: data_link
 state: Connected
 source:
