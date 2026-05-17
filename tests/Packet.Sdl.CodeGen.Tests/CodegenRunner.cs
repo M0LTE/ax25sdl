@@ -214,10 +214,10 @@ internal sealed class CodegenRunner : IDisposable
     private static string FindRepoRoot(string start)
     {
         var d = new DirectoryInfo(start);
-        while (d is not null && !File.Exists(Path.Combine(d.FullName, "Packet.NET.slnx")))
+        while (d is not null && !File.Exists(Path.Combine(d.FullName, "ax25sdl.slnx")))
         {
             d = d.Parent;
         }
-        return d?.FullName ?? throw new InvalidOperationException("repo root (Packet.NET.sln) not found above " + start);
+        return d?.FullName ?? throw new InvalidOperationException("repo root (ax25sdl.slnx) not found above " + start);
     }
 }
