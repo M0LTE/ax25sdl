@@ -1,0 +1,179 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # GitHub will force JavaScript actions onto Node.js 24 from
+  # June 2nd, 2026. Opting in early matches m0lte/packet.net.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # ─── Build + test the C# codegen + Sdl package ─────────────────────
+  csharp:
+    name: C# build + test
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - uses: actions/checkout@v6
+      - name: dotnet --version
+        run: dotnet --version
+      - name: build
+        run: dotnet build --nologo
+      - name: test
+        run: dotnet test --nologo --no-build
+
+  # ─── Codegen drift: regen each backend, error if the committed
+  #     generated files don't match the freshly-generated output. ───
+  csharp-drift:
+    name: codegen drift — C#
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate C#
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --csharp
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- src/Packet.Ax25.Sdl/; then
+            echo "::error::Generated C# files in src/Packet.Ax25.Sdl/ are out of sync with the SDL YAML. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --csharp\` locally and commit the diff."
+            exit 1
+          fi
+
+  ts-drift:
+    name: codegen drift — TS + typecheck/test
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ts-spec/package-lock.json
+      - name: regenerate TS
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --ts
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- ts-spec/; then
+            echo "::error::Generated TS files in ts-spec/ are out of sync. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --ts\` locally and commit the diff."
+            exit 1
+          fi
+      - name: ts-spec — install
+        working-directory: ts-spec
+        run: npm ci
+      - name: ts-spec — typecheck
+        working-directory: ts-spec
+        run: npm run typecheck
+      - name: ts-spec — test
+        working-directory: ts-spec
+        run: npm test
+      - name: ts-spec — build
+        working-directory: ts-spec
+        run: npm run build
+
+  go-drift:
+    name: codegen drift — Go + build/vet/test/gofmt
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+      - name: regenerate Go
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --go
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- go-spec/; then
+            echo "::error::Generated Go files in go-spec/ are out of sync. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --go\` locally and commit the diff."
+            exit 1
+          fi
+      - name: go build
+        working-directory: go-spec
+        run: go build ./...
+      - name: go vet
+        working-directory: go-spec
+        run: go vet ./...
+      - name: go test
+        working-directory: go-spec
+        run: go test ./...
+      - name: gofmt
+        working-directory: go-spec
+        run: |
+          mismatched=$(gofmt -l .)
+          if [ -n "$mismatched" ]; then
+            echo "::error::gofmt finds files needing reformatting:"
+            echo "$mismatched"
+            exit 1
+          fi
+
+  json-drift:
+    name: codegen drift — JSON + schema validation
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate JSON
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --json
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated JSON files are out of sync."
+            exit 1
+          fi
+
+  rust-drift:
+    name: codegen drift — Rust + cargo build/test/fmt
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate Rust
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --rust
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated Rust files are out of sync."
+            exit 1
+          fi
+
+  c-drift:
+    name: codegen drift — C + cmake build/ctest/clang-format
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate C
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --c
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated C files are out of sync."
+            exit 1
+          fi
+
+  python-drift:
+    name: codegen drift — Python + pytest/ruff
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate Python
+        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --python
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated Python files are out of sync."
+            exit 1
+          fi

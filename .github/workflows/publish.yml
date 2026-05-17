@@ -1,0 +1,148 @@
+name: publish
+
+# Publishes `ax25sdl` (from ts-spec/) to npmjs.com and
+# `Packet.Ax25.Sdl` (from src/Packet.Ax25.Sdl/) to nuget.org on any
+# tag matching `v*`. Version is taken from the tag (strip the leading
+# `v`), so e.g. tagging `v0.3.0` publishes both at 0.3.0.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    # Manual trigger lets you validate the workflow shape from a branch
+    # without actually publishing — the `if: env.<TOKEN> != ''` guards
+    # on the publish steps will skip the upload if the secret is unset.
+    inputs:
+      override_version:
+        description: 'Override version (only used for workflow_dispatch; tag wins for push events)'
+        required: false
+        default: ''
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  resolve-version:
+    name: resolve version from tag
+    runs-on: [self-hosted, Linux, X64]
+    outputs:
+      version: ${{ steps.parse.outputs.version }}
+    steps:
+      - id: parse
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # github.ref is refs/tags/v0.3.0 — strip prefix + leading v.
+            tag="${GITHUB_REF#refs/tags/}"
+            version="${tag#v}"
+          else
+            version="${{ inputs.override_version }}"
+          fi
+          if [ -z "$version" ]; then
+            echo "::error::No version resolved (tag was '${GITHUB_REF}', input was empty)."
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: ${version}"
+
+  # ─── npm: ax25sdl ────────────────────────────────────────────────────
+  publish-npm:
+    name: publish ax25sdl to npmjs.com
+    needs: resolve-version
+    runs-on: [self-hosted, Linux, X64]
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      VERSION: ${{ needs.resolve-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: ts-spec — pin version from tag
+        working-directory: ts-spec
+        run: |
+          echo "Pinning ts-spec/package.json → ${VERSION}"
+          npm pkg set "version=${VERSION}"
+
+      - name: ts-spec — install + build
+        working-directory: ts-spec
+        run: |
+          npm install
+          npm run build
+
+      - name: ts-spec — pack (dry-run sanity check)
+        working-directory: ts-spec
+        run: npm pack --dry-run
+
+      - name: ts-spec — publish
+        if: env.NPM_TOKEN != ''
+        working-directory: ts-spec
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: warn if NPM_TOKEN missing
+        if: env.NPM_TOKEN == ''
+        run: |
+          echo "::warning::NPM_TOKEN secret is not set — npm publish was skipped."
+
+  # ─── NuGet: Packet.Ax25.Sdl ─────────────────────────────────────────
+  publish-nuget:
+    name: publish Packet.Ax25.Sdl to nuget.org
+    needs: resolve-version
+    runs-on: [self-hosted, Linux, X64]
+    env:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      VERSION: ${{ needs.resolve-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: dotnet --version
+        run: dotnet --version
+
+      - name: build
+        run: dotnet build src/Packet.Ax25.Sdl/Packet.Ax25.Sdl.csproj --configuration Release -p:Version=${{ env.VERSION }}
+
+      - name: pack
+        run: |
+          dotnet pack src/Packet.Ax25.Sdl/Packet.Ax25.Sdl.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts \
+            -p:Version=${{ env.VERSION }}
+
+      - name: list artifacts
+        run: ls -la ./artifacts/
+
+      - name: push to nuget.org
+        if: env.NUGET_API_KEY != ''
+        run: |
+          dotnet nuget push "./artifacts/Packet.Ax25.Sdl.${VERSION}.nupkg" \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key "${NUGET_API_KEY}" \
+            --skip-duplicate
+          # Symbol package — best-effort. nuget.org's symbol server has
+          # accepted .snupkg sibling packages alongside the main one
+          # since ~2019; failure here shouldn't block the main publish.
+          if [ -f "./artifacts/Packet.Ax25.Sdl.${VERSION}.snupkg" ]; then
+            dotnet nuget push "./artifacts/Packet.Ax25.Sdl.${VERSION}.snupkg" \
+              --source https://api.nuget.org/v3/index.json \
+              --api-key "${NUGET_API_KEY}" \
+              --skip-duplicate || \
+              echo "::warning::snupkg push failed; main nupkg still uploaded."
+          fi
+
+      - name: warn if NUGET_API_KEY missing
+        if: env.NUGET_API_KEY == ''
+        run: |
+          echo "::warning::NUGET_API_KEY secret is not set — nuget push was skipped."
