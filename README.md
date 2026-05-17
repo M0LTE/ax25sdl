@@ -10,11 +10,12 @@ This repo holds the canonical SDL transcriptions for the connected-mode link-lay
 
 ```
 spec-sdl/                          YAML DSL + JSON schema — human-authored transcriptions
-spec-sdl/data-link/*.sdl.yaml      transcribed state pages (figc4.x)
-spec-sdl/data-link/*.graphml       yEd source for the transcribed figures
+spec-sdl/v2.2/                     clean published v2.2 transcriptions (pending backfill — see README)
+spec-sdl/v2.2-errata/              v2.2 + errata (red/green annotations in the figures applied)
+spec-sdl/v2.2-errata/data-link/    transcribed state pages (figc4.x) + their yEd graphml sources
 spec-sdl/schema/                   JSON Schema for the *.sdl.yaml files
-spec-sdl/actions.yaml              action-verb normalisation table
-spec-sdl/events.yaml               canonical event catalog
+spec-sdl/actions.yaml              action-verb normalisation table (shared across revisions)
+spec-sdl/events.yaml               canonical event catalog (shared across revisions)
 
 tools/Packet.Sdl.IR/               language-neutral IR + validation
 tools/Packet.Sdl.CodeGen/          thin orchestrator (driver)
