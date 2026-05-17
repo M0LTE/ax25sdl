@@ -1,38 +1,41 @@
 # ax25sdl
 
-AX.25 v2.2 SDL transcriptions, codegen, and multi-language artefacts.
+Canonical AX.25 v2.2 SDL transcriptions + codegen. Turns the figc4.x state-machine diagrams from the AX.25 v2.2 specification into ready-to-consume libraries in **C#, Go, TypeScript, JSON, Rust, C, and Python**.
 
-This repo holds the canonical SDL transcriptions for the connected-mode link-layer state machines (figc4.1 through figc4.7) and the codegen pipeline that turns them into ready-to-consume libraries in seven languages: **C#, Go, TypeScript, JSON, Rust, C, and Python**.
+> **Status:** prove-out repo. Tom (M0LTE) is working with the original AX.25 spec authors on whether `packethacking/ax25spec` should become the canonical community home for SDL transcriptions. Until that's agreed, `m0lte/ax25sdl` is the prove-out venue and downstream consumers pull from here.
 
-> **Status:** prove-out repo. Tom (M0LTE) is working with the original AX.25 spec authors on whether `packethacking/ax25spec` should be the canonical community home. Until that's agreed, this repo lives at `m0lte/ax25sdl` and downstream consumers (e.g. [`m0lte/packet.net`](https://github.com/m0lte/packet.net)) pull from here.
+## How it works
+
+1. **Human-authored transcriptions** under `spec-sdl/v2.2-errata/data-link/` — one `*.sdl.yaml` per state page (figc4.1 through figc4.7), encoding every transition verbatim from the figure. Each page has a companion `*.graphml` yEd source.
+2. **Codegen** under `tools/Packet.Sdl.CodeGen/` reads the YAML, validates against the JSON Schema (`spec-sdl/schema/`), and emits transition tables + type stubs for each backend. All seven backends share the same IR (`tools/Packet.Sdl.IR/`).
+3. **Per-backend publish.** The C# library publishes to NuGet; the TypeScript library publishes to npm; the Go module is consumable from this repo via `go get`.
+
+## Revision provenance
+
+The AX.25 v2.2 figures use colour-coded version control: black is the published v2.2 spec, red and green are errata that don't form part of the released spec. Today, all existing transcriptions encode the v2.2 + errata variant.
+
+- `spec-sdl/v2.2/` — clean published v2.2 (black-only). **Currently empty** — backfill pending.
+- `spec-sdl/v2.2-errata/` — v2.2 + errata applied. This is what every existing `*.sdl.yaml` encodes.
+
+The `Packet.Ax25.Sdl` package versioning scheme: `MAJOR.MINOR` = WG-published spec revision (`2.2`, `2.3`, `3.0`), `PATCH` = errata-batch accumulation. Each published artefact will ship **both** variants and consumers will pick at runtime via an `SdlRevision` enum (planned — current consumers get the errata variant unconditionally). See [`CLAUDE.md` § SDL revision provenance](CLAUDE.md) for the full plan.
 
 ## Layout
 
 ```
-spec-sdl/                          YAML DSL + JSON schema — human-authored transcriptions
-spec-sdl/v2.2/                     clean published v2.2 transcriptions (pending backfill — see README)
-spec-sdl/v2.2-errata/              v2.2 + errata (red/green annotations in the figures applied)
-spec-sdl/v2.2-errata/data-link/    transcribed state pages (figc4.x) + their yEd graphml sources
-spec-sdl/schema/                   JSON Schema for the *.sdl.yaml files
-spec-sdl/actions.yaml              action-verb normalisation table (shared across revisions)
-spec-sdl/events.yaml               canonical event catalog (shared across revisions)
+spec-sdl/v2.2/                     clean published v2.2 transcriptions (pending backfill)
+spec-sdl/v2.2-errata/data-link/    v2.2 + errata: transcribed state pages (figc4.x) + graphml sources
+spec-sdl/schema/                   JSON Schema for *.sdl.yaml
+spec-sdl/actions.yaml              action-verb normalisation table
+spec-sdl/events.yaml               canonical event catalog
 
 tools/Packet.Sdl.IR/               language-neutral IR + validation
-tools/Packet.Sdl.CodeGen/          thin orchestrator (driver)
-tools/Packet.Sdl.CodeGen.Csharp/   C# emitter (Scriban + Roslyn)
-tools/Packet.Sdl.CodeGen.Go/       Go emitter (hand-rolled, gofmt-finalised)
-tools/Packet.Sdl.CodeGen.Ts/       TypeScript emitter
-tools/Packet.Sdl.CodeGen.Json/     JSON emitter (codified IR for non-C# consumers)
-tools/Packet.Sdl.CodeGen.Rust/     Rust emitter
-tools/Packet.Sdl.CodeGen.C/        C emitter
-tools/Packet.Sdl.CodeGen.Python/   Python emitter
+tools/Packet.Sdl.CodeGen/          orchestrator (driver)
+tools/Packet.Sdl.CodeGen.{Csharp,Go,Ts,Json,Rust,C,Python}/   per-backend emitters
 tools/Packet.Sdl.Lint/             standalone schema lint
 
-src/Packet.Ax25.Sdl/               C# package (NuGet: Packet.Ax25.Sdl)
-go-spec/                           Go module (github.com/m0lte/ax25sdl/go-spec)
-ts-spec/                           npm package (ax25sdl)
-
-tests/Packet.Sdl.CodeGen.Tests/    codegen tests
+src/Packet.Ax25.Sdl/               C# library — publishes to NuGet
+go-spec/                           Go module — github.com/m0lte/ax25sdl/go-spec
+ts-spec/                           npm package source — publishes as `ax25sdl`
 
 docs/sdl-primer.md                 SDL shape reference
 docs/sdl-transcription-runbook.md  end-to-end per-figure workflow
@@ -46,38 +49,48 @@ docs/adr/0001-sdl-dsl.md           why the YAML DSL + codegen exists
 # Build the codegen tools + C# library
 dotnet build
 
-# Run codegen tests
-dotnet test
-
-# Regenerate all backends (writes into src/Packet.Ax25.Sdl/, ts-spec/, go-spec/, etc.)
+# Regenerate all backends
 dotnet run --project tools/Packet.Sdl.CodeGen
 
-# Regenerate a single backend
+# Regenerate one backend
 dotnet run --project tools/Packet.Sdl.CodeGen -- --csharp
 dotnet run --project tools/Packet.Sdl.CodeGen -- --go
 dotnet run --project tools/Packet.Sdl.CodeGen -- --ts
-dotnet run --project tools/Packet.Sdl.CodeGen -- --rust
-dotnet run --project tools/Packet.Sdl.CodeGen -- --c
-dotnet run --project tools/Packet.Sdl.CodeGen -- --python
-dotnet run --project tools/Packet.Sdl.CodeGen -- --json
+# ... --rust, --c, --python, --json
 
-# Verify the generated Go compiles + passes gofmt
+# Verify generated Go compiles + tests + gofmt clean
 cd go-spec && go build ./... && go vet ./... && go test ./... && gofmt -l .
 
-# Verify the generated TS typechecks + tests pass
+# Verify generated TS typechecks + tests pass
 cd ts-spec && npm ci && npm run typecheck && npm test
 ```
 
+Tag a `v*` release to fire [`.github/workflows/publish.yml`](.github/workflows/publish.yml) — both NuGet and npm publish from the tag (version taken from the tag, stripping the `v` prefix).
+
 ## What's published
 
-| Artefact | Package manager | Name | Source |
-| --- | --- | --- | --- |
-| C# library | NuGet | `Packet.Ax25.Sdl` | `src/Packet.Ax25.Sdl/` |
-| TypeScript library | npm | `ax25sdl` | `ts-spec/` |
-| Go module | git | `github.com/m0lte/ax25sdl/go-spec` | `go-spec/` |
-| Rust crate | _tbd_ | _tbd_ | `tools/Packet.Sdl.CodeGen.Rust/` output |
-| C / Python / JSON | _tbd_ | _tbd_ | codegen output |
+| Artefact | Package manager | Name |
+| --- | --- | --- |
+| C# library | NuGet | [`Packet.Ax25.Sdl`](https://www.nuget.org/packages/Packet.Ax25.Sdl) |
+| TypeScript library | npm | [`ax25sdl`](https://www.npmjs.com/package/ax25sdl) |
+| Go module | git | `github.com/m0lte/ax25sdl/go-spec` |
+| Rust crate | _planned_ | _tbd_ |
+| C / Python / JSON | _consumed in-tree_ | codegen output (not packaged externally) |
+
+## Provenance
+
+Extracted from `m0lte/packet.net` on 2026-05-17 — the SDL transcriptions + codegen pipeline used to live under `spec-sdl/` and `tools/Packet.Sdl.*/` in that monorepo. History preserved via `git filter-repo`. The .NET runtime that consumes these tables stays in `m0lte/packet.net`; the TypeScript runtime moved to `m0lte/ax25-ts`.
+
+## Sibling repos
+
+| Repo | What it is | Relation to here |
+| --- | --- | --- |
+| **`m0lte/ax25sdl`** *(here)* | SDL transcriptions + codegen | source of truth |
+| [`m0lte/packet.net`](https://github.com/m0lte/packet.net) | .NET libraries + node host | consumes [`Packet.Ax25.Sdl`](https://www.nuget.org/packages/Packet.Ax25.Sdl) from NuGet |
+| [`m0lte/ax25-ts`](https://github.com/m0lte/ax25-ts) | `@packet-net/ax25` browser TS library | consumes [`ax25sdl`](https://www.npmjs.com/package/ax25sdl) from npm |
+| [`m0lte/packet-term-tui`](https://github.com/m0lte/packet-term-tui) | C# Terminal.Gui v2 TUI | transitive: via `Packet.Ax25` → `Packet.Ax25.Sdl` |
+| [`m0lte/packet-term-web`](https://github.com/m0lte/packet-term-web) | Browser TNC2 emulator at https://packet-term.m0lte.uk | transitive: via `@packet-net/ax25` → `ax25sdl` |
 
 ## License
 
-[MIT](LICENSE) — see `LICENSE` for details. Spec text and figures are derived from the AX.25 v2.2 specification; this repo's transcription discipline is documented in [`docs/sdl-transcription-runbook.md`](docs/sdl-transcription-runbook.md).
+[MIT](LICENSE). Spec text and figures are derived from the AX.25 v2.2 specification; this repo's transcription discipline is documented in [`docs/sdl-transcription-runbook.md`](docs/sdl-transcription-runbook.md).
