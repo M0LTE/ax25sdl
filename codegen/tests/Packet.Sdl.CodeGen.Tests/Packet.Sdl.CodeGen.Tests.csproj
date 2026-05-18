@@ -15,6 +15,9 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
+    <!-- Transcribe is API-tested directly: tests load each committed
+         graphml, run the walker, and assert on the IR. -->
+    <ProjectReference Include="..\..\src\Packet.Sdl.Transcribe\Packet.Sdl.Transcribe.csproj" />
   </ItemGroup>
 
   <ItemGroup>
