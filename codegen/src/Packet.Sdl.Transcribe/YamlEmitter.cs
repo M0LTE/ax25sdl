@@ -1,0 +1,116 @@
+using System.Globalization;
+using System.Text;
+
+namespace Packet.Sdl.Transcribe;
+
+/// <summary>
+/// Emits an SdlPage as YAML, matching the existing format conventions in
+/// spec-sdl/v2.2-errata/data-link/*.sdl.yaml.
+/// </summary>
+/// <remarks>
+/// We hand-write YAML instead of using YamlDotNet's serializer so that
+/// flow-style maps for path steps (`{ action: ..., kind: ... }`) come out
+/// the way the existing yamls have them — YamlDotNet defaults to block
+/// style and we'd have to fight it for every collection.
+/// </remarks>
+public static class YamlEmitter
+{
+    private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
+
+    public static string Emit(SdlPage page)
+    {
+        var sb = new StringBuilder();
+
+        var src = page.SourceGraphmlPath is null ? "(unknown)" : Path.GetFileName(page.SourceGraphmlPath);
+        sb.AppendLine(Inv, $"# Auto-generated from {src}. DO NOT EDIT.");
+        sb.AppendLine("# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.");
+        sb.AppendLine();
+
+        sb.AppendLine(Inv, $"machine: {page.Machine}");
+        sb.AppendLine(Inv, $"state: {page.State}");
+        if (page.Coverage != "complete")
+            sb.AppendLine(Inv, $"coverage: {page.Coverage}");
+
+        if (!string.IsNullOrEmpty(page.Source.Spec) || !string.IsNullOrEmpty(page.Source.Figure))
+        {
+            sb.AppendLine("source:");
+            if (!string.IsNullOrEmpty(page.Source.Spec))
+                sb.AppendLine(Inv, $"  spec: {page.Source.Spec}");
+            if (!string.IsNullOrEmpty(page.Source.Figure))
+                sb.AppendLine(Inv, $"  figure: {page.Source.Figure}");
+            if (!string.IsNullOrEmpty(page.Source.Url))
+                sb.AppendLine(Inv, $"  url: {page.Source.Url}");
+        }
+
+        if (page.Save.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("save:");
+            foreach (var ev in page.Save)
+                sb.AppendLine(Inv, $"  - {ev}");
+        }
+
+        if (page.Decisions.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("decisions:");
+            foreach (var d in page.Decisions)
+            {
+                sb.AppendLine(Inv, $"  - id: {d.Id}");
+                // Always quote questions — they contain '?' and conventionally
+                // appear quoted in the existing yamls for readability.
+                sb.AppendLine(Inv, $"    question: \"{d.Question}\"");
+                sb.AppendLine(Inv, $"    predicate: {d.Predicate}");
+            }
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("transitions:");
+        foreach (var t in page.Transitions)
+        {
+            sb.AppendLine();
+            sb.AppendLine(Inv, $"  - id: {t.Id}");
+            sb.AppendLine(Inv, $"    on: {t.On}");
+            if (t.Path.Count == 0)
+            {
+                sb.AppendLine("    path: []");
+            }
+            else
+            {
+                sb.AppendLine("    path:");
+                foreach (var step in t.Path)
+                {
+                    sb.AppendLine(Inv, $"      - {FormatStep(step)}");
+                }
+            }
+            sb.AppendLine(Inv, $"    next: {t.Next}");
+        }
+
+        return sb.ToString();
+    }
+
+    private static string FormatStep(PathStep step) => step switch
+    {
+        ActionStep a       => string.Create(Inv, $"{{ action: {YamlQuote(a.Action)}, kind: {a.Kind} }}"),
+        DecisionBranch d   => string.Create(Inv, $"{{ decision: {d.DecisionId}, branch: {YamlQuote(d.Branch)} }}"),
+        _ => throw new InvalidOperationException($"unknown PathStep variant {step.GetType().Name}"),
+    };
+
+    private static readonly System.Buffers.SearchValues<char> QuoteForcing =
+        System.Buffers.SearchValues.Create("\"\\");
+    private static readonly System.Buffers.SearchValues<char> PlainScalarTroublemakers =
+        System.Buffers.SearchValues.Create(":#,[]{}&*!|>%@`");
+
+    private static string YamlQuote(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "\"\"";
+        if (s.AsSpan().ContainsAny(QuoteForcing))
+            return "\"" + s.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+        var needsQuote = s.AsSpan().ContainsAny(PlainScalarTroublemakers)
+                         || s.StartsWith(' ') || s.EndsWith(' ')
+                         || s.StartsWith('-')
+                         || double.TryParse(s, NumberStyles.Any, Inv, out _)
+                         || s is "true" or "false" or "yes" or "no" or "null" or "~";
+        return needsQuote ? "\"" + s + "\"" : s;
+    }
+}
