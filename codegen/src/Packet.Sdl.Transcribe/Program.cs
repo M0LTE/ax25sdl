@@ -25,14 +25,27 @@ public static class Program
             try
             {
                 var graph = GraphmlReader.Load(input);
-                var page = Walker.Walk(graph, input);
-                page.SourceGraphmlPath = input;
-                var yaml = YamlEmitter.Emit(page);
+                string yaml;
+                string summary;
+                if (SubroutinesWalker.IsSubroutinesPage(graph))
+                {
+                    var page = SubroutinesWalker.Walk(graph, input);
+                    page.SourceGraphmlPath = input;
+                    yaml = YamlEmitter.EmitSubroutines(page);
+                    summary = $"{page.Subroutines.Count} subroutines, {page.Decisions.Count} decisions";
+                }
+                else
+                {
+                    var page = Walker.Walk(graph, input);
+                    page.SourceGraphmlPath = input;
+                    yaml = YamlEmitter.Emit(page);
+                    summary = $"{page.Transitions.Count} transitions, {page.Decisions.Count} decisions";
+                }
 
                 var outPath = ResolveOutputPath(input, opt);
                 Directory.CreateDirectory(Path.GetDirectoryName(outPath)!);
                 File.WriteAllText(outPath, yaml);
-                Console.WriteLine($"  {input}  →  {outPath}  ({page.Transitions.Count} transitions, {page.Decisions.Count} decisions)");
+                Console.WriteLine($"  {input}  →  {outPath}  ({summary})");
             }
             catch (Exception ex)
             {

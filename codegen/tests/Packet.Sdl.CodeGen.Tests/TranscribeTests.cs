@@ -133,18 +133,94 @@ public class TranscribeTests
     }
 
     [Fact]
-    public void Subroutines_page_currently_warns_rather_than_crashing()
+    public void Subroutines_page_is_detected_by_topology()
     {
-        // Subroutines (figc4.7) has a different topology — no entry State
-        // node with outgoing edges. The walker throws a clear error rather
-        // than producing garbage. When the subroutines walker variant lands,
-        // this test should be replaced with positive coverage.
         var path = LocateRepoGraphml("DataLink_Subroutines.graphml");
         var graph = GraphmlReader.Load(path);
 
-        var act = () => Walker.Walk(graph, path);
-        act.Should().Throw<InvalidDataException>()
-            .WithMessage("*no State node with outgoing edges*");
+        SubroutinesWalker.IsSubroutinesPage(graph).Should().BeTrue();
+    }
+
+    [Fact]
+    public void State_pages_are_not_detected_as_subroutines_pages()
+    {
+        var path = LocateRepoGraphml("DataLink_Disconnected.graphml");
+        var graph = GraphmlReader.Load(path);
+
+        SubroutinesWalker.IsSubroutinesPage(graph).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Subroutines_page_walks_and_emits_yaml()
+    {
+        var path = LocateRepoGraphml("DataLink_Subroutines.graphml");
+        var graph = GraphmlReader.Load(path);
+
+        var page = SubroutinesWalker.Walk(graph, path);
+
+        page.Machine.Should().Be("data_link");
+        // The committed graphml has 13 Subroutine_start nodes but two
+        // ("Establish Data Link" + "Establish Extended Data Link") share
+        // an authoring bug — n50 (SABM) is missing its outgoing edge — so
+        // the walker emits warnings and skips them. The remaining 11
+        // subroutines transcribe cleanly. When the redrawn graphmls land
+        // (Tom's planned vanilla + errata sets), this count will rise.
+        page.Subroutines.Should().HaveCount(11);
+        page.Subroutines.Should().OnlyHaveUniqueItems(s => s.Name);
+    }
+
+    [Fact]
+    public void Subroutines_page_yaml_matches_committed_snapshot()
+    {
+        var graphmlPath = LocateRepoGraphml("DataLink_Subroutines.graphml");
+        var graph = GraphmlReader.Load(graphmlPath);
+        var page = SubroutinesWalker.Walk(graph, graphmlPath);
+        page.SourceGraphmlPath = graphmlPath;
+        var emitted = YamlEmitter.EmitSubroutines(page);
+
+        var snapshotPath = LocateFixture(Path.Combine("transcribe", "subroutines.sdl.yaml"));
+        if (!File.Exists(snapshotPath))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(snapshotPath)!);
+            File.WriteAllText(snapshotPath, emitted);
+            throw new InvalidOperationException(
+                $"Bootstrapped new snapshot at {snapshotPath}. Re-run the test; subsequent runs assert byte-identity.");
+        }
+        var expected = File.ReadAllText(snapshotPath);
+        emitted.Should().Be(expected,
+            "subroutines yaml should match the committed snapshot");
+    }
+
+    [Theory]
+    [InlineData("N(r) Error Recovery",         "N_r_Error_Recovery")]
+    [InlineData("UI Check",                     "UI_Check")]
+    [InlineData("Set Version 2.0",              "Set_Version_2_0")]
+    [InlineData("Check Need for Response",      "Check_Need_for_Response")]
+    [InlineData("Invoke Retransmission",        "Invoke_Retransmission")]
+    [InlineData("Establish Extended Data Link", "Establish_Extended_Data_Link")]
+    public void Subroutine_names_normalise_per_schema_pattern(string figureLabel, string expectedName)
+    {
+        // The schema's `name` pattern is ^[A-Z][A-Za-z0-9_]*$. Parens
+        // become word separators so V(r), N(r), etc. tokenise into V_r, N_r.
+        // Test via the public walker: feed a tiny synthetic graph with one
+        // start node carrying the label.
+        var graph = SynthesiseSingleStartGraph(figureLabel);
+
+        var page = SubroutinesWalker.Walk(graph, "DataLink_Subroutines.graphml");
+        page.Subroutines.Should().NotBeEmpty();
+        page.Subroutines[0].Name.Should().Be(expectedName);
+    }
+
+    private static GraphmlGraph SynthesiseSingleStartGraph(string startLabel)
+    {
+        // Subroutine_start (n0) → Return_from_Subroutine (n1)
+        var nodes = new List<GraphmlNode>
+        {
+            new("n0", "Subroutine start",        startLabel,      0, 0),
+            new("n1", "Return from Subroutine",  "",              0, 100),
+        };
+        var edges = new List<GraphmlEdge> { new("e0", "n0", "n1", "") };
+        return new GraphmlGraph("synthetic", nodes, edges);
     }
 
     // ─── EventResolver unit tests ─────────────────────────────────────
