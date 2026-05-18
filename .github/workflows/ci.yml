@@ -88,9 +88,11 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: 'stable'
+          # No external Go deps → no go.sum → caching would warn on every run.
+          cache: false
       - name: regenerate Go
         run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --go
       - name: assert no diff
