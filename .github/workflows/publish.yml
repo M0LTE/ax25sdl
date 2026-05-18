@@ -1,7 +1,7 @@
 name: publish
 
-# Publishes `ax25sdl` (from ts-spec/) to npmjs.com and
-# `Packet.Ax25.Sdl` (from src/Packet.Ax25.Sdl/) to nuget.org on any
+# Publishes `ax25sdl` (from spec/ts/) to npmjs.com and
+# `Packet.Ax25.Sdl` (from spec/csharp/) to nuget.org on any
 # tag matching `v*`. Version is taken from the tag (strip the leading
 # `v`), so e.g. tagging `v0.3.0` publishes both at 0.3.0.
 
@@ -68,25 +68,25 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: ts-spec — pin version from tag
-        working-directory: ts-spec
+      - name: spec/ts — pin version from tag
+        working-directory: spec/ts
         run: |
-          echo "Pinning ts-spec/package.json → ${VERSION}"
+          echo "Pinning spec/ts/package.json → ${VERSION}"
           npm pkg set "version=${VERSION}"
 
-      - name: ts-spec — install + build
-        working-directory: ts-spec
+      - name: spec/ts — install + build
+        working-directory: spec/ts
         run: |
           npm install
           npm run build
 
-      - name: ts-spec — pack (dry-run sanity check)
-        working-directory: ts-spec
+      - name: spec/ts — pack (dry-run sanity check)
+        working-directory: spec/ts
         run: npm pack --dry-run
 
-      - name: ts-spec — publish
+      - name: spec/ts — publish
         if: env.NPM_TOKEN != ''
-        working-directory: ts-spec
+        working-directory: spec/ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
@@ -111,11 +111,11 @@ jobs:
         run: dotnet --version
 
       - name: build
-        run: dotnet build src/Packet.Ax25.Sdl/Packet.Ax25.Sdl.csproj --configuration Release -p:Version=${{ env.VERSION }}
+        run: dotnet build spec/csharp/Packet.Ax25.Sdl.csproj --configuration Release -p:Version=${{ env.VERSION }}
 
       - name: pack
         run: |
-          dotnet pack src/Packet.Ax25.Sdl/Packet.Ax25.Sdl.csproj \
+          dotnet pack spec/csharp/Packet.Ax25.Sdl.csproj \
             --configuration Release \
             --no-build \
             --output ./artifacts \

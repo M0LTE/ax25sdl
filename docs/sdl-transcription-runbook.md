@@ -14,7 +14,7 @@ These are baked into the repo and don't repeat per figure:
 
 - Lossless YAML schema (`spec-sdl/schema/sdl-machine.schema.json`) with
   `pinned_refs`, `decisions`, `path`, `references` fields.
-- Codegen tool `tools/Packet.Sdl.CodeGen` with lints (decision-branch
+- Codegen tool `codegen/src/Packet.Sdl.CodeGen` with lints (decision-branch
   completeness, guard overlap, references shape) and Roslyn parse-back.
 - "Trust the figure" + "Read `d5`, not the shape direction" hard rules in
   [`CLAUDE.md`](../CLAUDE.md) and the agent's memory.
@@ -93,7 +93,7 @@ there. Add anything new — keep the grouping (`primitives_upper`,
 Run codegen + tests:
 
 ```sh
-dotnet run --project tools/Packet.Sdl.CodeGen
+dotnet run --project codegen/src/Packet.Sdl.CodeGen
 dotnet build
 dotnet test --filter "Category!=HardwareLoop&Category!=Interop"
 ```

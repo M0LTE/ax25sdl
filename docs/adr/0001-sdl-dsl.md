@@ -27,12 +27,12 @@ reviewed in isolation alongside the figure it came from.
 ## Decision
 
 We introduce a small YAML DSL for SDL state machines, stored under
-`/spec-sdl/`. A standalone console tool, `tools/Packet.Sdl.CodeGen`, reads the
+`/spec-sdl/`. A standalone console tool, `codegen/src/Packet.Sdl.CodeGen`, reads the
 DSL and emits:
 
-- `src/Packet.Ax25.Sdl/*.g.cs` — partial classes containing the state machine
+- `spec/csharp/*.g.cs` — partial classes containing the state machine
   transitions.
-- `tests/Packet.Ax25.Conformance.Tests/*.g.Tests.cs` — one xUnit `[Fact]` per
+- `spec/csharp/tests/*.g.Tests.cs` — one xUnit `[Fact]` per
   transition, asserting `(state, event, guard) → (next state, actions)`.
 
 Both generated outputs are **checked in**. CI regenerates them on every build
@@ -107,7 +107,7 @@ ones would still demand a transcription step from the bitmap.
 ### Negative
 
 - **One more tool to learn.** Contributors must run
-  `dotnet run --project tools/Packet.Sdl.CodeGen` before pushing.
+  `dotnet run --project codegen/src/Packet.Sdl.CodeGen` before pushing.
 - **Schema evolution.** As we encounter cases the schema doesn't model, we
   must extend the schema + the codegen — which may require regenerating
   existing files. Mitigation: codegen is deterministic and idempotent; the

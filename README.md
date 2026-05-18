@@ -19,9 +19,9 @@
 
 | Artefact | Where | Name | In-repo source |
 | --- | --- | --- | --- |
-| C# library | NuGet | [`Packet.Ax25.Sdl`](https://www.nuget.org/packages/Packet.Ax25.Sdl) | [`src/Packet.Ax25.Sdl/`](src/Packet.Ax25.Sdl/) |
-| TypeScript library | npm | [`ax25sdl`](https://www.npmjs.com/package/ax25sdl) | [`ts-spec/`](ts-spec/) |
-| Go module | git | `github.com/m0lte/ax25sdl/go-spec` | [`go-spec/`](go-spec/) |
+| C# library | NuGet | [`Packet.Ax25.Sdl`](https://www.nuget.org/packages/Packet.Ax25.Sdl) | [`spec/csharp/`](spec/csharp/) |
+| TypeScript library | npm | [`ax25sdl`](https://www.npmjs.com/package/ax25sdl) | [`spec/ts/`](spec/ts/) |
+| Go module | git | `github.com/m0lte/ax25sdl/spec/go` | [`spec/go/`](spec/go/) |
 | Rust / C / Python / JSON | _not externally packaged_ | codegen output for in-tree consumers | per-backend dirs |
 
 Tagging `v*` on `main` fires [`.github/workflows/publish.yml`](.github/workflows/publish.yml) — NuGet + npm publish from the same tag, version taken from the tag stripped of its leading `v`.

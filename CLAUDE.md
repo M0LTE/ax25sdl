@@ -67,24 +67,24 @@ dotnet build
 dotnet test
 
 # Regenerate all backends
-dotnet run --project tools/Packet.Sdl.CodeGen
+dotnet run --project codegen/src/Packet.Sdl.CodeGen
 
 # Regenerate one backend
-dotnet run --project tools/Packet.Sdl.CodeGen -- --csharp
-dotnet run --project tools/Packet.Sdl.CodeGen -- --go
-dotnet run --project tools/Packet.Sdl.CodeGen -- --ts
+dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --csharp
+dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --go
+dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --ts
 # etc.
 
 # Verify generated Go compiles + tests + gofmt clean
-cd go-spec && go build ./... && go vet ./... && go test ./... && gofmt -l .
+cd spec/go && go build ./... && go vet ./... && go test ./... && gofmt -l .
 
 # Verify generated TS typechecks + tests pass
-cd ts-spec && npm ci && npm run typecheck && npm test
+cd spec/ts && npm ci && npm run typecheck && npm test
 ```
 
 ## Things to avoid
 
-- Don't hand-edit `src/Packet.Ax25.Sdl/*.g.cs`, `go-spec/ax25sdl/*.g.go`, or `ts-spec/src/ax25sdl/*.g.ts`. They are generated. Edit the corresponding `*.sdl.yaml` and rerun the codegen. (`go-spec/ax25sdl/types.go`, `ts-spec/src/ax25sdl/types.ts`, and `ts-spec/src/ax25sdl/*.test.ts` ARE hand-written — keep the type files in sync with the C# types in `src/Packet.Ax25.Sdl/`.)
+- Don't hand-edit `spec/csharp/*.g.cs`, `spec/go/ax25sdl/*.g.go`, or `spec/ts/src/ax25sdl/*.g.ts`. They are generated. Edit the corresponding `*.sdl.yaml` and rerun the codegen. (`spec/go/ax25sdl/types.go`, `spec/ts/src/ax25sdl/types.ts`, and `spec/ts/src/ax25sdl/*.test.ts` ARE hand-written — keep the type files in sync with the C# types in `spec/csharp/`.)
 - Don't add `[Version=...]` on `<PackageReference>` items — CPM enforces a central version table.
 - Don't infer protocol semantics from the spec PNGs. See "Encode-then-verify" above.
 - **Don't add new GitHub Actions jobs with `runs-on: ubuntu-latest`** (or any other GitHub-hosted runner label). This project has no Actions minutes budget for hosted runners — every workflow job MUST target `[self-hosted, Linux, X64]`. Same rule as `m0lte/packet.net`.
