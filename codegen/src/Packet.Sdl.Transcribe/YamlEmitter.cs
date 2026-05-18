@@ -89,6 +89,63 @@ public static class YamlEmitter
         return sb.ToString();
     }
 
+    public static string EmitSubroutines(SubroutinePage page)
+    {
+        var sb = new StringBuilder();
+        var src = page.SourceGraphmlPath is null ? "(unknown)" : Path.GetFileName(page.SourceGraphmlPath);
+        sb.AppendLine(Inv, $"# Auto-generated from {src}. DO NOT EDIT.");
+        sb.AppendLine("# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.");
+        sb.AppendLine();
+        sb.AppendLine(Inv, $"machine: {page.Machine}");
+
+        if (!string.IsNullOrEmpty(page.Source.Spec) || !string.IsNullOrEmpty(page.Source.Figure))
+        {
+            sb.AppendLine("source:");
+            if (!string.IsNullOrEmpty(page.Source.Spec))
+                sb.AppendLine(Inv, $"  spec: {page.Source.Spec}");
+            if (!string.IsNullOrEmpty(page.Source.Figure))
+                sb.AppendLine(Inv, $"  figure: {page.Source.Figure}");
+            if (!string.IsNullOrEmpty(page.Source.Url))
+                sb.AppendLine(Inv, $"  url: {page.Source.Url}");
+        }
+
+        if (page.Decisions.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("decisions:");
+            foreach (var d in page.Decisions)
+            {
+                sb.AppendLine(Inv, $"  - id: {d.Id}");
+                sb.AppendLine(Inv, $"    question: \"{d.Question}\"");
+                sb.AppendLine(Inv, $"    predicate: {d.Predicate}");
+            }
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("subroutines:");
+        foreach (var sub in page.Subroutines)
+        {
+            sb.AppendLine();
+            sb.AppendLine(Inv, $"  - name: {sub.Name}");
+            sb.AppendLine("    paths:");
+            foreach (var p in sub.Paths)
+            {
+                sb.AppendLine(Inv, $"      - id: {p.Id}");
+                if (p.Steps.Count == 0)
+                {
+                    sb.AppendLine("        path: []");
+                }
+                else
+                {
+                    sb.AppendLine("        path:");
+                    foreach (var step in p.Steps)
+                        sb.AppendLine(Inv, $"          - {FormatStep(step)}");
+                }
+            }
+        }
+        return sb.ToString();
+    }
+
     private static string FormatStep(PathStep step) => step switch
     {
         ActionStep a       => string.Create(Inv, $"{{ action: {YamlQuote(a.Action)}, kind: {a.Kind} }}"),

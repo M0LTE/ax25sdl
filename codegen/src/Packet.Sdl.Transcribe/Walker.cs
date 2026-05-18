@@ -253,6 +253,14 @@ public static class Walker
             yield return new ActionStep(line, kind);
     }
 
+    /// <summary>Shared with SubroutinesWalker.</summary>
+    internal static void RecordDecisionPublic(GraphmlNode node, string contextualId, Dictionary<string, Decision> decisionsSeen)
+        => RecordDecision(node, contextualId, decisionsSeen);
+
+    /// <summary>Shared with SubroutinesWalker.</summary>
+    internal static string ContextualDecisionIdPublic(string triggerPrefix, string questionLabel)
+        => ContextualDecisionId(triggerPrefix, questionLabel);
+
     private static void RecordDecision(GraphmlNode node, string contextualId, Dictionary<string, Decision> decisionsSeen)
     {
         if (decisionsSeen.ContainsKey(contextualId)) return;
