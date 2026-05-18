@@ -29,9 +29,9 @@ jobs:
       - name: dotnet --version
         run: dotnet --version
       - name: build
-        run: dotnet build --nologo
+        run: dotnet build codegen/ax25sdl.slnx --nologo
       - name: test
-        run: dotnet test --nologo --no-build
+        run: dotnet test codegen/ax25sdl.slnx --nologo --no-build
 
   # ─── Codegen drift: regen each backend, error if the committed
   #     generated files don't match the freshly-generated output. ───
@@ -42,11 +42,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: regenerate C#
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --csharp
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --csharp
       - name: assert no diff
         run: |
-          if ! git diff --exit-code -- src/Packet.Ax25.Sdl/; then
-            echo "::error::Generated C# files in src/Packet.Ax25.Sdl/ are out of sync with the SDL YAML. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --csharp\` locally and commit the diff."
+          if ! git diff --exit-code -- spec/csharp/; then
+            echo "::error::Generated C# files in spec/csharp/ are out of sync with the SDL YAML. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --csharp\` locally and commit the diff."
             exit 1
           fi
 
@@ -60,26 +60,26 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: ts-spec/package-lock.json
+          cache-dependency-path: spec/ts/package-lock.json
       - name: regenerate TS
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --ts
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --ts
       - name: assert no diff
         run: |
-          if ! git diff --exit-code -- ts-spec/; then
-            echo "::error::Generated TS files in ts-spec/ are out of sync. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --ts\` locally and commit the diff."
+          if ! git diff --exit-code -- spec/ts/; then
+            echo "::error::Generated TS files in spec/ts/ are out of sync. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --ts\` locally and commit the diff."
             exit 1
           fi
-      - name: ts-spec — install
-        working-directory: ts-spec
+      - name: spec/ts — install
+        working-directory: spec/ts
         run: npm ci
-      - name: ts-spec — typecheck
-        working-directory: ts-spec
+      - name: spec/ts — typecheck
+        working-directory: spec/ts
         run: npm run typecheck
-      - name: ts-spec — test
-        working-directory: ts-spec
+      - name: spec/ts — test
+        working-directory: spec/ts
         run: npm test
-      - name: ts-spec — build
-        working-directory: ts-spec
+      - name: spec/ts — build
+        working-directory: spec/ts
         run: npm run build
 
   go-drift:
@@ -94,24 +94,24 @@ jobs:
           # No external Go deps → no go.sum → caching would warn on every run.
           cache: false
       - name: regenerate Go
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --go
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --go
       - name: assert no diff
         run: |
-          if ! git diff --exit-code -- go-spec/; then
-            echo "::error::Generated Go files in go-spec/ are out of sync. Run \`dotnet run --project tools/Packet.Sdl.CodeGen -- --go\` locally and commit the diff."
+          if ! git diff --exit-code -- spec/go/; then
+            echo "::error::Generated Go files in spec/go/ are out of sync. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --go\` locally and commit the diff."
             exit 1
           fi
       - name: go build
-        working-directory: go-spec
+        working-directory: spec/go
         run: go build ./...
       - name: go vet
-        working-directory: go-spec
+        working-directory: spec/go
         run: go vet ./...
       - name: go test
-        working-directory: go-spec
+        working-directory: spec/go
         run: go test ./...
       - name: gofmt
-        working-directory: go-spec
+        working-directory: spec/go
         run: |
           mismatched=$(gofmt -l .)
           if [ -n "$mismatched" ]; then
@@ -127,7 +127,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: regenerate JSON
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --json
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --json
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
@@ -142,7 +142,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: regenerate Rust
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --rust
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --rust
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
@@ -157,7 +157,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: regenerate C
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --c
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --c
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
@@ -172,7 +172,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: regenerate Python
-        run: dotnet run --project tools/Packet.Sdl.CodeGen --configuration Release -- --python
+        run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --python
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
