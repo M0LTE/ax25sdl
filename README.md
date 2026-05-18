@@ -2,7 +2,7 @@
 
 Canonical AX.25 v2.2 SDL transcriptions + codegen. Turns the figc4.x state-machine diagrams from the AX.25 v2.2 specification into ready-to-consume libraries in **C#, Go, TypeScript, JSON, Rust, C, and Python**.
 
-> **Status:** prove-out repo. Tom (M0LTE) is working with the original AX.25 spec authors on whether `packethacking/ax25spec` should become the canonical community home for SDL transcriptions. Until that's agreed, `m0lte/ax25sdl` is the prove-out venue and downstream consumers pull from here.
+> **Status:** prove-out repo. The team will work with the original AX.25 spec contributors on whether `packethacking/ax25spec` should become the canonical community home for SDL transcriptions. Until that's agreed, `m0lte/ax25sdl` is the prove-out venue and downstream consumers pull from here.
 
 ## How it works
 
