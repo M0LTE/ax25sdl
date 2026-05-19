@@ -26,6 +26,9 @@
          second-opinion check independent of the emitter's own internal
          validation. -->
     <PackageReference Include="JsonSchema.Net" />
+    <!-- CitationsSchemaTests reads YAML sidecars and converts them to
+         JsonNode for schema validation. -->
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
 </Project>
