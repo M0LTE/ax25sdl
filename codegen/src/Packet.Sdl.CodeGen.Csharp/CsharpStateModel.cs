@@ -44,6 +44,8 @@ public sealed class CsharpTransitionModel
 {
     public string Id { get; init; } = "";
     public string On { get; init; } = "";
+    public string OnLabel { get; init; } = "";
+    public string OnLabelLiteral { get; init; } = "null";
     public string? Guard { get; init; }
     public string GuardLiteral { get; init; } = "null";
     public string Next { get; init; } = "";
@@ -54,22 +56,40 @@ public sealed class CsharpTransitionModel
     public string ReferencesCsv { get; init; } = "";
     public string LoopsCsv { get; init; } = "";
     public string EdgeLabel { get; init; } = "";
+    /// <summary>C# array-initialiser literal for the transition's
+    /// UndefinedBranches argument — emits <c>null</c> when none, or the
+    /// constructed <c>UndefinedSpecBranch[]</c> when one or more decisions on
+    /// the transition's path cross an `undefined`-labelled edge.</summary>
+    public string UndefinedBranchesCsv { get; init; } = "null";
 
     public static CsharpTransitionModel From(ResolvedTransition t) => new()
     {
-        Id            = t.Id,
-        On            = t.On,
-        Guard         = t.Guard,
-        GuardLiteral  = t.Guard is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Guard),
-        Next          = t.Next,
-        Notes         = t.Notes,
-        NotesLiteral  = t.Notes is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Notes),
-        Actions       = t.Actions.Select(CsharpActionModel.From).ToList(),
-        ActionsCsv    = CsharpEmitter.FormatActionsCsv(t.Actions),
-        ReferencesCsv = CsharpEmitter.FormatReferenceCsv(t.References),
-        LoopsCsv      = CsharpEmitter.FormatLoopsCsv(t.Loops),
-        EdgeLabel     = CsharpEmitter.BuildMermaidEdgeLabel(t.Id, t.On, t.Guard, t.Actions),
+        Id                   = t.Id,
+        On                   = t.On,
+        OnLabel              = t.OnLabel,
+        OnLabelLiteral       = string.IsNullOrEmpty(t.OnLabel) ? "null" : CsharpEmitter.CSharpStringLiteral(t.OnLabel),
+        Guard                = t.Guard,
+        GuardLiteral         = t.Guard is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Guard),
+        Next                 = t.Next,
+        Notes                = t.Notes,
+        NotesLiteral         = t.Notes is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Notes),
+        Actions              = t.Actions.Select(CsharpActionModel.From).ToList(),
+        ActionsCsv           = CsharpEmitter.FormatActionsCsv(t.Actions),
+        ReferencesCsv        = CsharpEmitter.FormatReferenceCsv(t.References),
+        LoopsCsv             = CsharpEmitter.FormatLoopsCsv(t.Loops),
+        EdgeLabel            = CsharpEmitter.BuildMermaidEdgeLabel(t.Id, t.On, t.Guard, t.Actions),
+        UndefinedBranchesCsv = FormatUndefinedBranchesCsv(t.UndefinedBranches),
     };
+
+    private static string FormatUndefinedBranchesCsv(IReadOnlyList<ResolvedUndefinedBranch> branches)
+    {
+        if (branches.Count == 0) return "null";
+        var entries = branches.Select(b =>
+            $"new UndefinedSpecBranch({CsharpEmitter.CSharpStringLiteral(b.DecisionId)}, " +
+            $"{CsharpEmitter.CSharpStringLiteral(b.Question)}, " +
+            $"{CsharpEmitter.CSharpStringLiteral(b.Predicate)})");
+        return "new UndefinedSpecBranch[] { " + string.Join(", ", entries) + " }";
+    }
 }
 
 public sealed class CsharpActionModel

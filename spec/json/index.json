@@ -42,6 +42,13 @@
       "kind": "subroutines",
       "machine": "data_link",
       "figure": "figc4.7"
+    },
+    {
+      "file": "timer_recovery.g.json",
+      "kind": "state",
+      "machine": "data_link",
+      "state": "TimerRecovery",
+      "figure": "figc4.5"
     }
   ]
 }

@@ -7,4 +7,5 @@ export * from "./awaiting_release.g.js";
 export * from "./awaiting_v22_connection.g.js";
 export * from "./connected.g.js";
 export * from "./disconnected.g.js";
+export * from "./timer_recovery.g.js";
 export * from "./subroutines.g.js";

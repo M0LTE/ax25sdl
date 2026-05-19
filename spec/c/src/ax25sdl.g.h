@@ -12,6 +12,7 @@ extern const StatePage data_link_awaiting_release;
 extern const StatePage data_link_awaiting_v22_connection;
 extern const StatePage data_link_connected;
 extern const StatePage data_link_disconnected;
+extern const StatePage data_link_timer_recovery;
 extern const SubroutinesPage data_link_subroutines;
 
 #endif // AX25SDL_GENERATED_H

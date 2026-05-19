@@ -208,8 +208,15 @@ public static class Validation
             {
                 if (!decisionsById.ContainsKey(step.Decision!))
                     errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] references undefined decision `{step.Decision}`. Add it to the page-level decisions[].");
-                if (step.Branch is not "Yes" and not "No")
-                    errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] branch must be 'Yes' or 'No' (was `{step.Branch}`)");
+                // 'Undefined' is the third permitted branch label: it marks a
+                // decision edge that the AX.25 SDL itself labels 'undefined'
+                // (e.g. figc4.5 Command? and V(s)==V(a)?). Codegen emits a
+                // runtime throw for any transition whose path crosses such an
+                // edge — the spec authors deliberately left the behaviour
+                // unspecified, so reaching it at runtime is a real bug, not
+                // dead code.
+                if (step.Branch is not "Yes" and not "No" and not "Undefined")
+                    errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] branch must be 'Yes', 'No', or 'Undefined' (was `{step.Branch}`)");
             }
             else if (hasAction)
             {
@@ -341,6 +348,11 @@ public static class Validation
                 errors.Add($"{page.SourcePath}: decision `{id}` is declared but never referenced in any transition path.");
                 continue;
             }
+            // 'Undefined'-only decisions encode the SDL marker where both
+            // edges of a diamond carry the literal 'undefined' label. They
+            // never branch to Yes/No at runtime — codegen emits a throw stub
+            // — so the bilateral-coverage lint doesn't apply.
+            if (seen.Count == 1 && seen.Contains("Undefined")) continue;
             if (!seen.Contains("Yes"))
                 errors.Add($"{page.SourcePath}: decision `{id}` missing 'Yes' branch in any transition (seen: {string.Join(", ", seen.OrderBy(s => s, StringComparer.Ordinal))}). Add the missing column or mark `coverage: partial` with a verification_pending note.");
             if (!seen.Contains("No"))
@@ -364,7 +376,7 @@ public static class Validation
     {
         var compiled = page.Transitions
             .Where(t => t.Path is not null)
-            .Select(t => (t, lits: CompileGuardLiterals(t, decisionsById)))
+            .Select(t => (t, lits: CompileGuardLiterals(t, decisionsById), hasUndefined: HasUndefinedBranch(t)))
             .ToList();
 
         var byEvent = compiled.GroupBy(x => x.t.On, StringComparer.Ordinal);
@@ -376,6 +388,11 @@ public static class Validation
                 for (int j = i + 1; j < list.Count; j++)
                 {
                     if (list[i].lits is null || list[j].lits is null) continue;
+                    // Either transition crossing an 'undefined' branch in the
+                    // source SDL means the runtime throws on reaching it — so
+                    // there's no "silent first-match" footgun to lint about.
+                    // Codegen emits the throw stub for the undefined path.
+                    if (list[i].hasUndefined || list[j].hasUndefined) continue;
                     if (!AreDisjoint(list[i].lits!, list[j].lits!))
                     {
                         errors.Add($"{page.SourcePath}: transitions `{list[i].t.Id}` and `{list[j].t.Id}` both fire on event `{grp.Key}` with non-disjoint guards. The orchestrator will silently pick the first match. Add a contradicting decision branch on one path, or merge the transitions.");
@@ -384,6 +401,9 @@ public static class Validation
             }
         }
     }
+
+    private static bool HasUndefinedBranch(SdlTransition t) =>
+        t.Path is not null && t.Path.Any(s => s.Branch == "Undefined");
 
     private static HashSet<(string Ident, bool Positive)>? CompileGuardLiterals(
         SdlTransition t,

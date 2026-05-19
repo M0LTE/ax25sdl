@@ -77,6 +77,10 @@ public sealed class SdlTransition
 {
     public string Id { get; set; } = "";
     public string On { get; set; } = "";
+    /// <summary>Verbatim trigger-box NodeLabel text from the source graphml.
+    /// Optional — older yamls predating the on_label field leave it null.</summary>
+    [YamlMember(Alias = "on_label", ApplyNamingConventions = false)]
+    public string? OnLabel { get; set; }
     public List<SdlPathStep> Path { get; set; } = new();
     public string Next { get; set; } = "";
     public string? Notes { get; set; }

@@ -21,7 +21,19 @@ public sealed record TransitionSpec(
     string Next,
     string? Notes,
     IReadOnlyList<ImplementationReference> References,
-    IReadOnlyList<LoopRange> Loops);
+    IReadOnlyList<LoopRange> Loops,
+    IReadOnlyList<UndefinedSpecBranch>? UndefinedBranches = null,
+    string? OnLabel = null);
+
+/// <summary>
+/// One decision in this transition's path whose outgoing edge was labelled
+/// <c>undefined</c> in the source SDL — the spec authors deliberately didn't
+/// say what happens on that branch. The orchestrator must throw with details
+/// from these entries rather than execute <see cref="TransitionSpec.Actions"/>
+/// when dispatching a transition whose <see cref="TransitionSpec.UndefinedBranches"/>
+/// is non-empty.
+/// </summary>
+public sealed record UndefinedSpecBranch(string DecisionId, string Question, string Predicate);
 
 /// <summary>
 /// One cross-reference citation for a transition — either a pointer into
