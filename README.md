@@ -2,7 +2,7 @@
 
 **Canonical AX.25 v2.2 SDL transcriptions, plus a codegen pipeline that turns them into ready-to-consume libraries in seven languages.** The point of this repo is to encode the figc4.x state-machine figures from the AX.25 v2.2 specification *once*, with discipline, and emit that single source of truth as native idiomatic code for C#, Go, TypeScript, JSON, Rust, C, and Python. Downstream runtimes walk the generated tables — they don't have an opinion of their own about what AX.25 says.
 
-> **Status:** prove-out repo. Whether [`packethacking/ax25spec`](https://github.com/packethacking) becomes the canonical community home for these transcriptions is still being decided with the original AX.25 authors. Until then, downstream consumers pull from here.
+> **Status:** prove-out repo. Whether [`packethacking/ax25spec`](https://github.com/packethacking) becomes the canonical community home for these transcriptions is still to be decided among the group.
 
 ## Inputs
 
