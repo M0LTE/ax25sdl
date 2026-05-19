@@ -32,7 +32,8 @@ public static class Program
                     var page = SubroutinesWalker.Walk(graph, input);
                     page.SourceGraphmlPath = input;
                     yaml = YamlEmitter.EmitSubroutines(page);
-                    summary = $"{page.Subroutines.Count} subroutines, {page.Decisions.Count} decisions";
+                    var totalDecisions = page.Subroutines.Sum(s => s.Decisions.Count);
+                    summary = $"{page.Subroutines.Count} subroutines, {totalDecisions} decisions";
                 }
                 else
                 {

@@ -20,7 +20,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("DL_DISCONNECT_request");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
+    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -31,7 +31,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("DL_UNIT_DATA_request");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_command");
+    expect(t.actions[0].verb).toBe("UI Command");
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
@@ -48,13 +48,13 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Establish_Data_Link");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("set_layer_3_initiated");
+    expect(t.actions[3].verb).toBe("Set Layer 3 Initiated");
     expect(t.actions[3].kind).toBe("processing");
   });
 
-  it("t04_all_other_primitives_from_lower_layer", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t04_all_other_primitives_from_lower_layer");
-    expect(t, "transition t04_all_other_primitives_from_lower_layer not found").toBeDefined();
+  it("t04_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t04_all_other_primitives__from_lower_layer");
+    expect(t, "transition t04_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_lower_layer");
     expect(t.next).toBe("Disconnected");
@@ -74,14 +74,14 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t06_all_other_primitives_from_upper_layer", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t06_all_other_primitives_from_upper_layer");
-    expect(t, "transition t06_all_other_primitives_from_upper_layer not found").toBeDefined();
+  it("t06_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t06_all_other_primitives__from_upper_layer");
+    expect(t, "transition t06_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("discard_primitive");
+    expect(t.actions[0].verb).toBe("Discard Primitive");
     expect(t.actions[0].kind).toBe("processing");
   });
 
@@ -92,7 +92,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("control_field_error");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_L");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (L)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -103,7 +103,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("info_not_permitted_in_frame");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_M");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -114,7 +114,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("u_or_s_frame_length_error");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_N");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (N)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -125,19 +125,31 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_C_D");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (C,D)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t11_ui_received_p_eq_1", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t11_ui_received_p_eq_1");
-    expect(t, "transition t11_ui_received_p_eq_1 not found").toBeDefined();
+  it("t11_ui_received_no", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t11_ui_received_no");
+    expect(t, "transition t11_ui_received_no not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("UI_received");
+    expect(t.next).toBe("Disconnected");
+    expect(t.guard).toBe("not P_eq_1");
+    expect(t.actions).toHaveLength(1);
+    expect(t.actions[0].verb).toBe("UI Check");
+    expect(t.actions[0].kind).toBe("subroutine");
+  });
+
+  it("t11_ui_received_yes", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t11_ui_received_yes");
+    expect(t, "transition t11_ui_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("P_eq_1");
     expect(t.actions).toHaveLength(3);
-    expect(t.actions[0].verb).toBe("UI_Check");
+    expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
     expect(t.actions[1].verb).toBe("F := 1");
     expect(t.actions[1].kind).toBe("processing");
@@ -145,21 +157,9 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[2].kind).toBe("signal_lower");
   });
 
-  it("t12_ui_received_p_eq_0", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t12_ui_received_p_eq_0");
-    expect(t, "transition t12_ui_received_p_eq_0 not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("UI_received");
-    expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("not P_eq_1");
-    expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_Check");
-    expect(t.actions[0].kind).toBe("subroutine");
-  });
-
-  it("t13_disc_received", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t13_disc_received");
-    expect(t, "transition t13_disc_received not found").toBeDefined();
+  it("t12_disc_received", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t12_disc_received");
+    expect(t, "transition t12_disc_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DISC_received");
     expect(t.next).toBe("Disconnected");
@@ -170,9 +170,23 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t14_sabm_received_able", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t14_sabm_received_able");
-    expect(t, "transition t14_sabm_received_able not found").toBeDefined();
+  it("t13_sabm_received_no", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t13_sabm_received_no");
+    expect(t, "transition t13_sabm_received_no not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("SABM_received");
+    expect(t.next).toBe("Disconnected");
+    expect(t.guard).toBe("not able_to_establish");
+    expect(t.actions).toHaveLength(2);
+    expect(t.actions[0].verb).toBe("F := P");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("DM");
+    expect(t.actions[1].kind).toBe("signal_lower");
+  });
+
+  it("t13_sabm_received_yes", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t13_sabm_received_yes");
+    expect(t, "transition t13_sabm_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("Connected");
@@ -184,7 +198,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("UA");
     expect(t.actions[2].kind).toBe("signal_lower");
-    expect(t.actions[3].verb).toBe("Clear_Exception_Conditions");
+    expect(t.actions[3].verb).toBe("Clear Exception Conditions");
     expect(t.actions[3].kind).toBe("subroutine");
     expect(t.actions[4].verb).toBe("V(s) := 0");
     expect(t.actions[4].kind).toBe("processing");
@@ -192,23 +206,23 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("V(r) := 0");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("DL_CONNECT_indication");
+    expect(t.actions[7].verb).toBe("DL Connect Indication");
     expect(t.actions[7].kind).toBe("signal_upper");
     expect(t.actions[8].verb).toBe("SRT := Initial Default");
     expect(t.actions[8].kind).toBe("processing");
     expect(t.actions[9].verb).toBe("T1V := 2 * SRT");
     expect(t.actions[9].kind).toBe("processing");
-    expect(t.actions[10].verb).toBe("start_T3");
+    expect(t.actions[10].verb).toBe("Start T3");
     expect(t.actions[10].kind).toBe("processing");
     expect(t.actions[11].verb).toBe("RC := 0");
     expect(t.actions[11].kind).toBe("processing");
   });
 
-  it("t15_sabm_received_unable", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t15_sabm_received_unable");
-    expect(t, "transition t15_sabm_received_unable not found").toBeDefined();
+  it("t14_sabme_received_no", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t14_sabme_received_no");
+    expect(t, "transition t14_sabme_received_no not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("SABM_received");
+    expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("not able_to_establish");
     expect(t.actions).toHaveLength(2);
@@ -218,9 +232,9 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t16_sabme_received_able", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t16_sabme_received_able");
-    expect(t, "transition t16_sabme_received_able not found").toBeDefined();
+  it("t14_sabme_received_yes", () => {
+    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t14_sabme_received_yes");
+    expect(t, "transition t14_sabme_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Connected");
@@ -228,11 +242,11 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("set_version_2_2");
+    expect(t.actions[1].verb).toBe("Set Version 2.2");
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("UA");
     expect(t.actions[2].kind).toBe("signal_lower");
-    expect(t.actions[3].verb).toBe("Clear_Exception_Conditions");
+    expect(t.actions[3].verb).toBe("Clear Exception Conditions");
     expect(t.actions[3].kind).toBe("subroutine");
     expect(t.actions[4].verb).toBe("V(s) := 0");
     expect(t.actions[4].kind).toBe("processing");
@@ -240,30 +254,16 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("V(r) := 0");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("DL_CONNECT_indication");
+    expect(t.actions[7].verb).toBe("DL Connect Indication");
     expect(t.actions[7].kind).toBe("signal_upper");
     expect(t.actions[8].verb).toBe("SRT := Initial Default");
     expect(t.actions[8].kind).toBe("processing");
     expect(t.actions[9].verb).toBe("T1V := 2 * SRT");
     expect(t.actions[9].kind).toBe("processing");
-    expect(t.actions[10].verb).toBe("start_T3");
+    expect(t.actions[10].verb).toBe("Start T3");
     expect(t.actions[10].kind).toBe("processing");
     expect(t.actions[11].verb).toBe("RC := 0");
     expect(t.actions[11].kind).toBe("processing");
-  });
-
-  it("t17_sabme_received_unable", () => {
-    const t = DataLinkDisconnected.transitions.find((x) => x.id === "t17_sabme_received_unable");
-    expect(t, "transition t17_sabme_received_unable not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("SABME_received");
-    expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("not able_to_establish");
-    expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("F := P");
-    expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("DM");
-    expect(t.actions[1].kind).toBe("signal_lower");
   });
 
 });

@@ -3,9 +3,12 @@
 
 machine: data_link
 state: AwaitingRelease
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.3
 
 decisions:
-  - id: timer_t1_expiry_rc_eq_n2
+  - id: t1_expiry_rc_eq_n2
     question: "RC == N2?"
     predicate: RC_eq_N2
   - id: ua_f_eq_1
@@ -29,18 +32,18 @@ transitions:
       - { action: Expedited DM, kind: signal_lower }
     next: AwaitingRelease
 
-  - id: t02_timer_t1_expiry_yes
-    on: timer_t1_expiry
+  - id: t02_t1_expiry_yes
+    on: T1_expiry
     path:
-      - { decision: timer_t1_expiry_rc_eq_n2, branch: Yes }
+      - { decision: t1_expiry_rc_eq_n2, branch: Yes }
       - { action: DL-ERROR Indication (G), kind: signal_upper }
       - { action: DL-DISCONNECT Indication, kind: signal_upper }
     next: Disconnected
 
-  - id: t02_timer_t1_expiry_no
-    on: timer_t1_expiry
+  - id: t02_t1_expiry_no
+    on: T1_expiry
     path:
-      - { decision: timer_t1_expiry_rc_eq_n2, branch: No }
+      - { decision: t1_expiry_rc_eq_n2, branch: No }
       - { action: "RC := RC + 1", kind: processing }
       - { action: DISC (P = 1), kind: signal_lower }
       - { action: Select T1 Value, kind: subroutine }

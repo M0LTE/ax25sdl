@@ -45,16 +45,16 @@ func TestDataLinkAwaitingRelease_t01_dl_disconnect_request(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t02_t1_expiry_rc_eq_n2(t *testing.T) {
+func TestDataLinkAwaitingRelease_t02_t1_expiry_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t02_t1_expiry_rc_eq_n2" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t02_t1_expiry_yes" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t02_t1_expiry_rc_eq_n2 not found")
+		t.Fatalf("transition t02_t1_expiry_yes not found")
 	}
 	if tx.On != "T1_expiry" {
 		t.Errorf("On = %q, want T1_expiry", tx.On)
@@ -68,30 +68,30 @@ func TestDataLinkAwaitingRelease_t02_t1_expiry_rc_eq_n2(t *testing.T) {
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_G" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_G")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (G)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (G)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "DL_DISCONNECT_indication" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DL_DISCONNECT_indication")
+	if tx.Actions[1].Verb != "DL-DISCONNECT Indication" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DL-DISCONNECT Indication")
 	}
 	if tx.Actions[1].Kind != SignalUpper {
 		t.Errorf("Actions[1].Kind = %v, want SignalUpper", tx.Actions[1].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t03_t1_expiry_rc_neq_n2(t *testing.T) {
+func TestDataLinkAwaitingRelease_t02_t1_expiry_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t03_t1_expiry_rc_neq_n2" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t02_t1_expiry_no" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t03_t1_expiry_rc_neq_n2 not found")
+		t.Fatalf("transition t02_t1_expiry_no not found")
 	}
 	if tx.On != "T1_expiry" {
 		t.Errorf("On = %q, want T1_expiry", tx.On)
@@ -123,24 +123,24 @@ func TestDataLinkAwaitingRelease_t03_t1_expiry_rc_neq_n2(t *testing.T) {
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "start_T1" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "start_T1")
+	if tx.Actions[3].Verb != "Start T1" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Start T1")
 	}
 	if tx.Actions[3].Kind != Processing {
 		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t04_ua_received_f_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t03_ua_received_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t04_ua_received_f_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t03_ua_received_yes" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t04_ua_received_f_eq_1 not found")
+		t.Fatalf("transition t03_ua_received_yes not found")
 	}
 	if tx.On != "UA_received" {
 		t.Errorf("On = %q, want UA_received", tx.On)
@@ -154,30 +154,30 @@ func TestDataLinkAwaitingRelease_t04_ua_received_f_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
 	}
-	if tx.Actions[0].Verb != "DL_DISCONNECT_confirm" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_DISCONNECT_confirm")
+	if tx.Actions[0].Verb != "DL-DISCONNECT Confirm" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-DISCONNECT Confirm")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "stop_T1" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "stop_T1")
+	if tx.Actions[1].Verb != "Stop T1" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "Stop T1")
 	}
 	if tx.Actions[1].Kind != Processing {
 		t.Errorf("Actions[1].Kind = %v, want Processing", tx.Actions[1].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t05_ua_received_not_f_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t03_ua_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t05_ua_received_not_f_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t03_ua_received_no" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t05_ua_received_not_f_eq_1 not found")
+		t.Fatalf("transition t03_ua_received_no not found")
 	}
 	if tx.On != "UA_received" {
 		t.Errorf("On = %q, want UA_received", tx.On)
@@ -191,24 +191,24 @@ func TestDataLinkAwaitingRelease_t05_ua_received_not_f_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_D" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_D")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (D)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (D)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t06_all_other_primitives_from_upper_layer(t *testing.T) {
+func TestDataLinkAwaitingRelease_t04_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t06_all_other_primitives_from_upper_layer" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t04_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives_from_upper_layer not found")
+		t.Fatalf("transition t04_all_other_primitives__from_upper_layer not found")
 	}
 	if tx.On != "all_other_primitives__from_upper_layer" {
 		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
@@ -221,16 +221,16 @@ func TestDataLinkAwaitingRelease_t06_all_other_primitives_from_upper_layer(t *te
 	}
 }
 
-func TestDataLinkAwaitingRelease_t07_dl_unit_data_request(t *testing.T) {
+func TestDataLinkAwaitingRelease_t05_dl_unit_data_request(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t07_dl_unit_data_request" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t05_dl_unit_data_request" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t07_dl_unit_data_request not found")
+		t.Fatalf("transition t05_dl_unit_data_request not found")
 	}
 	if tx.On != "DL_UNIT_DATA_request" {
 		t.Errorf("On = %q, want DL_UNIT_DATA_request", tx.On)
@@ -241,24 +241,24 @@ func TestDataLinkAwaitingRelease_t07_dl_unit_data_request(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "UI_command" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_command")
+	if tx.Actions[0].Verb != "UI Command" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Command")
 	}
 	if tx.Actions[0].Kind != SignalLower {
 		t.Errorf("Actions[0].Kind = %v, want SignalLower", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t08_all_other_primitives_from_lower_layer(t *testing.T) {
+func TestDataLinkAwaitingRelease_t06_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t08_all_other_primitives_from_lower_layer" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t06_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t08_all_other_primitives_from_lower_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_lower_layer not found")
 	}
 	if tx.On != "all_other_primitives__from_lower_layer" {
 		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
@@ -271,16 +271,16 @@ func TestDataLinkAwaitingRelease_t08_all_other_primitives_from_lower_layer(t *te
 	}
 }
 
-func TestDataLinkAwaitingRelease_t09_control_field_error(t *testing.T) {
+func TestDataLinkAwaitingRelease_t07_control_field_error(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t09_control_field_error" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t07_control_field_error" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t09_control_field_error not found")
+		t.Fatalf("transition t07_control_field_error not found")
 	}
 	if tx.On != "control_field_error" {
 		t.Errorf("On = %q, want control_field_error", tx.On)
@@ -291,24 +291,24 @@ func TestDataLinkAwaitingRelease_t09_control_field_error(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_L" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_L")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (L)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (L)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t10_info_not_permitted_in_frame(t *testing.T) {
+func TestDataLinkAwaitingRelease_t08_info_not_permitted_in_frame(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t10_info_not_permitted_in_frame" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t08_info_not_permitted_in_frame" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t10_info_not_permitted_in_frame not found")
+		t.Fatalf("transition t08_info_not_permitted_in_frame not found")
 	}
 	if tx.On != "info_not_permitted_in_frame" {
 		t.Errorf("On = %q, want info_not_permitted_in_frame", tx.On)
@@ -319,24 +319,24 @@ func TestDataLinkAwaitingRelease_t10_info_not_permitted_in_frame(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_M" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_M")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (M)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (M)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t11_u_or_s_frame_length_error(t *testing.T) {
+func TestDataLinkAwaitingRelease_t09_u_or_s_frame_length_error(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t11_u_or_s_frame_length_error" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t09_u_or_s_frame_length_error" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t11_u_or_s_frame_length_error not found")
+		t.Fatalf("transition t09_u_or_s_frame_length_error not found")
 	}
 	if tx.On != "u_or_s_frame_length_error" {
 		t.Errorf("On = %q, want u_or_s_frame_length_error", tx.On)
@@ -347,24 +347,24 @@ func TestDataLinkAwaitingRelease_t11_u_or_s_frame_length_error(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_N" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_N")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (N)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (N)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t12_sabm_received(t *testing.T) {
+func TestDataLinkAwaitingRelease_t10_sabm_received(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t12_sabm_received" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t10_sabm_received" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t12_sabm_received not found")
+		t.Fatalf("transition t10_sabm_received not found")
 	}
 	if tx.On != "SABM_received" {
 		t.Errorf("On = %q, want SABM_received", tx.On)
@@ -389,16 +389,16 @@ func TestDataLinkAwaitingRelease_t12_sabm_received(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t13_sabme_received(t *testing.T) {
+func TestDataLinkAwaitingRelease_t11_sabme_received(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t13_sabme_received" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t11_sabme_received" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t13_sabme_received not found")
+		t.Fatalf("transition t11_sabme_received not found")
 	}
 	if tx.On != "SABME_received" {
 		t.Errorf("On = %q, want SABME_received", tx.On)
@@ -423,16 +423,16 @@ func TestDataLinkAwaitingRelease_t13_sabme_received(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t14_disc_received(t *testing.T) {
+func TestDataLinkAwaitingRelease_t12_disc_received(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t14_disc_received" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t12_disc_received" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t14_disc_received not found")
+		t.Fatalf("transition t12_disc_received not found")
 	}
 	if tx.On != "DISC_received" {
 		t.Errorf("On = %q, want DISC_received", tx.On)
@@ -457,16 +457,16 @@ func TestDataLinkAwaitingRelease_t14_disc_received(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t15_dm_received_f_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t13_dm_received_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t15_dm_received_f_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t13_dm_received_yes" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t15_dm_received_f_eq_1 not found")
+		t.Fatalf("transition t13_dm_received_yes not found")
 	}
 	if tx.On != "DM_received" {
 		t.Errorf("On = %q, want DM_received", tx.On)
@@ -480,30 +480,30 @@ func TestDataLinkAwaitingRelease_t15_dm_received_f_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
 	}
-	if tx.Actions[0].Verb != "DL_DISCONNECT_confirm" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_DISCONNECT_confirm")
+	if tx.Actions[0].Verb != "DL-DISCONNECT Confirm" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-DISCONNECT Confirm")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "stop_T1" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "stop_T1")
+	if tx.Actions[1].Verb != "Stop T1" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "Stop T1")
 	}
 	if tx.Actions[1].Kind != Processing {
 		t.Errorf("Actions[1].Kind = %v, want Processing", tx.Actions[1].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t16_dm_received_not_f_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t13_dm_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t16_dm_received_not_f_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t13_dm_received_no" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t16_dm_received_not_f_eq_1 not found")
+		t.Fatalf("transition t13_dm_received_no not found")
 	}
 	if tx.On != "DM_received" {
 		t.Errorf("On = %q, want DM_received", tx.On)
@@ -519,16 +519,16 @@ func TestDataLinkAwaitingRelease_t16_dm_received_not_f_eq_1(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t17_ui_received_p_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t14_ui_received_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t17_ui_received_p_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t14_ui_received_yes" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t17_ui_received_p_eq_1 not found")
+		t.Fatalf("transition t14_ui_received_yes not found")
 	}
 	if tx.On != "UI_received" {
 		t.Errorf("On = %q, want UI_received", tx.On)
@@ -542,8 +542,8 @@ func TestDataLinkAwaitingRelease_t17_ui_received_p_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
 	}
-	if tx.Actions[0].Verb != "UI_Check" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_Check")
+	if tx.Actions[0].Verb != "UI Check" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Check")
 	}
 	if tx.Actions[0].Kind != Subroutine {
 		t.Errorf("Actions[0].Kind = %v, want Subroutine", tx.Actions[0].Kind)
@@ -556,16 +556,16 @@ func TestDataLinkAwaitingRelease_t17_ui_received_p_eq_1(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t18_ui_received_not_p_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t14_ui_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t18_ui_received_not_p_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t14_ui_received_no" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t18_ui_received_not_p_eq_1 not found")
+		t.Fatalf("transition t14_ui_received_no not found")
 	}
 	if tx.On != "UI_received" {
 		t.Errorf("On = %q, want UI_received", tx.On)
@@ -579,24 +579,24 @@ func TestDataLinkAwaitingRelease_t18_ui_received_not_p_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "UI_Check" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_Check")
+	if tx.Actions[0].Verb != "UI Check" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Check")
 	}
 	if tx.Actions[0].Kind != Subroutine {
 		t.Errorf("Actions[0].Kind = %v, want Subroutine", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkAwaitingRelease_t19_i_or_s_command_p_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t15_i_or_s_command_received_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t19_i_or_s_command_p_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t15_i_or_s_command_received_yes" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t19_i_or_s_command_p_eq_1 not found")
+		t.Fatalf("transition t15_i_or_s_command_received_yes not found")
 	}
 	if tx.On != "i_or_s_command_received" {
 		t.Errorf("On = %q, want i_or_s_command_received", tx.On)
@@ -618,16 +618,16 @@ func TestDataLinkAwaitingRelease_t19_i_or_s_command_p_eq_1(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t20_i_or_s_command_not_p_eq_1(t *testing.T) {
+func TestDataLinkAwaitingRelease_t15_i_or_s_command_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t20_i_or_s_command_not_p_eq_1" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t15_i_or_s_command_received_no" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t20_i_or_s_command_not_p_eq_1 not found")
+		t.Fatalf("transition t15_i_or_s_command_received_no not found")
 	}
 	if tx.On != "i_or_s_command_received" {
 		t.Errorf("On = %q, want i_or_s_command_received", tx.On)

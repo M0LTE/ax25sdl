@@ -3,6 +3,9 @@
 
 machine: data_link
 state: AwaitingConnection
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.2
 
 decisions:
   - id: dm_f_eq_1
@@ -17,7 +20,7 @@ decisions:
   - id: ua_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
-  - id: timer_t1_expiry_rc_eq_n2
+  - id: t1_expiry_rc_eq_n2
     question: "RC == N2?"
     predicate: RC_eq_N2
   - id: dl_data_layer_3_initiated
@@ -112,19 +115,19 @@ transitions:
       - { action: Select T1 Value, kind: subroutine }
     next: Connected
 
-  - id: t05_timer_t1_expiry_yes
-    on: timer_t1_expiry
+  - id: t05_t1_expiry_yes
+    on: T1_expiry
     path:
-      - { decision: timer_t1_expiry_rc_eq_n2, branch: Yes }
+      - { decision: t1_expiry_rc_eq_n2, branch: Yes }
       - { action: Discard Frame Queue, kind: processing }
       - { action: DL-ERROR Indication (G), kind: signal_upper }
       - { action: DL-DISCONNECT Indication, kind: signal_upper }
     next: Disconnected
 
-  - id: t05_timer_t1_expiry_no
-    on: timer_t1_expiry
+  - id: t05_t1_expiry_no
+    on: T1_expiry
     path:
-      - { decision: timer_t1_expiry_rc_eq_n2, branch: No }
+      - { decision: t1_expiry_rc_eq_n2, branch: No }
       - { action: "RC := RC + 1", kind: processing }
       - { action: SABM (P == 1), kind: signal_lower }
       - { action: Select T1 Value, kind: subroutine }
@@ -149,30 +152,30 @@ transitions:
       - { action: UI Command, kind: signal_lower }
     next: AwaitingConnection
 
-  - id: t09_dl_data_request_yes (note: assumed; missing from spec)
+  - id: t09_dl_data_request_yes
     on: DL_DATA_request
     path:
-      - { decision: dl_data_layer_3_initiated, branch: "Yes (Note: assumed; missing from spec)" }
+      - { decision: dl_data_layer_3_initiated, branch: Yes }
       - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
-  - id: t09_dl_data_request_no (note: assumed; missing from spec)
+  - id: t09_dl_data_request_no
     on: DL_DATA_request
     path:
-      - { decision: dl_data_layer_3_initiated, branch: "No (Note: assumed; missing from spec)" }
+      - { decision: dl_data_layer_3_initiated, branch: No }
     next: AwaitingConnection
 
-  - id: t10_i_frame_pops_off_queue_yes (note: assumed; missing from spec)
-    on: i_frame_pops_off_queue
+  - id: t10_i_frame_pops_off_queue_yes
+    on: I_frame_pops_off_queue
     path:
-      - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: "Yes (Note: assumed; missing from spec)" }
+      - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: Yes }
       - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
-  - id: t10_i_frame_pops_off_queue_no (note: assumed; missing from spec)
-    on: i_frame_pops_off_queue
+  - id: t10_i_frame_pops_off_queue_no
+    on: I_frame_pops_off_queue
     path:
-      - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: "No (Note: assumed; missing from spec)" }
+      - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: No }
     next: AwaitingConnection
 
   - id: t11_all_other_primitives__from_lower_layer
@@ -225,4 +228,4 @@ transitions:
     path:
       - { action: "F := P", kind: processing }
       - { action: DM, kind: signal_lower }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection

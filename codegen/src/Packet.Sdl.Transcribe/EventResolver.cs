@@ -38,40 +38,78 @@ public static class EventResolver
         // Composite "I, RR, RNR, REJ or SREJ Commands" — figc4.3.
         [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from Lower Layer")] = "i_or_s_command_received",
         [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from upper layer")] = "i_or_s_command_received",
+
+        // Internal events with specific spelling per events.yaml — only
+        // I_frame_pops_off_queue preserves a capital because it's an
+        // I-frame name; the others are fully lowercase.
+        [("I Frame Pops Off Queue", "Signal reception from Lower Layer")] = "I_frame_pops_off_queue",
+        [("I Frame Pops Off Queue", "Signal reception from upper layer")] = "I_frame_pops_off_queue",
     };
 
     public static string ResolveTriggerEvent(string label, string shapeClass)
     {
-        if (ExplicitMap.TryGetValue((label, shapeClass), out var explicitName))
+        var trimmed = label.Trim();
+        if (ExplicitMap.TryGetValue((trimmed, shapeClass), out var explicitName))
             return explicitName;
 
         // "All Other Commands"
-        if (label == "All Other Commands") return "all_other_commands";
+        if (trimmed.Equals("All Other Commands", StringComparison.OrdinalIgnoreCase))
+            return "all_other_commands";
 
-        // "DL-X Y" → "DL_X_y" (request/confirm/indication lowercased)
-        if (label.StartsWith("DL-", StringComparison.Ordinal))
-            return NormaliseDlPrimitive(label);
+        // "Timer T1 Expiry" / "Timer T2 Expiry" / "Timer T3 Expiry" → "T1_expiry" etc.
+        var timerMatch = System.Text.RegularExpressions.Regex.Match(
+            trimmed, "^Timer (T[0-9])+ Expiry$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (timerMatch.Success)
+            return timerMatch.Groups[1].Value + "_expiry";
+
+        // "DL-X Y" → "DL_X_y" / "MDL-X Y" → "MDL_X_y" / "LM-X Y" → "LM_X_y"
+        // (request/confirm/indicate lowercased)
+        if (trimmed.StartsWith("DL-", StringComparison.OrdinalIgnoreCase)
+         || trimmed.StartsWith("MDL-", StringComparison.OrdinalIgnoreCase)
+         || trimmed.StartsWith("LM-", StringComparison.OrdinalIgnoreCase))
+            return NormaliseDashPrefixedPrimitive(trimmed);
 
         // Bare frame name → "<NAME>_received"
-        if (FrameNames.Contains(label.Trim()))
-            return label.Trim() + "_received";
+        if (FrameNames.Contains(trimmed))
+            return trimmed + "_received";
 
         // "Control Field Error" / "Info Not Permitted In Frame" / "U or S
-        // Frame Length Error" — multi-word title-case → snake_case lowercase.
-        // These all live under events.yaml § internal.
-        return ToSnakeCase(label);
+        // Frame Length Error" — title-case → fully snake_case lowercase to
+        // match events.yaml § internal entries. (I_frame_pops_off_queue is
+        // the lone exception, handled via ExplicitMap above.)
+        return string.Join('_', trimmed.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                       .Select(s => s.ToLowerInvariant()));
     }
 
-    private static string NormaliseDlPrimitive(string label)
+    private static string NormaliseDashPrefixedPrimitive(string label)
     {
         // "DL-DISCONNECT Request" → "DL_DISCONNECT_request"
         // "DL-UNIT-DATA Request" → "DL_UNIT_DATA_request"
         // "DL-ERROR Indication (L)" → "DL_ERROR_indication"  (drop parenthetical)
+        // "LM-SEIZE Confirm" → "LM_SEIZE_confirm"
+        // "MDL-NEGOTIATE Request" → "MDL_NEGOTIATE_request"
         var stripped = StripTrailingParenthetical(label);
         var parts = stripped.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        // First part keeps its case (DL/MDL/LM + verb, replace dashes with underscores).
         var head = parts[0].Replace('-', '_');
+        // Trailing words lowercase (the action: Request/Confirm/Indication/Indicate).
         var tail = string.Join('_', parts.Skip(1).Select(p => p.ToLowerInvariant()));
         return string.IsNullOrEmpty(tail) ? head : $"{head}_{tail}";
+    }
+
+    private static string ToSnakeCasePreservingSpecVars(string label)
+    {
+        var parts = label.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Join('_', parts.Select(PreserveOrLower));
+    }
+
+    private static string PreserveOrLower(string token)
+    {
+        // Keep single-letter or all-caps tokens as-is (I, U, S, F, V — spec
+        // variable names). Lowercase everything else.
+        return System.Text.RegularExpressions.Regex.IsMatch(token, "^[A-Z]+[0-9]*$")
+            ? token
+            : token.ToLowerInvariant();
     }
 
     private static string StripTrailingParenthetical(string s)
@@ -80,13 +118,6 @@ public static class EventResolver
         return openParen < 0 ? s.Trim() : s[..openParen].Trim();
     }
 
-    private static string ToSnakeCase(string label)
-    {
-        // "Control Field Error" → "control_field_error"
-        // "U or S Frame Length Error" → "u_or_s_frame_length_error"
-        return string.Join('_', label.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                     .Select(s => s.ToLowerInvariant()));
-    }
 
     /// <summary>
     /// Maps a d5 shape class to the canonical "kind" enum value in the

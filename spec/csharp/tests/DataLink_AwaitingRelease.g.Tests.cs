@@ -26,22 +26,22 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t02_t1_expiry_rc_eq_n2()
+    [Fact] public void t02_t1_expiry_yes()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t02_t1_expiry_rc_eq_n2");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t02_t1_expiry_yes");
         t.On.Should().Be("T1_expiry");
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_G");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (G)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be("DL-DISCONNECT Indication");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t03_t1_expiry_rc_neq_n2()
+    [Fact] public void t02_t1_expiry_no()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t03_t1_expiry_rc_neq_n2");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t02_t1_expiry_no");
         t.On.Should().Be("T1_expiry");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not RC_eq_N2");
@@ -52,93 +52,93 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
         t.Actions[2].Verb.Should().Be("Select_T1_Value");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("start_T1");
+        t.Actions[3].Verb.Should().Be("Start T1");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t04_ua_received_f_eq_1()
+    [Fact] public void t03_ua_received_yes()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t04_ua_received_f_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t03_ua_received_yes");
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("F_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
+        t.Actions[0].Verb.Should().Be("DL-DISCONNECT Confirm");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("stop_T1");
+        t.Actions[1].Verb.Should().Be("Stop T1");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t05_ua_received_not_f_eq_1()
+    [Fact] public void t03_ua_received_no()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t05_ua_received_not_f_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t03_ua_received_no");
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not F_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_D");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (D)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t06_all_other_primitives_from_upper_layer()
+    [Fact] public void t04_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t06_all_other_primitives_from_upper_layer");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_upper_layer");
         t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t07_dl_unit_data_request()
+    [Fact] public void t05_dl_unit_data_request()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t07_dl_unit_data_request");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t05_dl_unit_data_request");
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_command");
+        t.Actions[0].Verb.Should().Be("UI Command");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t08_all_other_primitives_from_lower_layer()
+    [Fact] public void t06_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t08_all_other_primitives_from_lower_layer");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_lower_layer");
         t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t09_control_field_error()
+    [Fact] public void t07_control_field_error()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t09_control_field_error");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t07_control_field_error");
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_L");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t10_info_not_permitted_in_frame()
+    [Fact] public void t08_info_not_permitted_in_frame()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t10_info_not_permitted_in_frame");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t08_info_not_permitted_in_frame");
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_M");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t11_u_or_s_frame_length_error()
+    [Fact] public void t09_u_or_s_frame_length_error()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t11_u_or_s_frame_length_error");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t09_u_or_s_frame_length_error");
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_N");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t12_sabm_received()
+    [Fact] public void t10_sabm_received()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t12_sabm_received");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t10_sabm_received");
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
@@ -148,9 +148,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t13_sabme_received()
+    [Fact] public void t11_sabme_received()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t13_sabme_received");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t11_sabme_received");
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
@@ -160,9 +160,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t14_disc_received()
+    [Fact] public void t12_disc_received()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t14_disc_received");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t12_disc_received");
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
@@ -172,55 +172,55 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t15_dm_received_f_eq_1()
+    [Fact] public void t13_dm_received_yes()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t15_dm_received_f_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t13_dm_received_yes");
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("F_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
+        t.Actions[0].Verb.Should().Be("DL-DISCONNECT Confirm");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("stop_T1");
+        t.Actions[1].Verb.Should().Be("Stop T1");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t16_dm_received_not_f_eq_1()
+    [Fact] public void t13_dm_received_no()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t16_dm_received_not_f_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t13_dm_received_no");
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not F_eq_1");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t17_ui_received_p_eq_1()
+    [Fact] public void t14_ui_received_yes()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t17_ui_received_p_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t14_ui_received_yes");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("UI_Check");
+        t.Actions[0].Verb.Should().Be("UI Check");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[1].Verb.Should().Be("DM (F = 1)");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t18_ui_received_not_p_eq_1()
+    [Fact] public void t14_ui_received_no()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t18_ui_received_not_p_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t14_ui_received_no");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not P_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_Check");
+        t.Actions[0].Verb.Should().Be("UI Check");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t19_i_or_s_command_p_eq_1()
+    [Fact] public void t15_i_or_s_command_received_yes()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t19_i_or_s_command_p_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t15_i_or_s_command_received_yes");
         t.On.Should().Be("i_or_s_command_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("P_eq_1");
@@ -229,9 +229,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t20_i_or_s_command_not_p_eq_1()
+    [Fact] public void t15_i_or_s_command_received_no()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t20_i_or_s_command_not_p_eq_1");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t15_i_or_s_command_received_no");
         t.On.Should().Be("i_or_s_command_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not P_eq_1");

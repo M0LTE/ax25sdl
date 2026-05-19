@@ -16,19 +16,29 @@ public static class SubroutinesWalker
     public static SubroutinePage Walk(GraphmlGraph graph, string graphmlFilename)
     {
         var machine = MachineFromFilename(graphmlFilename);
-        var page = new SubroutinePage { Machine = machine };
+        var page = new SubroutinePage
+        {
+            Machine = machine,
+            Source = new PageSource
+            {
+                Spec = "ax.25.2.2.4_Oct_25",
+                Figure = "figc4.7",
+            },
+        };
 
         var subroutineStarts = graph.Nodes
             .Where(n => n.ShapeClass == "Subroutine start")
             .OrderBy(n => n.Y).ThenBy(n => n.X)
             .ToList();
 
-        var decisionsSeen = new Dictionary<string, Decision>();
-
         foreach (var start in subroutineStarts)
         {
             var name = NormaliseSubroutineName(start.Label);
             var sub = new Subroutine { Name = name };
+            // Each subroutine has its own decisions dictionary — per the
+            // sdl-subroutines schema, decisions are nested under the
+            // subroutine, not at page level.
+            var decisionsSeen = new Dictionary<string, Decision>();
             int pathIndex = 0;
             var startEdges = graph.OutgoingByNodeId[start.Id];
             if (startEdges.Count == 0) continue;  // empty subroutine (probably authoring stub)
@@ -53,10 +63,10 @@ public static class SubroutinesWalker
                 continue;
             }
 
+            sub.Decisions.AddRange(decisionsSeen.Values);
             page.Subroutines.Add(sub);
         }
 
-        page.Decisions.AddRange(decisionsSeen.Values);
         return page;
     }
 

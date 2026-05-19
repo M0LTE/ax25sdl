@@ -27,7 +27,7 @@ public class TranscribeTests
         yield return ["DataLink_AwaitingConnection.graphml",   "data_link", "AwaitingConnection",    25, 8];
         yield return ["DataLink_AwaitingV22Connection.graphml","data_link", "AwaitingV22Connection", 25, 8];
         yield return ["DataLink_AwaitingRelease.graphml",      "data_link", "AwaitingRelease",       20, 5];
-        yield return ["DataLink_Connected.graphml",            "data_link", "Connected",             66, 38];
+        yield return ["DataLink_Connected.graphml",            "data_link", "Connected",             66, 37];
     }
 
     [Theory]

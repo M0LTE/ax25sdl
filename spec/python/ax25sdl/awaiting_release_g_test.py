@@ -26,28 +26,28 @@ def test_t01_dl_disconnect_request() -> None:
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t02_t1_expiry_rc_eq_n2() -> None:
+def test_t02_t1_expiry_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t02_t1_expiry_rc_eq_n2"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t02_t1_expiry_yes"),
         None,
     )
-    assert t is not None, "transition t02_t1_expiry_rc_eq_n2 not found"
+    assert t is not None, "transition t02_t1_expiry_yes not found"
     assert t.on == "T1_expiry"
     assert t.next == "Disconnected"
     assert t.guard == "RC_eq_N2"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL_ERROR_indication_G"
+    assert t.actions[0].verb == "DL-ERROR Indication (G)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "DL_DISCONNECT_indication"
+    assert t.actions[1].verb == "DL-DISCONNECT Indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t03_t1_expiry_rc_neq_n2() -> None:
+def test_t02_t1_expiry_no() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t03_t1_expiry_rc_neq_n2"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t02_t1_expiry_no"),
         None,
     )
-    assert t is not None, "transition t03_t1_expiry_rc_neq_n2 not found"
+    assert t is not None, "transition t02_t1_expiry_no not found"
     assert t.on == "T1_expiry"
     assert t.next == "AwaitingRelease"
     assert t.guard == "not RC_eq_N2"
@@ -58,120 +58,120 @@ def test_t03_t1_expiry_rc_neq_n2() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
     assert t.actions[2].verb == "Select_T1_Value"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "start_T1"
+    assert t.actions[3].verb == "Start T1"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t04_ua_received_f_eq_1() -> None:
+def test_t03_ua_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t04_ua_received_f_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t03_ua_received_yes"),
         None,
     )
-    assert t is not None, "transition t04_ua_received_f_eq_1 not found"
+    assert t is not None, "transition t03_ua_received_yes not found"
     assert t.on == "UA_received"
     assert t.next == "Disconnected"
     assert t.guard == "F_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
+    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "stop_T1"
+    assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
 
 
-def test_t05_ua_received_not_f_eq_1() -> None:
+def test_t03_ua_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t05_ua_received_not_f_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t03_ua_received_no"),
         None,
     )
-    assert t is not None, "transition t05_ua_received_not_f_eq_1 not found"
+    assert t is not None, "transition t03_ua_received_no not found"
     assert t.on == "UA_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "not F_eq_1"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_D"
+    assert t.actions[0].verb == "DL-ERROR Indication (D)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t06_all_other_primitives_from_upper_layer() -> None:
+def test_t04_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t06_all_other_primitives_from_upper_layer"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t04_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t06_all_other_primitives_from_upper_layer not found"
+    assert t is not None, "transition t04_all_other_primitives__from_upper_layer not found"
     assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 0
 
 
-def test_t07_dl_unit_data_request() -> None:
+def test_t05_dl_unit_data_request() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t07_dl_unit_data_request"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t05_dl_unit_data_request"),
         None,
     )
-    assert t is not None, "transition t07_dl_unit_data_request not found"
+    assert t is not None, "transition t05_dl_unit_data_request not found"
     assert t.on == "DL_UNIT_DATA_request"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_command"
+    assert t.actions[0].verb == "UI Command"
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t08_all_other_primitives_from_lower_layer() -> None:
+def test_t06_all_other_primitives__from_lower_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t08_all_other_primitives_from_lower_layer"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t06_all_other_primitives__from_lower_layer"),
         None,
     )
-    assert t is not None, "transition t08_all_other_primitives_from_lower_layer not found"
+    assert t is not None, "transition t06_all_other_primitives__from_lower_layer not found"
     assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 0
 
 
-def test_t09_control_field_error() -> None:
+def test_t07_control_field_error() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t09_control_field_error"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t07_control_field_error"),
         None,
     )
-    assert t is not None, "transition t09_control_field_error not found"
+    assert t is not None, "transition t07_control_field_error not found"
     assert t.on == "control_field_error"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_L"
+    assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t10_info_not_permitted_in_frame() -> None:
+def test_t08_info_not_permitted_in_frame() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t10_info_not_permitted_in_frame"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t08_info_not_permitted_in_frame"),
         None,
     )
-    assert t is not None, "transition t10_info_not_permitted_in_frame not found"
+    assert t is not None, "transition t08_info_not_permitted_in_frame not found"
     assert t.on == "info_not_permitted_in_frame"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_M"
+    assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t11_u_or_s_frame_length_error() -> None:
+def test_t09_u_or_s_frame_length_error() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t11_u_or_s_frame_length_error"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t09_u_or_s_frame_length_error"),
         None,
     )
-    assert t is not None, "transition t11_u_or_s_frame_length_error not found"
+    assert t is not None, "transition t09_u_or_s_frame_length_error not found"
     assert t.on == "u_or_s_frame_length_error"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_N"
+    assert t.actions[0].verb == "DL-ERROR Indication (N)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t12_sabm_received() -> None:
+def test_t10_sabm_received() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t12_sabm_received"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t10_sabm_received"),
         None,
     )
-    assert t is not None, "transition t12_sabm_received not found"
+    assert t is not None, "transition t10_sabm_received not found"
     assert t.on == "SABM_received"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 2
@@ -181,12 +181,12 @@ def test_t12_sabm_received() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t13_sabme_received() -> None:
+def test_t11_sabme_received() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t13_sabme_received"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t11_sabme_received"),
         None,
     )
-    assert t is not None, "transition t13_sabme_received not found"
+    assert t is not None, "transition t11_sabme_received not found"
     assert t.on == "SABME_received"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 2
@@ -196,12 +196,12 @@ def test_t13_sabme_received() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t14_disc_received() -> None:
+def test_t12_disc_received() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t14_disc_received"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t12_disc_received"),
         None,
     )
-    assert t is not None, "transition t14_disc_received not found"
+    assert t is not None, "transition t12_disc_received not found"
     assert t.on == "DISC_received"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 2
@@ -211,70 +211,70 @@ def test_t14_disc_received() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t15_dm_received_f_eq_1() -> None:
+def test_t13_dm_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t15_dm_received_f_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t13_dm_received_yes"),
         None,
     )
-    assert t is not None, "transition t15_dm_received_f_eq_1 not found"
+    assert t is not None, "transition t13_dm_received_yes not found"
     assert t.on == "DM_received"
     assert t.next == "Disconnected"
     assert t.guard == "F_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
+    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "stop_T1"
+    assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
 
 
-def test_t16_dm_received_not_f_eq_1() -> None:
+def test_t13_dm_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t16_dm_received_not_f_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t13_dm_received_no"),
         None,
     )
-    assert t is not None, "transition t16_dm_received_not_f_eq_1 not found"
+    assert t is not None, "transition t13_dm_received_no not found"
     assert t.on == "DM_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "not F_eq_1"
     assert len(t.actions) == 0
 
 
-def test_t17_ui_received_p_eq_1() -> None:
+def test_t14_ui_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t17_ui_received_p_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t14_ui_received_yes"),
         None,
     )
-    assert t is not None, "transition t17_ui_received_p_eq_1 not found"
+    assert t is not None, "transition t14_ui_received_yes not found"
     assert t.on == "UI_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "P_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "UI_Check"
+    assert t.actions[0].verb == "UI Check"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "DM (F = 1)"
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t18_ui_received_not_p_eq_1() -> None:
+def test_t14_ui_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t18_ui_received_not_p_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t14_ui_received_no"),
         None,
     )
-    assert t is not None, "transition t18_ui_received_not_p_eq_1 not found"
+    assert t is not None, "transition t14_ui_received_no not found"
     assert t.on == "UI_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "not P_eq_1"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_Check"
+    assert t.actions[0].verb == "UI Check"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
 
 
-def test_t19_i_or_s_command_p_eq_1() -> None:
+def test_t15_i_or_s_command_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t19_i_or_s_command_p_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t15_i_or_s_command_received_yes"),
         None,
     )
-    assert t is not None, "transition t19_i_or_s_command_p_eq_1 not found"
+    assert t is not None, "transition t15_i_or_s_command_received_yes not found"
     assert t.on == "i_or_s_command_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "P_eq_1"
@@ -283,12 +283,12 @@ def test_t19_i_or_s_command_p_eq_1() -> None:
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t20_i_or_s_command_not_p_eq_1() -> None:
+def test_t15_i_or_s_command_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t20_i_or_s_command_not_p_eq_1"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t15_i_or_s_command_received_no"),
         None,
     )
-    assert t is not None, "transition t20_i_or_s_command_not_p_eq_1 not found"
+    assert t is not None, "transition t15_i_or_s_command_received_no not found"
     assert t.on == "i_or_s_command_received"
     assert t.next == "AwaitingRelease"
     assert t.guard == "not P_eq_1"

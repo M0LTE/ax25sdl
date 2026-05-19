@@ -2,172 +2,156 @@
 // DO NOT EDIT. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
 
 import { describe, it, expect } from "vitest";
-import { DataLinkAwaitingConnection22 } from "./awaiting_v22_connection.g.js";
+import { DataLinkAwaitingV22Connection } from "./awaiting_v22_connection.g.js";
 
-describe("DataLinkAwaitingConnection22", () => {
+describe("DataLinkAwaitingV22Connection", () => {
   it("source figure", () => {
-    expect(DataLinkAwaitingConnection22.source.figure).toBe("figc4.6");
+    expect(DataLinkAwaitingV22Connection.source.figure).toBe("figc4.6");
   });
 
   it("transitions are present", () => {
-    expect(DataLinkAwaitingConnection22.transitions).toHaveLength(25);
+    expect(DataLinkAwaitingV22Connection.transitions).toHaveLength(25);
   });
 
-  it("t01_dl_connect_request", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t01_dl_connect_request");
-    expect(t, "transition t01_dl_connect_request not found").toBeDefined();
+  it("t02_dl_connect_request", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t02_dl_connect_request");
+    expect(t, "transition t02_dl_connect_request not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DL_CONNECT_request");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("discard_queue");
+    expect(t.actions[0].verb).toBe("Discard Queue");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("set_layer_3_initiated");
+    expect(t.actions[1].verb).toBe("Set Layer 3 Initiated");
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t02_dl_unit_data_request", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t02_dl_unit_data_request");
-    expect(t, "transition t02_dl_unit_data_request not found").toBeDefined();
+  it("t03_dl_unit_data_request", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t03_dl_unit_data_request");
+    expect(t, "transition t03_dl_unit_data_request not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DL_UNIT_DATA_request");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_command");
+    expect(t.actions[0].verb).toBe("UI Command");
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
-  it("t03_dl_data_request_layer_3_initiated", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t03_dl_data_request_layer_3_initiated");
-    expect(t, "transition t03_dl_data_request_layer_3_initiated not found").toBeDefined();
+  it("t04_dl_data_request_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t04_dl_data_request_yes");
+    expect(t, "transition t04_dl_data_request_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DL_DATA_request");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("layer_3_initiated");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t04_dl_data_request_not_layer_3_initiated", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t04_dl_data_request_not_layer_3_initiated");
-    expect(t, "transition t04_dl_data_request_not_layer_3_initiated not found").toBeDefined();
+  it("t04_dl_data_request_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t04_dl_data_request_no");
+    expect(t, "transition t04_dl_data_request_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DL_DATA_request");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("not layer_3_initiated");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
   });
 
-  it("t05_i_frame_pops_off_queue_layer_3_initiated", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t05_i_frame_pops_off_queue_layer_3_initiated");
-    expect(t, "transition t05_i_frame_pops_off_queue_layer_3_initiated not found").toBeDefined();
+  it("t05_i_frame_pops_off_queue_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t05_i_frame_pops_off_queue_yes");
+    expect(t, "transition t05_i_frame_pops_off_queue_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("layer_3_initiated");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t06_i_frame_pops_off_queue_not_layer_3_initiated", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t06_i_frame_pops_off_queue_not_layer_3_initiated");
-    expect(t, "transition t06_i_frame_pops_off_queue_not_layer_3_initiated not found").toBeDefined();
+  it("t05_i_frame_pops_off_queue_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t05_i_frame_pops_off_queue_no");
+    expect(t, "transition t05_i_frame_pops_off_queue_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("not layer_3_initiated");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
   });
 
-  it("t07_all_other_primitives_from_lower_layer", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t07_all_other_primitives_from_lower_layer");
-    expect(t, "transition t07_all_other_primitives_from_lower_layer not found").toBeDefined();
+  it("t06_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t06_all_other_primitives__from_lower_layer");
+    expect(t, "transition t06_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_lower_layer");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t08_control_field_error", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t08_control_field_error");
-    expect(t, "transition t08_control_field_error not found").toBeDefined();
+  it("t07_control_field_error", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t07_control_field_error");
+    expect(t, "transition t07_control_field_error not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("control_field_error");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_L");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (L)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t09_info_not_permitted_in_frame", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t09_info_not_permitted_in_frame");
-    expect(t, "transition t09_info_not_permitted_in_frame not found").toBeDefined();
+  it("t08_info_field_permitted_in_frame", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t08_info_field_permitted_in_frame");
+    expect(t, "transition t08_info_field_permitted_in_frame not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("info_not_permitted_in_frame");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.on).toBe("info_field_permitted_in_frame");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_M");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t10_u_or_s_frame_length_error", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t10_u_or_s_frame_length_error");
-    expect(t, "transition t10_u_or_s_frame_length_error not found").toBeDefined();
+  it("t09_u_or_s_frame_length_error", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t09_u_or_s_frame_length_error");
+    expect(t, "transition t09_u_or_s_frame_length_error not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("u_or_s_frame_length_error");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_N");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (N)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t11_ui_received_p_eq_1", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t11_ui_received_p_eq_1");
-    expect(t, "transition t11_ui_received_p_eq_1 not found").toBeDefined();
+  it("t10_ui_received_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t10_ui_received_no");
+    expect(t, "transition t10_ui_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UI_received");
-    expect(t.next).toBe("AwaitingConnection22");
-    expect(t.guard).toBe("P_eq_1");
-    expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_Check");
-    expect(t.actions[0].kind).toBe("subroutine");
-  });
-
-  it("t12_ui_received_not_p_eq_1", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t12_ui_received_not_p_eq_1");
-    expect(t, "transition t12_ui_received_not_p_eq_1 not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("UI_received");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("not P_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("UI_Check");
+    expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
     expect(t.actions[1].verb).toBe("DM (F = 1)");
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t13_dm_received_f_eq_1", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t13_dm_received_f_eq_1");
-    expect(t, "transition t13_dm_received_f_eq_1 not found").toBeDefined();
+  it("t10_ui_received_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t10_ui_received_yes");
+    expect(t, "transition t10_ui_received_yes not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("DM_received");
-    expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("F_eq_1");
-    expect(t.actions).toHaveLength(3);
-    expect(t.actions[0].verb).toBe("discard_I_frame_queue");
-    expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
-    expect(t.actions[1].kind).toBe("signal_upper");
-    expect(t.actions[2].verb).toBe("stop_T1");
-    expect(t.actions[2].kind).toBe("processing");
+    expect(t.on).toBe("UI_received");
+    expect(t.next).toBe("AwaitingV22Connection");
+    expect(t.guard).toBe("P_eq_1");
+    expect(t.actions).toHaveLength(1);
+    expect(t.actions[0].verb).toBe("UI Check");
+    expect(t.actions[0].kind).toBe("subroutine");
   });
 
-  it("t14_dm_received_not_f_eq_1", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t14_dm_received_not_f_eq_1");
-    expect(t, "transition t14_dm_received_not_f_eq_1 not found").toBeDefined();
+  it("t11_dm_received_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t11_dm_received_no");
+    expect(t, "transition t11_dm_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("AwaitingConnection");
@@ -175,31 +159,47 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t15_ua_received_not_f_eq_1", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t15_ua_received_not_f_eq_1");
-    expect(t, "transition t15_ua_received_not_f_eq_1 not found").toBeDefined();
+  it("t11_dm_received_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t11_dm_received_yes");
+    expect(t, "transition t11_dm_received_yes not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("DM_received");
+    expect(t.next).toBe("Disconnected");
+    expect(t.guard).toBe("F_eq_1");
+    expect(t.actions).toHaveLength(3);
+    expect(t.actions[0].verb).toBe("discard_I_frame_queue");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].kind).toBe("signal_upper");
+    expect(t.actions[2].verb).toBe("Stop T1");
+    expect(t.actions[2].kind).toBe("processing");
+  });
+
+  it("t12_ua_received_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t12_ua_received_no");
+    expect(t, "transition t12_ua_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UA_received");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("not F_eq_1");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (D)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t16_ua_received_f_eq_1_layer_3_initiated", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t16_ua_received_f_eq_1_layer_3_initiated");
-    expect(t, "transition t16_ua_received_f_eq_1_layer_3_initiated not found").toBeDefined();
+  it("t12_ua_received_yes_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t12_ua_received_yes_yes");
+    expect(t, "transition t12_ua_received_yes_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Connected");
     expect(t.guard).toBe("F_eq_1 and layer_3_initiated");
     expect(t.actions).toHaveLength(8);
-    expect(t.actions[0].verb).toBe("DL_CONNECT_confirm");
+    expect(t.actions[0].verb).toBe("DL-CONNECT Confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("stop_T1");
+    expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("start_T3");
+    expect(t.actions[2].verb).toBe("Start T3");
     expect(t.actions[2].kind).toBe("processing");
     expect(t.actions[3].verb).toBe("V(s) := 0");
     expect(t.actions[3].kind).toBe("processing");
@@ -209,53 +209,29 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("Select_T1_Value");
     expect(t.actions[6].kind).toBe("subroutine");
-    expect(t.actions[7].verb).toBe("MDL_NEGOTIATE_request");
+    expect(t.actions[7].verb).toBe("MDL-NEGOTIATE Request");
     expect(t.actions[7].kind).toBe("internal_out");
   });
 
-  it("t17_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t17_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va");
-    expect(t, "transition t17_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va not found").toBeDefined();
+  it("t12_ua_received_yes_no_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t12_ua_received_yes_no_no");
+    expect(t, "transition t12_ua_received_yes_no_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and V_s_eq_V_a");
-    expect(t.actions).toHaveLength(7);
-    expect(t.actions[0].verb).toBe("stop_T1");
-    expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("start_T3");
-    expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("V(s) := 0");
-    expect(t.actions[2].kind).toBe("processing");
-    expect(t.actions[3].verb).toBe("V(a) := 0");
-    expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("V(r) := 0");
-    expect(t.actions[4].kind).toBe("processing");
-    expect(t.actions[5].verb).toBe("Select_T1_Value");
-    expect(t.actions[5].kind).toBe("subroutine");
-    expect(t.actions[6].verb).toBe("MDL_NEGOTIATE_request");
-    expect(t.actions[6].kind).toBe("internal_out");
-  });
-
-  it("t18_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t18_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va");
-    expect(t, "transition t18_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("UA_received");
-    expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and not V_s_eq_V_a");
+    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and not vs_eq_va");
     expect(t.actions).toHaveLength(11);
     expect(t.actions[0].verb).toBe("SRT := Initial Default");
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("T1V := 2 * SRT");
     expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("start_T3");
+    expect(t.actions[2].verb).toBe("Start T3");
     expect(t.actions[2].kind).toBe("processing");
-    expect(t.actions[3].verb).toBe("DL_CONNECT_confirm");
+    expect(t.actions[3].verb).toBe("DL-CONNECT Confirm");
     expect(t.actions[3].kind).toBe("signal_upper");
-    expect(t.actions[4].verb).toBe("stop_T1");
+    expect(t.actions[4].verb).toBe("Stop T1");
     expect(t.actions[4].kind).toBe("processing");
-    expect(t.actions[5].verb).toBe("start_T3");
+    expect(t.actions[5].verb).toBe("Start T3");
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("V(s) := 0");
     expect(t.actions[6].kind).toBe("processing");
@@ -265,13 +241,37 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[8].kind).toBe("processing");
     expect(t.actions[9].verb).toBe("Select_T1_Value");
     expect(t.actions[9].kind).toBe("subroutine");
-    expect(t.actions[10].verb).toBe("MDL_NEGOTIATE_request");
+    expect(t.actions[10].verb).toBe("MDL-NEGOTIATE Request");
     expect(t.actions[10].kind).toBe("internal_out");
   });
 
-  it("t19_t1_expiry_rc_eq_n2", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t19_t1_expiry_rc_eq_n2");
-    expect(t, "transition t19_t1_expiry_rc_eq_n2 not found").toBeDefined();
+  it("t12_ua_received_yes_no_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t12_ua_received_yes_no_yes");
+    expect(t, "transition t12_ua_received_yes_no_yes not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("UA_received");
+    expect(t.next).toBe("Connected");
+    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and vs_eq_va");
+    expect(t.actions).toHaveLength(7);
+    expect(t.actions[0].verb).toBe("Stop T1");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("Start T3");
+    expect(t.actions[1].kind).toBe("processing");
+    expect(t.actions[2].verb).toBe("V(s) := 0");
+    expect(t.actions[2].kind).toBe("processing");
+    expect(t.actions[3].verb).toBe("V(a) := 0");
+    expect(t.actions[3].kind).toBe("processing");
+    expect(t.actions[4].verb).toBe("V(r) := 0");
+    expect(t.actions[4].kind).toBe("processing");
+    expect(t.actions[5].verb).toBe("Select_T1_Value");
+    expect(t.actions[5].kind).toBe("subroutine");
+    expect(t.actions[6].verb).toBe("MDL-NEGOTIATE Request");
+    expect(t.actions[6].kind).toBe("internal_out");
+  });
+
+  it("t13_t1_expiry_yes", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t13_t1_expiry_yes");
+    expect(t, "transition t13_t1_expiry_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
@@ -279,18 +279,18 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("DL_ERROR_indication_G");
+    expect(t.actions[1].verb).toBe("DL-ERROR Indication (G)");
     expect(t.actions[1].kind).toBe("signal_upper");
-    expect(t.actions[2].verb).toBe("DL_DISCONNECT_indication");
+    expect(t.actions[2].verb).toBe("DL-DISCONNECT Indication");
     expect(t.actions[2].kind).toBe("signal_upper");
   });
 
-  it("t20_t1_expiry_rc_neq_n2", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t20_t1_expiry_rc_neq_n2");
-    expect(t, "transition t20_t1_expiry_rc_neq_n2 not found").toBeDefined();
+  it("t13_t1_expiry_no", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t13_t1_expiry_no");
+    expect(t, "transition t13_t1_expiry_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.guard).toBe("not RC_eq_N2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("RC := RC + 1");
@@ -299,13 +299,13 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("start_T1");
+    expect(t.actions[3].verb).toBe("Start T1");
     expect(t.actions[3].kind).toBe("processing");
   });
 
-  it("t21_frmr_received", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t21_frmr_received");
-    expect(t, "transition t21_frmr_received not found").toBeDefined();
+  it("t14_frmr_received", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t14_frmr_received");
+    expect(t, "transition t14_frmr_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("FRMR_received");
     expect(t.next).toBe("AwaitingConnection");
@@ -316,18 +316,18 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Establish_Data_Link");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("set_layer_3_initiated");
+    expect(t.actions[3].verb).toBe("Set Layer 3 Initiated");
     expect(t.actions[3].kind).toBe("processing");
     expect(t.actions[4].verb).toBe("set_version_2_0");
     expect(t.actions[4].kind).toBe("processing");
   });
 
-  it("t22_sabme_received", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t22_sabme_received");
-    expect(t, "transition t22_sabme_received not found").toBeDefined();
+  it("t15_sabme_received", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t15_sabme_received");
+    expect(t, "transition t15_sabme_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABME_received");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -335,9 +335,9 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t23_sabm_received", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t23_sabm_received");
-    expect(t, "transition t23_sabm_received not found").toBeDefined();
+  it("t16_sabm_received", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t16_sabm_received");
+    expect(t, "transition t16_sabm_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("AwaitingConnection");
@@ -350,12 +350,12 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[2].kind).toBe("processing");
   });
 
-  it("t24_disc_received", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t24_disc_received");
-    expect(t, "transition t24_disc_received not found").toBeDefined();
+  it("t17_disc_received", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t17_disc_received");
+    expect(t, "transition t17_disc_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DISC_received");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -363,12 +363,12 @@ describe("DataLinkAwaitingConnection22", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t25_all_other_primitives_from_upper_layer", () => {
-    const t = DataLinkAwaitingConnection22.transitions.find((x) => x.id === "t25_all_other_primitives_from_upper_layer");
-    expect(t, "transition t25_all_other_primitives_from_upper_layer not found").toBeDefined();
+  it("t18_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t18_all_other_primitives__from_upper_layer");
+    expect(t, "transition t18_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_upper_layer");
-    expect(t.next).toBe("AwaitingConnection22");
+    expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(0);
   });
 

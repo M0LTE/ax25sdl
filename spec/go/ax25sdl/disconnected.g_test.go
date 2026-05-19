@@ -37,8 +37,8 @@ func TestDataLinkDisconnected_t01_dl_disconnect_request(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_DISCONNECT_confirm" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_DISCONNECT_confirm")
+	if tx.Actions[0].Verb != "DL-DISCONNECT Confirm" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-DISCONNECT Confirm")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -65,8 +65,8 @@ func TestDataLinkDisconnected_t02_dl_unit_data_request(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "UI_command" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_command")
+	if tx.Actions[0].Verb != "UI Command" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Command")
 	}
 	if tx.Actions[0].Kind != SignalLower {
 		t.Errorf("Actions[0].Kind = %v, want SignalLower", tx.Actions[0].Kind)
@@ -111,24 +111,24 @@ func TestDataLinkDisconnected_t03_dl_connect_request(t *testing.T) {
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "set_layer_3_initiated" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "set_layer_3_initiated")
+	if tx.Actions[3].Verb != "Set Layer 3 Initiated" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Set Layer 3 Initiated")
 	}
 	if tx.Actions[3].Kind != Processing {
 		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
 	}
 }
 
-func TestDataLinkDisconnected_t04_all_other_primitives_from_lower_layer(t *testing.T) {
+func TestDataLinkDisconnected_t04_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t04_all_other_primitives_from_lower_layer" {
+		if DataLinkDisconnected.Transitions[i].ID == "t04_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t04_all_other_primitives_from_lower_layer not found")
+		t.Fatalf("transition t04_all_other_primitives__from_lower_layer not found")
 	}
 	if tx.On != "all_other_primitives__from_lower_layer" {
 		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
@@ -175,16 +175,16 @@ func TestDataLinkDisconnected_t05_all_other_commands(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t06_all_other_primitives_from_upper_layer(t *testing.T) {
+func TestDataLinkDisconnected_t06_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t06_all_other_primitives_from_upper_layer" {
+		if DataLinkDisconnected.Transitions[i].ID == "t06_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives_from_upper_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_upper_layer not found")
 	}
 	if tx.On != "all_other_primitives__from_upper_layer" {
 		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
@@ -195,8 +195,8 @@ func TestDataLinkDisconnected_t06_all_other_primitives_from_upper_layer(t *testi
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "discard_primitive" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "discard_primitive")
+	if tx.Actions[0].Verb != "Discard Primitive" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "Discard Primitive")
 	}
 	if tx.Actions[0].Kind != Processing {
 		t.Errorf("Actions[0].Kind = %v, want Processing", tx.Actions[0].Kind)
@@ -223,8 +223,8 @@ func TestDataLinkDisconnected_t07_control_field_error(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_L" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_L")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (L)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (L)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -251,8 +251,8 @@ func TestDataLinkDisconnected_t08_info_not_permitted_in_frame(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_M" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_M")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (M)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (M)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -279,8 +279,8 @@ func TestDataLinkDisconnected_t09_u_or_s_frame_length_error(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_N" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_N")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (N)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (N)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -307,24 +307,55 @@ func TestDataLinkDisconnected_t10_ua_received(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL_ERROR_indication_C_D" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_C_D")
+	if tx.Actions[0].Verb != "DL-ERROR Indication (C,D)" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (C,D)")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
 }
 
-func TestDataLinkDisconnected_t11_ui_received_p_eq_1(t *testing.T) {
+func TestDataLinkDisconnected_t11_ui_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t11_ui_received_p_eq_1" {
+		if DataLinkDisconnected.Transitions[i].ID == "t11_ui_received_no" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t11_ui_received_p_eq_1 not found")
+		t.Fatalf("transition t11_ui_received_no not found")
+	}
+	if tx.On != "UI_received" {
+		t.Errorf("On = %q, want UI_received", tx.On)
+	}
+	if tx.Next != "Disconnected" {
+		t.Errorf("Next = %q, want Disconnected", tx.Next)
+	}
+	if tx.Guard != "not P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not P_eq_1")
+	}
+	if got := len(tx.Actions); got != 1 {
+		t.Fatalf("len(Actions) = %d, want 1", got)
+	}
+	if tx.Actions[0].Verb != "UI Check" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Check")
+	}
+	if tx.Actions[0].Kind != Subroutine {
+		t.Errorf("Actions[0].Kind = %v, want Subroutine", tx.Actions[0].Kind)
+	}
+}
+
+func TestDataLinkDisconnected_t11_ui_received_yes(t *testing.T) {
+	var tx *TransitionSpec
+	for i := range DataLinkDisconnected.Transitions {
+		if DataLinkDisconnected.Transitions[i].ID == "t11_ui_received_yes" {
+			tx = &DataLinkDisconnected.Transitions[i]
+			break
+		}
+	}
+	if tx == nil {
+		t.Fatalf("transition t11_ui_received_yes not found")
 	}
 	if tx.On != "UI_received" {
 		t.Errorf("On = %q, want UI_received", tx.On)
@@ -338,8 +369,8 @@ func TestDataLinkDisconnected_t11_ui_received_p_eq_1(t *testing.T) {
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
 	}
-	if tx.Actions[0].Verb != "UI_Check" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_Check")
+	if tx.Actions[0].Verb != "UI Check" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI Check")
 	}
 	if tx.Actions[0].Kind != Subroutine {
 		t.Errorf("Actions[0].Kind = %v, want Subroutine", tx.Actions[0].Kind)
@@ -358,47 +389,16 @@ func TestDataLinkDisconnected_t11_ui_received_p_eq_1(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t12_ui_received_p_eq_0(t *testing.T) {
+func TestDataLinkDisconnected_t12_disc_received(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t12_ui_received_p_eq_0" {
+		if DataLinkDisconnected.Transitions[i].ID == "t12_disc_received" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t12_ui_received_p_eq_0 not found")
-	}
-	if tx.On != "UI_received" {
-		t.Errorf("On = %q, want UI_received", tx.On)
-	}
-	if tx.Next != "Disconnected" {
-		t.Errorf("Next = %q, want Disconnected", tx.Next)
-	}
-	if tx.Guard != "not P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not P_eq_1")
-	}
-	if got := len(tx.Actions); got != 1 {
-		t.Fatalf("len(Actions) = %d, want 1", got)
-	}
-	if tx.Actions[0].Verb != "UI_Check" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "UI_Check")
-	}
-	if tx.Actions[0].Kind != Subroutine {
-		t.Errorf("Actions[0].Kind = %v, want Subroutine", tx.Actions[0].Kind)
-	}
-}
-
-func TestDataLinkDisconnected_t13_disc_received(t *testing.T) {
-	var tx *TransitionSpec
-	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t13_disc_received" {
-			tx = &DataLinkDisconnected.Transitions[i]
-			break
-		}
-	}
-	if tx == nil {
-		t.Fatalf("transition t13_disc_received not found")
+		t.Fatalf("transition t12_disc_received not found")
 	}
 	if tx.On != "DISC_received" {
 		t.Errorf("On = %q, want DISC_received", tx.On)
@@ -423,16 +423,53 @@ func TestDataLinkDisconnected_t13_disc_received(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t14_sabm_received_able(t *testing.T) {
+func TestDataLinkDisconnected_t13_sabm_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t14_sabm_received_able" {
+		if DataLinkDisconnected.Transitions[i].ID == "t13_sabm_received_no" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t14_sabm_received_able not found")
+		t.Fatalf("transition t13_sabm_received_no not found")
+	}
+	if tx.On != "SABM_received" {
+		t.Errorf("On = %q, want SABM_received", tx.On)
+	}
+	if tx.Next != "Disconnected" {
+		t.Errorf("Next = %q, want Disconnected", tx.Next)
+	}
+	if tx.Guard != "not able_to_establish" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not able_to_establish")
+	}
+	if got := len(tx.Actions); got != 2 {
+		t.Fatalf("len(Actions) = %d, want 2", got)
+	}
+	if tx.Actions[0].Verb != "F := P" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "F := P")
+	}
+	if tx.Actions[0].Kind != Processing {
+		t.Errorf("Actions[0].Kind = %v, want Processing", tx.Actions[0].Kind)
+	}
+	if tx.Actions[1].Verb != "DM" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DM")
+	}
+	if tx.Actions[1].Kind != SignalLower {
+		t.Errorf("Actions[1].Kind = %v, want SignalLower", tx.Actions[1].Kind)
+	}
+}
+
+func TestDataLinkDisconnected_t13_sabm_received_yes(t *testing.T) {
+	var tx *TransitionSpec
+	for i := range DataLinkDisconnected.Transitions {
+		if DataLinkDisconnected.Transitions[i].ID == "t13_sabm_received_yes" {
+			tx = &DataLinkDisconnected.Transitions[i]
+			break
+		}
+	}
+	if tx == nil {
+		t.Fatalf("transition t13_sabm_received_yes not found")
 	}
 	if tx.On != "SABM_received" {
 		t.Errorf("On = %q, want SABM_received", tx.On)
@@ -464,8 +501,8 @@ func TestDataLinkDisconnected_t14_sabm_received_able(t *testing.T) {
 	if tx.Actions[2].Kind != SignalLower {
 		t.Errorf("Actions[2].Kind = %v, want SignalLower", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "Clear_Exception_Conditions" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Clear_Exception_Conditions")
+	if tx.Actions[3].Verb != "Clear Exception Conditions" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Clear Exception Conditions")
 	}
 	if tx.Actions[3].Kind != Subroutine {
 		t.Errorf("Actions[3].Kind = %v, want Subroutine", tx.Actions[3].Kind)
@@ -488,8 +525,8 @@ func TestDataLinkDisconnected_t14_sabm_received_able(t *testing.T) {
 	if tx.Actions[6].Kind != Processing {
 		t.Errorf("Actions[6].Kind = %v, want Processing", tx.Actions[6].Kind)
 	}
-	if tx.Actions[7].Verb != "DL_CONNECT_indication" {
-		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL_CONNECT_indication")
+	if tx.Actions[7].Verb != "DL Connect Indication" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL Connect Indication")
 	}
 	if tx.Actions[7].Kind != SignalUpper {
 		t.Errorf("Actions[7].Kind = %v, want SignalUpper", tx.Actions[7].Kind)
@@ -506,8 +543,8 @@ func TestDataLinkDisconnected_t14_sabm_received_able(t *testing.T) {
 	if tx.Actions[9].Kind != Processing {
 		t.Errorf("Actions[9].Kind = %v, want Processing", tx.Actions[9].Kind)
 	}
-	if tx.Actions[10].Verb != "start_T3" {
-		t.Errorf("Actions[10].Verb = %q, want %q", tx.Actions[10].Verb, "start_T3")
+	if tx.Actions[10].Verb != "Start T3" {
+		t.Errorf("Actions[10].Verb = %q, want %q", tx.Actions[10].Verb, "Start T3")
 	}
 	if tx.Actions[10].Kind != Processing {
 		t.Errorf("Actions[10].Kind = %v, want Processing", tx.Actions[10].Kind)
@@ -520,19 +557,19 @@ func TestDataLinkDisconnected_t14_sabm_received_able(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t15_sabm_received_unable(t *testing.T) {
+func TestDataLinkDisconnected_t14_sabme_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t15_sabm_received_unable" {
+		if DataLinkDisconnected.Transitions[i].ID == "t14_sabme_received_no" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t15_sabm_received_unable not found")
+		t.Fatalf("transition t14_sabme_received_no not found")
 	}
-	if tx.On != "SABM_received" {
-		t.Errorf("On = %q, want SABM_received", tx.On)
+	if tx.On != "SABME_received" {
+		t.Errorf("On = %q, want SABME_received", tx.On)
 	}
 	if tx.Next != "Disconnected" {
 		t.Errorf("Next = %q, want Disconnected", tx.Next)
@@ -557,16 +594,16 @@ func TestDataLinkDisconnected_t15_sabm_received_unable(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
+func TestDataLinkDisconnected_t14_sabme_received_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t16_sabme_received_able" {
+		if DataLinkDisconnected.Transitions[i].ID == "t14_sabme_received_yes" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t16_sabme_received_able not found")
+		t.Fatalf("transition t14_sabme_received_yes not found")
 	}
 	if tx.On != "SABME_received" {
 		t.Errorf("On = %q, want SABME_received", tx.On)
@@ -586,8 +623,8 @@ func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
 	if tx.Actions[0].Kind != Processing {
 		t.Errorf("Actions[0].Kind = %v, want Processing", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "set_version_2_2" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "set_version_2_2")
+	if tx.Actions[1].Verb != "Set Version 2.2" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "Set Version 2.2")
 	}
 	if tx.Actions[1].Kind != Processing {
 		t.Errorf("Actions[1].Kind = %v, want Processing", tx.Actions[1].Kind)
@@ -598,8 +635,8 @@ func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
 	if tx.Actions[2].Kind != SignalLower {
 		t.Errorf("Actions[2].Kind = %v, want SignalLower", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "Clear_Exception_Conditions" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Clear_Exception_Conditions")
+	if tx.Actions[3].Verb != "Clear Exception Conditions" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Clear Exception Conditions")
 	}
 	if tx.Actions[3].Kind != Subroutine {
 		t.Errorf("Actions[3].Kind = %v, want Subroutine", tx.Actions[3].Kind)
@@ -622,8 +659,8 @@ func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
 	if tx.Actions[6].Kind != Processing {
 		t.Errorf("Actions[6].Kind = %v, want Processing", tx.Actions[6].Kind)
 	}
-	if tx.Actions[7].Verb != "DL_CONNECT_indication" {
-		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL_CONNECT_indication")
+	if tx.Actions[7].Verb != "DL Connect Indication" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL Connect Indication")
 	}
 	if tx.Actions[7].Kind != SignalUpper {
 		t.Errorf("Actions[7].Kind = %v, want SignalUpper", tx.Actions[7].Kind)
@@ -640,8 +677,8 @@ func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
 	if tx.Actions[9].Kind != Processing {
 		t.Errorf("Actions[9].Kind = %v, want Processing", tx.Actions[9].Kind)
 	}
-	if tx.Actions[10].Verb != "start_T3" {
-		t.Errorf("Actions[10].Verb = %q, want %q", tx.Actions[10].Verb, "start_T3")
+	if tx.Actions[10].Verb != "Start T3" {
+		t.Errorf("Actions[10].Verb = %q, want %q", tx.Actions[10].Verb, "Start T3")
 	}
 	if tx.Actions[10].Kind != Processing {
 		t.Errorf("Actions[10].Kind = %v, want Processing", tx.Actions[10].Kind)
@@ -651,42 +688,5 @@ func TestDataLinkDisconnected_t16_sabme_received_able(t *testing.T) {
 	}
 	if tx.Actions[11].Kind != Processing {
 		t.Errorf("Actions[11].Kind = %v, want Processing", tx.Actions[11].Kind)
-	}
-}
-
-func TestDataLinkDisconnected_t17_sabme_received_unable(t *testing.T) {
-	var tx *TransitionSpec
-	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t17_sabme_received_unable" {
-			tx = &DataLinkDisconnected.Transitions[i]
-			break
-		}
-	}
-	if tx == nil {
-		t.Fatalf("transition t17_sabme_received_unable not found")
-	}
-	if tx.On != "SABME_received" {
-		t.Errorf("On = %q, want SABME_received", tx.On)
-	}
-	if tx.Next != "Disconnected" {
-		t.Errorf("Next = %q, want Disconnected", tx.Next)
-	}
-	if tx.Guard != "not able_to_establish" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not able_to_establish")
-	}
-	if got := len(tx.Actions); got != 2 {
-		t.Fatalf("len(Actions) = %d, want 2", got)
-	}
-	if tx.Actions[0].Verb != "F := P" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "F := P")
-	}
-	if tx.Actions[0].Kind != Processing {
-		t.Errorf("Actions[0].Kind = %v, want Processing", tx.Actions[0].Kind)
-	}
-	if tx.Actions[1].Verb != "DM" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DM")
-	}
-	if tx.Actions[1].Kind != SignalLower {
-		t.Errorf("Actions[1].Kind = %v, want SignalLower", tx.Actions[1].Kind)
 	}
 }

@@ -14,7 +14,7 @@ public class DataLink_Connected_GeneratedTests
 {
     [Fact] public void SourceFigure() => DataLink_Connected.Source.Figure.Should().Be("figc4.4");
 
-    [Fact] public void TransitionsArePresent() => DataLink_Connected.Transitions.Count.Should().Be(69);
+    [Fact] public void TransitionsArePresent() => DataLink_Connected.Transitions.Count.Should().Be(66);
 
     [Fact] public void t01_dl_disconnect_request()
     {
@@ -28,664 +28,337 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("DISC (P = 1)");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("stop_T3");
+        t.Actions[3].Verb.Should().Be("Stop T3");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("start_T1");
+        t.Actions[4].Verb.Should().Be("Start T1");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t02_i_received_not_command()
+    [Fact] public void t02_dl_data_request()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t02_i_received_not_command");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not command");
-        t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_O");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("discard_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t03_i_received_command_info_field_invalid_v22()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t03_i_received_command_info_field_invalid_v22");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("command and not info_field_valid and version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_O");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t04_i_received_command_info_field_invalid_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t04_i_received_command_info_field_invalid_v20");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("command and not info_field_valid and not version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_O");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t05_i_received_command_info_valid_nr_out_of_window_v22()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t05_i_received_command_info_valid_nr_out_of_window_v22");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("command and info_field_valid and not V_a_le_N_r_le_V_s and version_2_2");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t06_i_received_command_info_valid_nr_out_of_window_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t06_i_received_command_info_valid_nr_out_of_window_v20");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("command and info_field_valid and not V_a_le_N_r_le_V_s and not version_2_2");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t07_i_received_own_busy_p_eq_1()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t07_i_received_own_busy_p_eq_1");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and own_receiver_busy and P_eq_1");
-        t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("F := 1");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("RR");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[5].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t08_i_received_own_busy_p_eq_0()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t08_i_received_own_busy_p_eq_0");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and own_receiver_busy and not P_eq_1");
-        t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t09_i_received_in_seq_no_stored_p_eq_1()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t09_i_received_in_seq_no_stored_p_eq_1");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and P_eq_1");
-        t.Actions.Count.Should().Be(9);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("F := 1");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("RR");
-        t.Actions[7].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[8].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t10_i_received_in_seq_no_stored_p_eq_0_ack_pending()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t10_i_received_in_seq_no_stored_p_eq_0_ack_pending");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and not P_eq_1 and acknowledge_pending");
-        t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-    }
-
-    [Fact] public void t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and not P_eq_1 and not acknowledge_pending");
-        t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("LM_seize_request");
-        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[6].Verb.Should().Be("set_acknowledge_pending");
-        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t12_i_received_out_of_seq_reject_exception_p_eq_1()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t12_i_received_out_of_seq_reject_exception_p_eq_1");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and reject_exception and P_eq_1");
-        t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("F := 1");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("RR");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[5].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t13_i_received_out_of_seq_reject_exception_p_eq_0()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t13_i_received_out_of_seq_reject_exception_p_eq_0");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and reject_exception and not P_eq_1");
-        t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t14_i_received_out_of_seq_srej_enabled_no_excep_in_range()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t14_i_received_out_of_seq_srej_enabled_no_excep_in_range");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and not srej_exception_gt_0 and not N_s_gt_V_r_plus_1");
-        t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("save_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := 1");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("increment_srej_exception");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("SREJ");
-        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
-    }
-
-    [Fact] public void t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and not srej_exception_gt_0 and N_s_gt_V_r_plus_1");
-        t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("save_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("set_reject_exception");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("F := P");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("REJ");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[7].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t16_i_received_out_of_seq_srej_enabled_existing_excep()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t16_i_received_out_of_seq_srej_enabled_existing_excep");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and srej_exception_gt_0");
-        t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("save_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("N(r) := N(s)");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := 0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("increment_srej_exception");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("SREJ");
-        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
-    }
-
-    [Fact] public void t17_i_received_out_of_seq_srej_disabled()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t17_i_received_out_of_seq_srej_disabled");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and not srej_enabled");
-        t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("discard_contents_of_I_frame");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("set_reject_exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := P");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("REJ");
-        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[6].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t18_dl_data_request()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t18_dl_data_request");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t02_dl_data_request");
         t.On.Should().Be("DL_DATA_request");
         t.Next.Should().Be("Connected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("push_on_I_frame_queue");
+        t.Actions[0].Verb.Should().Be("Push on I Frame Queue (note: word order?)");
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
-    [Fact] public void t19_i_frame_pops_off_queue_send_now_t1_running()
+    [Fact] public void t03_i_frame_pops_off_queue_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t19_i_frame_pops_off_queue_send_now_t1_running");
-        t.On.Should().Be("I_frame_pops_off_queue");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not peer_receiver_busy and not V_s_eq_V_a_plus_k and T1_running");
-        t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("p := 0");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("I_command");
-        t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t20_i_frame_pops_off_queue_send_now_t1_not_running()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t20_i_frame_pops_off_queue_send_now_t1_not_running");
-        t.On.Should().Be("I_frame_pops_off_queue");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not peer_receiver_busy and not V_s_eq_V_a_plus_k and not T1_running");
-        t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("p := 0");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("I_command");
-        t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("stop_T3");
-        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("start_T1");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t21_i_frame_pops_off_queue_window_full()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t21_i_frame_pops_off_queue_window_full");
-        t.On.Should().Be("I_frame_pops_off_queue");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not peer_receiver_busy and V_s_eq_V_a_plus_k");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("push_on_I_frame_queue");
-        t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
-    }
-
-    [Fact] public void t22_i_frame_pops_off_queue_peer_busy()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t22_i_frame_pops_off_queue_peer_busy");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t03_i_frame_pops_off_queue_yes");
         t.On.Should().Be("I_frame_pops_off_queue");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("peer_receiver_busy");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("push_on_I_frame_queue");
+        t.Actions[0].Verb.Should().Be("Push on I Frame Queue");
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
-    [Fact] public void t23_dl_unit_data_request()
+    [Fact] public void t03_i_frame_pops_off_queue_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t23_dl_unit_data_request");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t03_i_frame_pops_off_queue_no_yes");
+        t.On.Should().Be("I_frame_pops_off_queue");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not peer_receiver_busy and vs_eq_va_+_k");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("Push on I Frame Queue");
+        t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
+    }
+
+    [Fact] public void t03_i_frame_pops_off_queue_no_no_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t03_i_frame_pops_off_queue_no_no_no");
+        t.On.Should().Be("I_frame_pops_off_queue");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not peer_receiver_busy and not vs_eq_va_+_k and not T1_running");
+        t.Actions.Count.Should().Be(8);
+        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("p := 0");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("I Command");
+        t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("Stop T3");
+        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[7].Verb.Should().Be("Start T1");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t03_i_frame_pops_off_queue_no_no_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t03_i_frame_pops_off_queue_no_no_yes");
+        t.On.Should().Be("I_frame_pops_off_queue");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not peer_receiver_busy and not vs_eq_va_+_k and T1_running");
+        t.Actions.Count.Should().Be(6);
+        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("p := 0");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("I Command");
+        t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t04_dl_unit_data_request()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t04_dl_unit_data_request");
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("Connected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_command");
+        t.Actions[0].Verb.Should().Be("UI Command");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t24_dl_flow_off_when_not_busy()
+    [Fact] public void t05_dl_flow_off_request_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t24_dl_flow_off_when_not_busy");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t05_dl_flow_off_request_yes");
         t.On.Should().Be("DL_FLOW_OFF_request");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("own_receiver_busy");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("set_own_receiver_busy");
+        t.Actions[0].Verb.Should().Be("Set Own Receiver Busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RNR_response");
+        t.Actions[1].Verb.Should().Be("RNR Response");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("clear_acknowledge_pending");
+        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t25_dl_flow_off_when_already_busy()
+    [Fact] public void t05_dl_flow_off_request_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t25_dl_flow_off_when_already_busy");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t05_dl_flow_off_request_no");
         t.On.Should().Be("DL_FLOW_OFF_request");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not own_receiver_busy");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t26_dl_flow_on_when_busy_and_t1_not_running()
+    [Fact] public void t06_dl_flow_on_request_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_dl_flow_on_when_busy_and_t1_not_running");
-        t.On.Should().Be("DL_FLOW_ON_request");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("own_receiver_busy and not T1_running");
-        t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("clear_own_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RR_command");
-        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("stop_T3");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("start_T1");
-        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t27_dl_flow_on_when_busy_and_t1_running()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t27_dl_flow_on_when_busy_and_t1_running");
-        t.On.Should().Be("DL_FLOW_ON_request");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("own_receiver_busy and T1_running");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_own_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RR_command");
-        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t28_dl_flow_on_when_not_busy()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t28_dl_flow_on_when_not_busy");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t06_dl_flow_on_request_no");
         t.On.Should().Be("DL_FLOW_ON_request");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not own_receiver_busy");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t29_dl_connect_request_v22()
+    [Fact] public void t06_dl_flow_on_request_yes_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t29_dl_connect_request_v22");
-        t.On.Should().Be("DL_CONNECT_request");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t06_dl_flow_on_request_yes_yes");
+        t.On.Should().Be("DL_FLOW_ON_request");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("own_receiver_busy and T1_running");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[0].Verb.Should().Be("Clear Own Receiver Busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[1].Verb.Should().Be("RR Command");
+        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t30_dl_connect_request_v20()
+    [Fact] public void t06_dl_flow_on_request_yes_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t30_dl_connect_request_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t06_dl_flow_on_request_yes_no");
+        t.On.Should().Be("DL_FLOW_ON_request");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("own_receiver_busy and not T1_running");
+        t.Actions.Count.Should().Be(5);
+        t.Actions[0].Verb.Should().Be("Clear Own Receiver Busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("RR Command");
+        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Stop T3");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("Start T1");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t07_dl_connect_request_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t07_dl_connect_request_no");
         t.On.Should().Be("DL_CONNECT_request");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
+        t.Guard.Should().Be("not version_2.2");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("Establish_Data_Link");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[2].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t31_all_other_primitives_from_lower_layer()
+    [Fact] public void t07_dl_connect_request_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t31_all_other_primitives_from_lower_layer");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t07_dl_connect_request_yes");
+        t.On.Should().Be("DL_CONNECT_request");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t08_all_other_primitives__from_lower_layer()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t08_all_other_primitives__from_lower_layer");
         t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("Connected");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t32_control_field_error_v22()
+    [Fact] public void t09_control_field_error_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t32_control_field_error_v22");
-        t.On.Should().Be("control_field_error");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
-        t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_L");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t33_control_field_error_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t33_control_field_error_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t09_control_field_error_no");
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
+        t.Guard.Should().Be("not version_2.2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_L");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t34_info_not_permitted_in_frame_v22()
+    [Fact] public void t09_control_field_error_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t34_info_not_permitted_in_frame_v22");
-        t.On.Should().Be("info_not_permitted_in_frame");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t09_control_field_error_yes");
+        t.On.Should().Be("control_field_error");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_M");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t35_info_not_permitted_in_frame_v20()
+    [Fact] public void t10_info_not_permitted_in_frame_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t35_info_not_permitted_in_frame_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t10_info_not_permitted_in_frame_no");
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
+        t.Guard.Should().Be("not version_2.2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_M");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t36_u_or_s_frame_length_error_v22()
+    [Fact] public void t10_info_not_permitted_in_frame_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t36_u_or_s_frame_length_error_v22");
-        t.On.Should().Be("u_or_s_frame_length_error");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t10_info_not_permitted_in_frame_yes");
+        t.On.Should().Be("info_not_permitted_in_frame");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_N");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t37_u_or_s_frame_length_error_v20()
+    [Fact] public void t11_u_or_s_frame_length_error_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t37_u_or_s_frame_length_error_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t11_u_or_s_frame_length_error_no");
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
+        t.Guard.Should().Be("not version_2.2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_N");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t38_t1_expiry()
+    [Fact] public void t11_u_or_s_frame_length_error_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t38_t1_expiry");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t11_u_or_s_frame_length_error_yes");
+        t.On.Should().Be("u_or_s_frame_length_error");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
+        t.Actions.Count.Should().Be(4);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t12_t1_expiry()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t12_t1_expiry");
         t.On.Should().Be("T1_expiry");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be("RC := 1");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Transmit_Enquiry");
+        t.Actions[1].Verb.Should().Be("Transmit Enquery");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t39_t3_expiry()
+    [Fact] public void t13_t3_expiry()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t39_t3_expiry");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t13_t3_expiry");
         t.On.Should().Be("T3_expiry");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be("RC := 1");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Transmit_Enquiry");
+        t.Actions[1].Verb.Should().Be("Transmit Enquery");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t40_sabm_received_vs_neq_va()
+    [Fact] public void t14_sabm_received_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t40_sabm_received_vs_neq_va");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t14_sabm_received_yes");
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not V_s_eq_V_a");
-        t.Actions.Count.Should().Be(13);
-        t.Actions[0].Verb.Should().Be("F := P");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_0");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
-        t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
-        t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL_ERROR_indication_F");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("stop_T1");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("start_T3");
-        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("V(a) := 0");
-        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("V(s) := 0");
-        t.Actions[10].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[11].Verb.Should().Be("V(r) := 0");
-        t.Actions[11].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[12].Verb.Should().Be("RC := 0");
-        t.Actions[12].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t41_sabm_received_vs_eq_va()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t41_sabm_received_vs_eq_va");
-        t.On.Should().Be("SABM_received");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_s_eq_V_a");
+        t.Guard.Should().Be("vs_eq_va");
         t.Actions.Count.Should().Be(11);
         t.Actions[0].Verb.Should().Be("F := P");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -693,13 +366,13 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL_ERROR_indication_F");
+        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("stop_T1");
+        t.Actions[5].Verb.Should().Be("Stop T1");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("start_T3");
+        t.Actions[6].Verb.Should().Be("Start T3");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
         t.Actions[7].Verb.Should().Be("V(a) := 0");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -711,30 +384,30 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t42_sabme_received_vs_neq_va()
+    [Fact] public void t14_sabm_received_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t42_sabme_received_vs_neq_va");
-        t.On.Should().Be("SABME_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t14_sabm_received_no");
+        t.On.Should().Be("SABM_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not V_s_eq_V_a");
+        t.Guard.Should().Be("not vs_eq_va");
         t.Actions.Count.Should().Be(13);
         t.Actions[0].Verb.Should().Be("F := P");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_2");
+        t.Actions[1].Verb.Should().Be("set_version_2_0");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL_ERROR_indication_F");
+        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
+        t.Actions[6].Verb.Should().Be("DL-CONNECT Indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("stop_T1");
+        t.Actions[7].Verb.Should().Be("Stop T1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("start_T3");
+        t.Actions[8].Verb.Should().Be("Start T3");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
         t.Actions[9].Verb.Should().Be("V(a) := 0");
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
@@ -746,26 +419,26 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[12].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t43_sabme_received_vs_eq_va()
+    [Fact] public void t15_sabme_received_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t43_sabme_received_vs_eq_va");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t15_sabme_received_yes");
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_s_eq_V_a");
+        t.Guard.Should().Be("vs_eq_va");
         t.Actions.Count.Should().Be(11);
         t.Actions[0].Verb.Should().Be("F := P");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_2");
+        t.Actions[1].Verb.Should().Be("Set Version 2.2");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL_ERROR_indication_F");
+        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("stop_T1");
+        t.Actions[5].Verb.Should().Be("Stop T1");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("start_T3");
+        t.Actions[6].Verb.Should().Be("Start T3");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
         t.Actions[7].Verb.Should().Be("V(a) := 0");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -777,93 +450,128 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t44_frmr_received_v22()
+    [Fact] public void t15_sabme_received_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t44_frmr_received_v22");
-        t.On.Should().Be("FRMR_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_K");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t45_frmr_received_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t45_frmr_received_v20");
-        t.On.Should().Be("FRMR_received");
-        t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_K");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t46_ua_received_v22()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t46_ua_received_v22");
-        t.On.Should().Be("UA_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_K");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t47_ua_received_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t47_ua_received_v20");
-        t.On.Should().Be("UA_received");
-        t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_K");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("clear_layer_3_initiated");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t48_ui_received_p_eq_0()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t48_ui_received_p_eq_0");
-        t.On.Should().Be("UI_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t15_sabme_received_no");
+        t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not P_eq_1");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_Check");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Guard.Should().Be("not vs_eq_va");
+        t.Actions.Count.Should().Be(13);
+        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Set Version 2.2");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
+        t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("DL-CONNECT Indication");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[7].Verb.Should().Be("Stop T1");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[8].Verb.Should().Be("Start T3");
+        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[9].Verb.Should().Be("V(a) := 0");
+        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[10].Verb.Should().Be("V(s) := 0");
+        t.Actions[10].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[11].Verb.Should().Be("V(r) := 0");
+        t.Actions[11].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[12].Verb.Should().Be("RC := 0");
+        t.Actions[12].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t49_ui_received_p_eq_1()
+    [Fact] public void t16_frmr_received_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t49_ui_received_p_eq_1");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t16_frmr_received_no");
+        t.On.Should().Be("FRMR_received");
+        t.Next.Should().Be("AwaitingConnection");
+        t.Guard.Should().Be("not version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (K)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t16_frmr_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t16_frmr_received_yes");
+        t.On.Should().Be("FRMR_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (K)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t17_ua_received_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t17_ua_received_no");
+        t.On.Should().Be("UA_received");
+        t.Next.Should().Be("AwaitingConnection");
+        t.Guard.Should().Be("not version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (K)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t17_ua_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t17_ua_received_yes");
+        t.On.Should().Be("UA_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (K)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t18_ui_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t18_ui_received_yes");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("UI_Check");
+        t.Actions[0].Verb.Should().Be("UI Check");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t50_disc_received()
+    [Fact] public void t18_ui_received_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t50_disc_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t18_ui_received_no");
+        t.On.Should().Be("UI_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not P_eq_1");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t19_disc_received()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t19_disc_received");
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(6);
@@ -873,378 +581,583 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[3].Verb.Should().Be("DL-DISCONNECT Indication");
         t.Actions[3].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[4].Verb.Should().Be("stop_T3");
+        t.Actions[4].Verb.Should().Be("Stop T3");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("start_T1");
+        t.Actions[5].Verb.Should().Be("Start T1");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t51_dm_received()
+    [Fact] public void t20_dm_received()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t51_dm_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t20_dm_received");
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_E");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (E)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be("DL-DISCONNECT Indication");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("stop_T1");
+        t.Actions[3].Verb.Should().Be("Stop T1");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("stop_T3");
+        t.Actions[4].Verb.Should().Be("Stop T3");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t52_rr_received_nr_in_window()
+    [Fact] public void t21_rr_received_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t52_rr_received_nr_in_window");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t21_rr_received_yes");
         t.On.Should().Be("RR_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_a_le_N_r_le_V_s");
+        t.Guard.Should().Be("va_le_nr_le_vs");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[2].Verb.Should().Be("Check I Frame Acknowledged");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t53_rr_received_nr_out_of_window_v22()
+    [Fact] public void t21_rr_received_no_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t53_rr_received_nr_out_of_window_v22");
-        t.On.Should().Be("RR_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t54_rr_received_nr_out_of_window_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t54_rr_received_nr_out_of_window_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t21_rr_received_no_no");
         t.On.Should().Be("RR_received");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and not version_2_2");
+        t.Guard.Should().Be("not va_le_nr_le_vs and not version_2.2");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t55_rnr_received_nr_in_window()
+    [Fact] public void t21_rr_received_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t55_rnr_received_nr_in_window");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t21_rr_received_no_yes");
+        t.On.Should().Be("RR_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not va_le_nr_le_vs and version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t22_rnr_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t22_rnr_received_yes");
         t.On.Should().Be("RNR_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_a_le_N_r_le_V_s");
+        t.Guard.Should().Be("va_le_nr_le_vs");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[2].Verb.Should().Be("Check I Frame Acknowledged");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t56_rnr_received_nr_out_of_window_v22()
+    [Fact] public void t22_rnr_received_no_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t56_rnr_received_nr_out_of_window_v22");
-        t.On.Should().Be("RNR_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t57_rnr_received_nr_out_of_window_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t57_rnr_received_nr_out_of_window_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t22_rnr_received_no_no");
         t.On.Should().Be("RNR_received");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and not version_2_2");
+        t.Guard.Should().Be("not va_le_nr_le_vs and not version_2.2");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t58_lm_seize_confirm_no_ack_pending()
+    [Fact] public void t22_rnr_received_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t58_lm_seize_confirm_no_ack_pending");
-        t.On.Should().Be("LM_SEIZE_confirm");
-        t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("not acknowledge_pending");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("LM_release_request");
-        t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t22_rnr_received_no_yes");
+        t.On.Should().Be("RNR_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not va_le_nr_le_vs and version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t59_lm_seize_confirm_ack_pending()
+    [Fact] public void t23_lm_seize_confirm_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t59_lm_seize_confirm_ack_pending");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t23_lm_seize_confirm_yes");
         t.On.Should().Be("LM_SEIZE_confirm");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("acknowledge_pending");
+        t.Guard.Should().Be("ack_pending");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_acknowledge_pending");
+        t.Actions[0].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_0");
+        t.Actions[1].Verb.Should().Be("Enquiry Response (F = 0)");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("LM_release_request");
+        t.Actions[2].Verb.Should().Be("LM-RELEASE Request");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t60_srej_received_nr_in_window_pf_eq_0()
+    [Fact] public void t23_lm_seize_confirm_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t60_srej_received_nr_in_window_pf_eq_0");
-        t.On.Should().Be("SREJ_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t23_lm_seize_confirm_no");
+        t.On.Should().Be("LM_SEIZE_confirm");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_a_le_N_r_le_V_s and not P_or_F_eq_1");
-        t.Actions.Count.Should().Be(10);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("stop_T1");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("start_T3");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Select_T1_Value");
-        t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("push_old_I_frame_N_r_on_queue");
-        t.Actions[5].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[6].Verb.Should().Be("LM_data_request");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[7].Verb.Should().Be("stop_T3");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("start_T1");
-        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
+        t.Guard.Should().Be("not ack_pending");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("LM-RELEASE Request");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t61_srej_received_nr_in_window_pf_eq_1()
+    [Fact] public void t24_srej_received_yes_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t61_srej_received_nr_in_window_pf_eq_1");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t24_srej_received_yes_yes");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_a_le_N_r_le_V_s and P_or_F_eq_1");
+        t.Guard.Should().Be("va_le_nr_le_vs and p/f_eq_1");
         t.Actions.Count.Should().Be(11);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[2].Verb.Should().Be("V(a) := N(r)");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("stop_T1");
+        t.Actions[3].Verb.Should().Be("Stop T1");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("start_T3");
+        t.Actions[4].Verb.Should().Be("Start T3");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
         t.Actions[5].Verb.Should().Be("Select_T1_Value");
         t.Actions[5].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[6].Verb.Should().Be("push_old_I_frame_N_r_on_queue");
+        t.Actions[6].Verb.Should().Be("Push Old I Frame N(r) on Queue");
         t.Actions[6].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[7].Verb.Should().Be("LM_data_request");
+        t.Actions[7].Verb.Should().Be("LM-DATA Request");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[8].Verb.Should().Be("stop_T3");
+        t.Actions[8].Verb.Should().Be("Stop T3");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("start_T1");
+        t.Actions[9].Verb.Should().Be("Start T1");
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("clear_acknowledge_pending");
+        t.Actions[10].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t62_srej_received_nr_out_of_window_v22()
+    [Fact] public void t24_srej_received_yes_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t62_srej_received_nr_out_of_window_v22");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t24_srej_received_yes_no");
         t.On.Should().Be("SREJ_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and version_2_2");
-        t.Actions.Count.Should().Be(3);
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("va_le_nr_le_vs and not p/f_eq_1");
+        t.Actions.Count.Should().Be(10);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Stop T1");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Start T3");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("Select_T1_Value");
+        t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[5].Verb.Should().Be("Push Old I Frame N(r) on Queue");
+        t.Actions[5].Kind.Should().Be(ActionKind.InternalOut);
+        t.Actions[6].Verb.Should().Be("LM-DATA Request");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[7].Verb.Should().Be("Stop T3");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[8].Verb.Should().Be("Start T1");
+        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[9].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t63_srej_received_nr_out_of_window_v20()
+    [Fact] public void t24_srej_received_no_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t63_srej_received_nr_out_of_window_v20");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t24_srej_received_no_no");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and not version_2_2");
+        t.Guard.Should().Be("not va_le_nr_le_vs and not version_2.2");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t64_rej_received_nr_in_window()
+    [Fact] public void t24_srej_received_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t64_rej_received_nr_in_window");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t24_srej_received_no_yes");
+        t.On.Should().Be("SREJ_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not va_le_nr_le_vs and version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t25_rej_received_no_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t25_rej_received_no_no");
+        t.On.Should().Be("REJ_received");
+        t.Next.Should().Be("AwaitingConnection");
+        t.Guard.Should().Be("not va_le_nr_le_vs and not version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t25_rej_received_no_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t25_rej_received_no_yes");
+        t.On.Should().Be("REJ_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not va_le_nr_le_vs and version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t25_rej_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t25_rej_received_yes");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("V_a_le_N_r_le_V_s");
+        t.Guard.Should().Be("va_le_nr_le_vs");
         t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[2].Verb.Should().Be("V(a) := N(r)");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("start_T1");
+        t.Actions[3].Verb.Should().Be("Start T1");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("stop_T3");
+        t.Actions[4].Verb.Should().Be("Stop T3");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("clear_acknowledge_pending");
+        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
         t.Actions[6].Verb.Should().Be("Select_T1_Value");
         t.Actions[6].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[7].Verb.Should().Be("Invoke_Retransmission");
+        t.Actions[7].Verb.Should().Be("Invoke Retransmission");
         t.Actions[7].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t65_rej_received_nr_out_of_window_v22()
+    [Fact] public void t26_i_received_no_no_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t65_rej_received_nr_out_of_window_v22");
-        t.On.Should().Be("REJ_received");
-        t.Next.Should().Be("AwaitingConnection22");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and version_2_2");
-        t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t66_rej_received_nr_out_of_window_v20()
-    {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t66_rej_received_nr_out_of_window_v20");
-        t.On.Should().Be("REJ_received");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_no_no");
+        t.On.Should().Be("I_received");
         t.Next.Should().Be("AwaitingConnection");
-        t.Guard.Should().Be("not V_a_le_N_r_le_V_s and not version_2_2");
+        t.Guard.Should().Be("not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Check_Need_For_Response");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (O)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N_r_Error_Recovery");
-        t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t67_i_received_in_seq_stored_p_eq_1()
+    [Fact] public void t26_i_received_no_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t67_i_received_in_seq_stored_p_eq_1");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_no_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2");
+        t.Actions.Count.Should().Be(3);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (O)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_no_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_no_no");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("AwaitingConnection");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t26_i_received_no_yes_no_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_no_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("AwaitingV22Connection");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("N(r) Error Recovery");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_yes_no_no_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_yes_no_no_no");
         t.On.Should().Be("I_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and P_eq_1");
-        t.Actions.Count.Should().Be(12);
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        t.Actions.Count.Should().Be(7);
         t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
+        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
+        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("retrieve_stored_V_r_I_frame");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("F := 1");
-        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("RR");
-        t.Actions[10].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[11].Verb.Should().Be("clear_acknowledge_pending");
-        t.Actions[11].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("LM-SEIZE Request");
+        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[6].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t68_i_received_in_seq_stored_p_eq_0_ack_pending()
+    [Fact] public void t26_i_received_no_yes_yes_no_yes_no_no_yes()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t68_i_received_in_seq_stored_p_eq_0_ack_pending");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_yes_no_no_yes");
         t.On.Should().Be("I_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and not P_eq_1 and acknowledge_pending");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+        t.Actions.Count.Should().Be(5);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_yes_no_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_yes_no_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1");
+        t.Actions.Count.Should().Be(9);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[5].Verb.Should().Be("F := 1");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[7].Verb.Should().Be("RR");
+        t.Actions[7].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[8].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_no_yes_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_yes_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1");
+        t.Actions.Count.Should().Be(6);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("F := 1");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("RR");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_no_yes_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_yes_no");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+        t.Actions.Count.Should().Be(2);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_no_no_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_no_no");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+        t.Actions.Count.Should().Be(7);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Set Reject Exception");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("F := P");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("REJ");
+        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[6].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_no_no_yes_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_no_yes_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+        t.Actions.Count.Should().Be(6);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("N(r) := N(s)");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("F := 0");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("Increment Sreject Exception");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("SREJ");
+        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_no_no_no_yes_no_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_no_yes_no_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1");
         t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
+        t.Actions[2].Verb.Should().Be("Discard Contents of I Frame");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
+        t.Actions[3].Verb.Should().Be("Set Reject Exception");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("retrieve_stored_V_r_I_frame");
+        t.Actions[4].Verb.Should().Be("F := P");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("N(r) := V(r)");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[6].Verb.Should().Be("REJ");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[7].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t69_i_received_in_seq_stored_p_eq_0_no_ack_pending()
+    [Fact] public void t26_i_received_no_yes_yes_no_no_no_yes_no_no()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t69_i_received_in_seq_stored_p_eq_0_no_ack_pending");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_no_no_no_yes_no_no");
         t.On.Should().Be("I_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and not P_eq_1 and not acknowledge_pending");
-        t.Actions.Count.Should().Be(10);
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1");
+        t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("clear_reject_exception");
+        t.Actions[2].Verb.Should().Be("N(r) := V(r)");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("decrement_srej_exception_if_gt_0");
+        t.Actions[3].Verb.Should().Be("F := 1");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("retrieve_stored_V_r_I_frame");
+        t.Actions[4].Verb.Should().Be("Increment Sreject Exception");
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be("SREJ");
+        t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_yes_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_yes_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1");
+        t.Actions.Count.Should().Be(6);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("F := 1");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("RR");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("LM_seize_request");
-        t.Actions[8].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[9].Verb.Should().Be("set_acknowledge_pending");
-        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_no_yes_yes_yes_no()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_no_yes_yes_yes_no");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1");
+        t.Actions.Count.Should().Be(2);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t26_i_received_yes()
+    {
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t26_i_received_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("Connected");
+        t.Guard.Should().Be("command");
+        t.Actions.Count.Should().Be(2);
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (O)");
+        t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[1].Verb.Should().Be("Discard I Frame");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
 }

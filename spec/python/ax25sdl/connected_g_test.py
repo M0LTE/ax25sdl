@@ -10,7 +10,7 @@ def test_source_figure() -> None:
 
 
 def test_transitions_are_present() -> None:
-    assert len(DATA_LINK_CONNECTED.transitions) == 69
+    assert len(DATA_LINK_CONNECTED.transitions) == 66
 
 
 def test_t01_dl_disconnect_request() -> None:
@@ -28,784 +28,406 @@ def test_t01_dl_disconnect_request() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "DISC (P = 1)"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "stop_T3"
+    assert t.actions[3].verb == "Stop T3"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "start_T1"
+    assert t.actions[4].verb == "Start T1"
     assert t.actions[4].kind == ActionKind.PROCESSING
 
 
-def test_t02_i_received_not_command() -> None:
+def test_t02_dl_data_request() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t02_i_received_not_command"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t02_dl_data_request"),
         None,
     )
-    assert t is not None, "transition t02_i_received_not_command not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "not command"
-    assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL_ERROR_indication_O"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "discard_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-
-
-def test_t03_i_received_command_info_field_invalid_v22() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t03_i_received_command_info_field_invalid_v22"),
-        None,
-    )
-    assert t is not None, "transition t03_i_received_command_info_field_invalid_v22 not found"
-    assert t.on == "I_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "command and not info_field_valid and version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_O"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t04_i_received_command_info_field_invalid_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t04_i_received_command_info_field_invalid_v20"),
-        None,
-    )
-    assert t is not None, "transition t04_i_received_command_info_field_invalid_v20 not found"
-    assert t.on == "I_received"
-    assert t.next == "AwaitingConnection"
-    assert t.guard == "command and not info_field_valid and not version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_O"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t05_i_received_command_info_valid_nr_out_of_window_v22() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t05_i_received_command_info_valid_nr_out_of_window_v22"),
-        None,
-    )
-    assert t is not None, "transition t05_i_received_command_info_valid_nr_out_of_window_v22 not found"
-    assert t.on == "I_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "command and info_field_valid and not V_a_le_N_r_le_V_s and version_2_2"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "N_r_Error_Recovery"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-
-
-def test_t06_i_received_command_info_valid_nr_out_of_window_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t06_i_received_command_info_valid_nr_out_of_window_v20"),
-        None,
-    )
-    assert t is not None, "transition t06_i_received_command_info_valid_nr_out_of_window_v20 not found"
-    assert t.on == "I_received"
-    assert t.next == "AwaitingConnection"
-    assert t.guard == "command and info_field_valid and not V_a_le_N_r_le_V_s and not version_2_2"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "N_r_Error_Recovery"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-
-
-def test_t07_i_received_own_busy_p_eq_1() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t07_i_received_own_busy_p_eq_1"),
-        None,
-    )
-    assert t is not None, "transition t07_i_received_own_busy_p_eq_1 not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and own_receiver_busy and P_eq_1"
-    assert len(t.actions) == 6
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "discard_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "F := 1"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "N(r) := V(r)"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "RR"
-    assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[5].verb == "clear_acknowledge_pending"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-
-
-def test_t08_i_received_own_busy_p_eq_0() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t08_i_received_own_busy_p_eq_0"),
-        None,
-    )
-    assert t is not None, "transition t08_i_received_own_busy_p_eq_0 not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and own_receiver_busy and not P_eq_1"
-    assert len(t.actions) == 2
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "discard_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-
-
-def test_t09_i_received_in_seq_no_stored_p_eq_1() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t09_i_received_in_seq_no_stored_p_eq_1"),
-        None,
-    )
-    assert t is not None, "transition t09_i_received_in_seq_no_stored_p_eq_1 not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and P_eq_1"
-    assert len(t.actions) == 9
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "F := 1"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "N(r) := V(r)"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "RR"
-    assert t.actions[7].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[8].verb == "clear_acknowledge_pending"
-    assert t.actions[8].kind == ActionKind.PROCESSING
-
-
-def test_t10_i_received_in_seq_no_stored_p_eq_0_ack_pending() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t10_i_received_in_seq_no_stored_p_eq_0_ack_pending"),
-        None,
-    )
-    assert t is not None, "transition t10_i_received_in_seq_no_stored_p_eq_0_ack_pending not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and not P_eq_1 and acknowledge_pending"
-    assert len(t.actions) == 5
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-
-
-def test_t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending"),
-        None,
-    )
-    assert t is not None, "transition t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and not V_r_I_frame_stored and not P_eq_1 and not acknowledge_pending"
-    assert len(t.actions) == 7
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "LM_seize_request"
-    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[6].verb == "set_acknowledge_pending"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-
-
-def test_t12_i_received_out_of_seq_reject_exception_p_eq_1() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t12_i_received_out_of_seq_reject_exception_p_eq_1"),
-        None,
-    )
-    assert t is not None, "transition t12_i_received_out_of_seq_reject_exception_p_eq_1 not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and reject_exception and P_eq_1"
-    assert len(t.actions) == 6
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "discard_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "F := 1"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "N(r) := V(r)"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "RR"
-    assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[5].verb == "clear_acknowledge_pending"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-
-
-def test_t13_i_received_out_of_seq_reject_exception_p_eq_0() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t13_i_received_out_of_seq_reject_exception_p_eq_0"),
-        None,
-    )
-    assert t is not None, "transition t13_i_received_out_of_seq_reject_exception_p_eq_0 not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and reject_exception and not P_eq_1"
-    assert len(t.actions) == 2
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "discard_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-
-
-def test_t14_i_received_out_of_seq_srej_enabled_no_excep_in_range() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t14_i_received_out_of_seq_srej_enabled_no_excep_in_range"),
-        None,
-    )
-    assert t is not None, "transition t14_i_received_out_of_seq_srej_enabled_no_excep_in_range not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and not srej_exception_gt_0 and not N_s_gt_V_r_plus_1"
-    assert len(t.actions) == 6
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "save_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "N(r) := V(r)"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "F := 1"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "increment_srej_exception"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "SREJ"
-    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
-
-
-def test_t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip"),
-        None,
-    )
-    assert t is not None, "transition t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and not srej_exception_gt_0 and N_s_gt_V_r_plus_1"
-    assert len(t.actions) == 8
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "save_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "discard_contents_of_I_frame"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "set_reject_exception"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "F := P"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "N(r) := V(r)"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "REJ"
-    assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[7].verb == "clear_acknowledge_pending"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-
-
-def test_t16_i_received_out_of_seq_srej_enabled_existing_excep() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t16_i_received_out_of_seq_srej_enabled_existing_excep"),
-        None,
-    )
-    assert t is not None, "transition t16_i_received_out_of_seq_srej_enabled_existing_excep not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and srej_enabled and srej_exception_gt_0"
-    assert len(t.actions) == 6
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "save_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "N(r) := N(s)"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "F := 0"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "increment_srej_exception"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "SREJ"
-    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
-
-
-def test_t17_i_received_out_of_seq_srej_disabled() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t17_i_received_out_of_seq_srej_disabled"),
-        None,
-    )
-    assert t is not None, "transition t17_i_received_out_of_seq_srej_disabled not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and not N_s_eq_V_r and not reject_exception and not srej_enabled"
-    assert len(t.actions) == 7
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "discard_contents_of_I_frame"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "set_reject_exception"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "F := P"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "N(r) := V(r)"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "REJ"
-    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[6].verb == "clear_acknowledge_pending"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-
-
-def test_t18_dl_data_request() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t18_dl_data_request"),
-        None,
-    )
-    assert t is not None, "transition t18_dl_data_request not found"
+    assert t is not None, "transition t02_dl_data_request not found"
     assert t.on == "DL_DATA_request"
     assert t.next == "Connected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "push_on_I_frame_queue"
+    assert t.actions[0].verb == "Push on I Frame Queue (note: word order?)"
     assert t.actions[0].kind == ActionKind.INTERNAL_OUT
 
 
-def test_t19_i_frame_pops_off_queue_send_now_t1_running() -> None:
+def test_t03_i_frame_pops_off_queue_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t19_i_frame_pops_off_queue_send_now_t1_running"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t03_i_frame_pops_off_queue_yes"),
         None,
     )
-    assert t is not None, "transition t19_i_frame_pops_off_queue_send_now_t1_running not found"
-    assert t.on == "I_frame_pops_off_queue"
-    assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and not V_s_eq_V_a_plus_k and T1_running"
-    assert len(t.actions) == 6
-    assert t.actions[0].verb == "N(s) := V(s)"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "N(r) := V(r)"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "p := 0"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "I_command"
-    assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[4].verb == "V(s) := V(s) + 1"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "clear_acknowledge_pending"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-
-
-def test_t20_i_frame_pops_off_queue_send_now_t1_not_running() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t20_i_frame_pops_off_queue_send_now_t1_not_running"),
-        None,
-    )
-    assert t is not None, "transition t20_i_frame_pops_off_queue_send_now_t1_not_running not found"
-    assert t.on == "I_frame_pops_off_queue"
-    assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and not V_s_eq_V_a_plus_k and not T1_running"
-    assert len(t.actions) == 8
-    assert t.actions[0].verb == "N(s) := V(s)"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "N(r) := V(r)"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "p := 0"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "I_command"
-    assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[4].verb == "V(s) := V(s) + 1"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "clear_acknowledge_pending"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "stop_T3"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "start_T1"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-
-
-def test_t21_i_frame_pops_off_queue_window_full() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t21_i_frame_pops_off_queue_window_full"),
-        None,
-    )
-    assert t is not None, "transition t21_i_frame_pops_off_queue_window_full not found"
-    assert t.on == "I_frame_pops_off_queue"
-    assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and V_s_eq_V_a_plus_k"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "push_on_I_frame_queue"
-    assert t.actions[0].kind == ActionKind.INTERNAL_OUT
-
-
-def test_t22_i_frame_pops_off_queue_peer_busy() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t22_i_frame_pops_off_queue_peer_busy"),
-        None,
-    )
-    assert t is not None, "transition t22_i_frame_pops_off_queue_peer_busy not found"
+    assert t is not None, "transition t03_i_frame_pops_off_queue_yes not found"
     assert t.on == "I_frame_pops_off_queue"
     assert t.next == "Connected"
     assert t.guard == "peer_receiver_busy"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "push_on_I_frame_queue"
+    assert t.actions[0].verb == "Push on I Frame Queue"
     assert t.actions[0].kind == ActionKind.INTERNAL_OUT
 
 
-def test_t23_dl_unit_data_request() -> None:
+def test_t03_i_frame_pops_off_queue_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t23_dl_unit_data_request"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t03_i_frame_pops_off_queue_no_yes"),
         None,
     )
-    assert t is not None, "transition t23_dl_unit_data_request not found"
+    assert t is not None, "transition t03_i_frame_pops_off_queue_no_yes not found"
+    assert t.on == "I_frame_pops_off_queue"
+    assert t.next == "Connected"
+    assert t.guard == "not peer_receiver_busy and vs_eq_va_+_k"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "Push on I Frame Queue"
+    assert t.actions[0].kind == ActionKind.INTERNAL_OUT
+
+
+def test_t03_i_frame_pops_off_queue_no_no_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t03_i_frame_pops_off_queue_no_no_no"),
+        None,
+    )
+    assert t is not None, "transition t03_i_frame_pops_off_queue_no_no_no not found"
+    assert t.on == "I_frame_pops_off_queue"
+    assert t.next == "Connected"
+    assert t.guard == "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running"
+    assert len(t.actions) == 8
+    assert t.actions[0].verb == "N(s) := V(s)"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "N(r) := V(r)"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "p := 0"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "I Command"
+    assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[4].verb == "V(s) := V(s) + 1"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "Stop T3"
+    assert t.actions[6].kind == ActionKind.PROCESSING
+    assert t.actions[7].verb == "Start T1"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+
+
+def test_t03_i_frame_pops_off_queue_no_no_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t03_i_frame_pops_off_queue_no_no_yes"),
+        None,
+    )
+    assert t is not None, "transition t03_i_frame_pops_off_queue_no_no_yes not found"
+    assert t.on == "I_frame_pops_off_queue"
+    assert t.next == "Connected"
+    assert t.guard == "not peer_receiver_busy and not vs_eq_va_+_k and T1_running"
+    assert len(t.actions) == 6
+    assert t.actions[0].verb == "N(s) := V(s)"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "N(r) := V(r)"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "p := 0"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "I Command"
+    assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[4].verb == "V(s) := V(s) + 1"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+
+
+def test_t04_dl_unit_data_request() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t04_dl_unit_data_request"),
+        None,
+    )
+    assert t is not None, "transition t04_dl_unit_data_request not found"
     assert t.on == "DL_UNIT_DATA_request"
     assert t.next == "Connected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_command"
+    assert t.actions[0].verb == "UI Command"
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t24_dl_flow_off_when_not_busy() -> None:
+def test_t05_dl_flow_off_request_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t24_dl_flow_off_when_not_busy"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t05_dl_flow_off_request_yes"),
         None,
     )
-    assert t is not None, "transition t24_dl_flow_off_when_not_busy not found"
+    assert t is not None, "transition t05_dl_flow_off_request_yes not found"
     assert t.on == "DL_FLOW_OFF_request"
     assert t.next == "Connected"
     assert t.guard == "own_receiver_busy"
     assert len(t.actions) == 3
-    assert t.actions[0].verb == "set_own_receiver_busy"
+    assert t.actions[0].verb == "Set Own Receiver Busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "RNR_response"
+    assert t.actions[1].verb == "RNR Response"
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[2].verb == "clear_acknowledge_pending"
+    assert t.actions[2].verb == "Clear Acknowledge Pending"
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t25_dl_flow_off_when_already_busy() -> None:
+def test_t05_dl_flow_off_request_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t25_dl_flow_off_when_already_busy"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t05_dl_flow_off_request_no"),
         None,
     )
-    assert t is not None, "transition t25_dl_flow_off_when_already_busy not found"
+    assert t is not None, "transition t05_dl_flow_off_request_no not found"
     assert t.on == "DL_FLOW_OFF_request"
     assert t.next == "Connected"
     assert t.guard == "not own_receiver_busy"
     assert len(t.actions) == 0
 
 
-def test_t26_dl_flow_on_when_busy_and_t1_not_running() -> None:
+def test_t06_dl_flow_on_request_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_dl_flow_on_when_busy_and_t1_not_running"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t06_dl_flow_on_request_no"),
         None,
     )
-    assert t is not None, "transition t26_dl_flow_on_when_busy_and_t1_not_running not found"
-    assert t.on == "DL_FLOW_ON_request"
-    assert t.next == "Connected"
-    assert t.guard == "own_receiver_busy and not T1_running"
-    assert len(t.actions) == 5
-    assert t.actions[0].verb == "clear_own_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "RR_command"
-    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[2].verb == "clear_acknowledge_pending"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "stop_T3"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "start_T1"
-    assert t.actions[4].kind == ActionKind.PROCESSING
-
-
-def test_t27_dl_flow_on_when_busy_and_t1_running() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t27_dl_flow_on_when_busy_and_t1_running"),
-        None,
-    )
-    assert t is not None, "transition t27_dl_flow_on_when_busy_and_t1_running not found"
-    assert t.on == "DL_FLOW_ON_request"
-    assert t.next == "Connected"
-    assert t.guard == "own_receiver_busy and T1_running"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "clear_own_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "RR_command"
-    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[2].verb == "clear_acknowledge_pending"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t28_dl_flow_on_when_not_busy() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t28_dl_flow_on_when_not_busy"),
-        None,
-    )
-    assert t is not None, "transition t28_dl_flow_on_when_not_busy not found"
+    assert t is not None, "transition t06_dl_flow_on_request_no not found"
     assert t.on == "DL_FLOW_ON_request"
     assert t.next == "Connected"
     assert t.guard == "not own_receiver_busy"
     assert len(t.actions) == 0
 
 
-def test_t29_dl_connect_request_v22() -> None:
+def test_t06_dl_flow_on_request_yes_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t29_dl_connect_request_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t06_dl_flow_on_request_yes_yes"),
         None,
     )
-    assert t is not None, "transition t29_dl_connect_request_v22 not found"
-    assert t.on == "DL_CONNECT_request"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
+    assert t is not None, "transition t06_dl_flow_on_request_yes_yes not found"
+    assert t.on == "DL_FLOW_ON_request"
+    assert t.next == "Connected"
+    assert t.guard == "own_receiver_busy and T1_running"
     assert len(t.actions) == 3
-    assert t.actions[0].verb == "discard_I_frame_queue"
+    assert t.actions[0].verb == "Clear Own Receiver Busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "set_layer_3_initiated"
+    assert t.actions[1].verb == "RR Command"
+    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[2].verb == "Clear Acknowledge Pending"
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t30_dl_connect_request_v20() -> None:
+def test_t06_dl_flow_on_request_yes_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t30_dl_connect_request_v20"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t06_dl_flow_on_request_yes_no"),
         None,
     )
-    assert t is not None, "transition t30_dl_connect_request_v20 not found"
+    assert t is not None, "transition t06_dl_flow_on_request_yes_no not found"
+    assert t.on == "DL_FLOW_ON_request"
+    assert t.next == "Connected"
+    assert t.guard == "own_receiver_busy and not T1_running"
+    assert len(t.actions) == 5
+    assert t.actions[0].verb == "Clear Own Receiver Busy"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "RR Command"
+    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[2].verb == "Clear Acknowledge Pending"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "Stop T3"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "Start T1"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+
+
+def test_t07_dl_connect_request_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t07_dl_connect_request_no"),
+        None,
+    )
+    assert t is not None, "transition t07_dl_connect_request_no not found"
     assert t.on == "DL_CONNECT_request"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
+    assert t.guard == "not version_2.2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "discard_I_frame_queue"
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Establish_Data_Link"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "set_layer_3_initiated"
+    assert t.actions[2].verb == "Set Layer 3 Initiated"
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t31_all_other_primitives_from_lower_layer() -> None:
+def test_t07_dl_connect_request_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t31_all_other_primitives_from_lower_layer"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t07_dl_connect_request_yes"),
         None,
     )
-    assert t is not None, "transition t31_all_other_primitives_from_lower_layer not found"
+    assert t is not None, "transition t07_dl_connect_request_yes not found"
+    assert t.on == "DL_CONNECT_request"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "discard_I_frame_queue"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Set Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t08_all_other_primitives__from_lower_layer() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t08_all_other_primitives__from_lower_layer"),
+        None,
+    )
+    assert t is not None, "transition t08_all_other_primitives__from_lower_layer not found"
     assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "Connected"
     assert len(t.actions) == 0
 
 
-def test_t32_control_field_error_v22() -> None:
+def test_t09_control_field_error_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t32_control_field_error_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t09_control_field_error_no"),
         None,
     )
-    assert t is not None, "transition t32_control_field_error_v22 not found"
-    assert t.on == "control_field_error"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
-    assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_L"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "discard_I_frame_queue"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "Establish_Data_Link"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-
-
-def test_t33_control_field_error_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t33_control_field_error_v20"),
-        None,
-    )
-    assert t is not None, "transition t33_control_field_error_v20 not found"
+    assert t is not None, "transition t09_control_field_error_no not found"
     assert t.on == "control_field_error"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
+    assert t.guard == "not version_2.2"
     assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_L"
+    assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "discard_I_frame_queue"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t34_info_not_permitted_in_frame_v22() -> None:
+def test_t09_control_field_error_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t34_info_not_permitted_in_frame_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t09_control_field_error_yes"),
         None,
     )
-    assert t is not None, "transition t34_info_not_permitted_in_frame_v22 not found"
-    assert t.on == "info_not_permitted_in_frame"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
+    assert t is not None, "transition t09_control_field_error_yes not found"
+    assert t.on == "control_field_error"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
     assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_M"
+    assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "discard_I_frame_queue"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t35_info_not_permitted_in_frame_v20() -> None:
+def test_t10_info_not_permitted_in_frame_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t35_info_not_permitted_in_frame_v20"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t10_info_not_permitted_in_frame_no"),
         None,
     )
-    assert t is not None, "transition t35_info_not_permitted_in_frame_v20 not found"
+    assert t is not None, "transition t10_info_not_permitted_in_frame_no not found"
     assert t.on == "info_not_permitted_in_frame"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
+    assert t.guard == "not version_2.2"
     assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_M"
+    assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "discard_I_frame_queue"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t36_u_or_s_frame_length_error_v22() -> None:
+def test_t10_info_not_permitted_in_frame_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t36_u_or_s_frame_length_error_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t10_info_not_permitted_in_frame_yes"),
         None,
     )
-    assert t is not None, "transition t36_u_or_s_frame_length_error_v22 not found"
-    assert t.on == "u_or_s_frame_length_error"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
+    assert t is not None, "transition t10_info_not_permitted_in_frame_yes not found"
+    assert t.on == "info_not_permitted_in_frame"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
     assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_N"
+    assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "discard_I_frame_queue"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t37_u_or_s_frame_length_error_v20() -> None:
+def test_t11_u_or_s_frame_length_error_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t37_u_or_s_frame_length_error_v20"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t11_u_or_s_frame_length_error_no"),
         None,
     )
-    assert t is not None, "transition t37_u_or_s_frame_length_error_v20 not found"
+    assert t is not None, "transition t11_u_or_s_frame_length_error_no not found"
     assert t.on == "u_or_s_frame_length_error"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
+    assert t.guard == "not version_2.2"
     assert len(t.actions) == 4
-    assert t.actions[0].verb == "DL_ERROR_indication_N"
+    assert t.actions[0].verb == "DL-ERROR Indication (N)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "discard_I_frame_queue"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t38_t1_expiry() -> None:
+def test_t11_u_or_s_frame_length_error_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t38_t1_expiry"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t11_u_or_s_frame_length_error_yes"),
         None,
     )
-    assert t is not None, "transition t38_t1_expiry not found"
+    assert t is not None, "transition t11_u_or_s_frame_length_error_yes not found"
+    assert t.on == "u_or_s_frame_length_error"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
+    assert len(t.actions) == 4
+    assert t.actions[0].verb == "DL-ERROR Indication (N)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "discard_I_frame_queue"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "Establish_Data_Link"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+
+
+def test_t12_t1_expiry() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t12_t1_expiry"),
+        None,
+    )
+    assert t is not None, "transition t12_t1_expiry not found"
     assert t.on == "T1_expiry"
     assert t.next == "TimerRecovery"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "RC := 1"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Transmit_Enquiry"
+    assert t.actions[1].verb == "Transmit Enquery"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
 
 
-def test_t39_t3_expiry() -> None:
+def test_t13_t3_expiry() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t39_t3_expiry"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t13_t3_expiry"),
         None,
     )
-    assert t is not None, "transition t39_t3_expiry not found"
+    assert t is not None, "transition t13_t3_expiry not found"
     assert t.on == "T3_expiry"
     assert t.next == "TimerRecovery"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "RC := 1"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Transmit_Enquiry"
+    assert t.actions[1].verb == "Transmit Enquery"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
 
 
-def test_t40_sabm_received_vs_neq_va() -> None:
+def test_t14_sabm_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t40_sabm_received_vs_neq_va"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t14_sabm_received_yes"),
         None,
     )
-    assert t is not None, "transition t40_sabm_received_vs_neq_va not found"
+    assert t is not None, "transition t14_sabm_received_yes not found"
     assert t.on == "SABM_received"
     assert t.next == "Connected"
-    assert t.guard == "not V_s_eq_V_a"
-    assert len(t.actions) == 13
-    assert t.actions[0].verb == "F := P"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "set_version_2_0"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "UA"
-    assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
-    assert t.actions[3].kind == ActionKind.SUBROUTINE
-    assert t.actions[4].verb == "DL_ERROR_indication_F"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "discard_I_frame_queue"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL_CONNECT_indication"
-    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[7].verb == "stop_T1"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "start_T3"
-    assert t.actions[8].kind == ActionKind.PROCESSING
-    assert t.actions[9].verb == "V(a) := 0"
-    assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "V(s) := 0"
-    assert t.actions[10].kind == ActionKind.PROCESSING
-    assert t.actions[11].verb == "V(r) := 0"
-    assert t.actions[11].kind == ActionKind.PROCESSING
-    assert t.actions[12].verb == "RC := 0"
-    assert t.actions[12].kind == ActionKind.PROCESSING
-
-
-def test_t41_sabm_received_vs_eq_va() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t41_sabm_received_vs_eq_va"),
-        None,
-    )
-    assert t is not None, "transition t41_sabm_received_vs_eq_va not found"
-    assert t.on == "SABM_received"
-    assert t.next == "Connected"
-    assert t.guard == "V_s_eq_V_a"
+    assert t.guard == "vs_eq_va"
     assert len(t.actions) == 11
     assert t.actions[0].verb == "F := P"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -813,13 +435,13 @@ def test_t41_sabm_received_vs_eq_va() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
+    assert t.actions[3].verb == "Clear Exception Conditions"
     assert t.actions[3].kind == ActionKind.SUBROUTINE
-    assert t.actions[4].verb == "DL_ERROR_indication_F"
+    assert t.actions[4].verb == "DL-ERROR Indication (F)"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "stop_T1"
+    assert t.actions[5].verb == "Stop T1"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "start_T3"
+    assert t.actions[6].verb == "Start T3"
     assert t.actions[6].kind == ActionKind.PROCESSING
     assert t.actions[7].verb == "V(a) := 0"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -831,33 +453,33 @@ def test_t41_sabm_received_vs_eq_va() -> None:
     assert t.actions[10].kind == ActionKind.PROCESSING
 
 
-def test_t42_sabme_received_vs_neq_va() -> None:
+def test_t14_sabm_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t42_sabme_received_vs_neq_va"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t14_sabm_received_no"),
         None,
     )
-    assert t is not None, "transition t42_sabme_received_vs_neq_va not found"
-    assert t.on == "SABME_received"
+    assert t is not None, "transition t14_sabm_received_no not found"
+    assert t.on == "SABM_received"
     assert t.next == "Connected"
-    assert t.guard == "not V_s_eq_V_a"
+    assert t.guard == "not vs_eq_va"
     assert len(t.actions) == 13
     assert t.actions[0].verb == "F := P"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "set_version_2_2"
+    assert t.actions[1].verb == "set_version_2_0"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
+    assert t.actions[3].verb == "Clear Exception Conditions"
     assert t.actions[3].kind == ActionKind.SUBROUTINE
-    assert t.actions[4].verb == "DL_ERROR_indication_F"
+    assert t.actions[4].verb == "DL-ERROR Indication (F)"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "discard_I_frame_queue"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL_CONNECT_indication"
+    assert t.actions[6].verb == "DL-CONNECT Indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[7].verb == "stop_T1"
+    assert t.actions[7].verb == "Stop T1"
     assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "start_T3"
+    assert t.actions[8].verb == "Start T3"
     assert t.actions[8].kind == ActionKind.PROCESSING
     assert t.actions[9].verb == "V(a) := 0"
     assert t.actions[9].kind == ActionKind.PROCESSING
@@ -869,29 +491,29 @@ def test_t42_sabme_received_vs_neq_va() -> None:
     assert t.actions[12].kind == ActionKind.PROCESSING
 
 
-def test_t43_sabme_received_vs_eq_va() -> None:
+def test_t15_sabme_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t43_sabme_received_vs_eq_va"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t15_sabme_received_yes"),
         None,
     )
-    assert t is not None, "transition t43_sabme_received_vs_eq_va not found"
+    assert t is not None, "transition t15_sabme_received_yes not found"
     assert t.on == "SABME_received"
     assert t.next == "Connected"
-    assert t.guard == "V_s_eq_V_a"
+    assert t.guard == "vs_eq_va"
     assert len(t.actions) == 11
     assert t.actions[0].verb == "F := P"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "set_version_2_2"
+    assert t.actions[1].verb == "Set Version 2.2"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
+    assert t.actions[3].verb == "Clear Exception Conditions"
     assert t.actions[3].kind == ActionKind.SUBROUTINE
-    assert t.actions[4].verb == "DL_ERROR_indication_F"
+    assert t.actions[4].verb == "DL-ERROR Indication (F)"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "stop_T1"
+    assert t.actions[5].verb == "Stop T1"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "start_T3"
+    assert t.actions[6].verb == "Start T3"
     assert t.actions[6].kind == ActionKind.PROCESSING
     assert t.actions[7].verb == "V(a) := 0"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -903,114 +525,152 @@ def test_t43_sabme_received_vs_eq_va() -> None:
     assert t.actions[10].kind == ActionKind.PROCESSING
 
 
-def test_t44_frmr_received_v22() -> None:
+def test_t15_sabme_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t44_frmr_received_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t15_sabme_received_no"),
         None,
     )
-    assert t is not None, "transition t44_frmr_received_v22 not found"
-    assert t.on == "FRMR_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_K"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t45_frmr_received_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t45_frmr_received_v20"),
-        None,
-    )
-    assert t is not None, "transition t45_frmr_received_v20 not found"
-    assert t.on == "FRMR_received"
-    assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_K"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t46_ua_received_v22() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t46_ua_received_v22"),
-        None,
-    )
-    assert t is not None, "transition t46_ua_received_v22 not found"
-    assert t.on == "UA_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_K"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t47_ua_received_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t47_ua_received_v20"),
-        None,
-    )
-    assert t is not None, "transition t47_ua_received_v20 not found"
-    assert t.on == "UA_received"
-    assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "DL_ERROR_indication_K"
-    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "Establish_Data_Link"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "clear_layer_3_initiated"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-
-
-def test_t48_ui_received_p_eq_0() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t48_ui_received_p_eq_0"),
-        None,
-    )
-    assert t is not None, "transition t48_ui_received_p_eq_0 not found"
-    assert t.on == "UI_received"
+    assert t is not None, "transition t15_sabme_received_no not found"
+    assert t.on == "SABME_received"
     assert t.next == "Connected"
-    assert t.guard == "not P_eq_1"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_Check"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.guard == "not vs_eq_va"
+    assert len(t.actions) == 13
+    assert t.actions[0].verb == "F := P"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Set Version 2.2"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "UA"
+    assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[3].verb == "Clear Exception Conditions"
+    assert t.actions[3].kind == ActionKind.SUBROUTINE
+    assert t.actions[4].verb == "DL-ERROR Indication (F)"
+    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[5].verb == "discard_I_frame_queue"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "DL-CONNECT Indication"
+    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[7].verb == "Stop T1"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+    assert t.actions[8].verb == "Start T3"
+    assert t.actions[8].kind == ActionKind.PROCESSING
+    assert t.actions[9].verb == "V(a) := 0"
+    assert t.actions[9].kind == ActionKind.PROCESSING
+    assert t.actions[10].verb == "V(s) := 0"
+    assert t.actions[10].kind == ActionKind.PROCESSING
+    assert t.actions[11].verb == "V(r) := 0"
+    assert t.actions[11].kind == ActionKind.PROCESSING
+    assert t.actions[12].verb == "RC := 0"
+    assert t.actions[12].kind == ActionKind.PROCESSING
 
 
-def test_t49_ui_received_p_eq_1() -> None:
+def test_t16_frmr_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t49_ui_received_p_eq_1"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t16_frmr_received_no"),
         None,
     )
-    assert t is not None, "transition t49_ui_received_p_eq_1 not found"
+    assert t is not None, "transition t16_frmr_received_no not found"
+    assert t.on == "FRMR_received"
+    assert t.next == "AwaitingConnection"
+    assert t.guard == "not version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "DL-ERROR Indication (K)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t16_frmr_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t16_frmr_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t16_frmr_received_yes not found"
+    assert t.on == "FRMR_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "DL-ERROR Indication (K)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t17_ua_received_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t17_ua_received_no"),
+        None,
+    )
+    assert t is not None, "transition t17_ua_received_no not found"
+    assert t.on == "UA_received"
+    assert t.next == "AwaitingConnection"
+    assert t.guard == "not version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "DL-ERROR Indication (K)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t17_ua_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t17_ua_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t17_ua_received_yes not found"
+    assert t.on == "UA_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "DL-ERROR Indication (K)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t18_ui_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t18_ui_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t18_ui_received_yes not found"
     assert t.on == "UI_received"
     assert t.next == "Connected"
     assert t.guard == "P_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "UI_Check"
+    assert t.actions[0].verb == "UI Check"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "Enquiry_Response_F_1"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
 
 
-def test_t50_disc_received() -> None:
+def test_t18_ui_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t50_disc_received"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t18_ui_received_no"),
         None,
     )
-    assert t is not None, "transition t50_disc_received not found"
+    assert t is not None, "transition t18_ui_received_no not found"
+    assert t.on == "UI_received"
+    assert t.next == "Connected"
+    assert t.guard == "not P_eq_1"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "UI Check"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+
+
+def test_t19_disc_received() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t19_disc_received"),
+        None,
+    )
+    assert t is not None, "transition t19_disc_received not found"
     assert t.on == "DISC_received"
     assert t.next == "Disconnected"
     assert len(t.actions) == 6
@@ -1020,433 +680,677 @@ def test_t50_disc_received() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "DL_DISCONNECT_indication"
+    assert t.actions[3].verb == "DL-DISCONNECT Indication"
     assert t.actions[3].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[4].verb == "stop_T3"
+    assert t.actions[4].verb == "Stop T3"
     assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "start_T1"
+    assert t.actions[5].verb == "Start T1"
     assert t.actions[5].kind == ActionKind.PROCESSING
 
 
-def test_t51_dm_received() -> None:
+def test_t20_dm_received() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t51_dm_received"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t20_dm_received"),
         None,
     )
-    assert t is not None, "transition t51_dm_received not found"
+    assert t is not None, "transition t20_dm_received not found"
     assert t.on == "DM_received"
     assert t.next == "Disconnected"
     assert len(t.actions) == 5
-    assert t.actions[0].verb == "DL_ERROR_indication_E"
+    assert t.actions[0].verb == "DL-ERROR Indication (E)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "DL_DISCONNECT_indication"
+    assert t.actions[1].verb == "DL-DISCONNECT Indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[2].verb == "discard_I_frame_queue"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "stop_T1"
+    assert t.actions[3].verb == "Stop T1"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "stop_T3"
+    assert t.actions[4].verb == "Stop T3"
     assert t.actions[4].kind == ActionKind.PROCESSING
 
 
-def test_t52_rr_received_nr_in_window() -> None:
+def test_t21_rr_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t52_rr_received_nr_in_window"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t21_rr_received_yes"),
         None,
     )
-    assert t is not None, "transition t52_rr_received_nr_in_window not found"
+    assert t is not None, "transition t21_rr_received_yes not found"
     assert t.on == "RR_received"
     assert t.next == "Connected"
-    assert t.guard == "V_a_le_N_r_le_V_s"
+    assert t.guard == "va_le_nr_le_vs"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[2].verb == "Check I Frame Acknowledged"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
-def test_t53_rr_received_nr_out_of_window_v22() -> None:
+def test_t21_rr_received_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t53_rr_received_nr_out_of_window_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t21_rr_received_no_no"),
         None,
     )
-    assert t is not None, "transition t53_rr_received_nr_out_of_window_v22 not found"
-    assert t.on == "RR_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "not V_a_le_N_r_le_V_s and version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "clear_peer_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
-
-
-def test_t54_rr_received_nr_out_of_window_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t54_rr_received_nr_out_of_window_v20"),
-        None,
-    )
-    assert t is not None, "transition t54_rr_received_nr_out_of_window_v20 not found"
+    assert t is not None, "transition t21_rr_received_no_no not found"
     assert t.on == "RR_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not V_a_le_N_r_le_V_s and not version_2_2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
+    assert t.actions[2].verb == "N(r) Error Recovery"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
-def test_t55_rnr_received_nr_in_window() -> None:
+def test_t21_rr_received_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t55_rnr_received_nr_in_window"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t21_rr_received_no_yes"),
         None,
     )
-    assert t is not None, "transition t55_rnr_received_nr_in_window not found"
+    assert t is not None, "transition t21_rr_received_no_yes not found"
+    assert t.on == "RR_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "clear_peer_receiver_busy"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Check Need For Response"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "N(r) Error Recovery"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+
+
+def test_t22_rnr_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t22_rnr_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t22_rnr_received_yes not found"
     assert t.on == "RNR_received"
     assert t.next == "Connected"
-    assert t.guard == "V_a_le_N_r_le_V_s"
+    assert t.guard == "va_le_nr_le_vs"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[2].verb == "Check I Frame Acknowledged"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
-def test_t56_rnr_received_nr_out_of_window_v22() -> None:
+def test_t22_rnr_received_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t56_rnr_received_nr_out_of_window_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t22_rnr_received_no_no"),
         None,
     )
-    assert t is not None, "transition t56_rnr_received_nr_out_of_window_v22 not found"
-    assert t.on == "RNR_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "not V_a_le_N_r_le_V_s and version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "set_peer_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
-
-
-def test_t57_rnr_received_nr_out_of_window_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t57_rnr_received_nr_out_of_window_v20"),
-        None,
-    )
-    assert t is not None, "transition t57_rnr_received_nr_out_of_window_v20 not found"
+    assert t is not None, "transition t22_rnr_received_no_no not found"
     assert t.on == "RNR_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not V_a_le_N_r_le_V_s and not version_2_2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
+    assert t.actions[2].verb == "N(r) Error Recovery"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
-def test_t58_lm_seize_confirm_no_ack_pending() -> None:
+def test_t22_rnr_received_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t58_lm_seize_confirm_no_ack_pending"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t22_rnr_received_no_yes"),
         None,
     )
-    assert t is not None, "transition t58_lm_seize_confirm_no_ack_pending not found"
-    assert t.on == "LM_SEIZE_confirm"
-    assert t.next == "Connected"
-    assert t.guard == "not acknowledge_pending"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "LM_release_request"
-    assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
-
-
-def test_t59_lm_seize_confirm_ack_pending() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t59_lm_seize_confirm_ack_pending"),
-        None,
-    )
-    assert t is not None, "transition t59_lm_seize_confirm_ack_pending not found"
-    assert t.on == "LM_SEIZE_confirm"
-    assert t.next == "Connected"
-    assert t.guard == "acknowledge_pending"
+    assert t is not None, "transition t22_rnr_received_no_yes not found"
+    assert t.on == "RNR_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not va_le_nr_le_vs and version_2.2"
     assert len(t.actions) == 3
-    assert t.actions[0].verb == "clear_acknowledge_pending"
+    assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Enquiry_Response_F_0"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "LM_release_request"
+    assert t.actions[2].verb == "N(r) Error Recovery"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+
+
+def test_t23_lm_seize_confirm_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t23_lm_seize_confirm_yes"),
+        None,
+    )
+    assert t is not None, "transition t23_lm_seize_confirm_yes not found"
+    assert t.on == "LM_SEIZE_confirm"
+    assert t.next == "Connected"
+    assert t.guard == "ack_pending"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "Clear Acknowledge Pending"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Enquiry Response (F = 0)"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "LM-RELEASE Request"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t60_srej_received_nr_in_window_pf_eq_0() -> None:
+def test_t23_lm_seize_confirm_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t60_srej_received_nr_in_window_pf_eq_0"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t23_lm_seize_confirm_no"),
         None,
     )
-    assert t is not None, "transition t60_srej_received_nr_in_window_pf_eq_0 not found"
-    assert t.on == "SREJ_received"
+    assert t is not None, "transition t23_lm_seize_confirm_no not found"
+    assert t.on == "LM_SEIZE_confirm"
     assert t.next == "Connected"
-    assert t.guard == "V_a_le_N_r_le_V_s and not P_or_F_eq_1"
-    assert len(t.actions) == 10
-    assert t.actions[0].verb == "clear_peer_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "stop_T1"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "start_T3"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "Select_T1_Value"
-    assert t.actions[4].kind == ActionKind.SUBROUTINE
-    assert t.actions[5].verb == "push_old_I_frame_N_r_on_queue"
-    assert t.actions[5].kind == ActionKind.INTERNAL_OUT
-    assert t.actions[6].verb == "LM_data_request"
-    assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[7].verb == "stop_T3"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "start_T1"
-    assert t.actions[8].kind == ActionKind.PROCESSING
-    assert t.actions[9].verb == "clear_acknowledge_pending"
-    assert t.actions[9].kind == ActionKind.PROCESSING
+    assert t.guard == "not ack_pending"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "LM-RELEASE Request"
+    assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t61_srej_received_nr_in_window_pf_eq_1() -> None:
+def test_t24_srej_received_yes_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t61_srej_received_nr_in_window_pf_eq_1"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t24_srej_received_yes_yes"),
         None,
     )
-    assert t is not None, "transition t61_srej_received_nr_in_window_pf_eq_1 not found"
+    assert t is not None, "transition t24_srej_received_yes_yes not found"
     assert t.on == "SREJ_received"
     assert t.next == "Connected"
-    assert t.guard == "V_a_le_N_r_le_V_s and P_or_F_eq_1"
+    assert t.guard == "va_le_nr_le_vs and p/f_eq_1"
     assert len(t.actions) == 11
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
     assert t.actions[2].verb == "V(a) := N(r)"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "stop_T1"
+    assert t.actions[3].verb == "Stop T1"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "start_T3"
+    assert t.actions[4].verb == "Start T3"
     assert t.actions[4].kind == ActionKind.PROCESSING
     assert t.actions[5].verb == "Select_T1_Value"
     assert t.actions[5].kind == ActionKind.SUBROUTINE
-    assert t.actions[6].verb == "push_old_I_frame_N_r_on_queue"
+    assert t.actions[6].verb == "Push Old I Frame N(r) on Queue"
     assert t.actions[6].kind == ActionKind.INTERNAL_OUT
-    assert t.actions[7].verb == "LM_data_request"
+    assert t.actions[7].verb == "LM-DATA Request"
     assert t.actions[7].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[8].verb == "stop_T3"
+    assert t.actions[8].verb == "Stop T3"
     assert t.actions[8].kind == ActionKind.PROCESSING
-    assert t.actions[9].verb == "start_T1"
+    assert t.actions[9].verb == "Start T1"
     assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "clear_acknowledge_pending"
+    assert t.actions[10].verb == "Clear Acknowledge Pending"
     assert t.actions[10].kind == ActionKind.PROCESSING
 
 
-def test_t62_srej_received_nr_out_of_window_v22() -> None:
+def test_t24_srej_received_yes_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t62_srej_received_nr_out_of_window_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t24_srej_received_yes_no"),
         None,
     )
-    assert t is not None, "transition t62_srej_received_nr_out_of_window_v22 not found"
+    assert t is not None, "transition t24_srej_received_yes_no not found"
     assert t.on == "SREJ_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "not V_a_le_N_r_le_V_s and version_2_2"
-    assert len(t.actions) == 3
+    assert t.next == "Connected"
+    assert t.guard == "va_le_nr_le_vs and not p/f_eq_1"
+    assert len(t.actions) == 10
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Stop T1"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "Start T3"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "Select_T1_Value"
+    assert t.actions[4].kind == ActionKind.SUBROUTINE
+    assert t.actions[5].verb == "Push Old I Frame N(r) on Queue"
+    assert t.actions[5].kind == ActionKind.INTERNAL_OUT
+    assert t.actions[6].verb == "LM-DATA Request"
+    assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[7].verb == "Stop T3"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+    assert t.actions[8].verb == "Start T1"
+    assert t.actions[8].kind == ActionKind.PROCESSING
+    assert t.actions[9].verb == "Clear Acknowledge Pending"
+    assert t.actions[9].kind == ActionKind.PROCESSING
 
 
-def test_t63_srej_received_nr_out_of_window_v20() -> None:
+def test_t24_srej_received_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t63_srej_received_nr_out_of_window_v20"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t24_srej_received_no_no"),
         None,
     )
-    assert t is not None, "transition t63_srej_received_nr_out_of_window_v20 not found"
+    assert t is not None, "transition t24_srej_received_no_no not found"
     assert t.on == "SREJ_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not V_a_le_N_r_le_V_s and not version_2_2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
+    assert t.actions[2].verb == "N(r) Error Recovery"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
-def test_t64_rej_received_nr_in_window() -> None:
+def test_t24_srej_received_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t64_rej_received_nr_in_window"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t24_srej_received_no_yes"),
         None,
     )
-    assert t is not None, "transition t64_rej_received_nr_in_window not found"
+    assert t is not None, "transition t24_srej_received_no_yes not found"
+    assert t.on == "SREJ_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "clear_peer_receiver_busy"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Check Need For Response"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "N(r) Error Recovery"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+
+
+def test_t25_rej_received_no_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t25_rej_received_no_no"),
+        None,
+    )
+    assert t is not None, "transition t25_rej_received_no_no not found"
+    assert t.on == "REJ_received"
+    assert t.next == "AwaitingConnection"
+    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "clear_peer_receiver_busy"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Check Need For Response"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "N(r) Error Recovery"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+
+
+def test_t25_rej_received_no_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t25_rej_received_no_yes"),
+        None,
+    )
+    assert t is not None, "transition t25_rej_received_no_yes not found"
+    assert t.on == "REJ_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "clear_peer_receiver_busy"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "Check Need For Response"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "N(r) Error Recovery"
+    assert t.actions[2].kind == ActionKind.SUBROUTINE
+
+
+def test_t25_rej_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t25_rej_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t25_rej_received_yes not found"
     assert t.on == "REJ_received"
     assert t.next == "Connected"
-    assert t.guard == "V_a_le_N_r_le_V_s"
+    assert t.guard == "va_le_nr_le_vs"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
     assert t.actions[2].verb == "V(a) := N(r)"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "start_T1"
+    assert t.actions[3].verb == "Start T1"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "stop_T3"
+    assert t.actions[4].verb == "Stop T3"
     assert t.actions[4].kind == ActionKind.PROCESSING
-    assert t.actions[5].verb == "clear_acknowledge_pending"
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
     assert t.actions[5].kind == ActionKind.PROCESSING
     assert t.actions[6].verb == "Select_T1_Value"
     assert t.actions[6].kind == ActionKind.SUBROUTINE
-    assert t.actions[7].verb == "Invoke_Retransmission"
+    assert t.actions[7].verb == "Invoke Retransmission"
     assert t.actions[7].kind == ActionKind.SUBROUTINE
 
 
-def test_t65_rej_received_nr_out_of_window_v22() -> None:
+def test_t26_i_received_no_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t65_rej_received_nr_out_of_window_v22"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_no_no"),
         None,
     )
-    assert t is not None, "transition t65_rej_received_nr_out_of_window_v22 not found"
-    assert t.on == "REJ_received"
-    assert t.next == "AwaitingConnection22"
-    assert t.guard == "not V_a_le_N_r_le_V_s and version_2_2"
-    assert len(t.actions) == 3
-    assert t.actions[0].verb == "clear_peer_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
-
-
-def test_t66_rej_received_nr_out_of_window_v20() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t66_rej_received_nr_out_of_window_v20"),
-        None,
-    )
-    assert t is not None, "transition t66_rej_received_nr_out_of_window_v20 not found"
-    assert t.on == "REJ_received"
+    assert t is not None, "transition t26_i_received_no_no_no not found"
+    assert t.on == "I_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not V_a_le_N_r_le_V_s and not version_2_2"
+    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2"
     assert len(t.actions) == 3
-    assert t.actions[0].verb == "clear_peer_receiver_busy"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Check_Need_For_Response"
+    assert t.actions[0].verb == "DL-ERROR Indication (O)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "N_r_Error_Recovery"
-    assert t.actions[2].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t67_i_received_in_seq_stored_p_eq_1() -> None:
+def test_t26_i_received_no_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t67_i_received_in_seq_stored_p_eq_1"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_no_yes"),
         None,
     )
-    assert t is not None, "transition t67_i_received_in_seq_stored_p_eq_1 not found"
+    assert t is not None, "transition t26_i_received_no_no_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2"
+    assert len(t.actions) == 3
+    assert t.actions[0].verb == "DL-ERROR Indication (O)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Establish_Data_Link"
+    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[2].verb == "Clear Layer 3 Initiated"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_no_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_no_no"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_no_no not found"
+    assert t.on == "I_received"
+    assert t.next == "AwaitingConnection"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "N(r) Error Recovery"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+
+
+def test_t26_i_received_no_yes_no_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_no_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_no_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "AwaitingV22Connection"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "N(r) Error Recovery"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+
+
+def test_t26_i_received_no_yes_yes_no_yes_no_no_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_no_no"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and P_eq_1"
-    assert len(t.actions) == 12
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
+    assert len(t.actions) == 7
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "V(r) := V(r) + 1"
     assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
+    assert t.actions[2].verb == "Clear Reject Exception"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
+    assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
+    assert t.actions[4].verb == "DL-DATA Indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "retrieve_stored_V_r_I_frame"
-    assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL_DATA_indication"
-    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[7].verb == "V(r) := V(r) + 1"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "F := 1"
-    assert t.actions[8].kind == ActionKind.PROCESSING
-    assert t.actions[9].verb == "N(r) := V(r)"
-    assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "RR"
-    assert t.actions[10].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[11].verb == "clear_acknowledge_pending"
-    assert t.actions[11].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "LM-SEIZE Request"
+    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[6].verb == "set_acknowledge_pending"
+    assert t.actions[6].kind == ActionKind.PROCESSING
 
 
-def test_t68_i_received_in_seq_stored_p_eq_0_ack_pending() -> None:
+def test_t26_i_received_no_yes_yes_no_yes_no_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t68_i_received_in_seq_stored_p_eq_0_ack_pending"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_no_yes"),
         None,
     )
-    assert t is not None, "transition t68_i_received_in_seq_stored_p_eq_0_ack_pending not found"
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and not P_eq_1 and acknowledge_pending"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
+    assert len(t.actions) == 5
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "V(r) := V(r) + 1"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "Clear Reject Exception"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
+
+
+def test_t26_i_received_no_yes_yes_no_yes_no_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
+    assert len(t.actions) == 9
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "V(r) := V(r) + 1"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "Clear Reject Exception"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[5].verb == "F := 1"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "N(r) := V(r)"
+    assert t.actions[6].kind == ActionKind.PROCESSING
+    assert t.actions[7].verb == "RR"
+    assert t.actions[7].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[8].verb == "Clear Acknowledge Pending"
+    assert t.actions[8].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_yes_no_no_yes_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_yes_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_yes_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1"
+    assert len(t.actions) == 6
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Discard Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "F := 1"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "N(r) := V(r)"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "RR"
+    assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_yes_no_no_yes_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_yes_no"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_yes_no not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1"
+    assert len(t.actions) == 2
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Discard Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_yes_no_no_no_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_no"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_no not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled"
+    assert len(t.actions) == 7
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Discard Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "Set Reject Exception"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "F := P"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "N(r) := V(r)"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "REJ"
+    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[6].verb == "Clear Acknowledge Pending"
+    assert t.actions[6].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_yes_no_no_no_yes_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0"
+    assert len(t.actions) == 6
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Save Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "N(r) := N(s)"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "F := 0"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "Increment Sreject Exception"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "SREJ"
+    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
+
+
+def test_t26_i_received_no_yes_yes_no_no_no_yes_no_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
+    assert t.actions[1].verb == "Save Contents of I Frame"
     assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
+    assert t.actions[2].verb == "Discard Contents of I Frame"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
+    assert t.actions[3].verb == "Set Reject Exception"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "retrieve_stored_V_r_I_frame"
+    assert t.actions[4].verb == "F := P"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "N(r) := V(r)"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL_DATA_indication"
-    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[7].verb == "V(r) := V(r) + 1"
+    assert t.actions[6].verb == "REJ"
+    assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[7].verb == "Clear Acknowledge Pending"
     assert t.actions[7].kind == ActionKind.PROCESSING
 
 
-def test_t69_i_received_in_seq_stored_p_eq_0_no_ack_pending() -> None:
+def test_t26_i_received_no_yes_yes_no_no_no_yes_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t69_i_received_in_seq_stored_p_eq_0_no_ack_pending"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_no"),
         None,
     )
-    assert t is not None, "transition t69_i_received_in_seq_stored_p_eq_0_no_ack_pending not found"
+    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "command and info_field_valid and V_a_le_N_r_le_V_s and not own_receiver_busy and N_s_eq_V_r and V_r_I_frame_stored and not P_eq_1 and not acknowledge_pending"
-    assert len(t.actions) == 10
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1"
+    assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
+    assert t.actions[1].verb == "Save Contents of I Frame"
     assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "clear_reject_exception"
+    assert t.actions[2].verb == "N(r) := V(r)"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "decrement_srej_exception_if_gt_0"
+    assert t.actions[3].verb == "F := 1"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL_DATA_indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "retrieve_stored_V_r_I_frame"
+    assert t.actions[4].verb == "Increment Sreject Exception"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "SREJ"
+    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
+
+
+def test_t26_i_received_no_yes_yes_yes_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_yes_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_yes_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1"
+    assert len(t.actions) == 6
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Discard Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "F := 1"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "N(r) := V(r)"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "RR"
+    assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL_DATA_indication"
-    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[7].verb == "V(r) := V(r) + 1"
-    assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "LM_seize_request"
-    assert t.actions[8].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[9].verb == "set_acknowledge_pending"
-    assert t.actions[9].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_no_yes_yes_yes_no() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_yes_no"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_no_yes_yes_yes_no not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1"
+    assert len(t.actions) == 2
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Discard Contents of I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "command"
+    assert len(t.actions) == 2
+    assert t.actions[0].verb == "DL-ERROR Indication (O)"
+    assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[1].verb == "Discard I Frame"
+    assert t.actions[1].kind == ActionKind.PROCESSING
 

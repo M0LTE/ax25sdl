@@ -3,6 +3,9 @@
 
 machine: data_link
 state: Connected
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.4
 
 decisions:
   - id: i_frame_pops_off_queue_peer_receiver_busy
@@ -62,7 +65,7 @@ decisions:
   - id: rnr_version_2.2
     question: "Version 2.2?"
     predicate: version_2.2
-  - id: lm-seize_ack_pending
+  - id: lm_seize_ack_pending
     question: "Ack Pending?"
     predicate: ack_pending
   - id: srej_va_le_nr_le_vs
@@ -98,9 +101,6 @@ decisions:
   - id: i_ns_eq_vr
     question: "N(s) == V(r)?"
     predicate: ns_eq_vr
-  - id: i_vr_i_frame_stored
-    question: "V(r) I Frame Stored?"
-    predicate: vr_I_frame_stored
   - id: i_p_eq_1
     question: "P == 1?"
     predicate: P_eq_1
@@ -139,14 +139,14 @@ transitions:
     next: Connected
 
   - id: t03_i_frame_pops_off_queue_yes
-    on: i_frame_pops_off_queue
+    on: I_frame_pops_off_queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: Yes }
       - { action: Push on I Frame Queue, kind: internal_out }
     next: Connected
 
   - id: t03_i_frame_pops_off_queue_no_yes
-    on: i_frame_pops_off_queue
+    on: I_frame_pops_off_queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: Yes }
@@ -154,7 +154,7 @@ transitions:
     next: Connected
 
   - id: t03_i_frame_pops_off_queue_no_no_no
-    on: i_frame_pops_off_queue
+    on: I_frame_pops_off_queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
@@ -170,7 +170,7 @@ transitions:
     next: Connected
 
   - id: t03_i_frame_pops_off_queue_no_no_yes
-    on: i_frame_pops_off_queue
+    on: I_frame_pops_off_queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
@@ -248,7 +248,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
       - { decision: dl_connect_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t08_all_other_primitives__from_lower_layer
     on: all_other_primitives__from_lower_layer
@@ -273,7 +273,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
       - { decision: control_field_error_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t10_info_not_permitted_in_frame_no
     on: info_not_permitted_in_frame
@@ -293,7 +293,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
       - { decision: info_not_permitted_in_frame_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t11_u_or_s_frame_length_error_no
     on: u_or_s_frame_length_error
@@ -313,17 +313,17 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
       - { decision: u_or_s_frame_length_error_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
-  - id: t12_timer_t1_expiry
-    on: timer_t1_expiry
+  - id: t12_t1_expiry
+    on: T1_expiry
     path:
       - { action: "RC := 1", kind: processing }
       - { action: Transmit Enquery, kind: subroutine }
     next: TimerRecovery
 
-  - id: t13_timer_t3_expiry
-    on: timer_t3_expiry
+  - id: t13_t3_expiry
+    on: T3_expiry
     path:
       - { action: "RC := 1", kind: processing }
       - { action: Transmit Enquery, kind: subroutine }
@@ -417,7 +417,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
       - { decision: frmr_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t17_ua_received_no
     on: UA_received
@@ -435,7 +435,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
       - { decision: ua_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t18_ui_received_yes
     on: UI_received
@@ -500,7 +500,7 @@ transitions:
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: rr_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t22_rnr_received_yes
     on: RNR_received
@@ -529,21 +529,21 @@ transitions:
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: rnr_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
-  - id: t23_lm-seize_confirm_yes
-    on: lm-seize_confirm
+  - id: t23_lm_seize_confirm_yes
+    on: LM_SEIZE_confirm
     path:
-      - { decision: lm-seize_ack_pending, branch: Yes }
+      - { decision: lm_seize_ack_pending, branch: Yes }
       - { action: Clear Acknowledge Pending, kind: processing }
       - { action: Enquiry Response (F = 0), kind: subroutine }
       - { action: LM-RELEASE Request, kind: signal_lower }
     next: Connected
 
-  - id: t23_lm-seize_confirm_no
-    on: lm-seize_confirm
+  - id: t23_lm_seize_confirm_no
+    on: LM_SEIZE_confirm
     path:
-      - { decision: lm-seize_ack_pending, branch: No }
+      - { decision: lm_seize_ack_pending, branch: No }
       - { action: LM-RELEASE Request, kind: signal_lower }
     next: Connected
 
@@ -600,7 +600,7 @@ transitions:
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: srej_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t25_rej_received_no_no
     on: REJ_received
@@ -620,7 +620,7 @@ transitions:
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: rej_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t25_rej_received_yes
     on: REJ_received
@@ -656,7 +656,7 @@ transitions:
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
       - { decision: i_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t26_i_received_no_yes_no_no
     on: I_received
@@ -676,7 +676,7 @@ transitions:
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: i_version_2.2, branch: Yes }
-    next: Awaiting2.2Connection
+    next: AwaitingV22Connection
 
   - id: t26_i_received_no_yes_yes_no_yes_no_no_no
     on: I_received
@@ -691,7 +691,6 @@ transitions:
       - { action: Clear Reject Exception, kind: processing }
       - { action: "Decrement Sreject Exception if > 0", kind: processing }
       - { action: DL-DATA Indication, kind: signal_upper }
-      - { decision: i_vr_i_frame_stored, branch: No }
       - { decision: i_p_eq_1, branch: No }
       - { decision: i_ack_pending, branch: No }
       - { action: LM-SEIZE Request, kind: signal_lower }
@@ -711,7 +710,6 @@ transitions:
       - { action: Clear Reject Exception, kind: processing }
       - { action: "Decrement Sreject Exception if > 0", kind: processing }
       - { action: DL-DATA Indication, kind: signal_upper }
-      - { decision: i_vr_i_frame_stored, branch: No }
       - { decision: i_p_eq_1, branch: No }
       - { decision: i_ack_pending, branch: Yes }
     next: Connected
@@ -729,7 +727,6 @@ transitions:
       - { action: Clear Reject Exception, kind: processing }
       - { action: "Decrement Sreject Exception if > 0", kind: processing }
       - { action: DL-DATA Indication, kind: signal_upper }
-      - { decision: i_vr_i_frame_stored, branch: No }
       - { decision: i_p_eq_1, branch: Yes }
       - { action: "F := 1", kind: processing }
       - { action: "N(r) := V(r)", kind: processing }

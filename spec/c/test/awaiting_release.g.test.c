@@ -46,38 +46,39 @@ static int test_t01_dl_disconnect_request(void) {
   return 0;
 }
 
-static int test_t02_t1_expiry_rc_eq_n2(void) {
+static int test_t02_t1_expiry_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t02_t1_expiry_rc_eq_n2") == 0) {
+               "t02_t1_expiry_yes") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t02_t1_expiry_rc_eq_n2 not found");
+  ASSERT(t != NULL, "t02_t1_expiry_yes not found");
   ASSERT_STREQ(t->on, "T1_expiry", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "RC_eq_N2", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_G", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (G)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   return 0;
 }
 
-static int test_t03_t1_expiry_rc_neq_n2(void) {
+static int test_t02_t1_expiry_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t03_t1_expiry_rc_neq_n2") == 0) {
+               "t02_t1_expiry_no") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t03_t1_expiry_rc_neq_n2 not found");
+  ASSERT(t != NULL, "t02_t1_expiry_no not found");
   ASSERT_STREQ(t->on, "T1_expiry", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not RC_eq_N2", "guard");
@@ -88,165 +89,169 @@ static int test_t03_t1_expiry_rc_neq_n2(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "start_T1", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "Start T1", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
   return 0;
 }
 
-static int test_t04_ua_received_f_eq_1(void) {
+static int test_t03_ua_received_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t04_ua_received_f_eq_1") == 0) {
+               "t03_ua_received_yes") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t04_ua_received_f_eq_1 not found");
+  ASSERT(t != NULL, "t03_ua_received_yes not found");
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "F_eq_1", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "stop_T1", "actions[1].verb");
+  ASSERT_STREQ(t->actions[1].verb, "Stop T1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   return 0;
 }
 
-static int test_t05_ua_received_not_f_eq_1(void) {
+static int test_t03_ua_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t05_ua_received_not_f_eq_1") == 0) {
+               "t03_ua_received_no") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t05_ua_received_not_f_eq_1 not found");
+  ASSERT(t != NULL, "t03_ua_received_no not found");
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not F_eq_1", "guard");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_D", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (D)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
 
-static int test_t06_all_other_primitives_from_upper_layer(void) {
+static int test_t04_all_other_primitives__from_upper_layer(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t06_all_other_primitives_from_upper_layer") == 0) {
+               "t04_all_other_primitives__from_upper_layer") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t06_all_other_primitives_from_upper_layer not found");
+  ASSERT(t != NULL, "t04_all_other_primitives__from_upper_layer not found");
   ASSERT_STREQ(t->on, "all_other_primitives__from_upper_layer", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 0, "actions count");
   return 0;
 }
 
-static int test_t07_dl_unit_data_request(void) {
+static int test_t05_dl_unit_data_request(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t07_dl_unit_data_request") == 0) {
+               "t05_dl_unit_data_request") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t07_dl_unit_data_request not found");
+  ASSERT(t != NULL, "t05_dl_unit_data_request not found");
   ASSERT_STREQ(t->on, "DL_UNIT_DATA_request", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_command", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "UI Command", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[0].kind");
   return 0;
 }
 
-static int test_t08_all_other_primitives_from_lower_layer(void) {
+static int test_t06_all_other_primitives__from_lower_layer(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t08_all_other_primitives_from_lower_layer") == 0) {
+               "t06_all_other_primitives__from_lower_layer") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t08_all_other_primitives_from_lower_layer not found");
+  ASSERT(t != NULL, "t06_all_other_primitives__from_lower_layer not found");
   ASSERT_STREQ(t->on, "all_other_primitives__from_lower_layer", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 0, "actions count");
   return 0;
 }
 
-static int test_t09_control_field_error(void) {
+static int test_t07_control_field_error(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t09_control_field_error") == 0) {
+               "t07_control_field_error") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t09_control_field_error not found");
+  ASSERT(t != NULL, "t07_control_field_error not found");
   ASSERT_STREQ(t->on, "control_field_error", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_L", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (L)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
 
-static int test_t10_info_not_permitted_in_frame(void) {
+static int test_t08_info_not_permitted_in_frame(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t10_info_not_permitted_in_frame") == 0) {
+               "t08_info_not_permitted_in_frame") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t10_info_not_permitted_in_frame not found");
+  ASSERT(t != NULL, "t08_info_not_permitted_in_frame not found");
   ASSERT_STREQ(t->on, "info_not_permitted_in_frame", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_M", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (M)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
 
-static int test_t11_u_or_s_frame_length_error(void) {
+static int test_t09_u_or_s_frame_length_error(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t11_u_or_s_frame_length_error") == 0) {
+               "t09_u_or_s_frame_length_error") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t11_u_or_s_frame_length_error not found");
+  ASSERT(t != NULL, "t09_u_or_s_frame_length_error not found");
   ASSERT_STREQ(t->on, "u_or_s_frame_length_error", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_N", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (N)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
 
-static int test_t12_sabm_received(void) {
+static int test_t10_sabm_received(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t12_sabm_received") == 0) {
+               "t10_sabm_received") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t12_sabm_received not found");
+  ASSERT(t != NULL, "t10_sabm_received not found");
   ASSERT_STREQ(t->on, "SABM_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 2, "actions count");
@@ -257,16 +262,16 @@ static int test_t12_sabm_received(void) {
   return 0;
 }
 
-static int test_t13_sabme_received(void) {
+static int test_t11_sabme_received(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t13_sabme_received") == 0) {
+               "t11_sabme_received") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t13_sabme_received not found");
+  ASSERT(t != NULL, "t11_sabme_received not found");
   ASSERT_STREQ(t->on, "SABME_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 2, "actions count");
@@ -277,16 +282,16 @@ static int test_t13_sabme_received(void) {
   return 0;
 }
 
-static int test_t14_disc_received(void) {
+static int test_t12_disc_received(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t14_disc_received") == 0) {
+               "t12_disc_received") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t14_disc_received not found");
+  ASSERT(t != NULL, "t12_disc_received not found");
   ASSERT_STREQ(t->on, "DISC_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT(t->actions_len == 2, "actions count");
@@ -297,37 +302,37 @@ static int test_t14_disc_received(void) {
   return 0;
 }
 
-static int test_t15_dm_received_f_eq_1(void) {
+static int test_t13_dm_received_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t15_dm_received_f_eq_1") == 0) {
+               "t13_dm_received_yes") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t15_dm_received_f_eq_1 not found");
+  ASSERT(t != NULL, "t13_dm_received_yes not found");
   ASSERT_STREQ(t->on, "DM_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "F_eq_1", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "stop_T1", "actions[1].verb");
+  ASSERT_STREQ(t->actions[1].verb, "Stop T1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   return 0;
 }
 
-static int test_t16_dm_received_not_f_eq_1(void) {
+static int test_t13_dm_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t16_dm_received_not_f_eq_1") == 0) {
+               "t13_dm_received_no") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t16_dm_received_not_f_eq_1 not found");
+  ASSERT(t != NULL, "t13_dm_received_no not found");
   ASSERT_STREQ(t->on, "DM_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not F_eq_1", "guard");
@@ -335,56 +340,56 @@ static int test_t16_dm_received_not_f_eq_1(void) {
   return 0;
 }
 
-static int test_t17_ui_received_p_eq_1(void) {
+static int test_t14_ui_received_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t17_ui_received_p_eq_1") == 0) {
+               "t14_ui_received_yes") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t17_ui_received_p_eq_1 not found");
+  ASSERT(t != NULL, "t14_ui_received_yes not found");
   ASSERT_STREQ(t->on, "UI_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "P_eq_1", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_Check", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "UI Check", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "DM (F = 1)", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[1].kind");
   return 0;
 }
 
-static int test_t18_ui_received_not_p_eq_1(void) {
+static int test_t14_ui_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t18_ui_received_not_p_eq_1") == 0) {
+               "t14_ui_received_no") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t18_ui_received_not_p_eq_1 not found");
+  ASSERT(t != NULL, "t14_ui_received_no not found");
   ASSERT_STREQ(t->on, "UI_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not P_eq_1", "guard");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_Check", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "UI Check", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
   return 0;
 }
 
-static int test_t19_i_or_s_command_p_eq_1(void) {
+static int test_t15_i_or_s_command_received_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t19_i_or_s_command_p_eq_1") == 0) {
+               "t15_i_or_s_command_received_yes") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t19_i_or_s_command_p_eq_1 not found");
+  ASSERT(t != NULL, "t15_i_or_s_command_received_yes not found");
   ASSERT_STREQ(t->on, "i_or_s_command_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "P_eq_1", "guard");
@@ -394,16 +399,16 @@ static int test_t19_i_or_s_command_p_eq_1(void) {
   return 0;
 }
 
-static int test_t20_i_or_s_command_not_p_eq_1(void) {
+static int test_t15_i_or_s_command_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_release.transitions_len; i++) {
     if (strcmp(data_link_awaiting_release.transitions[i].id,
-               "t20_i_or_s_command_not_p_eq_1") == 0) {
+               "t15_i_or_s_command_received_no") == 0) {
       t = &data_link_awaiting_release.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t20_i_or_s_command_not_p_eq_1 not found");
+  ASSERT(t != NULL, "t15_i_or_s_command_received_no not found");
   ASSERT_STREQ(t->on, "i_or_s_command_received", "on");
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not P_eq_1", "guard");
@@ -416,24 +421,24 @@ int main(void) {
   rc |= test_source_figure();
   rc |= test_transitions_count();
   rc |= test_t01_dl_disconnect_request();
-  rc |= test_t02_t1_expiry_rc_eq_n2();
-  rc |= test_t03_t1_expiry_rc_neq_n2();
-  rc |= test_t04_ua_received_f_eq_1();
-  rc |= test_t05_ua_received_not_f_eq_1();
-  rc |= test_t06_all_other_primitives_from_upper_layer();
-  rc |= test_t07_dl_unit_data_request();
-  rc |= test_t08_all_other_primitives_from_lower_layer();
-  rc |= test_t09_control_field_error();
-  rc |= test_t10_info_not_permitted_in_frame();
-  rc |= test_t11_u_or_s_frame_length_error();
-  rc |= test_t12_sabm_received();
-  rc |= test_t13_sabme_received();
-  rc |= test_t14_disc_received();
-  rc |= test_t15_dm_received_f_eq_1();
-  rc |= test_t16_dm_received_not_f_eq_1();
-  rc |= test_t17_ui_received_p_eq_1();
-  rc |= test_t18_ui_received_not_p_eq_1();
-  rc |= test_t19_i_or_s_command_p_eq_1();
-  rc |= test_t20_i_or_s_command_not_p_eq_1();
+  rc |= test_t02_t1_expiry_yes();
+  rc |= test_t02_t1_expiry_no();
+  rc |= test_t03_ua_received_yes();
+  rc |= test_t03_ua_received_no();
+  rc |= test_t04_all_other_primitives__from_upper_layer();
+  rc |= test_t05_dl_unit_data_request();
+  rc |= test_t06_all_other_primitives__from_lower_layer();
+  rc |= test_t07_control_field_error();
+  rc |= test_t08_info_not_permitted_in_frame();
+  rc |= test_t09_u_or_s_frame_length_error();
+  rc |= test_t10_sabm_received();
+  rc |= test_t11_sabme_received();
+  rc |= test_t12_disc_received();
+  rc |= test_t13_dm_received_yes();
+  rc |= test_t13_dm_received_no();
+  rc |= test_t14_ui_received_yes();
+  rc |= test_t14_ui_received_no();
+  rc |= test_t15_i_or_s_command_received_yes();
+  rc |= test_t15_i_or_s_command_received_no();
   return rc;
 }

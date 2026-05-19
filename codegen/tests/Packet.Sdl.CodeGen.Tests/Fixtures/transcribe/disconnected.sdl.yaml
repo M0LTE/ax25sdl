@@ -3,6 +3,9 @@
 
 machine: data_link
 state: Disconnected
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.1
 
 decisions:
   - id: ui_p_eq_1
