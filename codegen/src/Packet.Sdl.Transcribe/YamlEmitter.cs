@@ -5,7 +5,7 @@ namespace Packet.Sdl.Transcribe;
 
 /// <summary>
 /// Emits an SdlPage as YAML, matching the existing format conventions in
-/// spec-sdl/v2.2-errata/data-link/*.sdl.yaml.
+/// spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml.
 /// </summary>
 /// <remarks>
 /// We hand-write YAML instead of using YamlDotNet's serializer so that

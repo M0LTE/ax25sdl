@@ -194,11 +194,11 @@ jobs:
       - name: regenerate yaml from graphml
         run: |
           dotnet run --project codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
-            -i spec-sdl/v2.2-errata/data-link/ \
-            -o spec-sdl/v2.2-errata/data-link/
+            -i spec-sdl/v2.2-errata/data-link/sdl/ \
+            -o spec-sdl/v2.2-errata/data-link/yaml/
       - name: assert no diff
         run: |
-          if ! git diff --exit-code -- spec-sdl/v2.2-errata/data-link/*.sdl.yaml; then
-            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i spec-sdl/v2.2-errata/data-link/ -o spec-sdl/v2.2-errata/data-link/\` locally and commit the diff."
+          if ! git diff --exit-code -- spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml; then
+            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i spec-sdl/v2.2-errata/data-link/sdl/ -o spec-sdl/v2.2-errata/data-link/yaml/\` locally and commit the diff."
             exit 1
           fi
