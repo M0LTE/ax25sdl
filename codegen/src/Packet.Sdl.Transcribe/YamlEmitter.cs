@@ -71,6 +71,8 @@ public static class YamlEmitter
             sb.AppendLine();
             sb.AppendLine(Inv, $"  - id: {t.Id}");
             sb.AppendLine(Inv, $"    on: {t.On}");
+            if (!string.IsNullOrEmpty(t.OnLabel))
+                sb.AppendLine(Inv, $"    on_label: {YamlQuote(t.OnLabel)}");
             if (t.Path.Count == 0)
             {
                 sb.AppendLine("    path: []");

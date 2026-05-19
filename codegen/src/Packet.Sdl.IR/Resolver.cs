@@ -73,17 +73,20 @@ public static class Resolver
         var predicates = new List<string>();
         var actions    = new List<ResolvedAction>();
         var loops      = new List<ResolvedLoop>();
-        WalkPath(t.Path, decisionsById, predicates, actions, loops);
+        var undefined  = new List<ResolvedUndefinedBranch>();
+        WalkPath(t.Path, decisionsById, predicates, actions, loops, undefined);
         return new ResolvedTransition
         {
-            Id         = t.Id,
-            On         = t.On,
-            Guard      = predicates.Count == 0 ? null : string.Join(" and ", predicates),
-            Next       = t.Next,
-            Notes      = t.Notes,
-            Actions    = actions,
-            Loops      = loops,
-            References = MapReferences(t.References),
+            Id                = t.Id,
+            On                = t.On,
+            OnLabel           = t.OnLabel ?? "",
+            Guard             = predicates.Count == 0 ? null : string.Join(" and ", predicates),
+            Next              = t.Next,
+            Notes             = t.Notes,
+            Actions           = actions,
+            Loops             = loops,
+            References        = MapReferences(t.References),
+            UndefinedBranches = undefined,
         };
     }
 
@@ -105,14 +108,26 @@ public static class Resolver
         IReadOnlyDictionary<string, SdlDecision> decisionsById,
         List<string> predicates,
         List<ResolvedAction> actions,
-        List<ResolvedLoop> loops)
+        List<ResolvedLoop> loops,
+        List<ResolvedUndefinedBranch>? undefined = null)
     {
         foreach (var step in path)
         {
             if (!string.IsNullOrWhiteSpace(step.Decision))
             {
                 var decision = decisionsById[step.Decision!];
-                predicates.Add(step.Branch == "Yes" ? decision.Predicate : "not " + decision.Predicate);
+                if (step.Branch == "Undefined")
+                {
+                    // Spec-level undefined branch — don't contribute to the
+                    // guard expression (no truth-value applies; the codegen
+                    // emits a runtime throw for this transition). Record the
+                    // decision so the emitter can quote it in the error.
+                    undefined?.Add(new ResolvedUndefinedBranch(decision.Id, decision.Question, decision.Predicate));
+                }
+                else
+                {
+                    predicates.Add(step.Branch == "Yes" ? decision.Predicate : "not " + decision.Predicate);
+                }
             }
             else if (!string.IsNullOrWhiteSpace(step.LoopWhile))
             {

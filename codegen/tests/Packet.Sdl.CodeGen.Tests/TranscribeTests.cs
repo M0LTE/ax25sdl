@@ -28,6 +28,11 @@ public class TranscribeTests
         yield return ["DataLink_AwaitingV22Connection.graphml","data_link", "AwaitingV22Connection", 25, 8];
         yield return ["DataLink_AwaitingRelease.graphml",      "data_link", "AwaitingRelease",       20, 5];
         yield return ["DataLink_Connected.graphml",            "data_link", "Connected",             66, 37];
+        // figc4.5 — has two decision diamonds whose edges are both labelled
+        // "undefined" (raised against the spec authors at
+        // packethacking/ax25spec#10 and #11). Walker yields paths through
+        // those edges with branch: Undefined and marks the page coverage: partial.
+        yield return ["DataLink_TimerRecovery.graphml",        "data_link", "TimerRecovery",         86, 45];
     }
 
     [Theory]

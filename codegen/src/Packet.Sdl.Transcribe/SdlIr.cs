@@ -8,7 +8,7 @@ public sealed class SdlPage
 {
     public required string Machine { get; init; }
     public required string State { get; init; }
-    public string Coverage { get; init; } = "complete";
+    public string Coverage { get; set; } = "complete";
     public PageSource Source { get; init; } = new();
     public List<string> Save { get; } = [];
     public List<Decision> Decisions { get; } = [];
@@ -36,6 +36,11 @@ public sealed class Transition
 {
     public required string Id { get; init; }
     public required string On { get; init; }
+    /// <summary>Verbatim trigger-box NodeLabel text from the source graphml
+    /// (e.g. "I Frame Pops Off Queue"). Preserved so generated code can quote
+    /// the figure when raising errors against transitions whose behaviour is
+    /// undefined in the SDL.</summary>
+    public required string OnLabel { get; init; }
     public List<PathStep> Path { get; } = [];
     public required string Next { get; init; }
 }

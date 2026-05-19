@@ -60,13 +60,30 @@ public sealed class ResolvedTransition
 {
     public string Id { get; init; } = "";
     public string On { get; init; } = "";
+    /// <summary>Verbatim trigger-box NodeLabel text from the source SDL (e.g.
+    /// "I Frame Pops Off Queue"). Empty for transitions transcribed before the
+    /// on_label field landed. Emitters include this in error messages so a
+    /// runtime trace can quote the figure.</summary>
+    public string OnLabel { get; init; } = "";
     public string? Guard { get; init; }
     public string Next { get; init; } = "";
     public string? Notes { get; init; }
     public IReadOnlyList<ResolvedAction> Actions { get; init; } = Array.Empty<ResolvedAction>();
     public IReadOnlyList<ResolvedLoop> Loops { get; init; } = Array.Empty<ResolvedLoop>();
     public IReadOnlyList<ResolvedReference> References { get; init; } = Array.Empty<ResolvedReference>();
+    /// <summary>Decisions in the path whose branch label is <c>Undefined</c>
+    /// — paths crossing the SDL's "both edges labelled undefined" marker.
+    /// Emitters must render the transition body as a runtime throw quoting
+    /// these decision questions; the runtime cannot resolve which path to
+    /// take because the spec leaves it unspecified. Empty for the normal
+    /// (Yes/No-only) case.</summary>
+    public IReadOnlyList<ResolvedUndefinedBranch> UndefinedBranches { get; init; } = Array.Empty<ResolvedUndefinedBranch>();
 }
+
+/// <summary>Records a single Undefined branch crossed on a path — the
+/// decision id, its human-readable question, and the predicate name. Used by
+/// emitters to compose runtime-throw error messages that quote the figure.</summary>
+public sealed record ResolvedUndefinedBranch(string DecisionId, string Question, string Predicate);
 
 /// <summary>A resolved subroutine page (figc4.7).</summary>
 public sealed class ResolvedSubroutinesPage

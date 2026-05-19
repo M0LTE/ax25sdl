@@ -59,18 +59,23 @@ public static class Walker
             var triggerPrefix = TriggerPrefixFromEvent(triggerEvent);
 
             // From the trigger, recursively walk paths. Decisions cause branching.
+            var perTriggerTransitions = new List<(string BaseId, string Next, List<PathStep> Path)>();
             foreach (var (path, next, branchLabels) in WalkFromTrigger(graph, triggerNode, triggerPrefix, decisionsSeen))
             {
-                var transitionId = BuildTransitionId(triggerIndex, triggerEvent, branchLabels);
-                var t = new Transition
-                {
-                    Id = transitionId,
-                    On = triggerEvent,
-                    Next = next,
-                };
-                t.Path.AddRange(path);
-                page.Transitions.Add(t);
+                perTriggerTransitions.Add((
+                    BuildTransitionId(triggerIndex, triggerEvent, branchLabels),
+                    next,
+                    path));
             }
+            // Disambiguate base ids that collide. Collisions only happen when
+            // one or more branches in a path is "Undefined" (figc4.5 has
+            // decision diamonds with both edges labelled "undefined" — they
+            // can't disambiguate at the branch-label level). Walk each
+            // colliding group's paths forward and find the first path element
+            // that differs; append a sanitised form to the id so consumers
+            // can map the id back to a figure-recognisable element.
+            foreach (var t in DisambiguateColliding(perTriggerTransitions, triggerEvent, triggerNode.Label))
+                page.Transitions.Add(t);
         }
 
         // Order decisions by their first-encountered transition index.
@@ -84,7 +89,155 @@ public static class Walker
         // on the orphaned one-sided decision. Strip both.
         PruneOneSidedDecisions(page);
 
+        // Any transition landing at the UNDEFINED ON DIAGRAM sentinel marks
+        // the page's cross-page consistency intentionally incomplete (no page
+        // is ever transcribed for the sentinel state). coverage: partial
+        // tells the codegen state-target lint to skip checks on this page.
+        if (page.Transitions.Any(t => t.Next == UndefinedSentinel))
+            page.Coverage = "partial";
+
         return page;
+    }
+
+    /// <summary>Sentinel state name yielded for paths terminating at an
+    /// <c>UNDEFINED ON DIAGRAM</c> node in the source SDL.</summary>
+    internal const string UndefinedSentinel = "Undefined";
+
+    /// <summary>Branch label used when a decision's outgoing edge is itself
+    /// labelled <c>undefined</c> / <c>Undefined</c> in the source graphml — the
+    /// spec's marker for "behaviour undefined on this branch".</summary>
+    internal const string UndefinedBranchLabel = "Undefined";
+
+    private static bool IsUndefinedOnDiagramSink(GraphmlNode node) =>
+        string.Equals(node.Label.Trim(), "UNDEFINED ON DIAGRAM", StringComparison.Ordinal);
+
+    /// <summary>
+    /// Build the final per-trigger transition list, replacing any base ids
+    /// that collide with content-derived discriminators. Yes/No-only branch
+    /// chains never collide; the only collisions in practice come from
+    /// "Undefined" branches that share an edge label with a sibling edge.
+    /// </summary>
+    private static IEnumerable<Transition> DisambiguateColliding(
+        List<(string BaseId, string Next, List<PathStep> Path)> raw,
+        string triggerEvent, string triggerLabel)
+    {
+        // Group by base id, then within each colliding group derive a
+        // suffix from the first path element that distinguishes them.
+        var groups = raw.GroupBy(r => r.BaseId).ToList();
+        foreach (var g in groups)
+        {
+            var items = g.ToList();
+            if (items.Count == 1)
+            {
+                var only = items[0];
+                yield return Build(only.BaseId, only.Next, only.Path);
+                continue;
+            }
+            // Multiple paths share a base id. For each, find its first
+            // disambiguating step relative to the others and append a
+            // sanitised form to the id. If first-divergence-content still
+            // collides (rare — two paths visit identically-named first
+            // elements), fall back to a short content hash.
+            var assignedIds = AssignDiscriminators(items);
+            foreach (var (id, item) in assignedIds)
+                yield return Build(id, item.Next, item.Path);
+        }
+
+        Transition Build(string id, string next, List<PathStep> path)
+        {
+            var t = new Transition
+            {
+                Id = id,
+                On = triggerEvent,
+                OnLabel = triggerLabel,
+                Next = next,
+            };
+            t.Path.AddRange(path);
+            return t;
+        }
+    }
+
+    private static IEnumerable<(string Id, (string BaseId, string Next, List<PathStep> Path) Item)>
+        AssignDiscriminators(List<(string BaseId, string Next, List<PathStep> Path)> items)
+    {
+        // For each path, derive a primary discriminator from the first step
+        // whose textual content differs from at least one other path's same
+        // step. If the primary still produces a collision, append a short
+        // content hash of the full path for an absolute tie-break.
+        var primaries = items.Select(it => FirstDivergingLabel(it.Path, items.Select(o => o.Path).ToList())).ToList();
+        var counts = primaries.GroupBy(p => p).ToDictionary(g => g.Key, g => g.Count());
+        for (int i = 0; i < items.Count; i++)
+        {
+            var primary = primaries[i];
+            var id = items[i].BaseId + "_via_" + primary;
+            if (counts[primary] > 1)
+                id += "_" + ShortHash(items[i].Path);
+            yield return (id, items[i]);
+        }
+    }
+
+    /// <summary>
+    /// Return a sanitised label drawn from the first path-step at which the
+    /// supplied path differs from at least one of the alternatives. Used as
+    /// a content-derived id suffix to disambiguate transitions whose branch
+    /// chain alone doesn't distinguish them (Undefined branches).
+    /// </summary>
+    private static string FirstDivergingLabel(List<PathStep> path, List<List<PathStep>> alternatives)
+    {
+        int maxLen = Math.Max(path.Count, alternatives.Max(p => p.Count));
+        for (int i = 0; i < maxLen; i++)
+        {
+            var mine = i < path.Count ? StepKey(path[i]) : "__end__";
+            bool differs = false;
+            foreach (var alt in alternatives)
+            {
+                if (alt == path) continue;
+                var theirs = i < alt.Count ? StepKey(alt[i]) : "__end__";
+                if (!string.Equals(mine, theirs, StringComparison.Ordinal)) { differs = true; break; }
+            }
+            if (differs) return SanitiseForId(StepDisplay(path.Count > i ? path[i] : null));
+        }
+        // Paths are identical at the step level — yield a placeholder; caller
+        // will append a content hash below for an absolute tie-break.
+        return "tie";
+    }
+
+    private static string StepKey(PathStep step) => step switch
+    {
+        ActionStep a       => "A:" + a.Action + "|" + a.Kind,
+        DecisionBranch d   => "D:" + d.DecisionId + "|" + d.Branch,
+        _ => "?",
+    };
+
+    private static string StepDisplay(PathStep? step) => step switch
+    {
+        ActionStep a       => a.Action,
+        DecisionBranch d   => d.DecisionId + "_" + d.Branch.ToLowerInvariant(),
+        null               => "end",
+        _ => "?",
+    };
+
+    private static string SanitiseForId(string s)
+    {
+        // Keep ascii alphanumerics + underscore; collapse runs of anything
+        // else; lowercase.
+        var sb = new System.Text.StringBuilder();
+        bool lastWasSep = true;
+        foreach (var ch in s)
+        {
+            if (char.IsAsciiLetterOrDigit(ch)) { sb.Append(char.ToLowerInvariant(ch)); lastWasSep = false; }
+            else if (!lastWasSep) { sb.Append('_'); lastWasSep = true; }
+        }
+        var trimmed = sb.ToString().Trim('_');
+        // Cap length to keep ids readable in error messages.
+        return trimmed.Length > 40 ? trimmed[..40] : trimmed;
+    }
+
+    private static string ShortHash(List<PathStep> path)
+    {
+        var canonical = string.Join("|", path.Select(StepKey));
+        var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(canonical));
+        return Convert.ToHexString(bytes)[..8].ToLowerInvariant();
     }
 
     private static void PruneOneSidedDecisions(SdlPage page)
@@ -97,8 +250,16 @@ public static class Walker
                     branchesByDecision[step.DecisionId] = set = new HashSet<string>(StringComparer.Ordinal);
                 set.Add(step.Branch);
             }
+        // A decision is "one-sided" only when exactly one Yes/No branch
+        // was reached (the other was cycle-skipped). A decision whose
+        // single observed branch is `Undefined` is NOT one-sided — it
+        // represents the AX.25 spec marker where both edges share the
+        // `Undefined` label deliberately, and pruning would strip the
+        // decision-branch step the codegen relies on to emit a runtime
+        // throw.
         var oneSided = branchesByDecision
-            .Where(kv => kv.Value.Count < 2)
+            .Where(kv => kv.Value.Count < 2
+                      && !kv.Value.Contains(UndefinedBranchLabel))
             .Select(kv => kv.Key)
             .ToHashSet(StringComparer.Ordinal);
         if (oneSided.Count == 0) return;
@@ -210,6 +371,16 @@ public static class Walker
         {
             var nextState = ParseStateName(current.Label);
             yield return (pathSoFar, nextState, branchLabelsSoFar);
+            yield break;
+        }
+
+        // Spec-level "UNDEFINED ON DIAGRAM" sink — AX.25 v2.2 figc4.5 has a
+        // node labelled this verbatim, marking a path the spec authors
+        // deliberately left undefined. Yield with a sentinel state name and
+        // let the caller mark the page coverage: partial.
+        if (outEdges.Count == 0 && IsUndefinedOnDiagramSink(current))
+        {
+            yield return (pathSoFar, UndefinedSentinel, branchLabelsSoFar);
             yield break;
         }
 

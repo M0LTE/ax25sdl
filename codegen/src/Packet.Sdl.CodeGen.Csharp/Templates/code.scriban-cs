@@ -28,7 +28,9 @@ public static class {{ page.class_name }}
             Next: "{{ t.next }}",
             Notes: {{ t.notes_literal }},
             References: new ImplementationReference[] { {{ t.references_csv }} },
-            Loops: new LoopRange[] { {{ t.loops_csv }} }),
+            Loops: new LoopRange[] { {{ t.loops_csv }} },
+            UndefinedBranches: {{ t.undefined_branches_csv }},
+            OnLabel: {{ t.on_label_literal }}),
 {{- end }}
     };
 }
