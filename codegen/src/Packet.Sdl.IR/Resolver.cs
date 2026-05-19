@@ -11,7 +11,7 @@ public static class Resolver
 {
     public static ResolvedPage Resolve(SdlPage page)
     {
-        var decisionsById = page.Decisions.ToDictionary(d => d.Id, d => d, StringComparer.Ordinal);
+        var decisionsById = page.Decisions!.ToDictionary(d => d.Id, d => d, StringComparer.Ordinal);
         return new ResolvedPage
         {
             Machine      = page.Machine,
@@ -21,7 +21,7 @@ public static class Resolver
             SourceSpec   = page.Source!.Spec,
             SourceFigure = page.Source.Figure,
             SourceUrl    = page.Source.Url,
-            Transitions  = page.Transitions.Select(t => ResolveTransition(t, decisionsById)).ToList(),
+            Transitions  = page.Transitions!.Select(t => ResolveTransition(t, decisionsById)).ToList(),
         };
     }
 

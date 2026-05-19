@@ -22,7 +22,7 @@ def test_t01_dl_disconnect_request() -> None:
     assert t.on == "DL_DISCONNECT_request"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
+    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -35,7 +35,7 @@ def test_t02_dl_unit_data_request() -> None:
     assert t.on == "DL_UNIT_DATA_request"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_command"
+    assert t.actions[0].verb == "UI Command"
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
@@ -54,16 +54,16 @@ def test_t03_dl_connect_request() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Establish_Data_Link"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "set_layer_3_initiated"
+    assert t.actions[3].verb == "Set Layer 3 Initiated"
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t04_all_other_primitives_from_lower_layer() -> None:
+def test_t04_all_other_primitives__from_lower_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t04_all_other_primitives_from_lower_layer"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t04_all_other_primitives__from_lower_layer"),
         None,
     )
-    assert t is not None, "transition t04_all_other_primitives_from_lower_layer not found"
+    assert t is not None, "transition t04_all_other_primitives__from_lower_layer not found"
     assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "Disconnected"
     assert len(t.actions) == 0
@@ -84,16 +84,16 @@ def test_t05_all_other_commands() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t06_all_other_primitives_from_upper_layer() -> None:
+def test_t06_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t06_all_other_primitives_from_upper_layer"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t06_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t06_all_other_primitives_from_upper_layer not found"
+    assert t is not None, "transition t06_all_other_primitives__from_upper_layer not found"
     assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "discard_primitive"
+    assert t.actions[0].verb == "Discard Primitive"
     assert t.actions[0].kind == ActionKind.PROCESSING
 
 
@@ -106,7 +106,7 @@ def test_t07_control_field_error() -> None:
     assert t.on == "control_field_error"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_L"
+    assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -119,7 +119,7 @@ def test_t08_info_not_permitted_in_frame() -> None:
     assert t.on == "info_not_permitted_in_frame"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_M"
+    assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -132,7 +132,7 @@ def test_t09_u_or_s_frame_length_error() -> None:
     assert t.on == "u_or_s_frame_length_error"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_N"
+    assert t.actions[0].verb == "DL-ERROR Indication (N)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -145,21 +145,35 @@ def test_t10_ua_received() -> None:
     assert t.on == "UA_received"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL_ERROR_indication_C_D"
+    assert t.actions[0].verb == "DL-ERROR Indication (C,D)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t11_ui_received_p_eq_1() -> None:
+def test_t11_ui_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t11_ui_received_p_eq_1"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t11_ui_received_no"),
         None,
     )
-    assert t is not None, "transition t11_ui_received_p_eq_1 not found"
+    assert t is not None, "transition t11_ui_received_no not found"
+    assert t.on == "UI_received"
+    assert t.next == "Disconnected"
+    assert t.guard == "not P_eq_1"
+    assert len(t.actions) == 1
+    assert t.actions[0].verb == "UI Check"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+
+
+def test_t11_ui_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t11_ui_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t11_ui_received_yes not found"
     assert t.on == "UI_received"
     assert t.next == "Disconnected"
     assert t.guard == "P_eq_1"
     assert len(t.actions) == 3
-    assert t.actions[0].verb == "UI_Check"
+    assert t.actions[0].verb == "UI Check"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "F := 1"
     assert t.actions[1].kind == ActionKind.PROCESSING
@@ -167,26 +181,12 @@ def test_t11_ui_received_p_eq_1() -> None:
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t12_ui_received_p_eq_0() -> None:
+def test_t12_disc_received() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t12_ui_received_p_eq_0"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t12_disc_received"),
         None,
     )
-    assert t is not None, "transition t12_ui_received_p_eq_0 not found"
-    assert t.on == "UI_received"
-    assert t.next == "Disconnected"
-    assert t.guard == "not P_eq_1"
-    assert len(t.actions) == 1
-    assert t.actions[0].verb == "UI_Check"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-
-
-def test_t13_disc_received() -> None:
-    t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t13_disc_received"),
-        None,
-    )
-    assert t is not None, "transition t13_disc_received not found"
+    assert t is not None, "transition t12_disc_received not found"
     assert t.on == "DISC_received"
     assert t.next == "Disconnected"
     assert len(t.actions) == 2
@@ -196,12 +196,28 @@ def test_t13_disc_received() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t14_sabm_received_able() -> None:
+def test_t13_sabm_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t14_sabm_received_able"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t13_sabm_received_no"),
         None,
     )
-    assert t is not None, "transition t14_sabm_received_able not found"
+    assert t is not None, "transition t13_sabm_received_no not found"
+    assert t.on == "SABM_received"
+    assert t.next == "Disconnected"
+    assert t.guard == "not able_to_establish"
+    assert len(t.actions) == 2
+    assert t.actions[0].verb == "F := P"
+    assert t.actions[0].kind == ActionKind.PROCESSING
+    assert t.actions[1].verb == "DM"
+    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
+
+
+def test_t13_sabm_received_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t13_sabm_received_yes"),
+        None,
+    )
+    assert t is not None, "transition t13_sabm_received_yes not found"
     assert t.on == "SABM_received"
     assert t.next == "Connected"
     assert t.guard == "able_to_establish"
@@ -212,7 +228,7 @@ def test_t14_sabm_received_able() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
+    assert t.actions[3].verb == "Clear Exception Conditions"
     assert t.actions[3].kind == ActionKind.SUBROUTINE
     assert t.actions[4].verb == "V(s) := 0"
     assert t.actions[4].kind == ActionKind.PROCESSING
@@ -220,25 +236,25 @@ def test_t14_sabm_received_able() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
     assert t.actions[6].verb == "V(r) := 0"
     assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "DL_CONNECT_indication"
+    assert t.actions[7].verb == "DL Connect Indication"
     assert t.actions[7].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[8].verb == "SRT := Initial Default"
     assert t.actions[8].kind == ActionKind.PROCESSING
     assert t.actions[9].verb == "T1V := 2 * SRT"
     assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "start_T3"
+    assert t.actions[10].verb == "Start T3"
     assert t.actions[10].kind == ActionKind.PROCESSING
     assert t.actions[11].verb == "RC := 0"
     assert t.actions[11].kind == ActionKind.PROCESSING
 
 
-def test_t15_sabm_received_unable() -> None:
+def test_t14_sabme_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t15_sabm_received_unable"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t14_sabme_received_no"),
         None,
     )
-    assert t is not None, "transition t15_sabm_received_unable not found"
-    assert t.on == "SABM_received"
+    assert t is not None, "transition t14_sabme_received_no not found"
+    assert t.on == "SABME_received"
     assert t.next == "Disconnected"
     assert t.guard == "not able_to_establish"
     assert len(t.actions) == 2
@@ -248,23 +264,23 @@ def test_t15_sabm_received_unable() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t16_sabme_received_able() -> None:
+def test_t14_sabme_received_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t16_sabme_received_able"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t14_sabme_received_yes"),
         None,
     )
-    assert t is not None, "transition t16_sabme_received_able not found"
+    assert t is not None, "transition t14_sabme_received_yes not found"
     assert t.on == "SABME_received"
     assert t.next == "Connected"
     assert t.guard == "able_to_establish"
     assert len(t.actions) == 12
     assert t.actions[0].verb == "F := P"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "set_version_2_2"
+    assert t.actions[1].verb == "Set Version 2.2"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "Clear_Exception_Conditions"
+    assert t.actions[3].verb == "Clear Exception Conditions"
     assert t.actions[3].kind == ActionKind.SUBROUTINE
     assert t.actions[4].verb == "V(s) := 0"
     assert t.actions[4].kind == ActionKind.PROCESSING
@@ -272,30 +288,14 @@ def test_t16_sabme_received_able() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
     assert t.actions[6].verb == "V(r) := 0"
     assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "DL_CONNECT_indication"
+    assert t.actions[7].verb == "DL Connect Indication"
     assert t.actions[7].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[8].verb == "SRT := Initial Default"
     assert t.actions[8].kind == ActionKind.PROCESSING
     assert t.actions[9].verb == "T1V := 2 * SRT"
     assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "start_T3"
+    assert t.actions[10].verb == "Start T3"
     assert t.actions[10].kind == ActionKind.PROCESSING
     assert t.actions[11].verb == "RC := 0"
     assert t.actions[11].kind == ActionKind.PROCESSING
-
-
-def test_t17_sabme_received_unable() -> None:
-    t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t17_sabme_received_unable"),
-        None,
-    )
-    assert t is not None, "transition t17_sabme_received_unable not found"
-    assert t.on == "SABME_received"
-    assert t.next == "Disconnected"
-    assert t.guard == "not able_to_establish"
-    assert len(t.actions) == 2
-    assert t.actions[0].verb == "F := P"
-    assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "DM"
-    assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 

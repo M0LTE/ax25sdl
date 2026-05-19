@@ -27,6 +27,11 @@ public static class Walker
         {
             Machine = machine,
             State = state,
+            Source = new PageSource
+            {
+                Spec = "ax.25.2.2.4_Oct_25",
+                Figure = FigureForState(state),
+            },
         };
 
         var decisionsSeen = new Dictionary<string, Decision>();
@@ -71,8 +76,59 @@ public static class Walker
         // Order decisions by their first-encountered transition index.
         page.Decisions.AddRange(decisionsSeen.Values);
 
+        // Drop decisions whose other branch was cycle-skipped. After cycle
+        // truncation, the surviving branch's transition is effectively
+        // unconditional — by the time the runtime reaches it, the loop
+        // predicate has terminated — so the DecisionBranch step is
+        // semantically redundant and codegen's bilateral-branch lint trips
+        // on the orphaned one-sided decision. Strip both.
+        PruneOneSidedDecisions(page);
+
         return page;
     }
+
+    private static void PruneOneSidedDecisions(SdlPage page)
+    {
+        var branchesByDecision = new Dictionary<string, HashSet<string>>();
+        foreach (var t in page.Transitions)
+            foreach (var step in t.Path.OfType<DecisionBranch>())
+            {
+                if (!branchesByDecision.TryGetValue(step.DecisionId, out var set))
+                    branchesByDecision[step.DecisionId] = set = new HashSet<string>(StringComparer.Ordinal);
+                set.Add(step.Branch);
+            }
+        var oneSided = branchesByDecision
+            .Where(kv => kv.Value.Count < 2)
+            .Select(kv => kv.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        if (oneSided.Count == 0) return;
+
+        page.Decisions.RemoveAll(d => oneSided.Contains(d.Id));
+        foreach (var t in page.Transitions)
+        {
+            for (int i = t.Path.Count - 1; i >= 0; i--)
+                if (t.Path[i] is DecisionBranch db && oneSided.Contains(db.DecisionId))
+                    t.Path.RemoveAt(i);
+        }
+    }
+
+    /// <summary>
+    /// Maps a state name to its figc4.x figure designator. AX.25 v2.2 §C
+    /// lays out one state per figure. If the tool encounters a state name
+    /// not in this map (e.g. a future state machine), the source.figure
+    /// field falls back to a placeholder — that's a soft default; the
+    /// loader needs *something* but doesn't act on the value.
+    /// </summary>
+    private static string FigureForState(string state) => state switch
+    {
+        "Disconnected"          => "figc4.1",
+        "AwaitingConnection"    => "figc4.2",
+        "AwaitingRelease"       => "figc4.3",
+        "Connected"             => "figc4.4",
+        "TimerRecovery"         => "figc4.5",
+        "AwaitingV22Connection" => "figc4.6",
+        _ => "figc4.x",
+    };
 
     private static (string Machine, string State) MachineAndStateFromFilename(string filename)
     {
@@ -184,9 +240,13 @@ public static class Walker
                 if (string.IsNullOrWhiteSpace(branchLabel))
                     throw new InvalidDataException(
                         $"decision edge {edge.Id} (from {current.Id} '{current.Label}') has no Yes/No label and can't be inferred");
+                // Strip annotations like "Yes (Note: assumed; missing from spec)"
+                // down to bare "Yes" / "No" — the codegen validator requires
+                // exactly these two values for branch labels.
+                var canonicalBranch = NormaliseBranchLabel(branchLabel);
                 var newPath = new List<PathStep>(pathSoFar);
-                newPath.Add(new DecisionBranch(decisionId, branchLabel));
-                var newBranchLabels = new List<string>(branchLabelsSoFar) { branchLabel };
+                newPath.Add(new DecisionBranch(decisionId, canonicalBranch));
+                var newBranchLabels = new List<string>(branchLabelsSoFar) { canonicalBranch };
                 var newVisited = new HashSet<string>(visitedInThisWalk) { edge.Target };
                 foreach (var result in WalkFrom(graph, graph.NodesById[edge.Target], newPath, newBranchLabels, newVisited, triggerPrefix, decisionsSeen))
                     yield return result;
@@ -345,15 +405,31 @@ public static class Walker
 
     private static string ParseStateName(string label)
     {
-        // "0 Disconnected"  → "Disconnected"
-        // "1 Awaiting Connection" → "AwaitingConnection"  (strip the leading
-        // figure-column number AND fuse internal whitespace into PascalCase
-        // — yaml convention per the schema's [A-Z][A-Za-z0-9]* state name pattern).
+        // "0 Disconnected"          → "Disconnected"
+        // "1 Awaiting Connection"   → "AwaitingConnection"
+        // "5 Awaiting V2.2 Connection" → "AwaitingV22Connection" (drop dots)
+        // "Awaiting 2.2 Connection" (LLM-era typo: missing V) → "AwaitingV22Connection"
+        //
+        // The source graphmls use multiple inconsistent labels for the same
+        // SDL state. We normalise: strip leading figure-column number, fuse
+        // spaces into PascalCase, drop dots, then apply a small alias map
+        // for known typo variants. The aliases will go away when Tom
+        // redraws the graphmls with consistent labels.
         var trimmed = label.Trim();
         var firstSpace = trimmed.IndexOf(' ');
         var stateText = firstSpace < 0 ? trimmed : trimmed[(firstSpace + 1)..];
-        return string.Concat(stateText.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        var raw = string.Concat(stateText.Split(' ', StringSplitOptions.RemoveEmptyEntries)).Replace(".", "");
+        return StateNameAliases.TryGetValue(raw, out var canon) ? canon : raw;
     }
+
+    /// <summary>
+    /// Maps inconsistent state-name labels in the current graphmls to their
+    /// canonical form. Empty once the graphmls are consistent.
+    /// </summary>
+    private static readonly Dictionary<string, string> StateNameAliases = new(StringComparer.Ordinal)
+    {
+        ["Awaiting22Connection"] = "AwaitingV22Connection",  // missing "V" in some graphmls
+    };
 
     /// <summary>
     /// For a 2-branch decision with one labeled edge and one unlabeled,
@@ -398,8 +474,35 @@ public static class Walker
     private static string BuildTransitionId(int triggerIndex, string triggerEvent, List<string> branchLabels)
     {
         // "t01_dl_disconnect_request" or "t12_sabm_received_yes" / "_no" if branched.
+        // Branch labels are sanitised to their leading word — authors sometimes
+        // annotate a branch with parenthetical notes (e.g. "Yes (Note: assumed)")
+        // which would break the id otherwise.
         var prefix = $"t{triggerIndex:D2}_{triggerEvent.ToLowerInvariant()}";
         if (branchLabels.Count == 0) return prefix;
-        return prefix + "_" + string.Join('_', branchLabels.Select(b => b.ToLowerInvariant()));
+        var sanitised = branchLabels.Select(SanitiseBranchLabelForId);
+        return prefix + "_" + string.Join('_', sanitised);
+    }
+
+    private static string SanitiseBranchLabelForId(string label)
+        => NormaliseBranchLabel(label).ToLowerInvariant();
+
+    /// <summary>
+    /// Reduces a free-form branch label to its canonical "Yes"/"No" form by
+    /// taking the leading word. Authors sometimes annotate a branch with
+    /// parenthetical context ("Yes (Note: assumed; missing from spec)") —
+    /// those notes belong in commentary, not in the branch label itself.
+    /// </summary>
+    private static string NormaliseBranchLabel(string label)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var c in label.Trim())
+        {
+            if (char.IsLetter(c)) sb.Append(c);
+            else break;
+        }
+        var bare = sb.ToString();
+        // Title-case it: "yes" → "Yes" / "no" → "No".
+        if (bare.Length == 0) return "";
+        return char.ToUpperInvariant(bare[0]) + bare[1..].ToLowerInvariant();
     }
 }

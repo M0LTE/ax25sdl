@@ -41,7 +41,7 @@ static int test_t01_dl_disconnect_request(void) {
   ASSERT_STREQ(t->on, "DL_DISCONNECT_request", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -59,7 +59,7 @@ static int test_t02_dl_unit_data_request(void) {
   ASSERT_STREQ(t->on, "DL_UNIT_DATA_request", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_command", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "UI Command", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[0].kind");
   return 0;
 }
@@ -83,21 +83,21 @@ static int test_t03_dl_connect_request(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Establish_Data_Link", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "set_layer_3_initiated", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "Set Layer 3 Initiated", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
   return 0;
 }
 
-static int test_t04_all_other_primitives_from_lower_layer(void) {
+static int test_t04_all_other_primitives__from_lower_layer(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t04_all_other_primitives_from_lower_layer") == 0) {
+               "t04_all_other_primitives__from_lower_layer") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t04_all_other_primitives_from_lower_layer not found");
+  ASSERT(t != NULL, "t04_all_other_primitives__from_lower_layer not found");
   ASSERT_STREQ(t->on, "all_other_primitives__from_lower_layer", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 0, "actions count");
@@ -124,20 +124,20 @@ static int test_t05_all_other_commands(void) {
   return 0;
 }
 
-static int test_t06_all_other_primitives_from_upper_layer(void) {
+static int test_t06_all_other_primitives__from_upper_layer(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t06_all_other_primitives_from_upper_layer") == 0) {
+               "t06_all_other_primitives__from_upper_layer") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t06_all_other_primitives_from_upper_layer not found");
+  ASSERT(t != NULL, "t06_all_other_primitives__from_upper_layer not found");
   ASSERT_STREQ(t->on, "all_other_primitives__from_upper_layer", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "discard_primitive", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "Discard Primitive", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   return 0;
 }
@@ -155,7 +155,8 @@ static int test_t07_control_field_error(void) {
   ASSERT_STREQ(t->on, "control_field_error", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_L", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (L)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -173,7 +174,8 @@ static int test_t08_info_not_permitted_in_frame(void) {
   ASSERT_STREQ(t->on, "info_not_permitted_in_frame", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_M", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (M)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -191,7 +193,8 @@ static int test_t09_u_or_s_frame_length_error(void) {
   ASSERT_STREQ(t->on, "u_or_s_frame_length_error", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_N", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (N)",
+               "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -209,27 +212,46 @@ static int test_t10_ua_received(void) {
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_C_D",
+  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (C,D)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
 
-static int test_t11_ui_received_p_eq_1(void) {
+static int test_t11_ui_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t11_ui_received_p_eq_1") == 0) {
+               "t11_ui_received_no") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t11_ui_received_p_eq_1 not found");
+  ASSERT(t != NULL, "t11_ui_received_no not found");
+  ASSERT_STREQ(t->on, "UI_received", "on");
+  ASSERT_STREQ(t->next, "Disconnected", "next");
+  ASSERT_STREQ(t->guard, "not P_eq_1", "guard");
+  ASSERT(t->actions_len == 1, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "UI Check", "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
+  return 0;
+}
+
+static int test_t11_ui_received_yes(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
+    if (strcmp(data_link_disconnected.transitions[i].id,
+               "t11_ui_received_yes") == 0) {
+      t = &data_link_disconnected.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t11_ui_received_yes not found");
   ASSERT_STREQ(t->on, "UI_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "P_eq_1", "guard");
   ASSERT(t->actions_len == 3, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_Check", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "UI Check", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "F := 1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
@@ -238,35 +260,16 @@ static int test_t11_ui_received_p_eq_1(void) {
   return 0;
 }
 
-static int test_t12_ui_received_p_eq_0(void) {
+static int test_t12_disc_received(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
-    if (strcmp(data_link_disconnected.transitions[i].id,
-               "t12_ui_received_p_eq_0") == 0) {
-      t = &data_link_disconnected.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t12_ui_received_p_eq_0 not found");
-  ASSERT_STREQ(t->on, "UI_received", "on");
-  ASSERT_STREQ(t->next, "Disconnected", "next");
-  ASSERT_STREQ(t->guard, "not P_eq_1", "guard");
-  ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "UI_Check", "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
-  return 0;
-}
-
-static int test_t13_disc_received(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
-    if (strcmp(data_link_disconnected.transitions[i].id, "t13_disc_received") ==
+    if (strcmp(data_link_disconnected.transitions[i].id, "t12_disc_received") ==
         0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t13_disc_received not found");
+  ASSERT(t != NULL, "t12_disc_received not found");
   ASSERT_STREQ(t->on, "DISC_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 2, "actions count");
@@ -277,16 +280,37 @@ static int test_t13_disc_received(void) {
   return 0;
 }
 
-static int test_t14_sabm_received_able(void) {
+static int test_t13_sabm_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t14_sabm_received_able") == 0) {
+               "t13_sabm_received_no") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t14_sabm_received_able not found");
+  ASSERT(t != NULL, "t13_sabm_received_no not found");
+  ASSERT_STREQ(t->on, "SABM_received", "on");
+  ASSERT_STREQ(t->next, "Disconnected", "next");
+  ASSERT_STREQ(t->guard, "not able_to_establish", "guard");
+  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "F := P", "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "DM", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[1].kind");
+  return 0;
+}
+
+static int test_t13_sabm_received_yes(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
+    if (strcmp(data_link_disconnected.transitions[i].id,
+               "t13_sabm_received_yes") == 0) {
+      t = &data_link_disconnected.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t13_sabm_received_yes not found");
   ASSERT_STREQ(t->on, "SABM_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
   ASSERT_STREQ(t->guard, "able_to_establish", "guard");
@@ -297,7 +321,7 @@ static int test_t14_sabm_received_able(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "UA", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "Clear_Exception_Conditions",
+  ASSERT_STREQ(t->actions[3].verb, "Clear Exception Conditions",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "V(s) := 0", "actions[4].verb");
@@ -306,30 +330,30 @@ static int test_t14_sabm_received_able(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "V(r) := 0", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "DL_CONNECT_indication", "actions[7].verb");
+  ASSERT_STREQ(t->actions[7].verb, "DL Connect Indication", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[7].kind");
   ASSERT_STREQ(t->actions[8].verb, "SRT := Initial Default", "actions[8].verb");
   ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
   ASSERT_STREQ(t->actions[9].verb, "T1V := 2 * SRT", "actions[9].verb");
   ASSERT(t->actions[9].kind == AX25SDL_KIND_PROCESSING, "actions[9].kind");
-  ASSERT_STREQ(t->actions[10].verb, "start_T3", "actions[10].verb");
+  ASSERT_STREQ(t->actions[10].verb, "Start T3", "actions[10].verb");
   ASSERT(t->actions[10].kind == AX25SDL_KIND_PROCESSING, "actions[10].kind");
   ASSERT_STREQ(t->actions[11].verb, "RC := 0", "actions[11].verb");
   ASSERT(t->actions[11].kind == AX25SDL_KIND_PROCESSING, "actions[11].kind");
   return 0;
 }
 
-static int test_t15_sabm_received_unable(void) {
+static int test_t14_sabme_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t15_sabm_received_unable") == 0) {
+               "t14_sabme_received_no") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t15_sabm_received_unable not found");
-  ASSERT_STREQ(t->on, "SABM_received", "on");
+  ASSERT(t != NULL, "t14_sabme_received_no not found");
+  ASSERT_STREQ(t->on, "SABME_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "not able_to_establish", "guard");
   ASSERT(t->actions_len == 2, "actions count");
@@ -340,27 +364,27 @@ static int test_t15_sabm_received_unable(void) {
   return 0;
 }
 
-static int test_t16_sabme_received_able(void) {
+static int test_t14_sabme_received_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
     if (strcmp(data_link_disconnected.transitions[i].id,
-               "t16_sabme_received_able") == 0) {
+               "t14_sabme_received_yes") == 0) {
       t = &data_link_disconnected.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t16_sabme_received_able not found");
+  ASSERT(t != NULL, "t14_sabme_received_yes not found");
   ASSERT_STREQ(t->on, "SABME_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
   ASSERT_STREQ(t->guard, "able_to_establish", "guard");
   ASSERT(t->actions_len == 12, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "F := P", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "set_version_2_2", "actions[1].verb");
+  ASSERT_STREQ(t->actions[1].verb, "Set Version 2.2", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "UA", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "Clear_Exception_Conditions",
+  ASSERT_STREQ(t->actions[3].verb, "Clear Exception Conditions",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "V(s) := 0", "actions[4].verb");
@@ -369,37 +393,16 @@ static int test_t16_sabme_received_able(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "V(r) := 0", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "DL_CONNECT_indication", "actions[7].verb");
+  ASSERT_STREQ(t->actions[7].verb, "DL Connect Indication", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[7].kind");
   ASSERT_STREQ(t->actions[8].verb, "SRT := Initial Default", "actions[8].verb");
   ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
   ASSERT_STREQ(t->actions[9].verb, "T1V := 2 * SRT", "actions[9].verb");
   ASSERT(t->actions[9].kind == AX25SDL_KIND_PROCESSING, "actions[9].kind");
-  ASSERT_STREQ(t->actions[10].verb, "start_T3", "actions[10].verb");
+  ASSERT_STREQ(t->actions[10].verb, "Start T3", "actions[10].verb");
   ASSERT(t->actions[10].kind == AX25SDL_KIND_PROCESSING, "actions[10].kind");
   ASSERT_STREQ(t->actions[11].verb, "RC := 0", "actions[11].verb");
   ASSERT(t->actions[11].kind == AX25SDL_KIND_PROCESSING, "actions[11].kind");
-  return 0;
-}
-
-static int test_t17_sabme_received_unable(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_disconnected.transitions_len; i++) {
-    if (strcmp(data_link_disconnected.transitions[i].id,
-               "t17_sabme_received_unable") == 0) {
-      t = &data_link_disconnected.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t17_sabme_received_unable not found");
-  ASSERT_STREQ(t->on, "SABME_received", "on");
-  ASSERT_STREQ(t->next, "Disconnected", "next");
-  ASSERT_STREQ(t->guard, "not able_to_establish", "guard");
-  ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "F := P", "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DM", "actions[1].verb");
-  ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[1].kind");
   return 0;
 }
 
@@ -410,19 +413,19 @@ int main(void) {
   rc |= test_t01_dl_disconnect_request();
   rc |= test_t02_dl_unit_data_request();
   rc |= test_t03_dl_connect_request();
-  rc |= test_t04_all_other_primitives_from_lower_layer();
+  rc |= test_t04_all_other_primitives__from_lower_layer();
   rc |= test_t05_all_other_commands();
-  rc |= test_t06_all_other_primitives_from_upper_layer();
+  rc |= test_t06_all_other_primitives__from_upper_layer();
   rc |= test_t07_control_field_error();
   rc |= test_t08_info_not_permitted_in_frame();
   rc |= test_t09_u_or_s_frame_length_error();
   rc |= test_t10_ua_received();
-  rc |= test_t11_ui_received_p_eq_1();
-  rc |= test_t12_ui_received_p_eq_0();
-  rc |= test_t13_disc_received();
-  rc |= test_t14_sabm_received_able();
-  rc |= test_t15_sabm_received_unable();
-  rc |= test_t16_sabme_received_able();
-  rc |= test_t17_sabme_received_unable();
+  rc |= test_t11_ui_received_no();
+  rc |= test_t11_ui_received_yes();
+  rc |= test_t12_disc_received();
+  rc |= test_t13_sabm_received_no();
+  rc |= test_t13_sabm_received_yes();
+  rc |= test_t14_sabme_received_no();
+  rc |= test_t14_sabme_received_yes();
   return rc;
 }

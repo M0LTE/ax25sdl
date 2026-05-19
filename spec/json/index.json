@@ -20,7 +20,7 @@
       "file": "awaiting_v22_connection.g.json",
       "kind": "state",
       "machine": "data_link",
-      "state": "AwaitingConnection22",
+      "state": "AwaitingV22Connection",
       "figure": "figc4.6"
     },
     {
@@ -41,7 +41,7 @@
       "file": "subroutines.g.json",
       "kind": "subroutines",
       "machine": "data_link",
-      "figure": "C4.7"
+      "figure": "figc4.7"
     }
   ]
 }

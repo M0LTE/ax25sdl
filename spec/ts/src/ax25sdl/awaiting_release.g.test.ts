@@ -24,23 +24,23 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
-  it("t02_t1_expiry_rc_eq_n2", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t02_t1_expiry_rc_eq_n2");
-    expect(t, "transition t02_t1_expiry_rc_eq_n2 not found").toBeDefined();
+  it("t02_t1_expiry_yes", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t02_t1_expiry_yes");
+    expect(t, "transition t02_t1_expiry_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("RC_eq_N2");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_G");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (G)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
+    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
     expect(t.actions[1].kind).toBe("signal_upper");
   });
 
-  it("t03_t1_expiry_rc_neq_n2", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t03_t1_expiry_rc_neq_n2");
-    expect(t, "transition t03_t1_expiry_rc_neq_n2 not found").toBeDefined();
+  it("t02_t1_expiry_no", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t02_t1_expiry_no");
+    expect(t, "transition t02_t1_expiry_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("AwaitingRelease");
@@ -52,101 +52,101 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("start_T1");
+    expect(t.actions[3].verb).toBe("Start T1");
     expect(t.actions[3].kind).toBe("processing");
   });
 
-  it("t04_ua_received_f_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t04_ua_received_f_eq_1");
-    expect(t, "transition t04_ua_received_f_eq_1 not found").toBeDefined();
+  it("t03_ua_received_yes", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t03_ua_received_yes");
+    expect(t, "transition t03_ua_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("F_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
+    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("stop_T1");
+    expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t05_ua_received_not_f_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t05_ua_received_not_f_eq_1");
-    expect(t, "transition t05_ua_received_not_f_eq_1 not found").toBeDefined();
+  it("t03_ua_received_no", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t03_ua_received_no");
+    expect(t, "transition t03_ua_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.guard).toBe("not F_eq_1");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (D)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t06_all_other_primitives_from_upper_layer", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t06_all_other_primitives_from_upper_layer");
-    expect(t, "transition t06_all_other_primitives_from_upper_layer not found").toBeDefined();
+  it("t04_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t04_all_other_primitives__from_upper_layer");
+    expect(t, "transition t04_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t07_dl_unit_data_request", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t07_dl_unit_data_request");
-    expect(t, "transition t07_dl_unit_data_request not found").toBeDefined();
+  it("t05_dl_unit_data_request", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t05_dl_unit_data_request");
+    expect(t, "transition t05_dl_unit_data_request not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DL_UNIT_DATA_request");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_command");
+    expect(t.actions[0].verb).toBe("UI Command");
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
-  it("t08_all_other_primitives_from_lower_layer", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t08_all_other_primitives_from_lower_layer");
-    expect(t, "transition t08_all_other_primitives_from_lower_layer not found").toBeDefined();
+  it("t06_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t06_all_other_primitives__from_lower_layer");
+    expect(t, "transition t06_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("all_other_primitives__from_lower_layer");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t09_control_field_error", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t09_control_field_error");
-    expect(t, "transition t09_control_field_error not found").toBeDefined();
+  it("t07_control_field_error", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t07_control_field_error");
+    expect(t, "transition t07_control_field_error not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("control_field_error");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_L");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (L)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t10_info_not_permitted_in_frame", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t10_info_not_permitted_in_frame");
-    expect(t, "transition t10_info_not_permitted_in_frame not found").toBeDefined();
+  it("t08_info_not_permitted_in_frame", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t08_info_not_permitted_in_frame");
+    expect(t, "transition t08_info_not_permitted_in_frame not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("info_not_permitted_in_frame");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_M");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t11_u_or_s_frame_length_error", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t11_u_or_s_frame_length_error");
-    expect(t, "transition t11_u_or_s_frame_length_error not found").toBeDefined();
+  it("t09_u_or_s_frame_length_error", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t09_u_or_s_frame_length_error");
+    expect(t, "transition t09_u_or_s_frame_length_error not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("u_or_s_frame_length_error");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL_ERROR_indication_N");
+    expect(t.actions[0].verb).toBe("DL-ERROR Indication (N)");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t12_sabm_received", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t12_sabm_received");
-    expect(t, "transition t12_sabm_received not found").toBeDefined();
+  it("t10_sabm_received", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t10_sabm_received");
+    expect(t, "transition t10_sabm_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("AwaitingRelease");
@@ -157,9 +157,9 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t13_sabme_received", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t13_sabme_received");
-    expect(t, "transition t13_sabme_received not found").toBeDefined();
+  it("t11_sabme_received", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t11_sabme_received");
+    expect(t, "transition t11_sabme_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("AwaitingRelease");
@@ -170,9 +170,9 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t14_disc_received", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t14_disc_received");
-    expect(t, "transition t14_disc_received not found").toBeDefined();
+  it("t12_disc_received", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t12_disc_received");
+    expect(t, "transition t12_disc_received not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DISC_received");
     expect(t.next).toBe("AwaitingRelease");
@@ -183,23 +183,23 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t15_dm_received_f_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t15_dm_received_f_eq_1");
-    expect(t, "transition t15_dm_received_f_eq_1 not found").toBeDefined();
+  it("t13_dm_received_yes", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t13_dm_received_yes");
+    expect(t, "transition t13_dm_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("F_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
+    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("stop_T1");
+    expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t16_dm_received_not_f_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t16_dm_received_not_f_eq_1");
-    expect(t, "transition t16_dm_received_not_f_eq_1 not found").toBeDefined();
+  it("t13_dm_received_no", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t13_dm_received_no");
+    expect(t, "transition t13_dm_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("AwaitingRelease");
@@ -207,35 +207,35 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t17_ui_received_p_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t17_ui_received_p_eq_1");
-    expect(t, "transition t17_ui_received_p_eq_1 not found").toBeDefined();
+  it("t14_ui_received_yes", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t14_ui_received_yes");
+    expect(t, "transition t14_ui_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.guard).toBe("P_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("UI_Check");
+    expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
     expect(t.actions[1].verb).toBe("DM (F = 1)");
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t18_ui_received_not_p_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t18_ui_received_not_p_eq_1");
-    expect(t, "transition t18_ui_received_not_p_eq_1 not found").toBeDefined();
+  it("t14_ui_received_no", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t14_ui_received_no");
+    expect(t, "transition t14_ui_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.guard).toBe("not P_eq_1");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("UI_Check");
+    expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
   });
 
-  it("t19_i_or_s_command_p_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t19_i_or_s_command_p_eq_1");
-    expect(t, "transition t19_i_or_s_command_p_eq_1 not found").toBeDefined();
+  it("t15_i_or_s_command_received_yes", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t15_i_or_s_command_received_yes");
+    expect(t, "transition t15_i_or_s_command_received_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("i_or_s_command_received");
     expect(t.next).toBe("AwaitingRelease");
@@ -245,9 +245,9 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
-  it("t20_i_or_s_command_not_p_eq_1", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t20_i_or_s_command_not_p_eq_1");
-    expect(t, "transition t20_i_or_s_command_not_p_eq_1 not found").toBeDefined();
+  it("t15_i_or_s_command_received_no", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t15_i_or_s_command_received_no");
+    expect(t, "transition t15_i_or_s_command_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("i_or_s_command_received");
     expect(t.next).toBe("AwaitingRelease");

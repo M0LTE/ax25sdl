@@ -22,7 +22,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("DL_DISCONNECT_request");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
+        t.Actions[0].Verb.Should().Be("DL-DISCONNECT Confirm");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -32,7 +32,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_command");
+        t.Actions[0].Verb.Should().Be("UI Command");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -48,13 +48,13 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Establish_Data_Link");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("set_layer_3_initiated");
+        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t04_all_other_primitives_from_lower_layer()
+    [Fact] public void t04_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t04_all_other_primitives_from_lower_layer");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_lower_layer");
         t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(0);
@@ -72,13 +72,13 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t06_all_other_primitives_from_upper_layer()
+    [Fact] public void t06_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t06_all_other_primitives_from_upper_layer");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_upper_layer");
         t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("discard_primitive");
+        t.Actions[0].Verb.Should().Be("Discard Primitive");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -88,7 +88,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_L");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -98,7 +98,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_M");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -108,7 +108,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_N");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -118,18 +118,29 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_C_D");
+        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (C,D)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t11_ui_received_p_eq_1()
+    [Fact] public void t11_ui_received_no()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_p_eq_1");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_no");
+        t.On.Should().Be("UI_received");
+        t.Next.Should().Be("Disconnected");
+        t.Guard.Should().Be("not P_eq_1");
+        t.Actions.Count.Should().Be(1);
+        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+    }
+
+    [Fact] public void t11_ui_received_yes()
+    {
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_yes");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("UI_Check");
+        t.Actions[0].Verb.Should().Be("UI Check");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[1].Verb.Should().Be("F := 1");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
@@ -137,20 +148,9 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t12_ui_received_p_eq_0()
+    [Fact] public void t12_disc_received()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t12_ui_received_p_eq_0");
-        t.On.Should().Be("UI_received");
-        t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("not P_eq_1");
-        t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI_Check");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-    }
-
-    [Fact] public void t13_disc_received()
-    {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_disc_received");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t12_disc_received");
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(2);
@@ -160,9 +160,22 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t14_sabm_received_able()
+    [Fact] public void t13_sabm_received_no()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabm_received_able");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_no");
+        t.On.Should().Be("SABM_received");
+        t.Next.Should().Be("Disconnected");
+        t.Guard.Should().Be("not able_to_establish");
+        t.Actions.Count.Should().Be(2);
+        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[1].Verb.Should().Be("DM");
+        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
+    }
+
+    [Fact] public void t13_sabm_received_yes()
+    {
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_yes");
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("able_to_establish");
@@ -173,7 +186,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[4].Verb.Should().Be("V(s) := 0");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
@@ -181,22 +194,22 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
         t.Actions[6].Verb.Should().Be("V(r) := 0");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("DL_CONNECT_indication");
+        t.Actions[7].Verb.Should().Be("DL Connect Indication");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[8].Verb.Should().Be("SRT := Initial Default");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
         t.Actions[9].Verb.Should().Be("T1V := 2 * SRT");
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("start_T3");
+        t.Actions[10].Verb.Should().Be("Start T3");
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
         t.Actions[11].Verb.Should().Be("RC := 0");
         t.Actions[11].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t15_sabm_received_unable()
+    [Fact] public void t14_sabme_received_no()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t15_sabm_received_unable");
-        t.On.Should().Be("SABM_received");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_no");
+        t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("not able_to_establish");
         t.Actions.Count.Should().Be(2);
@@ -206,20 +219,20 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t16_sabme_received_able()
+    [Fact] public void t14_sabme_received_yes()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t16_sabme_received_able");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_yes");
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("able_to_establish");
         t.Actions.Count.Should().Be(12);
         t.Actions[0].Verb.Should().Be("F := P");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_2");
+        t.Actions[1].Verb.Should().Be("Set Version 2.2");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear_Exception_Conditions");
+        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[4].Verb.Should().Be("V(s) := 0");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
@@ -227,29 +240,16 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
         t.Actions[6].Verb.Should().Be("V(r) := 0");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("DL_CONNECT_indication");
+        t.Actions[7].Verb.Should().Be("DL Connect Indication");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[8].Verb.Should().Be("SRT := Initial Default");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
         t.Actions[9].Verb.Should().Be("T1V := 2 * SRT");
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("start_T3");
+        t.Actions[10].Verb.Should().Be("Start T3");
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
         t.Actions[11].Verb.Should().Be("RC := 0");
         t.Actions[11].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t17_sabme_received_unable()
-    {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t17_sabme_received_unable");
-        t.On.Should().Be("SABME_received");
-        t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("not able_to_establish");
-        t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
-        t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DM");
-        t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
 }

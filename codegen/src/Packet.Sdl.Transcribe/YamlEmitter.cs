@@ -109,24 +109,22 @@ public static class YamlEmitter
                 sb.AppendLine(Inv, $"  url: {page.Source.Url}");
         }
 
-        if (page.Decisions.Count > 0)
-        {
-            sb.AppendLine();
-            sb.AppendLine("decisions:");
-            foreach (var d in page.Decisions)
-            {
-                sb.AppendLine(Inv, $"  - id: {d.Id}");
-                sb.AppendLine(Inv, $"    question: \"{d.Question}\"");
-                sb.AppendLine(Inv, $"    predicate: {d.Predicate}");
-            }
-        }
-
         sb.AppendLine();
         sb.AppendLine("subroutines:");
         foreach (var sub in page.Subroutines)
         {
             sb.AppendLine();
             sb.AppendLine(Inv, $"  - name: {sub.Name}");
+            if (sub.Decisions.Count > 0)
+            {
+                sb.AppendLine("    decisions:");
+                foreach (var d in sub.Decisions)
+                {
+                    sb.AppendLine(Inv, $"      - id: {d.Id}");
+                    sb.AppendLine(Inv, $"        question: \"{d.Question}\"");
+                    sb.AppendLine(Inv, $"        predicate: {d.Predicate}");
+                }
+            }
             sb.AppendLine("    paths:");
             foreach (var p in sub.Paths)
             {

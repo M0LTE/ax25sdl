@@ -54,7 +54,6 @@ public sealed class SubroutinePage
 {
     public required string Machine { get; init; }
     public PageSource Source { get; init; } = new();
-    public List<Decision> Decisions { get; } = [];
     public List<Subroutine> Subroutines { get; } = [];
     public string? SourceGraphmlPath { get; set; }
 }
@@ -62,6 +61,7 @@ public sealed class SubroutinePage
 public sealed class Subroutine
 {
     public required string Name { get; init; }
+    public List<Decision> Decisions { get; } = [];
     public List<SubroutinePath> Paths { get; } = [];
 }
 
