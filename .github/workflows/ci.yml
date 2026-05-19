@@ -179,3 +179,26 @@ jobs:
             echo "::error::Generated Python files are out of sync."
             exit 1
           fi
+
+  transcribe-drift:
+    name: transcribe drift — graphml → yaml
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    # If the committed *.sdl.yaml files drift from what Packet.Sdl.Transcribe
+    # would currently produce from the *.graphml sources, surface that as a
+    # clear test-suite failure with the exact command to run locally. Pairs
+    # with the YAML-side drift jobs above (which guard yaml → code) to lock
+    # the full graphml → yaml → code pipeline.
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate yaml from graphml
+        run: |
+          dotnet run --project codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
+            -i spec-sdl/v2.2-errata/data-link/ \
+            -o spec-sdl/v2.2-errata/data-link/
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- spec-sdl/v2.2-errata/data-link/*.sdl.yaml; then
+            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i spec-sdl/v2.2-errata/data-link/ -o spec-sdl/v2.2-errata/data-link/\` locally and commit the diff."
+            exit 1
+          fi
