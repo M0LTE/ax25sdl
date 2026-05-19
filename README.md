@@ -8,7 +8,7 @@
 
 | Path | What |
 | --- | --- |
-| [`spec-sdl/v2.2-errata/data-link/`](spec-sdl/v2.2-errata/data-link/) | `*.sdl.yaml` transcriptions of figc4.1 – figc4.7 (v2.2 + errata applied) and their `*.graphml` yEd sources |
+| [`spec-sdl/v2.2-errata/data-link/`](spec-sdl/v2.2-errata/data-link/) | The figc4.1 – figc4.7 data-link state machine (v2.2 + errata), split by artefact kind: [`sdl/`](spec-sdl/v2.2-errata/data-link/sdl/) holds the canonical `*.graphml` yEd sources, [`yaml/`](spec-sdl/v2.2-errata/data-link/yaml/) holds the `*.sdl.yaml` transcriptions (derived) plus the `*.citations.yaml` human-curated sidecars, [`mmd/`](spec-sdl/v2.2-errata/data-link/mmd/) holds the `*.g.mmd` Mermaid renderings (derived). |
 | [`spec-sdl/v2.2/`](spec-sdl/v2.2/) | Clean published v2.2 (black-only, no errata). **Currently empty — backfill pending.** |
 | [`spec-sdl/schema/`](spec-sdl/schema/) | JSON Schema for `*.sdl.yaml` |
 | [`spec-sdl/actions.yaml`](spec-sdl/actions.yaml) | Action-verb normalisation table (figure spellings → canonical verbs) |

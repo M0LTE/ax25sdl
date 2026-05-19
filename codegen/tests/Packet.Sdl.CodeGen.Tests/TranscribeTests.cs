@@ -12,7 +12,7 @@ namespace Packet.Sdl.CodeGen.Tests;
 /// <summary>
 /// End-to-end tests of the graphml → sdl.yaml pipeline. Drives the walker
 /// against the committed corpus of state-page graphmls under
-/// spec-sdl/v2.2-errata/data-link/ and asserts on (a) basic structural
+/// spec-sdl/v2.2-errata/data-link/sdl/ and asserts on (a) basic structural
 /// invariants and (b) the per-page snapshot under Fixtures/transcribe/.
 ///
 /// The Subroutines page (figc4.7) has a different topology and is not
@@ -263,7 +263,7 @@ public class TranscribeTests
     {
         var assemblyDir = Path.GetDirectoryName(typeof(TranscribeTests).Assembly.Location)!;
         var repoRoot = FindRepoRoot(assemblyDir);
-        return Path.Combine(repoRoot, "spec-sdl", "v2.2-errata", "data-link", filename);
+        return Path.Combine(repoRoot, "spec-sdl", "v2.2-errata", "data-link", "sdl", filename);
     }
 
     private static string LocateFixture(string relativePath)

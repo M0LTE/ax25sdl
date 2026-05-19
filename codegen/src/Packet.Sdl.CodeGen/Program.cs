@@ -266,7 +266,12 @@ internal static class Program
                 var testsPath = Path.Combine(plan.CsharpTests, model.ClassName + ".g.Tests.cs");
                 var mermaidPath = plan.MermaidOut is null
                     ? Path.Combine(
-                        Path.GetDirectoryName(page.SourcePath)!,
+                        // Default: emit to a sibling `mmd/` directory when the
+                        // source lives under a `yaml/` folder (the layout used
+                        // under spec-sdl/<rev>/<machine>/{sdl,yaml,mmd}/); fall
+                        // back to alongside the source for in-memory test
+                        // fixtures, which don't use the three-way split.
+                        SiblingMermaidDir(page.SourcePath),
                         Path.GetFileNameWithoutExtension(page.SourcePath).Replace(".sdl", string.Empty, StringComparison.Ordinal) + ".g.mmd")
                     : Path.Combine(plan.MermaidOut, model.ClassName + ".g.mmd");
 
@@ -1262,6 +1267,21 @@ internal static class Program
         }
     }
 
+    // When the SDL source lives under a `yaml/` folder (the layout used under
+    // spec-sdl/<rev>/<machine>/{sdl,yaml,mmd}/), redirect the default mermaid
+    // output to the sibling `mmd/` folder so artefacts stay grouped by kind.
+    // Source paths that don't match this pattern (test fixtures, ad-hoc one-off
+    // yamls) fall back to writing alongside the source.
+    private static string SiblingMermaidDir(string sourcePath)
+    {
+        var dir = Path.GetDirectoryName(sourcePath)!;
+        if (string.Equals(Path.GetFileName(dir), "yaml", StringComparison.Ordinal))
+        {
+            return Path.Combine(Path.GetDirectoryName(dir)!, "mmd");
+        }
+        return dir;
+    }
+
     private static void WriteIfChanged(string path, string contents)
     {
         if (File.Exists(path) && File.ReadAllText(path) == contents) return;
@@ -1306,7 +1326,7 @@ internal sealed class CodegenOptions
     [Option("csharp-tests", Default = "", HelpText = "C# generated-tests output directory. Implies --csharp. Defaults to spec/csharp/tests.")]
     public string CsharpTests { get; set; } = "";
 
-    [Option("mermaid-out", Default = "", HelpText = "Mermaid output directory (gated on --csharp). When unset, emits .g.mmd alongside each *.sdl.yaml.")]
+    [Option("mermaid-out", Default = "", HelpText = "Mermaid output directory (gated on --csharp). When unset and the *.sdl.yaml lives under a `yaml/` folder, emits .g.mmd to the sibling `mmd/` folder; otherwise emits alongside the *.sdl.yaml.")]
     public string MermaidOut { get; set; } = "";
 
     // ─── Go ────────────────────────────────────────────────────────────

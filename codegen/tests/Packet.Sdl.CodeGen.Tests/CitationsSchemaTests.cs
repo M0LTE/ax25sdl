@@ -154,7 +154,7 @@ public class CitationsSchemaTests
         Path.Combine(FindRepoRoot(), "spec-sdl", "schema", "sdl-citations.schema.json");
 
     private static string LocateCitationsDir() =>
-        Path.Combine(FindRepoRoot(), "spec-sdl", "v2.2-errata", "data-link");
+        Path.Combine(FindRepoRoot(), "spec-sdl", "v2.2-errata", "data-link", "yaml");
 
     private static string FindRepoRoot()
     {

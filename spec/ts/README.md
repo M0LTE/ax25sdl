@@ -99,7 +99,7 @@ via the unmodelled state. Short-lived sessions never reach it.
 
 ### Subroutine status (figc4.7) — TS runtime
 
-13 subroutines are declared in `spec-sdl/v2.2-errata/data-link/subroutines.sdl.yaml`.
+13 subroutines are declared in `spec-sdl/v2.2-errata/data-link/yaml/subroutines.sdl.yaml`.
 The TS `SubroutineRegistry` (`web/ax25/src/sdl/subroutine-registry.ts`)
 ships the following coverage. The C# runtime's `DefaultSubroutineRegistry`
 in [`src/Packet.Ax25/Session/`](../src/Packet.Ax25/Session/) routes every
