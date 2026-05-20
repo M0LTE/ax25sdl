@@ -22,14 +22,12 @@ func TestStatePagesHaveTransitions(t *testing.T) {
 	}
 }
 
-// TestSubroutinesPageHasBodies asserts the figc4.7 page declared its
-// subroutines. The spec figure has 13; the current graphml has authoring
-// bugs on Establish_Data_Link and Establish_Extended_Data_Link (n50
-// SABM is missing its outgoing edge), so the tool emits 11 — those two
-// are skipped with a warning. When the graphmls are redrawn this bumps
-// back to 13.
+// TestSubroutinesPageHasBodies asserts the figc4.7 page declared all
+// 13 subroutines from the spec figure. The graphml edge fix for #11
+// (SABM out-edge from n50) restored Establish_Data_Link and
+// Establish_Extended_Data_Link, which were previously skipped.
 func TestSubroutinesPageHasBodies(t *testing.T) {
-	const expected = 11
+	const expected = 13
 	if got := len(DataLinkSubroutines.Subroutines); got != expected {
 		t.Errorf("expected %d subroutines on figc4.7, got %d", expected, got)
 	}
