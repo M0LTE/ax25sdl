@@ -101,11 +101,11 @@ describe("DataLinkAwaitingV22Connection", () => {
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t08_info_field_permitted_in_frame", () => {
-    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t08_info_field_permitted_in_frame");
-    expect(t, "transition t08_info_field_permitted_in_frame not found").toBeDefined();
+  it("t08_info_not_permitted_in_frame", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t08_info_not_permitted_in_frame");
+    expect(t, "transition t08_info_not_permitted_in_frame not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("info_field_permitted_in_frame");
+    expect(t.on).toBe("info_not_permitted_in_frame");
     expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");

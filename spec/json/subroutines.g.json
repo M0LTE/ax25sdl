@@ -229,6 +229,152 @@
       "references": []
     },
     {
+      "name": "Establish_Extended_Data_Link",
+      "paths": [
+        {
+          "id": "t01_establish_extended_data_link_no",
+          "guard": "not mod_128",
+          "actions": [
+            {
+              "verb": "Clear Exception Conditions",
+              "kind": "processing"
+            },
+            {
+              "verb": "RC := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "P := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "SABM",
+              "kind": "signal_lower"
+            },
+            {
+              "verb": "Stop T3",
+              "kind": "processing"
+            },
+            {
+              "verb": "Start T1",
+              "kind": "processing"
+            }
+          ],
+          "notes": "",
+          "references": [],
+          "loops": []
+        },
+        {
+          "id": "t02_establish_extended_data_link_yes",
+          "guard": "mod_128",
+          "actions": [
+            {
+              "verb": "Clear Exception Conditions",
+              "kind": "processing"
+            },
+            {
+              "verb": "RC := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "P := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "SABME",
+              "kind": "signal_lower"
+            },
+            {
+              "verb": "Stop T3",
+              "kind": "processing"
+            },
+            {
+              "verb": "Start T1",
+              "kind": "processing"
+            }
+          ],
+          "notes": "",
+          "references": [],
+          "loops": []
+        }
+      ],
+      "notes": "",
+      "references": []
+    },
+    {
+      "name": "Establish_Data_Link",
+      "paths": [
+        {
+          "id": "t01_establish_data_link_no",
+          "guard": "not mod_128",
+          "actions": [
+            {
+              "verb": "Clear Exception Conditions",
+              "kind": "processing"
+            },
+            {
+              "verb": "RC := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "P := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "SABM",
+              "kind": "signal_lower"
+            },
+            {
+              "verb": "Stop T3",
+              "kind": "processing"
+            },
+            {
+              "verb": "Start T1",
+              "kind": "processing"
+            }
+          ],
+          "notes": "",
+          "references": [],
+          "loops": []
+        },
+        {
+          "id": "t02_establish_data_link_yes",
+          "guard": "mod_128",
+          "actions": [
+            {
+              "verb": "Clear Exception Conditions",
+              "kind": "processing"
+            },
+            {
+              "verb": "RC := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "P := 1",
+              "kind": "processing"
+            },
+            {
+              "verb": "SABME",
+              "kind": "signal_lower"
+            },
+            {
+              "verb": "Stop T3",
+              "kind": "processing"
+            },
+            {
+              "verb": "Start T1",
+              "kind": "processing"
+            }
+          ],
+          "notes": "",
+          "references": [],
+          "loops": []
+        }
+      ],
+      "notes": "",
+      "references": []
+    },
+    {
       "name": "Invoke_Retransmission",
       "paths": [
         {

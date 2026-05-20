@@ -117,13 +117,13 @@ def test_t07_control_field_error() -> None:
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t08_info_field_permitted_in_frame() -> None:
+def test_t08_info_not_permitted_in_frame() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_V_22_CONNECTION.transitions if x.id == "t08_info_field_permitted_in_frame"),
+        (x for x in DATA_LINK_AWAITING_V_22_CONNECTION.transitions if x.id == "t08_info_not_permitted_in_frame"),
         None,
     )
-    assert t is not None, "transition t08_info_field_permitted_in_frame not found"
-    assert t.on == "info_field_permitted_in_frame"
+    assert t is not None, "transition t08_info_not_permitted_in_frame not found"
+    assert t.on == "info_not_permitted_in_frame"
     assert t.next == "AwaitingV22Connection"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "DL-ERROR Indication (M)"

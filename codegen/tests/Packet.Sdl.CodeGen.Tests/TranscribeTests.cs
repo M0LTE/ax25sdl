@@ -164,13 +164,10 @@ public class TranscribeTests
         var page = SubroutinesWalker.Walk(graph, path);
 
         page.Machine.Should().Be("data_link");
-        // The committed graphml has 13 Subroutine_start nodes but two
-        // ("Establish Data Link" + "Establish Extended Data Link") share
-        // an authoring bug — n50 (SABM) is missing its outgoing edge — so
-        // the walker emits warnings and skips them. The remaining 11
-        // subroutines transcribe cleanly. When the redrawn graphmls land
-        // (Tom's planned vanilla + errata sets), this count will rise.
-        page.Subroutines.Should().HaveCount(11);
+        // 13 Subroutine_start nodes, all transcribing cleanly since the
+        // graphml fix for #11 landed (Establish Data Link + Establish
+        // Extended Data Link both now have the SABM-side edge).
+        page.Subroutines.Should().HaveCount(13);
         page.Subroutines.Should().OnlyHaveUniqueItems(s => s.Name);
     }
 

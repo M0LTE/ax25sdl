@@ -118,9 +118,9 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t08_info_field_permitted_in_frame",
+            id="t08_info_not_permitted_in_frame",
             from_="AwaitingV22Connection",
-            on="info_field_permitted_in_frame",
+            on="info_not_permitted_in_frame",
             guard="",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (M)", kind=ActionKind.SIGNAL_UPPER),
