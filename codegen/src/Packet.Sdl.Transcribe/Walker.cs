@@ -410,7 +410,7 @@ public static class Walker
                 var branchLabel = resolvedBranchLabels[i];
                 if (string.IsNullOrWhiteSpace(branchLabel))
                     throw new InvalidDataException(
-                        $"decision edge {edge.Id} (from {current.Id} '{current.Label}') has no Yes/No label and can't be inferred");
+                        $"decision edge {edge.Id} (from {current.Id} '{current.Label}') has no branch label — every out-edge of a Test-or-decision must be labelled explicitly (Yes/No, or another figure-verbatim value).");
                 // Strip annotations like "Yes (Note: assumed; missing from spec)"
                 // down to bare "Yes" / "No" — the codegen validator requires
                 // exactly these two values for branch labels.
@@ -645,24 +645,15 @@ public static class Walker
     };
 
     /// <summary>
-    /// For a 2-branch decision with one labeled edge and one unlabeled,
-    /// infer the unlabeled edge's label as the opposite. yEd authors
-    /// occasionally forget to label one edge; this fixes that without
-    /// silently picking the wrong branch.
+    /// Returns the raw labels for each out-edge of a decision. Both edges
+    /// must be labelled — the walker no longer infers a missing label as
+    /// the opposite of the labelled one, because the inference silently
+    /// papered over a polarity ambiguity in figc4.4 (see #24, #29). The
+    /// caller throws on any blank label, so unlabelled edges surface at
+    /// transcribe time rather than at runtime.
     /// </summary>
     private static List<string> ResolveBranchLabels(GraphmlNode decision, List<GraphmlEdge> outEdges)
-    {
-        var labels = outEdges.Select(e => e.Label).ToList();
-        if (outEdges.Count != 2) return labels;
-        var blanks = labels.Where(string.IsNullOrWhiteSpace).Count();
-        if (blanks != 1) return labels;  // 0 → all good; 2 → can't infer
-        var labelled = labels.First(l => !string.IsNullOrWhiteSpace(l));
-        var opposite = labelled.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "No"
-                     : labelled.Equals("No",  StringComparison.OrdinalIgnoreCase) ? "Yes"
-                     : "";  // give up if the existing label isn't Yes/No
-        if (string.IsNullOrEmpty(opposite)) return labels;
-        return labels.Select(l => string.IsNullOrWhiteSpace(l) ? opposite : l).ToList();
-    }
+        => outEdges.Select(e => e.Label).ToList();
 
     /// <summary>
     /// True if walking from the trigger reaches a "Save a signal until a
