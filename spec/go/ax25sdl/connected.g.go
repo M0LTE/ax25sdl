@@ -57,7 +57,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_yes",
 			From:  "Connected",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and vs_eq_va_+_k",
+			Guard: "not peer_receiver_busy and vs_eq_va_plus_k",
 			Actions: []ActionStep{
 				{Verb: "Push on I Frame Queue", Kind: InternalOut},
 			},
@@ -70,7 +70,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_no_no",
 			From:  "Connected",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running",
+			Guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
 			Actions: []ActionStep{
 				{Verb: "N(s) := V(s)", Kind: Processing},
 				{Verb: "N(r) := V(r)", Kind: Processing},
@@ -90,7 +90,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_no_yes",
 			From:  "Connected",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and not vs_eq_va_+_k and T1_running",
+			Guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
 			Actions: []ActionStep{
 				{Verb: "N(s) := V(s)", Kind: Processing},
 				{Verb: "N(r) := V(r)", Kind: Processing},
@@ -190,7 +190,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t07_dl_connect_request_no",
 			From:  "Connected",
 			On:    "DL_CONNECT_request",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "discard_I_frame_queue", Kind: Processing},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -205,7 +205,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t07_dl_connect_request_yes",
 			From:  "Connected",
 			On:    "DL_CONNECT_request",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "discard_I_frame_queue", Kind: Processing},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -231,7 +231,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t09_control_field_error_no",
 			From:  "Connected",
 			On:    "control_field_error",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (L)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -247,7 +247,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t09_control_field_error_yes",
 			From:  "Connected",
 			On:    "control_field_error",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (L)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -263,7 +263,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t10_info_not_permitted_in_frame_no",
 			From:  "Connected",
 			On:    "info_not_permitted_in_frame",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (M)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -279,7 +279,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t10_info_not_permitted_in_frame_yes",
 			From:  "Connected",
 			On:    "info_not_permitted_in_frame",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (M)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -295,7 +295,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t11_u_or_s_frame_length_error_no",
 			From:  "Connected",
 			On:    "u_or_s_frame_length_error",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (N)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -311,7 +311,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t11_u_or_s_frame_length_error_yes",
 			From:  "Connected",
 			On:    "u_or_s_frame_length_error",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (N)", Kind: SignalUpper},
 				{Verb: "discard_I_frame_queue", Kind: Processing},
@@ -451,7 +451,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t16_frmr_received_no",
 			From:  "Connected",
 			On:    "FRMR_received",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (K)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -466,7 +466,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t16_frmr_received_yes",
 			From:  "Connected",
 			On:    "FRMR_received",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (K)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -481,7 +481,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t17_ua_received_no",
 			From:  "Connected",
 			On:    "UA_received",
-			Guard: "not version_2.2",
+			Guard: "not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (K)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -496,7 +496,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t17_ua_received_yes",
 			From:  "Connected",
 			On:    "UA_received",
-			Guard: "version_2.2",
+			Guard: "version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (K)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -588,7 +588,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t21_rr_received_no_no",
 			From:  "Connected",
 			On:    "RR_received",
-			Guard: "not va_le_nr_le_vs and not version_2.2",
+			Guard: "not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -603,7 +603,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t21_rr_received_no_yes",
 			From:  "Connected",
 			On:    "RR_received",
-			Guard: "not va_le_nr_le_vs and version_2.2",
+			Guard: "not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -633,7 +633,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t22_rnr_received_no_no",
 			From:  "Connected",
 			On:    "RNR_received",
-			Guard: "not va_le_nr_le_vs and not version_2.2",
+			Guard: "not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -648,7 +648,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t22_rnr_received_no_yes",
 			From:  "Connected",
 			On:    "RNR_received",
-			Guard: "not va_le_nr_le_vs and version_2.2",
+			Guard: "not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -691,7 +691,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t24_srej_received_yes_yes",
 			From:  "Connected",
 			On:    "SREJ_received",
-			Guard: "va_le_nr_le_vs and p/f_eq_1",
+			Guard: "va_le_nr_le_vs and P_or_F_eq_1",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -714,7 +714,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t24_srej_received_yes_no",
 			From:  "Connected",
 			On:    "SREJ_received",
-			Guard: "va_le_nr_le_vs and not p/f_eq_1",
+			Guard: "va_le_nr_le_vs and not P_or_F_eq_1",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -736,7 +736,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t24_srej_received_no_no",
 			From:  "Connected",
 			On:    "SREJ_received",
-			Guard: "not va_le_nr_le_vs and not version_2.2",
+			Guard: "not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -751,7 +751,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t24_srej_received_no_yes",
 			From:  "Connected",
 			On:    "SREJ_received",
-			Guard: "not va_le_nr_le_vs and version_2.2",
+			Guard: "not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -766,7 +766,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t25_rej_received_no_no",
 			From:  "Connected",
 			On:    "REJ_received",
-			Guard: "not va_le_nr_le_vs and not version_2.2",
+			Guard: "not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -781,7 +781,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t25_rej_received_no_yes",
 			From:  "Connected",
 			On:    "REJ_received",
-			Guard: "not va_le_nr_le_vs and version_2.2",
+			Guard: "not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Check Need For Response", Kind: Subroutine},
@@ -816,7 +816,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_no_no",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2",
+			Guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (O)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -831,7 +831,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_no_yes",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2",
+			Guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (O)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -846,7 +846,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_yes_no_no",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "N(r) Error Recovery", Kind: Subroutine},
 			},
@@ -859,7 +859,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_yes_no_yes",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2",
+			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "N(r) Error Recovery", Kind: Subroutine},
 			},
@@ -998,7 +998,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_yes_yes_no_no_no_yes_no_yes",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1",
+			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Save Contents of I Frame", Kind: Processing},
@@ -1018,7 +1018,7 @@ var DataLinkConnected = StatePage{
 			ID:    "t26_i_received_no_yes_yes_no_no_no_yes_no_no",
 			From:  "Connected",
 			On:    "I_received",
-			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1",
+			Guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Save Contents of I Frame", Kind: Processing},

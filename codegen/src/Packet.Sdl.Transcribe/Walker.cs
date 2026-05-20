@@ -492,6 +492,18 @@ public static class Walker
     internal static string ContextualDecisionIdPublic(string triggerPrefix, string questionLabel)
         => ContextualDecisionId(triggerPrefix, questionLabel);
 
+    /// <summary>Test entry point for the predicate-name normaliser. Returns the
+    /// runtime-identifier form (preserves spec-variable casing like P / F / V / I /
+    /// RR / SREJ) used as the <c>predicate:</c> field of an emitted decision.</summary>
+    public static string DecisionPredicateForTests(string questionLabel)
+        => DecisionPredicate(questionLabel);
+
+    /// <summary>Test entry point for the decision-id normaliser. Returns the
+    /// lower-case-everywhere form used as the <c>id:</c> field of an emitted
+    /// decision (prefixed by trigger context at call sites).</summary>
+    public static string NormaliseQuestionToIdForTests(string questionLabel)
+        => NormaliseQuestionToId(questionLabel);
+
     private static void RecordDecision(GraphmlNode node, string contextualId, Dictionary<string, Decision> decisionsSeen)
     {
         if (decisionsSeen.ContainsKey(contextualId)) return;
@@ -513,17 +525,7 @@ public static class Walker
     private static string NormaliseQuestionToId(string label)
     {
         // "P == 1?" → "p_eq_1"   |   "Able to Establish?" → "able_to_establish"
-        var stripped = label.TrimEnd('?').Trim();
-        var snake = Regex.Replace(stripped, @"\s+", "_")
-                         .Replace("==", "eq")
-                         .Replace("!=", "ne")
-                         .Replace(">=", "ge")
-                         .Replace("<=", "le")
-                         .Replace(">",  "gt")
-                         .Replace("<",  "lt")
-                         .Replace("(",  "")
-                         .Replace(")",  "")
-                         .ToLowerInvariant();
+        var snake = NormaliseQuestionShared(label).ToLowerInvariant();
         return Regex.Replace(snake, @"_+", "_").Trim('_');
     }
 
@@ -533,20 +535,60 @@ public static class Walker
         // (single-letter or all-caps — P, F, V, I) and lowercase everything
         // else. Matches the existing yaml convention: P_eq_1 (keep P), but
         // able_to_establish (lowercase the regular words).
-        var stripped = label.TrimEnd('?').Trim();
-        var snake = Regex.Replace(stripped, @"\s+", "_")
-                         .Replace("==", "eq")
-                         .Replace("!=", "ne")
-                         .Replace(">=", "ge")
-                         .Replace("<=", "le")
-                         .Replace(">",  "gt")
-                         .Replace("<",  "lt")
-                         .Replace("(",  "")
-                         .Replace(")",  "");
+        var snake = NormaliseQuestionShared(label);
         var collapsed = Regex.Replace(snake, @"_+", "_").Trim('_');
         var tokens = collapsed.Split('_', StringSplitOptions.RemoveEmptyEntries)
                               .Select(PreserveSpecVariable);
         return string.Join('_', tokens);
+    }
+
+    /// <summary>
+    /// Shared question-text → identifier normalisation. Replaces comparison
+    /// operators and boolean connectives with word forms, strips remaining
+    /// non-alphanumeric / non-underscore characters, and leaves casing for
+    /// the caller (id form lowercases everything; predicate form preserves
+    /// spec-variable tokens P / F / V / I etc.).
+    /// </summary>
+    /// <remarks>
+    /// The graphml decision diamonds use mathematical notation verbatim:
+    /// <c>V(s) == V(a)?</c>, <c>N(s) &gt; V(r)+1?</c>, <c>P/F == 1?</c>,
+    /// <c>F == 1 &amp; (frame=RR || frame=RNR || frame=I)?</c>, <c>Version 2.2?</c>.
+    /// All of these need to become valid identifier strings so the
+    /// downstream guard evaluator can tokenise them. Replacements applied in
+    /// fixed order, longest-match first within each category so e.g.
+    /// <c>&lt;=</c> doesn't get partially matched by the <c>&lt;</c> rule.
+    /// </remarks>
+    private static string NormaliseQuestionShared(string label)
+    {
+        var stripped = label.TrimEnd('?').Trim();
+        var snake = Regex.Replace(stripped, @"\s+", "_")
+                         // Comparison operators — two-char before one-char.
+                         .Replace("==", "_eq_")
+                         .Replace("!=", "_ne_")
+                         .Replace(">=", "_ge_")
+                         .Replace("<=", "_le_")
+                         .Replace(">",  "_gt_")
+                         .Replace("<",  "_lt_")
+                         // Single '=' is comparison too (e.g. `frame=RR` inside
+                         // a composite). Applied AFTER the two-char operators
+                         // above so >=, <=, !=, == aren't double-replaced.
+                         .Replace("=",  "_eq_")
+                         // Boolean connectives — two-char before one-char.
+                         .Replace("&&", "_and_")
+                         .Replace("||", "_or_")
+                         .Replace("&",  "_and_")
+                         .Replace("|",  "_or_")
+                         // Slash is P/F-style "or" in spec prose.
+                         .Replace("/",  "_or_")
+                         // Arithmetic / structural.
+                         .Replace("+",  "_plus_")
+                         .Replace(".",  "_")
+                         .Replace("(",  "")
+                         .Replace(")",  "")
+                         .Replace(",",  "_");
+        // Strip any remaining non-identifier characters as a backstop.
+        snake = Regex.Replace(snake, @"[^A-Za-z0-9_]+", "_");
+        return snake;
     }
 
     private static string PreserveSpecVariable(string token)

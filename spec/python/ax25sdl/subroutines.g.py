@@ -56,7 +56,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t02_ui_check_yes_yes",
-                    guard="command and info_field_length_le_N1_&_content_is_octet_aligned",
+                    guard="command and info_field_length_le_N1_and_content_is_octet_aligned",
                     actions=(
                         ActionStep(verb="DL-UNIT-DATA Indication", kind=ActionKind.SIGNAL_UPPER),
                     ),
@@ -66,7 +66,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t03_ui_check_yes_no",
-                    guard="command and not info_field_length_le_N1_&_content_is_octet_aligned",
+                    guard="command and not info_field_length_le_N1_and_content_is_octet_aligned",
                     actions=(
                         ActionStep(verb="DL-ERROR Indication (K)", kind=ActionKind.SIGNAL_UPPER),
                     ),
@@ -142,7 +142,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
             paths=(
                 SubroutinePath(
                     id="t01_check_need_for_response_yes",
-                    guard="command_&_P_eq_1",
+                    guard="command_and_P_eq_1",
                     actions=(
                         ActionStep(verb="Enquiry_Response_F_1", kind=ActionKind.SUBROUTINE),
                     ),
@@ -152,7 +152,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t02_check_need_for_response_no_no",
-                    guard="not command_&_P_eq_1 and not response_&_F_eq_1",
+                    guard="not command_and_P_eq_1 and not response_and_F_eq_1",
                     actions=(),
                     notes="",
                     references=(),
@@ -160,7 +160,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t03_check_need_for_response_no_yes",
-                    guard="not command_&_P_eq_1 and response_&_F_eq_1",
+                    guard="not command_and_P_eq_1 and response_and_F_eq_1",
                     actions=(
                         ActionStep(verb="DL-ERROR Indication (A)", kind=ActionKind.SIGNAL_UPPER),
                     ),
@@ -336,7 +336,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
             paths=(
                 SubroutinePath(
                     id="t01_enquiry_response_yes_yes",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and own_receiver_busy",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and own_receiver_busy",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="RNR Response", kind=ActionKind.SIGNAL_LOWER),
@@ -348,7 +348,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t02_enquiry_response_yes_no_yes_yes_yes",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="DL-ERROR Indication (add)", kind=ActionKind.SIGNAL_UPPER),
@@ -362,7 +362,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t03_enquiry_response_yes_no_yes_yes_no",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="DL-ERROR Indication (add)", kind=ActionKind.SIGNAL_UPPER),
@@ -375,7 +375,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t04_enquiry_response_yes_no_yes_no_yes",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="SREJ", kind=ActionKind.SIGNAL_LOWER),
@@ -388,7 +388,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t05_enquiry_response_yes_no_yes_no_no",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="RR Response", kind=ActionKind.SIGNAL_LOWER),
@@ -400,7 +400,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t06_enquiry_response_yes_no_no",
-                    guard="F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and not SREJ_enabled",
+                    guard="F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and not SREJ_enabled",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="RR Response", kind=ActionKind.SIGNAL_LOWER),
@@ -412,7 +412,7 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                 ),
                 SubroutinePath(
                     id="t07_enquiry_response_no",
-                    guard="not F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi",
+                    guard="not F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I",
                     actions=(
                         ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
                         ActionStep(verb="RR Response", kind=ActionKind.SIGNAL_LOWER),

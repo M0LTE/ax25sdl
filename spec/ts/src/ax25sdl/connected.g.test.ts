@@ -61,7 +61,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not peer_receiver_busy and vs_eq_va_+_k");
+    expect(t.guard).toBe("not peer_receiver_busy and vs_eq_va_plus_k");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("Push on I Frame Queue");
     expect(t.actions[0].kind).toBe("internal_out");
@@ -73,7 +73,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_+_k and not T1_running");
+    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running");
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
@@ -99,7 +99,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_+_k and T1_running");
+    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_plus_k and T1_running");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
@@ -204,7 +204,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("DL_CONNECT_request");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_I_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
@@ -220,7 +220,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("DL_CONNECT_request");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_I_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
@@ -245,7 +245,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("control_field_error");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (L)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -263,7 +263,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("control_field_error");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (L)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -281,7 +281,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("info_not_permitted_in_frame");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -299,7 +299,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("info_not_permitted_in_frame");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (M)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -317,7 +317,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("u_or_s_frame_length_error");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (N)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -335,7 +335,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("u_or_s_frame_length_error");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (N)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -515,7 +515,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("FRMR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (K)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -531,7 +531,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("FRMR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (K)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -547,7 +547,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not version_2.2");
+    expect(t.guard).toBe("not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (K)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -563,7 +563,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("version_2.2");
+    expect(t.guard).toBe("version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (K)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -661,7 +661,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -677,7 +677,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -709,7 +709,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -725,7 +725,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -769,7 +769,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("va_le_nr_le_vs and p/f_eq_1");
+    expect(t.guard).toBe("va_le_nr_le_vs and P_or_F_eq_1");
     expect(t.actions).toHaveLength(11);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -801,7 +801,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("va_le_nr_le_vs and not p/f_eq_1");
+    expect(t.guard).toBe("va_le_nr_le_vs and not P_or_F_eq_1");
     expect(t.actions).toHaveLength(10);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -831,7 +831,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -847,7 +847,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -863,7 +863,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -879,7 +879,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not va_le_nr_le_vs and version_2.2");
+    expect(t.guard).toBe("not va_le_nr_le_vs and version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -921,7 +921,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2");
+    expect(t.guard).toBe("not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -937,7 +937,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2");
+    expect(t.guard).toBe("not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -953,7 +953,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2");
+    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("N(r) Error Recovery");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -965,7 +965,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2");
+    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("N(r) Error Recovery");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1131,7 +1131,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1");
+    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1157,7 +1157,7 @@ describe("DataLinkConnected", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1");
+    expect(t.guard).toBe("not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");

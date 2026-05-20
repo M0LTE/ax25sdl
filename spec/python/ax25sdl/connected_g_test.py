@@ -69,7 +69,7 @@ def test_t03_i_frame_pops_off_queue_no_yes() -> None:
     assert t is not None, "transition t03_i_frame_pops_off_queue_no_yes not found"
     assert t.on == "I_frame_pops_off_queue"
     assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and vs_eq_va_+_k"
+    assert t.guard == "not peer_receiver_busy and vs_eq_va_plus_k"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "Push on I Frame Queue"
     assert t.actions[0].kind == ActionKind.INTERNAL_OUT
@@ -83,7 +83,7 @@ def test_t03_i_frame_pops_off_queue_no_no_no() -> None:
     assert t is not None, "transition t03_i_frame_pops_off_queue_no_no_no not found"
     assert t.on == "I_frame_pops_off_queue"
     assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running"
+    assert t.guard == "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "N(s) := V(s)"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -111,7 +111,7 @@ def test_t03_i_frame_pops_off_queue_no_no_yes() -> None:
     assert t is not None, "transition t03_i_frame_pops_off_queue_no_no_yes not found"
     assert t.on == "I_frame_pops_off_queue"
     assert t.next == "Connected"
-    assert t.guard == "not peer_receiver_busy and not vs_eq_va_+_k and T1_running"
+    assert t.guard == "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "N(s) := V(s)"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -230,7 +230,7 @@ def test_t07_dl_connect_request_no() -> None:
     assert t is not None, "transition t07_dl_connect_request_no not found"
     assert t.on == "DL_CONNECT_request"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "discard_I_frame_queue"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -248,7 +248,7 @@ def test_t07_dl_connect_request_yes() -> None:
     assert t is not None, "transition t07_dl_connect_request_yes not found"
     assert t.on == "DL_CONNECT_request"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "discard_I_frame_queue"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -277,7 +277,7 @@ def test_t09_control_field_error_no() -> None:
     assert t is not None, "transition t09_control_field_error_no not found"
     assert t.on == "control_field_error"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -297,7 +297,7 @@ def test_t09_control_field_error_yes() -> None:
     assert t is not None, "transition t09_control_field_error_yes not found"
     assert t.on == "control_field_error"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (L)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -317,7 +317,7 @@ def test_t10_info_not_permitted_in_frame_no() -> None:
     assert t is not None, "transition t10_info_not_permitted_in_frame_no not found"
     assert t.on == "info_not_permitted_in_frame"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -337,7 +337,7 @@ def test_t10_info_not_permitted_in_frame_yes() -> None:
     assert t is not None, "transition t10_info_not_permitted_in_frame_yes not found"
     assert t.on == "info_not_permitted_in_frame"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (M)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -357,7 +357,7 @@ def test_t11_u_or_s_frame_length_error_no() -> None:
     assert t is not None, "transition t11_u_or_s_frame_length_error_no not found"
     assert t.on == "u_or_s_frame_length_error"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (N)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -377,7 +377,7 @@ def test_t11_u_or_s_frame_length_error_yes() -> None:
     assert t is not None, "transition t11_u_or_s_frame_length_error_yes not found"
     assert t.on == "u_or_s_frame_length_error"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (N)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -571,7 +571,7 @@ def test_t16_frmr_received_no() -> None:
     assert t is not None, "transition t16_frmr_received_no not found"
     assert t.on == "FRMR_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (K)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -589,7 +589,7 @@ def test_t16_frmr_received_yes() -> None:
     assert t is not None, "transition t16_frmr_received_yes not found"
     assert t.on == "FRMR_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (K)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -607,7 +607,7 @@ def test_t17_ua_received_no() -> None:
     assert t is not None, "transition t17_ua_received_no not found"
     assert t.on == "UA_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not version_2.2"
+    assert t.guard == "not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (K)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -625,7 +625,7 @@ def test_t17_ua_received_yes() -> None:
     assert t is not None, "transition t17_ua_received_yes not found"
     assert t.on == "UA_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "version_2.2"
+    assert t.guard == "version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (K)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -735,7 +735,7 @@ def test_t21_rr_received_no_no() -> None:
     assert t is not None, "transition t21_rr_received_no_no not found"
     assert t.on == "RR_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -753,7 +753,7 @@ def test_t21_rr_received_no_yes() -> None:
     assert t is not None, "transition t21_rr_received_no_yes not found"
     assert t.on == "RR_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -789,7 +789,7 @@ def test_t22_rnr_received_no_no() -> None:
     assert t is not None, "transition t22_rnr_received_no_no not found"
     assert t.on == "RNR_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -807,7 +807,7 @@ def test_t22_rnr_received_no_yes() -> None:
     assert t is not None, "transition t22_rnr_received_no_yes not found"
     assert t.on == "RNR_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -857,7 +857,7 @@ def test_t24_srej_received_yes_yes() -> None:
     assert t is not None, "transition t24_srej_received_yes_yes not found"
     assert t.on == "SREJ_received"
     assert t.next == "Connected"
-    assert t.guard == "va_le_nr_le_vs and p/f_eq_1"
+    assert t.guard == "va_le_nr_le_vs and P_or_F_eq_1"
     assert len(t.actions) == 11
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -891,7 +891,7 @@ def test_t24_srej_received_yes_no() -> None:
     assert t is not None, "transition t24_srej_received_yes_no not found"
     assert t.on == "SREJ_received"
     assert t.next == "Connected"
-    assert t.guard == "va_le_nr_le_vs and not p/f_eq_1"
+    assert t.guard == "va_le_nr_le_vs and not P_or_F_eq_1"
     assert len(t.actions) == 10
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -923,7 +923,7 @@ def test_t24_srej_received_no_no() -> None:
     assert t is not None, "transition t24_srej_received_no_no not found"
     assert t.on == "SREJ_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -941,7 +941,7 @@ def test_t24_srej_received_no_yes() -> None:
     assert t is not None, "transition t24_srej_received_no_yes not found"
     assert t.on == "SREJ_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -959,7 +959,7 @@ def test_t25_rej_received_no_no() -> None:
     assert t is not None, "transition t25_rej_received_no_no not found"
     assert t.on == "REJ_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not va_le_nr_le_vs and not version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -977,7 +977,7 @@ def test_t25_rej_received_no_yes() -> None:
     assert t is not None, "transition t25_rej_received_no_yes not found"
     assert t.on == "REJ_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not va_le_nr_le_vs and version_2.2"
+    assert t.guard == "not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1023,7 +1023,7 @@ def test_t26_i_received_no_no_no() -> None:
     assert t is not None, "transition t26_i_received_no_no_no not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2"
+    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (O)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -1041,7 +1041,7 @@ def test_t26_i_received_no_no_yes() -> None:
     assert t is not None, "transition t26_i_received_no_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2"
+    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (O)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -1059,7 +1059,7 @@ def test_t26_i_received_no_yes_no_no() -> None:
     assert t is not None, "transition t26_i_received_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "N(r) Error Recovery"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1073,7 +1073,7 @@ def test_t26_i_received_no_yes_no_yes() -> None:
     assert t is not None, "transition t26_i_received_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "N(r) Error Recovery"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1255,7 +1255,7 @@ def test_t26_i_received_no_yes_yes_no_no_no_yes_no_yes() -> None:
     assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1283,7 +1283,7 @@ def test_t26_i_received_no_yes_yes_no_no_no_yes_no_no() -> None:
     assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1"
+    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE

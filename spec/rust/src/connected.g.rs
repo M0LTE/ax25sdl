@@ -61,7 +61,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_yes",
             from: "Connected",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and vs_eq_va_+_k",
+            guard: "not peer_receiver_busy and vs_eq_va_plus_k",
             actions: &[
                 ActionStep { verb: "Push on I Frame Queue", kind: ActionKind::InternalOut },
             ],
@@ -74,7 +74,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_no_no",
             from: "Connected",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running",
+            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
@@ -94,7 +94,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_no_yes",
             from: "Connected",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vs_eq_va_+_k and T1_running",
+            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
@@ -194,7 +194,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t07_dl_connect_request_no",
             from: "Connected",
             on: "DL_CONNECT_request",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -209,7 +209,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t07_dl_connect_request_yes",
             from: "Connected",
             on: "DL_CONNECT_request",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -235,7 +235,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t09_control_field_error_no",
             from: "Connected",
             on: "control_field_error",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -251,7 +251,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t09_control_field_error_yes",
             from: "Connected",
             on: "control_field_error",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -267,7 +267,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t10_info_not_permitted_in_frame_no",
             from: "Connected",
             on: "info_not_permitted_in_frame",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -283,7 +283,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t10_info_not_permitted_in_frame_yes",
             from: "Connected",
             on: "info_not_permitted_in_frame",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -299,7 +299,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t11_u_or_s_frame_length_error_no",
             from: "Connected",
             on: "u_or_s_frame_length_error",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -315,7 +315,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t11_u_or_s_frame_length_error_yes",
             from: "Connected",
             on: "u_or_s_frame_length_error",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
@@ -455,7 +455,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t16_frmr_received_no",
             from: "Connected",
             on: "FRMR_received",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -470,7 +470,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t16_frmr_received_yes",
             from: "Connected",
             on: "FRMR_received",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -485,7 +485,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t17_ua_received_no",
             from: "Connected",
             on: "UA_received",
-            guard: "not version_2.2",
+            guard: "not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -500,7 +500,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t17_ua_received_yes",
             from: "Connected",
             on: "UA_received",
-            guard: "version_2.2",
+            guard: "version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -592,7 +592,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t21_rr_received_no_no",
             from: "Connected",
             on: "RR_received",
-            guard: "not va_le_nr_le_vs and not version_2.2",
+            guard: "not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -607,7 +607,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t21_rr_received_no_yes",
             from: "Connected",
             on: "RR_received",
-            guard: "not va_le_nr_le_vs and version_2.2",
+            guard: "not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -637,7 +637,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t22_rnr_received_no_no",
             from: "Connected",
             on: "RNR_received",
-            guard: "not va_le_nr_le_vs and not version_2.2",
+            guard: "not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -652,7 +652,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t22_rnr_received_no_yes",
             from: "Connected",
             on: "RNR_received",
-            guard: "not va_le_nr_le_vs and version_2.2",
+            guard: "not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -695,7 +695,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t24_srej_received_yes_yes",
             from: "Connected",
             on: "SREJ_received",
-            guard: "va_le_nr_le_vs and p/f_eq_1",
+            guard: "va_le_nr_le_vs and P_or_F_eq_1",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -718,7 +718,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t24_srej_received_yes_no",
             from: "Connected",
             on: "SREJ_received",
-            guard: "va_le_nr_le_vs and not p/f_eq_1",
+            guard: "va_le_nr_le_vs and not P_or_F_eq_1",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -740,7 +740,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t24_srej_received_no_no",
             from: "Connected",
             on: "SREJ_received",
-            guard: "not va_le_nr_le_vs and not version_2.2",
+            guard: "not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -755,7 +755,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t24_srej_received_no_yes",
             from: "Connected",
             on: "SREJ_received",
-            guard: "not va_le_nr_le_vs and version_2.2",
+            guard: "not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -770,7 +770,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t25_rej_received_no_no",
             from: "Connected",
             on: "REJ_received",
-            guard: "not va_le_nr_le_vs and not version_2.2",
+            guard: "not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -785,7 +785,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t25_rej_received_no_yes",
             from: "Connected",
             on: "REJ_received",
-            guard: "not va_le_nr_le_vs and version_2.2",
+            guard: "not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Check Need For Response", kind: ActionKind::Subroutine },
@@ -820,7 +820,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2",
+            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -835,7 +835,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2",
+            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -850,7 +850,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_yes_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2",
+            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
             ],
@@ -863,7 +863,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2",
+            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
             ],
@@ -1002,7 +1002,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_yes_yes_no_no_no_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1",
+            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1022,7 +1022,7 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             id: "t26_i_received_no_yes_yes_no_no_no_yes_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1",
+            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1162,7 +1162,7 @@ mod tests {
             .expect("transition t03_i_frame_pops_off_queue_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not peer_receiver_busy and vs_eq_va_+_k");
+        assert_eq!(tx.guard, "not peer_receiver_busy and vs_eq_va_plus_k");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "Push on I Frame Queue");
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
@@ -1179,7 +1179,7 @@ mod tests {
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running"
+            "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
         );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
@@ -1211,7 +1211,7 @@ mod tests {
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_+_k and T1_running"
+            "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
         );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
@@ -1338,7 +1338,7 @@ mod tests {
             .expect("transition t07_dl_connect_request_no not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1357,7 +1357,7 @@ mod tests {
             .expect("transition t07_dl_connect_request_yes not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1388,7 +1388,7 @@ mod tests {
             .expect("transition t09_control_field_error_no not found");
         assert_eq!(tx.on, "control_field_error");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (L)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1409,7 +1409,7 @@ mod tests {
             .expect("transition t09_control_field_error_yes not found");
         assert_eq!(tx.on, "control_field_error");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (L)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1430,7 +1430,7 @@ mod tests {
             .expect("transition t10_info_not_permitted_in_frame_no not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (M)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1451,7 +1451,7 @@ mod tests {
             .expect("transition t10_info_not_permitted_in_frame_yes not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (M)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1472,7 +1472,7 @@ mod tests {
             .expect("transition t11_u_or_s_frame_length_error_no not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (N)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1493,7 +1493,7 @@ mod tests {
             .expect("transition t11_u_or_s_frame_length_error_yes not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (N)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1694,7 +1694,7 @@ mod tests {
             .expect("transition t16_frmr_received_no not found");
         assert_eq!(tx.on, "FRMR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (K)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1713,7 +1713,7 @@ mod tests {
             .expect("transition t16_frmr_received_yes not found");
         assert_eq!(tx.on, "FRMR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (K)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1732,7 +1732,7 @@ mod tests {
             .expect("transition t17_ua_received_no not found");
         assert_eq!(tx.on, "UA_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not version_2.2");
+        assert_eq!(tx.guard, "not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (K)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1751,7 +1751,7 @@ mod tests {
             .expect("transition t17_ua_received_yes not found");
         assert_eq!(tx.on, "UA_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "version_2.2");
+        assert_eq!(tx.guard, "version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (K)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -1867,7 +1867,7 @@ mod tests {
             .expect("transition t21_rr_received_no_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1886,7 +1886,7 @@ mod tests {
             .expect("transition t21_rr_received_no_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1924,7 +1924,7 @@ mod tests {
             .expect("transition t22_rnr_received_no_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1943,7 +1943,7 @@ mod tests {
             .expect("transition t22_rnr_received_no_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1996,7 +1996,7 @@ mod tests {
             .expect("transition t24_srej_received_yes_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "va_le_nr_le_vs and p/f_eq_1");
+        assert_eq!(tx.guard, "va_le_nr_le_vs and P_or_F_eq_1");
         assert_eq!(tx.actions.len(), 11);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2031,7 +2031,7 @@ mod tests {
             .expect("transition t24_srej_received_yes_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "va_le_nr_le_vs and not p/f_eq_1");
+        assert_eq!(tx.guard, "va_le_nr_le_vs and not P_or_F_eq_1");
         assert_eq!(tx.actions.len(), 10);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2064,7 +2064,7 @@ mod tests {
             .expect("transition t24_srej_received_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2083,7 +2083,7 @@ mod tests {
             .expect("transition t24_srej_received_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2102,7 +2102,7 @@ mod tests {
             .expect("transition t25_rej_received_no_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2121,7 +2121,7 @@ mod tests {
             .expect("transition t25_rej_received_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2169,7 +2169,7 @@ mod tests {
             .expect("transition t26_i_received_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2");
+        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2188,7 +2188,7 @@ mod tests {
             .expect("transition t26_i_received_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2");
+        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2207,7 +2207,7 @@ mod tests {
             .expect("transition t26_i_received_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Error Recovery");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2222,7 +2222,7 @@ mod tests {
             .expect("transition t26_i_received_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Error Recovery");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2412,7 +2412,7 @@ mod tests {
             .expect("transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1");
+        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2441,7 +2441,7 @@ mod tests {
             .expect("transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1");
+        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);

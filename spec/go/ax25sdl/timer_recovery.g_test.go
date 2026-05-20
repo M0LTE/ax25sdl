@@ -145,8 +145,8 @@ func TestDataLinkTimerRecovery_t03_i_frame_pops_off_queue_no_yes(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and vseqva+k" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and vseqva+k")
+	if tx.Guard != "not peer_receiver_busy and vs_eq_va_plus_k" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and vs_eq_va_plus_k")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -176,8 +176,8 @@ func TestDataLinkTimerRecovery_t03_i_frame_pops_off_queue_no_no_yes(t *testing.T
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and not vseqva+k and T1_running" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vseqva+k and T1_running")
+	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -237,8 +237,8 @@ func TestDataLinkTimerRecovery_t03_i_frame_pops_off_queue_no_no_no(t *testing.T)
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and not vseqva+k and not T1_running" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vseqva+k and not T1_running")
+	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -1275,8 +1275,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_no_no(t *testing.T) {
 	if tx.Next != "Undefined" {
 		t.Errorf("Next = %q, want Undefined", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -1306,8 +1306,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_no_yes_yes(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1349,8 +1349,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_no_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1392,8 +1392,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_no_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1435,8 +1435,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -1484,8 +1484,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -1533,8 +1533,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_yes_yes_no(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -1606,8 +1606,8 @@ func TestDataLinkTimerRecovery_t18_rr_received_yes_yes_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -1667,8 +1667,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_no_no(t *testing.T) {
 	if tx.Next != "Undefined" {
 		t.Errorf("Next = %q, want Undefined", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -1698,8 +1698,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_no_yes_yes(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1741,8 +1741,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_no_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1784,8 +1784,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_no_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1827,8 +1827,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -1876,8 +1876,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -1925,8 +1925,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_yes_yes_no(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -1998,8 +1998,8 @@ func TestDataLinkTimerRecovery_t19_rnr_received_yes_yes_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -2351,8 +2351,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not info_field_length_le_N1_&_content_is_octet_aligned" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not info_field_length_le_N1_&_content_is_octet_aligned")
+	if tx.Guard != "not info_field_length_le_N1_and_content_is_octet_aligned" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not info_field_length_le_N1_and_content_is_octet_aligned")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2394,8 +2394,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -2425,8 +2425,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_yes_yes(t *testi
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -2486,8 +2486,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_yes_no(t *testin
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -2523,8 +2523,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_yes_no_yes(t 
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 9 {
 		t.Fatalf("len(Actions) = %d, want 9", got)
@@ -2602,8 +2602,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_yes_no_no_no(
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending")
 	}
 	if got := len(tx.Actions); got != 7 {
 		t.Fatalf("len(Actions) = %d, want 7", got)
@@ -2669,8 +2669,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_yes_no_no_yes
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending")
 	}
 	if got := len(tx.Actions); got != 5 {
 		t.Fatalf("len(Actions) = %d, want 5", got)
@@ -2724,8 +2724,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_yes_yes(t 
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -2785,8 +2785,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_yes_no(t *
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -2822,8 +2822,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_no_no(t *t
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled")
 	}
 	if got := len(tx.Actions); got != 7 {
 		t.Fatalf("len(Actions) = %d, want 7", got)
@@ -2889,8 +2889,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_no_yes_no_
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -2962,8 +2962,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_no_yes_no_
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3023,8 +3023,8 @@ func TestDataLinkTimerRecovery_t22_i_received_undefined_yes_yes_no_no_no_yes_yes
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0")
+	if tx.Guard != "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3084,8 +3084,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_yes_yes_yes(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -3127,8 +3127,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_yes_yes_no(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 7 {
 		t.Fatalf("len(Actions) = %d, want 7", got)
@@ -3194,8 +3194,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -3237,8 +3237,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -3280,8 +3280,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_no_yes_yes(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3317,8 +3317,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_no_yes_no(t *testing.T) {
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3378,8 +3378,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_no_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3415,8 +3415,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_no_no_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3452,8 +3452,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -3501,8 +3501,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -3550,8 +3550,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_yes_yes_undefined_via_start_t3(t
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3611,8 +3611,8 @@ func TestDataLinkTimerRecovery_t23_rej_received_yes_yes_undefined_via_invoke_ret
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
 	}
-	if tx.Guard != "response_&_F_eq_1 and va_le_nr_le_vs" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response_&_F_eq_1 and va_le_nr_le_vs")
+	if tx.Guard != "response_and_F_eq_1 and va_le_nr_le_vs" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response_and_F_eq_1 and va_le_nr_le_vs")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -3844,8 +3844,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not response and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not response and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3881,8 +3881,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not response and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not response and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3918,8 +3918,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "response and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "response and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -3967,8 +3967,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "response and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "response and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "response and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "response and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
