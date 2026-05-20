@@ -68,6 +68,54 @@ static const ActionStep
 };
 
 static const ActionStep
+    data_link_subroutines_establish_extended_data_link_t01_establish_extended_data_link_no_actions
+        [] = {
+            {.verb = "Clear Exception Conditions",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "RC := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "P := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "SABM", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const ActionStep
+    data_link_subroutines_establish_extended_data_link_t02_establish_extended_data_link_yes_actions
+        [] = {
+            {.verb = "Clear Exception Conditions",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "RC := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "P := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "SABME", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const ActionStep
+    data_link_subroutines_establish_data_link_t01_establish_data_link_no_actions
+        [] = {
+            {.verb = "Clear Exception Conditions",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "RC := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "P := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "SABM", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const ActionStep
+    data_link_subroutines_establish_data_link_t02_establish_data_link_yes_actions
+        [] = {
+            {.verb = "Clear Exception Conditions",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "RC := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "P := 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "SABME", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const ActionStep
     data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_yes_actions
         [] = {
             {.verb = "Backtrack", .kind = AX25SDL_KIND_PROCESSING},
@@ -364,6 +412,61 @@ static const SubroutinePath data_link_subroutines_check_need_for_response_paths[
     },
 };
 
+static const SubroutinePath
+    data_link_subroutines_establish_extended_data_link_paths[] = {
+        {
+            .id = "t01_establish_extended_data_link_no",
+            .guard = "not mod_128",
+            .actions =
+                data_link_subroutines_establish_extended_data_link_t01_establish_extended_data_link_no_actions,
+            .actions_len = 6,
+            .notes = "",
+            .references = NULL,
+            .references_len = 0,
+            .loops = NULL,
+            .loops_len = 0,
+        },
+        {
+            .id = "t02_establish_extended_data_link_yes",
+            .guard = "mod_128",
+            .actions =
+                data_link_subroutines_establish_extended_data_link_t02_establish_extended_data_link_yes_actions,
+            .actions_len = 6,
+            .notes = "",
+            .references = NULL,
+            .references_len = 0,
+            .loops = NULL,
+            .loops_len = 0,
+        },
+};
+
+static const SubroutinePath data_link_subroutines_establish_data_link_paths[] = {
+    {
+        .id = "t01_establish_data_link_no",
+        .guard = "not mod_128",
+        .actions =
+            data_link_subroutines_establish_data_link_t01_establish_data_link_no_actions,
+        .actions_len = 6,
+        .notes = "",
+        .references = NULL,
+        .references_len = 0,
+        .loops = NULL,
+        .loops_len = 0,
+    },
+    {
+        .id = "t02_establish_data_link_yes",
+        .guard = "mod_128",
+        .actions =
+            data_link_subroutines_establish_data_link_t02_establish_data_link_yes_actions,
+        .actions_len = 6,
+        .notes = "",
+        .references = NULL,
+        .references_len = 0,
+        .loops = NULL,
+        .loops_len = 0,
+    },
+};
+
 static const SubroutinePath data_link_subroutines_invoke_retransmission_paths[] = {
     {
         .id = "t01_invoke_retransmission_yes",
@@ -638,6 +741,22 @@ static const SubroutineSpec data_link_subroutines_subroutines[] = {
         .references_len = 0,
     },
     {
+        .name = "Establish_Extended_Data_Link",
+        .paths = data_link_subroutines_establish_extended_data_link_paths,
+        .paths_len = 2,
+        .notes = "",
+        .references = NULL,
+        .references_len = 0,
+    },
+    {
+        .name = "Establish_Data_Link",
+        .paths = data_link_subroutines_establish_data_link_paths,
+        .paths_len = 2,
+        .notes = "",
+        .references = NULL,
+        .references_len = 0,
+    },
+    {
         .name = "Invoke_Retransmission",
         .paths = data_link_subroutines_invoke_retransmission_paths,
         .paths_len = 1,
@@ -691,5 +810,5 @@ const SubroutinesPage data_link_subroutines = {
     .machine = "data_link",
     .source = {.spec = "ax.25.2.2.4_Oct_25", .figure = "figc4.7", .url = ""},
     .subroutines = data_link_subroutines_subroutines,
-    .subroutines_len = 11,
+    .subroutines_len = 13,
 };

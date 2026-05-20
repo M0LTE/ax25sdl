@@ -96,10 +96,10 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t08_info_field_permitted_in_frame()
+    [Fact] public void t08_info_not_permitted_in_frame()
     {
-        var t = DataLink_AwaitingV22Connection.Transitions.Single(x => x.Id == "t08_info_field_permitted_in_frame");
-        t.On.Should().Be("info_field_permitted_in_frame");
+        var t = DataLink_AwaitingV22Connection.Transitions.Single(x => x.Id == "t08_info_not_permitted_in_frame");
+        t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("AwaitingV22Connection");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");

@@ -168,6 +168,80 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             references: &[],
         },
         SubroutineSpec {
+            name: "Establish_Extended_Data_Link",
+            paths: &[
+                SubroutinePath {
+                    id: "t01_establish_extended_data_link_no",
+                    guard: "not mod_128",
+                    actions: &[
+                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
+                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "SABM", kind: ActionKind::SignalLower },
+                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                    ],
+                    notes: "",
+                    references: &[],
+                    loops: &[],
+                },
+                SubroutinePath {
+                    id: "t02_establish_extended_data_link_yes",
+                    guard: "mod_128",
+                    actions: &[
+                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
+                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "SABME", kind: ActionKind::SignalLower },
+                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                    ],
+                    notes: "",
+                    references: &[],
+                    loops: &[],
+                },
+            ],
+            notes: "",
+            references: &[],
+        },
+        SubroutineSpec {
+            name: "Establish_Data_Link",
+            paths: &[
+                SubroutinePath {
+                    id: "t01_establish_data_link_no",
+                    guard: "not mod_128",
+                    actions: &[
+                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
+                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "SABM", kind: ActionKind::SignalLower },
+                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                    ],
+                    notes: "",
+                    references: &[],
+                    loops: &[],
+                },
+                SubroutinePath {
+                    id: "t02_establish_data_link_yes",
+                    guard: "mod_128",
+                    actions: &[
+                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
+                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
+                        ActionStep { verb: "SABME", kind: ActionKind::SignalLower },
+                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                    ],
+                    notes: "",
+                    references: &[],
+                    loops: &[],
+                },
+            ],
+            notes: "",
+            references: &[],
+        },
+        SubroutineSpec {
             name: "Invoke_Retransmission",
             paths: &[
                 SubroutinePath {

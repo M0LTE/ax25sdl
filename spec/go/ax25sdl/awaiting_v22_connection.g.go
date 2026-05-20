@@ -110,9 +110,9 @@ var DataLinkAwaitingV22Connection = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:    "t08_info_field_permitted_in_frame",
+			ID:    "t08_info_not_permitted_in_frame",
 			From:  "AwaitingV22Connection",
-			On:    "info_field_permitted_in_frame",
+			On:    "info_not_permitted_in_frame",
 			Guard: "",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (M)", Kind: SignalUpper},

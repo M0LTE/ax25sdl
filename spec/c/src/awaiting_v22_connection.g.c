@@ -33,7 +33,7 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_awaiting_v22_connection_t08_info_field_permitted_in_frame_actions
+    data_link_awaiting_v22_connection_t08_info_not_permitted_in_frame_actions
         [] = {
             {.verb = "DL-ERROR Indication (M)",
              .kind = AX25SDL_KIND_SIGNAL_UPPER},
@@ -269,12 +269,12 @@ static const TransitionSpec data_link_awaiting_v22_connection_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t08_info_field_permitted_in_frame",
+        .id = "t08_info_not_permitted_in_frame",
         .from = "AwaitingV22Connection",
-        .on = "info_field_permitted_in_frame",
+        .on = "info_not_permitted_in_frame",
         .guard = "",
         .actions =
-            data_link_awaiting_v22_connection_t08_info_field_permitted_in_frame_actions,
+            data_link_awaiting_v22_connection_t08_info_not_permitted_in_frame_actions,
         .actions_len = 1,
         .next = "AwaitingV22Connection",
         .notes = "",

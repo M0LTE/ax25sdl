@@ -164,6 +164,80 @@ var DataLinkSubroutines = SubroutinesPage{
 			References: []ImplementationReference{},
 		},
 		{
+			Name: "Establish_Extended_Data_Link",
+			Paths: []SubroutinePath{
+				{
+					ID:    "t01_establish_extended_data_link_no",
+					Guard: "not mod_128",
+					Actions: []ActionStep{
+						{Verb: "Clear Exception Conditions", Kind: Processing},
+						{Verb: "RC := 1", Kind: Processing},
+						{Verb: "P := 1", Kind: Processing},
+						{Verb: "SABM", Kind: SignalLower},
+						{Verb: "Stop T3", Kind: Processing},
+						{Verb: "Start T1", Kind: Processing},
+					},
+					Notes:      "",
+					References: []ImplementationReference{},
+					Loops:      []LoopRange{},
+				},
+				{
+					ID:    "t02_establish_extended_data_link_yes",
+					Guard: "mod_128",
+					Actions: []ActionStep{
+						{Verb: "Clear Exception Conditions", Kind: Processing},
+						{Verb: "RC := 1", Kind: Processing},
+						{Verb: "P := 1", Kind: Processing},
+						{Verb: "SABME", Kind: SignalLower},
+						{Verb: "Stop T3", Kind: Processing},
+						{Verb: "Start T1", Kind: Processing},
+					},
+					Notes:      "",
+					References: []ImplementationReference{},
+					Loops:      []LoopRange{},
+				},
+			},
+			Notes:      "",
+			References: []ImplementationReference{},
+		},
+		{
+			Name: "Establish_Data_Link",
+			Paths: []SubroutinePath{
+				{
+					ID:    "t01_establish_data_link_no",
+					Guard: "not mod_128",
+					Actions: []ActionStep{
+						{Verb: "Clear Exception Conditions", Kind: Processing},
+						{Verb: "RC := 1", Kind: Processing},
+						{Verb: "P := 1", Kind: Processing},
+						{Verb: "SABM", Kind: SignalLower},
+						{Verb: "Stop T3", Kind: Processing},
+						{Verb: "Start T1", Kind: Processing},
+					},
+					Notes:      "",
+					References: []ImplementationReference{},
+					Loops:      []LoopRange{},
+				},
+				{
+					ID:    "t02_establish_data_link_yes",
+					Guard: "mod_128",
+					Actions: []ActionStep{
+						{Verb: "Clear Exception Conditions", Kind: Processing},
+						{Verb: "RC := 1", Kind: Processing},
+						{Verb: "P := 1", Kind: Processing},
+						{Verb: "SABME", Kind: SignalLower},
+						{Verb: "Stop T3", Kind: Processing},
+						{Verb: "Start T1", Kind: Processing},
+					},
+					Notes:      "",
+					References: []ImplementationReference{},
+					Loops:      []LoopRange{},
+				},
+			},
+			Notes:      "",
+			References: []ImplementationReference{},
+		},
+		{
 			Name: "Invoke_Retransmission",
 			Paths: []SubroutinePath{
 				{

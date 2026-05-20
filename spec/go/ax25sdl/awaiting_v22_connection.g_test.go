@@ -241,19 +241,19 @@ func TestDataLinkAwaitingV22Connection_t07_control_field_error(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingV22Connection_t08_info_field_permitted_in_frame(t *testing.T) {
+func TestDataLinkAwaitingV22Connection_t08_info_not_permitted_in_frame(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingV22Connection.Transitions {
-		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t08_info_field_permitted_in_frame" {
+		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t08_info_not_permitted_in_frame" {
 			tx = &DataLinkAwaitingV22Connection.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t08_info_field_permitted_in_frame not found")
+		t.Fatalf("transition t08_info_not_permitted_in_frame not found")
 	}
-	if tx.On != "info_field_permitted_in_frame" {
-		t.Errorf("On = %q, want info_field_permitted_in_frame", tx.On)
+	if tx.On != "info_not_permitted_in_frame" {
+		t.Errorf("On = %q, want info_not_permitted_in_frame", tx.On)
 	}
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)

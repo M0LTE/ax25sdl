@@ -183,18 +183,18 @@ static int test_t07_control_field_error(void) {
   return 0;
 }
 
-static int test_t08_info_field_permitted_in_frame(void) {
+static int test_t08_info_not_permitted_in_frame(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_awaiting_v22_connection.transitions_len;
        i++) {
     if (strcmp(data_link_awaiting_v22_connection.transitions[i].id,
-               "t08_info_field_permitted_in_frame") == 0) {
+               "t08_info_not_permitted_in_frame") == 0) {
       t = &data_link_awaiting_v22_connection.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t08_info_field_permitted_in_frame not found");
-  ASSERT_STREQ(t->on, "info_field_permitted_in_frame", "on");
+  ASSERT(t != NULL, "t08_info_not_permitted_in_frame not found");
+  ASSERT_STREQ(t->on, "info_not_permitted_in_frame", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (M)",
@@ -611,7 +611,7 @@ int main(void) {
   rc |= test_t05_i_frame_pops_off_queue_no();
   rc |= test_t06_all_other_primitives__from_lower_layer();
   rc |= test_t07_control_field_error();
-  rc |= test_t08_info_field_permitted_in_frame();
+  rc |= test_t08_info_not_permitted_in_frame();
   rc |= test_t09_u_or_s_frame_length_error();
   rc |= test_t10_ui_received_no();
   rc |= test_t10_ui_received_yes();

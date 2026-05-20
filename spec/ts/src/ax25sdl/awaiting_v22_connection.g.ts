@@ -112,9 +112,9 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       loops: [],
     },
     {
-      id: "t08_info_field_permitted_in_frame",
+      id: "t08_info_not_permitted_in_frame",
       from: "AwaitingV22Connection",
-      on: "info_field_permitted_in_frame",
+      on: "info_not_permitted_in_frame",
       guard: "",
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },

@@ -173,6 +173,80 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
             references=(),
         ),
         SubroutineSpec(
+            name="Establish_Extended_Data_Link",
+            paths=(
+                SubroutinePath(
+                    id="t01_establish_extended_data_link_no",
+                    guard="not mod_128",
+                    actions=(
+                        ActionStep(verb="Clear Exception Conditions", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="RC := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="P := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="SABM", kind=ActionKind.SIGNAL_LOWER),
+                        ActionStep(verb="Stop T3", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="Start T1", kind=ActionKind.PROCESSING),
+                    ),
+                    notes="",
+                    references=(),
+                    loops=(),
+                ),
+                SubroutinePath(
+                    id="t02_establish_extended_data_link_yes",
+                    guard="mod_128",
+                    actions=(
+                        ActionStep(verb="Clear Exception Conditions", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="RC := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="P := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="SABME", kind=ActionKind.SIGNAL_LOWER),
+                        ActionStep(verb="Stop T3", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="Start T1", kind=ActionKind.PROCESSING),
+                    ),
+                    notes="",
+                    references=(),
+                    loops=(),
+                ),
+            ),
+            notes="",
+            references=(),
+        ),
+        SubroutineSpec(
+            name="Establish_Data_Link",
+            paths=(
+                SubroutinePath(
+                    id="t01_establish_data_link_no",
+                    guard="not mod_128",
+                    actions=(
+                        ActionStep(verb="Clear Exception Conditions", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="RC := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="P := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="SABM", kind=ActionKind.SIGNAL_LOWER),
+                        ActionStep(verb="Stop T3", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="Start T1", kind=ActionKind.PROCESSING),
+                    ),
+                    notes="",
+                    references=(),
+                    loops=(),
+                ),
+                SubroutinePath(
+                    id="t02_establish_data_link_yes",
+                    guard="mod_128",
+                    actions=(
+                        ActionStep(verb="Clear Exception Conditions", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="RC := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="P := 1", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="SABME", kind=ActionKind.SIGNAL_LOWER),
+                        ActionStep(verb="Stop T3", kind=ActionKind.PROCESSING),
+                        ActionStep(verb="Start T1", kind=ActionKind.PROCESSING),
+                    ),
+                    notes="",
+                    references=(),
+                    loops=(),
+                ),
+            ),
+            notes="",
+            references=(),
+        ),
+        SubroutineSpec(
             name="Invoke_Retransmission",
             paths=(
                 SubroutinePath(

@@ -124,9 +124,9 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t08_info_field_permitted_in_frame",
+            id: "t08_info_not_permitted_in_frame",
             from: "AwaitingV22Connection",
-            on: "info_field_permitted_in_frame",
+            on: "info_not_permitted_in_frame",
             guard: "",
             actions: &[ActionStep {
                 verb: "DL-ERROR Indication (M)",
@@ -663,13 +663,13 @@ mod tests {
     }
 
     #[test]
-    fn t08_info_field_permitted_in_frame() {
+    fn t08_info_not_permitted_in_frame() {
         let tx = DATA_LINK_AWAITING_V_22_CONNECTION
             .transitions
             .iter()
-            .find(|x| x.id == "t08_info_field_permitted_in_frame")
-            .expect("transition t08_info_field_permitted_in_frame not found");
-        assert_eq!(tx.on, "info_field_permitted_in_frame");
+            .find(|x| x.id == "t08_info_not_permitted_in_frame")
+            .expect("transition t08_info_not_permitted_in_frame not found");
+        assert_eq!(tx.on, "info_not_permitted_in_frame");
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (M)");

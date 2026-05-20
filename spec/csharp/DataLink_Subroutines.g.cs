@@ -130,6 +130,48 @@ public static class DataLink_Subroutines
             Notes: null,
             References: new ImplementationReference[] {  }),
         new SubroutineSpec(
+            Name: "Establish_Extended_Data_Link",
+            Paths: new SubroutinePath[]
+            {
+                new SubroutinePath(
+                    Id: "t01_establish_extended_data_link_no",
+                    Guard: "not mod_128",
+                    Actions: new ActionStep[] { new ActionStep("Clear Exception Conditions", ActionKind.Processing), new ActionStep("RC := 1", ActionKind.Processing), new ActionStep("P := 1", ActionKind.Processing), new ActionStep("SABM", ActionKind.SignalLower), new ActionStep("Stop T3", ActionKind.Processing), new ActionStep("Start T1", ActionKind.Processing) },
+                    Notes: null,
+                    References: new ImplementationReference[] {  },
+                    Loops: new LoopRange[] {  }),
+                new SubroutinePath(
+                    Id: "t02_establish_extended_data_link_yes",
+                    Guard: "mod_128",
+                    Actions: new ActionStep[] { new ActionStep("Clear Exception Conditions", ActionKind.Processing), new ActionStep("RC := 1", ActionKind.Processing), new ActionStep("P := 1", ActionKind.Processing), new ActionStep("SABME", ActionKind.SignalLower), new ActionStep("Stop T3", ActionKind.Processing), new ActionStep("Start T1", ActionKind.Processing) },
+                    Notes: null,
+                    References: new ImplementationReference[] {  },
+                    Loops: new LoopRange[] {  }),
+            },
+            Notes: null,
+            References: new ImplementationReference[] {  }),
+        new SubroutineSpec(
+            Name: "Establish_Data_Link",
+            Paths: new SubroutinePath[]
+            {
+                new SubroutinePath(
+                    Id: "t01_establish_data_link_no",
+                    Guard: "not mod_128",
+                    Actions: new ActionStep[] { new ActionStep("Clear Exception Conditions", ActionKind.Processing), new ActionStep("RC := 1", ActionKind.Processing), new ActionStep("P := 1", ActionKind.Processing), new ActionStep("SABM", ActionKind.SignalLower), new ActionStep("Stop T3", ActionKind.Processing), new ActionStep("Start T1", ActionKind.Processing) },
+                    Notes: null,
+                    References: new ImplementationReference[] {  },
+                    Loops: new LoopRange[] {  }),
+                new SubroutinePath(
+                    Id: "t02_establish_data_link_yes",
+                    Guard: "mod_128",
+                    Actions: new ActionStep[] { new ActionStep("Clear Exception Conditions", ActionKind.Processing), new ActionStep("RC := 1", ActionKind.Processing), new ActionStep("P := 1", ActionKind.Processing), new ActionStep("SABME", ActionKind.SignalLower), new ActionStep("Stop T3", ActionKind.Processing), new ActionStep("Start T1", ActionKind.Processing) },
+                    Notes: null,
+                    References: new ImplementationReference[] {  },
+                    Loops: new LoopRange[] {  }),
+            },
+            Notes: null,
+            References: new ImplementationReference[] {  }),
+        new SubroutineSpec(
             Name: "Invoke_Retransmission",
             Paths: new SubroutinePath[]
             {

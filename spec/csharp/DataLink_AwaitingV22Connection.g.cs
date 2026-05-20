@@ -115,9 +115,9 @@ public static class DataLink_AwaitingV22Connection
             UndefinedBranches: null,
             OnLabel: "Control Field Error"),
         new TransitionSpec(
-            Id: "t08_info_field_permitted_in_frame",
+            Id: "t08_info_not_permitted_in_frame",
             From: "AwaitingV22Connection",
-            On: "info_field_permitted_in_frame",
+            On: "info_not_permitted_in_frame",
             Guard: null,
             Actions: new ActionStep[] { new ActionStep("DL-ERROR Indication (M)", ActionKind.SignalUpper) },
             Next: "AwaitingV22Connection",
@@ -125,7 +125,7 @@ public static class DataLink_AwaitingV22Connection
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "Info Field Permitted In Frame"),
+            OnLabel: "Info Not Permitted In Frame"),
         new TransitionSpec(
             Id: "t09_u_or_s_frame_length_error",
             From: "AwaitingV22Connection",
