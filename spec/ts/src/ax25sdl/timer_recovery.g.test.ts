@@ -10,7 +10,7 @@ describe("DataLinkTimerRecovery", () => {
   });
 
   it("transitions are present", () => {
-    expect(DataLinkTimerRecovery.transitions).toHaveLength(86);
+    expect(DataLinkTimerRecovery.transitions).toHaveLength(90);
   });
 
   it("t01_dl_disconnect_request", () => {
@@ -470,18 +470,6 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
   });
 
-  it("t18_rr_received_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t18_rr_received_no_no");
-    expect(t, "transition t18_rr_received_no_no not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("RR_received");
-    expect(t.next).toBe("Undefined");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1");
-    expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
-    expect(t.actions[0].kind).toBe("processing");
-  });
-
   it("t18_rr_received_no_yes_yes", () => {
     const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t18_rr_received_no_yes_yes");
     expect(t, "transition t18_rr_received_no_yes_yes not found").toBeDefined();
@@ -510,7 +498,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Enquiry_Response_F_1");
     expect(t.actions[1].kind).toBe("subroutine");
-    expect(t.actions[2].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[2].verb).toBe("N(r) Recovery");
     expect(t.actions[2].kind).toBe("subroutine");
   });
 
@@ -526,8 +514,36 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Enquiry_Response_F_1");
     expect(t.actions[1].kind).toBe("subroutine");
-    expect(t.actions[2].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[2].verb).toBe("N(r) Recovery");
     expect(t.actions[2].kind).toBe("subroutine");
+  });
+
+  it("t18_rr_received_no_no_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t18_rr_received_no_no_yes");
+    expect(t, "transition t18_rr_received_no_no_yes not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("RR_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.actions).toHaveLength(2);
+    expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("V(a) := N(r)");
+    expect(t.actions[1].kind).toBe("processing");
+  });
+
+  it("t18_rr_received_no_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t18_rr_received_no_no_no");
+    expect(t, "transition t18_rr_received_no_no_no not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("RR_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
+    expect(t.actions).toHaveLength(2);
+    expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("N(r) Recovery");
+    expect(t.actions[1].kind).toBe("subroutine");
   });
 
   it("t18_rr_received_yes_no_no", () => {
@@ -544,7 +560,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[3].verb).toBe("N(r) Recovery");
     expect(t.actions[3].kind).toBe("subroutine");
   });
 
@@ -562,7 +578,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[3].verb).toBe("N(r) Recovery");
     expect(t.actions[3].kind).toBe("subroutine");
   });
 
@@ -614,18 +630,6 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
   });
 
-  it("t19_rnr_received_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t19_rnr_received_no_no");
-    expect(t, "transition t19_rnr_received_no_no not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("RNR_received");
-    expect(t.next).toBe("Undefined");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1");
-    expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
-    expect(t.actions[0].kind).toBe("processing");
-  });
-
   it("t19_rnr_received_no_yes_yes", () => {
     const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t19_rnr_received_no_yes_yes");
     expect(t, "transition t19_rnr_received_no_yes_yes not found").toBeDefined();
@@ -654,7 +658,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Enquiry_Response_F_1");
     expect(t.actions[1].kind).toBe("subroutine");
-    expect(t.actions[2].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[2].verb).toBe("N(r) Recovery");
     expect(t.actions[2].kind).toBe("subroutine");
   });
 
@@ -670,8 +674,36 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Enquiry_Response_F_1");
     expect(t.actions[1].kind).toBe("subroutine");
-    expect(t.actions[2].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[2].verb).toBe("N(r) Recovery");
     expect(t.actions[2].kind).toBe("subroutine");
+  });
+
+  it("t19_rnr_received_no_no_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t19_rnr_received_no_no_yes");
+    expect(t, "transition t19_rnr_received_no_no_yes not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("RNR_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.actions).toHaveLength(2);
+    expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("V(a) := N(r)");
+    expect(t.actions[1].kind).toBe("processing");
+  });
+
+  it("t19_rnr_received_no_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t19_rnr_received_no_no_no");
+    expect(t, "transition t19_rnr_received_no_no_no not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("RNR_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
+    expect(t.actions).toHaveLength(2);
+    expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
+    expect(t.actions[0].kind).toBe("processing");
+    expect(t.actions[1].verb).toBe("N(r) Recovery");
+    expect(t.actions[1].kind).toBe("subroutine");
   });
 
   it("t19_rnr_received_yes_no_no", () => {
@@ -688,7 +720,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[3].verb).toBe("N(r) Recovery");
     expect(t.actions[3].kind).toBe("subroutine");
   });
 
@@ -706,7 +738,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("N(r) Error Recovery");
+    expect(t.actions[3].verb).toBe("N(r) Recovery");
     expect(t.actions[3].kind).toBe("subroutine");
   });
 
@@ -854,12 +886,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[3].kind).toBe("signal_lower");
   });
 
-  it("t22_i_received_undefined", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined");
-    expect(t, "transition t22_i_received_undefined not found").toBeDefined();
+  it("t22_i_received_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_no");
+    expect(t, "transition t22_i_received_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("Connected");
+    expect(t.guard).toBe("not command");
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -867,13 +900,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_no");
-    expect(t, "transition t22_i_received_undefined_no not found").toBeDefined();
+  it("t22_i_received_yes_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_no");
+    expect(t, "transition t22_i_received_yes_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not info_field_length_le_N1_and_content_is_octet_aligned");
+    expect(t.guard).toBe("command and not info_field_length_le_N1_and_content_is_octet_aligned");
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -883,25 +916,25 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_no");
-    expect(t, "transition t22_i_received_undefined_yes_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_no");
+    expect(t, "transition t22_i_received_yes_yes_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("N(r) Recovery");
     expect(t.actions[0].kind).toBe("subroutine");
   });
 
-  it("t22_i_received_undefined_yes_yes_yes_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_yes_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_yes_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_yes_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_yes_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_yes_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -917,13 +950,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_yes_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_yes_no");
-    expect(t, "transition t22_i_received_undefined_yes_yes_yes_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_yes_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_yes_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_yes_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -931,13 +964,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_yes_no_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_yes_no_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_yes_no_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_yes_no_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
     expect(t.actions).toHaveLength(9);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -959,13 +992,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[8].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_yes_no_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_yes_no_no_no");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_yes_no_no_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_yes_no_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_no_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_no_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -983,13 +1016,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[6].kind).toBe("signal_lower");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_yes_no_no_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_yes_no_no_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_yes_no_no_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_yes_no_no_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_no_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_no_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1003,13 +1036,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[4].kind).toBe("signal_upper");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_yes_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_yes_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_yes_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_yes_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_yes_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_yes_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1025,13 +1058,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_yes_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_yes_no");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_yes_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_yes_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_yes_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_yes_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1039,13 +1072,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_no_no");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_no_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_no_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_no_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1063,13 +1096,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[6].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_no_yes_no_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1089,13 +1122,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[7].kind).toBe("processing");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_no_yes_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_no not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_no_yes_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_no_yes_no_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1111,13 +1144,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("signal_lower");
   });
 
-  it("t22_i_received_undefined_yes_yes_no_no_no_yes_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_undefined_yes_yes_no_no_no_yes_yes");
-    expect(t, "transition t22_i_received_undefined_yes_yes_no_no_no_yes_yes not found").toBeDefined();
+  it("t22_i_received_yes_yes_yes_no_no_no_yes_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_no_no_yes_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_no_no_yes_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1305,13 +1338,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[3].kind).toBe("subroutine");
   });
 
-  it("t23_rej_received_yes_yes_undefined_via_start_t3", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t23_rej_received_yes_yes_undefined_via_start_t3");
-    expect(t, "transition t23_rej_received_yes_yes_undefined_via_start_t3 not found").toBeDefined();
+  it("t23_rej_received_yes_yes_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t23_rej_received_yes_yes_yes");
+    expect(t, "transition t23_rej_received_yes_yes_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1327,13 +1360,13 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
   });
 
-  it("t23_rej_received_yes_yes_undefined_via_invoke_retransmission", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t23_rej_received_yes_yes_undefined_via_invoke_retransmission");
-    expect(t, "transition t23_rej_received_yes_yes_undefined_via_invoke_retransmission not found").toBeDefined();
+  it("t23_rej_received_yes_yes_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t23_rej_received_yes_yes_no");
+    expect(t, "transition t23_rej_received_yes_yes_no not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1579,6 +1612,24 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[7].kind).toBe("processing");
     expect(t.actions[8].verb).toBe("Invoke Retransmission");
     expect(t.actions[8].kind).toBe("subroutine");
+  });
+
+  it("t25_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t25_all_other_primitives__from_upper_layer");
+    expect(t, "transition t25_all_other_primitives__from_upper_layer not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("all_other_primitives__from_upper_layer");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.actions).toHaveLength(0);
+  });
+
+  it("t26_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t26_all_other_primitives__from_lower_layer");
+    expect(t, "transition t26_all_other_primitives__from_lower_layer not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("all_other_primitives__from_lower_layer");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.actions).toHaveLength(0);
   });
 
 });

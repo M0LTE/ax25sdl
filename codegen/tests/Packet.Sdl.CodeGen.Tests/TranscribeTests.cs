@@ -32,7 +32,7 @@ public class TranscribeTests
         // "undefined" (raised against the spec authors at
         // packethacking/ax25spec#10 and #11). Walker yields paths through
         // those edges with branch: Undefined and marks the page coverage: partial.
-        yield return ["DataLink_TimerRecovery.graphml",        "data_link", "TimerRecovery",         86, 45];
+        yield return ["DataLink_TimerRecovery.graphml",        "data_link", "TimerRecovery",         90, 45];
     }
 
     [Theory]

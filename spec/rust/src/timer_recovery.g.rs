@@ -429,19 +429,6 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t18_rr_received_no_no",
-            from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
-            actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-            ],
-            next: "Undefined",
-            notes: "",
-            references: &[],
-            loops: &[],
-        },
-        TransitionSpec {
             id: "t18_rr_received_no_yes_yes",
             from: "TimerRecovery",
             on: "RR_received",
@@ -464,7 +451,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -479,9 +466,37 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingV22Connection",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
+        TransitionSpec {
+            id: "t18_rr_received_no_no_yes",
+            from: "TimerRecovery",
+            on: "RR_received",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+            actions: &[
+                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
+                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+            ],
+            next: "TimerRecovery",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
+        TransitionSpec {
+            id: "t18_rr_received_no_no_no",
+            from: "TimerRecovery",
+            on: "RR_received",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs",
+            actions: &[
+                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+            ],
+            next: "TimerRecovery",
             notes: "",
             references: &[],
             loops: &[],
@@ -495,7 +510,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -511,7 +526,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -557,19 +572,6 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t19_rnr_received_no_no",
-            from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
-            actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-            ],
-            next: "Undefined",
-            notes: "",
-            references: &[],
-            loops: &[],
-        },
-        TransitionSpec {
             id: "t19_rnr_received_no_yes_yes",
             from: "TimerRecovery",
             on: "RNR_received",
@@ -592,7 +594,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -607,9 +609,37 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingV22Connection",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
+        TransitionSpec {
+            id: "t19_rnr_received_no_no_yes",
+            from: "TimerRecovery",
+            on: "RNR_received",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+            actions: &[
+                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
+                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+            ],
+            next: "TimerRecovery",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
+        TransitionSpec {
+            id: "t19_rnr_received_no_no_no",
+            from: "TimerRecovery",
+            on: "RNR_received",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs",
+            actions: &[
+                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+            ],
+            next: "TimerRecovery",
             notes: "",
             references: &[],
             loops: &[],
@@ -623,7 +653,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -639,7 +669,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
+                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -775,10 +805,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined",
+            id: "t22_i_received_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "",
+            guard: "not command",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Discard I Frame", kind: ActionKind::Processing },
@@ -789,10 +819,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_no",
+            id: "t22_i_received_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "not info_field_length_le_N1_and_content_is_octet_aligned",
+            guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -804,10 +834,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_no",
+            id: "t22_i_received_yes_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
@@ -817,10 +847,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_yes_yes",
+            id: "t22_i_received_yes_yes_yes_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -835,10 +865,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_yes_no",
+            id: "t22_i_received_yes_yes_yes_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -849,10 +879,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_yes_no_yes",
+            id: "t22_i_received_yes_yes_yes_no_yes_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -870,10 +900,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_yes_no_no_no",
+            id: "t22_i_received_yes_yes_yes_no_yes_no_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -889,10 +919,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_yes_no_no_yes",
+            id: "t22_i_received_yes_yes_yes_no_yes_no_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -906,10 +936,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_yes_yes",
+            id: "t22_i_received_yes_yes_yes_no_no_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -924,10 +954,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_yes_no",
+            id: "t22_i_received_yes_yes_yes_no_no_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -938,10 +968,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_no_no",
+            id: "t22_i_received_yes_yes_yes_no_no_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -957,10 +987,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes",
+            id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -977,10 +1007,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no",
+            id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -995,10 +1025,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_undefined_yes_yes_no_no_no_yes_yes",
+            id: "t22_i_received_yes_yes_yes_no_no_no_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1169,10 +1199,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t23_rej_received_yes_yes_undefined_via_start_t3",
+            id: "t23_rej_received_yes_yes_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1187,10 +1217,10 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t23_rej_received_yes_yes_undefined_via_invoke_retransmission",
+            id: "t23_rej_received_yes_yes_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1404,6 +1434,28 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             references: &[],
             loops: &[],
         },
+        TransitionSpec {
+            id: "t25_all_other_primitives__from_upper_layer",
+            from: "TimerRecovery",
+            on: "all_other_primitives__from_upper_layer",
+            guard: "",
+            actions: &[],
+            next: "TimerRecovery",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
+        TransitionSpec {
+            id: "t26_all_other_primitives__from_lower_layer",
+            from: "TimerRecovery",
+            on: "all_other_primitives__from_lower_layer",
+            guard: "",
+            actions: &[],
+            next: "TimerRecovery",
+            notes: "",
+            references: &[],
+            loops: &[],
+        },
     ],
 };
 
@@ -1418,7 +1470,7 @@ mod tests {
 
     #[test]
     fn transitions_are_present() {
-        assert_eq!(DATA_LINK_TIMER_RECOVERY.transitions.len(), 86);
+        assert_eq!(DATA_LINK_TIMER_RECOVERY.transitions.len(), 90);
     }
 
     #[test]
@@ -1963,24 +2015,6 @@ mod tests {
     }
 
     #[test]
-    fn t18_rr_received_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t18_rr_received_no_no")
-            .expect("transition t18_rr_received_no_no not found");
-        assert_eq!(tx.on, "RR_received");
-        assert_eq!(tx.next, "Undefined");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1"
-        );
-        assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
-        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-    }
-
-    #[test]
     fn t18_rr_received_no_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
@@ -2017,7 +2051,7 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2039,8 +2073,48 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
+    }
+
+    #[test]
+    fn t18_rr_received_no_no_yes() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t18_rr_received_no_no_yes")
+            .expect("transition t18_rr_received_no_no_yes not found");
+        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
+        );
+        assert_eq!(tx.actions.len(), 2);
+        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
+    }
+
+    #[test]
+    fn t18_rr_received_no_no_no() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t18_rr_received_no_no_no")
+            .expect("transition t18_rr_received_no_no_no not found");
+        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
+        );
+        assert_eq!(tx.actions.len(), 2);
+        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
     #[test]
@@ -2063,7 +2137,7 @@ mod tests {
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "Select_T1_Value");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2087,7 +2161,7 @@ mod tests {
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "Select_T1_Value");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2152,24 +2226,6 @@ mod tests {
     }
 
     #[test]
-    fn t19_rnr_received_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t19_rnr_received_no_no")
-            .expect("transition t19_rnr_received_no_no not found");
-        assert_eq!(tx.on, "RNR_received");
-        assert_eq!(tx.next, "Undefined");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1"
-        );
-        assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
-        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-    }
-
-    #[test]
     fn t19_rnr_received_no_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
@@ -2206,7 +2262,7 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2228,8 +2284,48 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
+    }
+
+    #[test]
+    fn t19_rnr_received_no_no_yes() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t19_rnr_received_no_no_yes")
+            .expect("transition t19_rnr_received_no_no_yes not found");
+        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
+        );
+        assert_eq!(tx.actions.len(), 2);
+        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
+    }
+
+    #[test]
+    fn t19_rnr_received_no_no_no() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t19_rnr_received_no_no_no")
+            .expect("transition t19_rnr_received_no_no_no not found");
+        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
+        );
+        assert_eq!(tx.actions.len(), 2);
+        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
     #[test]
@@ -2252,7 +2348,7 @@ mod tests {
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "Select_T1_Value");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2276,7 +2372,7 @@ mod tests {
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "Select_T1_Value");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Error Recovery");
+        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2455,14 +2551,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined() {
+    fn t22_i_received_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined")
-            .expect("transition t22_i_received_undefined not found");
+            .find(|x| x.id == "t22_i_received_no")
+            .expect("transition t22_i_received_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
+        assert_eq!(tx.guard, "not command");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2471,17 +2568,17 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_no() {
+    fn t22_i_received_yes_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_no")
-            .expect("transition t22_i_received_undefined_no not found");
+            .find(|x| x.id == "t22_i_received_yes_no")
+            .expect("transition t22_i_received_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "not info_field_length_le_N1_and_content_is_octet_aligned"
+            "command and not info_field_length_le_N1_and_content_is_octet_aligned"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
@@ -2493,33 +2590,30 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_no() {
+    fn t22_i_received_yes_yes_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_no")
-            .expect("transition t22_i_received_undefined_yes_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_no")
+            .expect("transition t22_i_received_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Recovery");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_yes_yes() {
+    fn t22_i_received_yes_yes_yes_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_yes_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_yes_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_yes")
+            .expect("transition t22_i_received_yes_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2536,15 +2630,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_yes_no() {
+    fn t22_i_received_yes_yes_yes_yes_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_yes_no")
-            .expect("transition t22_i_received_undefined_yes_yes_yes_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_no")
+            .expect("transition t22_i_received_yes_yes_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2553,15 +2647,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_yes_no_yes() {
+    fn t22_i_received_yes_yes_yes_no_yes_no_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_yes_no_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
         assert_eq!(tx.actions.len(), 9);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2584,15 +2678,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_yes_no_no_no() {
+    fn t22_i_received_yes_yes_yes_no_yes_no_no_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_yes_no_no_no")
-            .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_no_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_no")
+            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2611,15 +2705,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_yes_no_no_yes() {
+    fn t22_i_received_yes_yes_yes_no_yes_no_no_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_yes_no_no_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_no_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
         assert_eq!(tx.actions.len(), 5);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2634,15 +2728,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_yes_yes() {
+    fn t22_i_received_yes_yes_yes_no_no_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_yes_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_yes_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2659,15 +2753,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_yes_no() {
+    fn t22_i_received_yes_yes_yes_no_no_yes_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_yes_no")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_yes_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_no")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2676,15 +2770,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_no_no() {
+    fn t22_i_received_yes_yes_yes_no_no_no_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_no_no")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_no_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_no")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2703,15 +2797,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes() {
+    fn t22_i_received_yes_yes_yes_no_no_no_yes_no_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2732,15 +2826,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_no_yes_no_no() {
+    fn t22_i_received_yes_yes_yes_no_no_no_yes_no_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_no not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_no")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2757,15 +2851,15 @@ mod tests {
     }
 
     #[test]
-    fn t22_i_received_undefined_yes_yes_no_no_no_yes_yes() {
+    fn t22_i_received_yes_yes_yes_no_no_no_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t22_i_received_undefined_yes_yes_no_no_no_yes_yes")
-            .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_yes not found");
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -3002,15 +3096,18 @@ mod tests {
     }
 
     #[test]
-    fn t23_rej_received_yes_yes_undefined_via_start_t3() {
+    fn t23_rej_received_yes_yes_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t23_rej_received_yes_yes_undefined_via_start_t3")
-            .expect("transition t23_rej_received_yes_yes_undefined_via_start_t3 not found");
+            .find(|x| x.id == "t23_rej_received_yes_yes_yes")
+            .expect("transition t23_rej_received_yes_yes_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs");
+        assert_eq!(
+            tx.guard,
+            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+        );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3027,17 +3124,18 @@ mod tests {
     }
 
     #[test]
-    fn t23_rej_received_yes_yes_undefined_via_invoke_retransmission() {
+    fn t23_rej_received_yes_yes_no() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
             .iter()
-            .find(|x| x.id == "t23_rej_received_yes_yes_undefined_via_invoke_retransmission")
-            .expect(
-                "transition t23_rej_received_yes_yes_undefined_via_invoke_retransmission not found",
-            );
+            .find(|x| x.id == "t23_rej_received_yes_yes_no")
+            .expect("transition t23_rej_received_yes_yes_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs");
+        assert_eq!(
+            tx.guard,
+            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+        );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3352,5 +3450,29 @@ mod tests {
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
         assert_eq!(tx.actions[8].verb, "Invoke Retransmission");
         assert_eq!(tx.actions[8].kind, ActionKind::Subroutine);
+    }
+
+    #[test]
+    fn t25_all_other_primitives__from_upper_layer() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t25_all_other_primitives__from_upper_layer")
+            .expect("transition t25_all_other_primitives__from_upper_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(tx.actions.len(), 0);
+    }
+
+    #[test]
+    fn t26_all_other_primitives__from_lower_layer() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t26_all_other_primitives__from_lower_layer")
+            .expect("transition t26_all_other_primitives__from_lower_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(tx.actions.len(), 0);
     }
 }
