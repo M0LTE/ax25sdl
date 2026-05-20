@@ -47,7 +47,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t02_ui_check_yes_yes",
-					Guard: "command and info_field_length_le_N1_&_content_is_octet_aligned",
+					Guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
 					Actions: []ActionStep{
 						{Verb: "DL-UNIT-DATA Indication", Kind: SignalUpper},
 					},
@@ -57,7 +57,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t03_ui_check_yes_no",
-					Guard: "command and not info_field_length_le_N1_&_content_is_octet_aligned",
+					Guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned",
 					Actions: []ActionStep{
 						{Verb: "DL-ERROR Indication (K)", Kind: SignalUpper},
 					},
@@ -133,7 +133,7 @@ var DataLinkSubroutines = SubroutinesPage{
 			Paths: []SubroutinePath{
 				{
 					ID:    "t01_check_need_for_response_yes",
-					Guard: "command_&_P_eq_1",
+					Guard: "command_and_P_eq_1",
 					Actions: []ActionStep{
 						{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
 					},
@@ -143,7 +143,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:         "t02_check_need_for_response_no_no",
-					Guard:      "not command_&_P_eq_1 and not response_&_F_eq_1",
+					Guard:      "not command_and_P_eq_1 and not response_and_F_eq_1",
 					Actions:    []ActionStep{},
 					Notes:      "",
 					References: []ImplementationReference{},
@@ -151,7 +151,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t03_check_need_for_response_no_yes",
-					Guard: "not command_&_P_eq_1 and response_&_F_eq_1",
+					Guard: "not command_and_P_eq_1 and response_and_F_eq_1",
 					Actions: []ActionStep{
 						{Verb: "DL-ERROR Indication (A)", Kind: SignalUpper},
 					},
@@ -327,7 +327,7 @@ var DataLinkSubroutines = SubroutinesPage{
 			Paths: []SubroutinePath{
 				{
 					ID:    "t01_enquiry_response_yes_yes",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and own_receiver_busy",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and own_receiver_busy",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "RNR Response", Kind: SignalLower},
@@ -339,7 +339,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t02_enquiry_response_yes_no_yes_yes_yes",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "DL-ERROR Indication (add)", Kind: SignalUpper},
@@ -353,7 +353,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t03_enquiry_response_yes_no_yes_yes_no",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "DL-ERROR Indication (add)", Kind: SignalUpper},
@@ -366,7 +366,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t04_enquiry_response_yes_no_yes_no_yes",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "SREJ", Kind: SignalLower},
@@ -379,7 +379,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t05_enquiry_response_yes_no_yes_no_no",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "RR Response", Kind: SignalLower},
@@ -391,7 +391,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t06_enquiry_response_yes_no_no",
-					Guard: "F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi and not own_receiver_busy and not SREJ_enabled",
+					Guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and not SREJ_enabled",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "RR Response", Kind: SignalLower},
@@ -403,7 +403,7 @@ var DataLinkSubroutines = SubroutinesPage{
 				},
 				{
 					ID:    "t07_enquiry_response_no",
-					Guard: "not F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi",
+					Guard: "not F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I",
 					Actions: []ActionStep{
 						{Verb: "N(r) := V(r)", Kind: Processing},
 						{Verb: "RR Response", Kind: SignalLower},

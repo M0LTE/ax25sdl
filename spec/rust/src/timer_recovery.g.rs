@@ -61,7 +61,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_yes",
             from: "TimerRecovery",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and vseqva+k",
+            guard: "not peer_receiver_busy and vs_eq_va_plus_k",
             actions: &[
                 ActionStep { verb: "Push I Frame on I Queue", kind: ActionKind::InternalOut },
             ],
@@ -74,7 +74,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_no_yes",
             from: "TimerRecovery",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vseqva+k and T1_running",
+            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
                 ActionStep { verb: "N(R) := V(r)", kind: ActionKind::Processing },
@@ -92,7 +92,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t03_i_frame_pops_off_queue_no_no_no",
             from: "TimerRecovery",
             on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vseqva+k and not T1_running",
+            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
                 ActionStep { verb: "N(R) := V(r)", kind: ActionKind::Processing },
@@ -432,7 +432,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_no_no",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
             ],
@@ -445,7 +445,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_no_yes_yes",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -460,7 +460,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_no_yes_no_no",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -475,7 +475,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_no_yes_no_yes",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -490,7 +490,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_yes_no_no",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -506,7 +506,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_yes_no_yes",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -522,7 +522,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_yes_yes_no",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -542,7 +542,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t18_rr_received_yes_yes_yes",
             from: "TimerRecovery",
             on: "RR_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -560,7 +560,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_no_no",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
             ],
@@ -573,7 +573,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_no_yes_yes",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -588,7 +588,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_no_yes_no_no",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -603,7 +603,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_no_yes_no_yes",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -618,7 +618,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_yes_no_no",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -634,7 +634,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_yes_no_yes",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -650,7 +650,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_yes_yes_no",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -670,7 +670,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t19_rnr_received_yes_yes_yes",
             from: "TimerRecovery",
             on: "RNR_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
             actions: &[
                 ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -792,7 +792,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "not info_field_length_le_N1_&_content_is_octet_aligned",
+            guard: "not info_field_length_le_N1_and_content_is_octet_aligned",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -807,7 +807,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
             ],
@@ -820,7 +820,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -838,7 +838,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -852,7 +852,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_yes_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -873,7 +873,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_yes_no_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -892,7 +892,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_yes_no_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -909,7 +909,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -927,7 +927,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_yes_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -941,7 +941,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -960,7 +960,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -980,7 +980,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -998,7 +998,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t22_i_received_undefined_yes_yes_no_no_no_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
-            guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0",
+            guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1016,7 +1016,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_yes_yes_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -1031,7 +1031,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_yes_yes_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -1050,7 +1050,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_yes_no_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -1065,7 +1065,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_yes_no_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
@@ -1080,7 +1080,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_no_yes_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
@@ -1094,7 +1094,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_no_yes_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
@@ -1112,7 +1112,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_no_no_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
@@ -1126,7 +1126,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_no_no_no_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
@@ -1140,7 +1140,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_yes_no_yes",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1156,7 +1156,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_yes_no_no",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1172,7 +1172,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_yes_yes_undefined_via_start_t3",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1190,7 +1190,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t23_rej_received_yes_yes_undefined_via_invoke_retransmission",
             from: "TimerRecovery",
             on: "REJ_received",
-            guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+            guard: "response_and_F_eq_1 and va_le_nr_le_vs",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1268,7 +1268,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t24_srej_received_no_no_no",
             from: "TimerRecovery",
             on: "SREJ_received",
-            guard: "not response and not va_le_nr_le_vs and not version_2.2",
+            guard: "not response and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
@@ -1282,7 +1282,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t24_srej_received_no_no_yes",
             from: "TimerRecovery",
             on: "SREJ_received",
-            guard: "not response and not va_le_nr_le_vs and version_2.2",
+            guard: "not response and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
@@ -1296,7 +1296,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t24_srej_received_yes_no_no",
             from: "TimerRecovery",
             on: "SREJ_received",
-            guard: "response and not va_le_nr_le_vs and not version_2.2",
+            guard: "response and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1312,7 +1312,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             id: "t24_srej_received_yes_no_yes",
             from: "TimerRecovery",
             on: "SREJ_received",
-            guard: "response and not va_le_nr_le_vs and version_2.2",
+            guard: "response and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
@@ -1481,7 +1481,7 @@ mod tests {
             .expect("transition t03_i_frame_pops_off_queue_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not peer_receiver_busy and vseqva+k");
+        assert_eq!(tx.guard, "not peer_receiver_busy and vs_eq_va_plus_k");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "Push I Frame on I Queue");
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
@@ -1498,7 +1498,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vseqva+k and T1_running"
+            "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
         );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
@@ -1526,7 +1526,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vseqva+k and not T1_running"
+            "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
         );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
@@ -1971,7 +1971,10 @@ mod tests {
             .expect("transition t18_rr_received_no_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "Undefined");
-        assert_eq!(tx.guard, "not response_&_F_eq_1 and not command_&_P_eq_1");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1"
+        );
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1988,7 +1991,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2008,10 +2011,7 @@ mod tests {
             .expect("transition t18_rr_received_no_yes_no_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2032,7 +2032,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2054,7 +2054,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2078,7 +2078,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2102,7 +2102,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2134,7 +2134,7 @@ mod tests {
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2160,7 +2160,10 @@ mod tests {
             .expect("transition t19_rnr_received_no_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "Undefined");
-        assert_eq!(tx.guard, "not response_&_F_eq_1 and not command_&_P_eq_1");
+        assert_eq!(
+            tx.guard,
+            "not response_and_F_eq_1 and not command_and_P_eq_1"
+        );
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2177,7 +2180,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2197,10 +2200,7 @@ mod tests {
             .expect("transition t19_rnr_received_no_yes_no_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2221,7 +2221,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2243,7 +2243,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2267,7 +2267,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2291,7 +2291,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2323,7 +2323,7 @@ mod tests {
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
@@ -2481,7 +2481,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "not info_field_length_le_N1_&_content_is_octet_aligned"
+            "not info_field_length_le_N1_and_content_is_octet_aligned"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
@@ -2503,7 +2503,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs"
+            "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs"
         );
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Recovery");
@@ -2519,7 +2519,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2544,7 +2544,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2561,7 +2561,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
         assert_eq!(tx.actions.len(), 9);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2592,7 +2592,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2619,7 +2619,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_yes_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
         assert_eq!(tx.actions.len(), 5);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2642,7 +2642,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2667,7 +2667,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2684,7 +2684,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2711,7 +2711,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2740,7 +2740,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2765,7 +2765,7 @@ mod tests {
             .expect("transition t22_i_received_undefined_yes_yes_no_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0");
+        assert_eq!(tx.guard, "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2792,7 +2792,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2814,7 +2814,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2844,7 +2844,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2864,10 +2864,7 @@ mod tests {
             .expect("transition t23_rej_received_no_yes_no_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2888,7 +2885,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
+            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
         );
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2906,10 +2903,7 @@ mod tests {
             .expect("transition t23_rej_received_no_no_yes_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2934,10 +2928,7 @@ mod tests {
             .expect("transition t23_rej_received_no_no_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2954,7 +2945,7 @@ mod tests {
             .expect("transition t23_rej_received_no_no_no_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2");
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2973,7 +2964,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -2997,7 +2988,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2"
+            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -3019,7 +3010,7 @@ mod tests {
             .expect("transition t23_rej_received_yes_yes_undefined_via_start_t3 not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "response_&_F_eq_1 and va_le_nr_le_vs");
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3046,7 +3037,7 @@ mod tests {
             );
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "response_&_F_eq_1 and va_le_nr_le_vs");
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3161,7 +3152,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "not response and not va_le_nr_le_vs and not version_2.2"
+            "not response and not va_le_nr_le_vs and not version_2_2"
         );
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -3181,7 +3172,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response and not va_le_nr_le_vs and version_2.2"
+            "not response and not va_le_nr_le_vs and version_2_2"
         );
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -3201,7 +3192,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response and not va_le_nr_le_vs and not version_2.2"
+            "response and not va_le_nr_le_vs and not version_2_2"
         );
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
@@ -3223,7 +3214,7 @@ mod tests {
             .expect("transition t24_srej_received_yes_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "response and not va_le_nr_le_vs and version_2.2");
+        assert_eq!(tx.guard, "response and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);

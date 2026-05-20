@@ -103,7 +103,7 @@ static int test_t03_i_frame_pops_off_queue_no_yes(void) {
   ASSERT(t != NULL, "t03_i_frame_pops_off_queue_no_yes not found");
   ASSERT_STREQ(t->on, "I_frame_pops_off_queue", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "not peer_receiver_busy and vs_eq_va_+_k", "guard");
+  ASSERT_STREQ(t->guard, "not peer_receiver_busy and vs_eq_va_plus_k", "guard");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Push on I Frame Queue", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[0].kind");
@@ -122,9 +122,10 @@ static int test_t03_i_frame_pops_off_queue_no_no_no(void) {
   ASSERT(t != NULL, "t03_i_frame_pops_off_queue_no_no_no not found");
   ASSERT_STREQ(t->on, "I_frame_pops_off_queue", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard,
-               "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
+      "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(s) := V(s)", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -159,7 +160,7 @@ static int test_t03_i_frame_pops_off_queue_no_no_yes(void) {
   ASSERT_STREQ(t->on, "I_frame_pops_off_queue", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
   ASSERT_STREQ(t->guard,
-               "not peer_receiver_busy and not vs_eq_va_+_k and T1_running",
+               "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
                "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(s) := V(s)", "actions[0].verb");
@@ -320,7 +321,7 @@ static int test_t07_dl_connect_request_no(void) {
   ASSERT(t != NULL, "t07_dl_connect_request_no not found");
   ASSERT_STREQ(t->on, "DL_CONNECT_request", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "discard_I_frame_queue", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -343,7 +344,7 @@ static int test_t07_dl_connect_request_yes(void) {
   ASSERT(t != NULL, "t07_dl_connect_request_yes not found");
   ASSERT_STREQ(t->on, "DL_CONNECT_request", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "discard_I_frame_queue", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -382,7 +383,7 @@ static int test_t09_control_field_error_no(void) {
   ASSERT(t != NULL, "t09_control_field_error_no not found");
   ASSERT_STREQ(t->on, "control_field_error", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (L)",
                "actions[0].verb");
@@ -408,7 +409,7 @@ static int test_t09_control_field_error_yes(void) {
   ASSERT(t != NULL, "t09_control_field_error_yes not found");
   ASSERT_STREQ(t->on, "control_field_error", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (L)",
                "actions[0].verb");
@@ -434,7 +435,7 @@ static int test_t10_info_not_permitted_in_frame_no(void) {
   ASSERT(t != NULL, "t10_info_not_permitted_in_frame_no not found");
   ASSERT_STREQ(t->on, "info_not_permitted_in_frame", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (M)",
                "actions[0].verb");
@@ -460,7 +461,7 @@ static int test_t10_info_not_permitted_in_frame_yes(void) {
   ASSERT(t != NULL, "t10_info_not_permitted_in_frame_yes not found");
   ASSERT_STREQ(t->on, "info_not_permitted_in_frame", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (M)",
                "actions[0].verb");
@@ -486,7 +487,7 @@ static int test_t11_u_or_s_frame_length_error_no(void) {
   ASSERT(t != NULL, "t11_u_or_s_frame_length_error_no not found");
   ASSERT_STREQ(t->on, "u_or_s_frame_length_error", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (N)",
                "actions[0].verb");
@@ -512,7 +513,7 @@ static int test_t11_u_or_s_frame_length_error_yes(void) {
   ASSERT(t != NULL, "t11_u_or_s_frame_length_error_yes not found");
   ASSERT_STREQ(t->on, "u_or_s_frame_length_error", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (N)",
                "actions[0].verb");
@@ -748,7 +749,7 @@ static int test_t16_frmr_received_no(void) {
   ASSERT(t != NULL, "t16_frmr_received_no not found");
   ASSERT_STREQ(t->on, "FRMR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (K)",
                "actions[0].verb");
@@ -773,7 +774,7 @@ static int test_t16_frmr_received_yes(void) {
   ASSERT(t != NULL, "t16_frmr_received_yes not found");
   ASSERT_STREQ(t->on, "FRMR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (K)",
                "actions[0].verb");
@@ -798,7 +799,7 @@ static int test_t17_ua_received_no(void) {
   ASSERT(t != NULL, "t17_ua_received_no not found");
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (K)",
                "actions[0].verb");
@@ -823,7 +824,7 @@ static int test_t17_ua_received_yes(void) {
   ASSERT(t != NULL, "t17_ua_received_yes not found");
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (K)",
                "actions[0].verb");
@@ -970,7 +971,7 @@ static int test_t21_rr_received_no_no(void) {
   ASSERT(t != NULL, "t21_rr_received_no_no not found");
   ASSERT_STREQ(t->on, "RR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -995,7 +996,7 @@ static int test_t21_rr_received_no_yes(void) {
   ASSERT(t != NULL, "t21_rr_received_no_yes not found");
   ASSERT_STREQ(t->on, "RR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1045,7 +1046,7 @@ static int test_t22_rnr_received_no_no(void) {
   ASSERT(t != NULL, "t22_rnr_received_no_no not found");
   ASSERT_STREQ(t->on, "RNR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -1069,7 +1070,7 @@ static int test_t22_rnr_received_no_yes(void) {
   ASSERT(t != NULL, "t22_rnr_received_no_yes not found");
   ASSERT_STREQ(t->on, "RNR_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -1137,7 +1138,7 @@ static int test_t24_srej_received_yes_yes(void) {
   ASSERT(t != NULL, "t24_srej_received_yes_yes not found");
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "va_le_nr_le_vs and p/f_eq_1", "guard");
+  ASSERT_STREQ(t->guard, "va_le_nr_le_vs and P_or_F_eq_1", "guard");
   ASSERT(t->actions_len == 11, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1180,7 +1181,7 @@ static int test_t24_srej_received_yes_no(void) {
   ASSERT(t != NULL, "t24_srej_received_yes_no not found");
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "va_le_nr_le_vs and not p/f_eq_1", "guard");
+  ASSERT_STREQ(t->guard, "va_le_nr_le_vs and not P_or_F_eq_1", "guard");
   ASSERT(t->actions_len == 10, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1221,7 +1222,7 @@ static int test_t24_srej_received_no_no(void) {
   ASSERT(t != NULL, "t24_srej_received_no_no not found");
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1246,7 +1247,7 @@ static int test_t24_srej_received_no_yes(void) {
   ASSERT(t != NULL, "t24_srej_received_no_yes not found");
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1271,7 +1272,7 @@ static int test_t25_rej_received_no_no(void) {
   ASSERT(t != NULL, "t25_rej_received_no_no not found");
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and not version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1296,7 +1297,7 @@ static int test_t25_rej_received_no_yes(void) {
   ASSERT(t != NULL, "t25_rej_received_no_yes not found");
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
-  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2.2", "guard");
+  ASSERT_STREQ(t->guard, "not va_le_nr_le_vs and version_2_2", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -1360,7 +1361,7 @@ static int test_t26_i_received_no_no_no(void) {
   ASSERT_STREQ(t->guard,
                "not command and not "
                "info_field_length_le_N1_and_content_is_octet_aligned and not "
-               "version_2.2",
+               "version_2_2",
                "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (O)",
@@ -1389,7 +1390,7 @@ static int test_t26_i_received_no_no_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "not command and not "
-      "info_field_length_le_N1_and_content_is_octet_aligned and version_2.2",
+      "info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
       "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (O)",
@@ -1418,7 +1419,7 @@ static int test_t26_i_received_no_yes_no_no(void) {
   ASSERT_STREQ(
       t->guard,
       "not command and info_field_length_le_N1_and_content_is_octet_aligned "
-      "and not va_le_nr_le_vs and not version_2.2",
+      "and not va_le_nr_le_vs and not version_2_2",
       "guard");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(r) Error Recovery", "actions[0].verb");
@@ -1441,7 +1442,7 @@ static int test_t26_i_received_no_yes_no_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "not command and info_field_length_le_N1_and_content_is_octet_aligned "
-      "and not va_le_nr_le_vs and version_2.2",
+      "and not va_le_nr_le_vs and version_2_2",
       "guard");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(r) Error Recovery", "actions[0].verb");
@@ -1722,7 +1723,7 @@ static int test_t26_i_received_no_yes_yes_no_no_no_yes_no_yes(void) {
       "not command and info_field_length_le_N1_and_content_is_octet_aligned "
       "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
-      "ns_gt_vr_+_1",
+      "ns_gt_vr_plus_1",
       "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1765,7 +1766,7 @@ static int test_t26_i_received_no_yes_yes_no_no_no_yes_no_no(void) {
       "not command and info_field_length_le_N1_and_content_is_octet_aligned "
       "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
-      "not ns_gt_vr_+_1",
+      "not ns_gt_vr_plus_1",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",

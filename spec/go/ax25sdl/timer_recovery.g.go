@@ -57,7 +57,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_yes",
 			From:  "TimerRecovery",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and vseqva+k",
+			Guard: "not peer_receiver_busy and vs_eq_va_plus_k",
 			Actions: []ActionStep{
 				{Verb: "Push I Frame on I Queue", Kind: InternalOut},
 			},
@@ -70,7 +70,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_no_yes",
 			From:  "TimerRecovery",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and not vseqva+k and T1_running",
+			Guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
 			Actions: []ActionStep{
 				{Verb: "N(s) := V(s)", Kind: Processing},
 				{Verb: "N(R) := V(r)", Kind: Processing},
@@ -88,7 +88,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t03_i_frame_pops_off_queue_no_no_no",
 			From:  "TimerRecovery",
 			On:    "I_frame_pops_off_queue",
-			Guard: "not peer_receiver_busy and not vseqva+k and not T1_running",
+			Guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
 			Actions: []ActionStep{
 				{Verb: "N(s) := V(s)", Kind: Processing},
 				{Verb: "N(R) := V(r)", Kind: Processing},
@@ -428,7 +428,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_no_no",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 			},
@@ -441,7 +441,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -456,7 +456,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_no_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -471,7 +471,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_no_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -486,7 +486,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -502,7 +502,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -518,7 +518,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -538,7 +538,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -556,7 +556,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_no_no",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 			},
@@ -569,7 +569,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -584,7 +584,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_no_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -599,7 +599,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_no_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -614,7 +614,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -630,7 +630,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -646,7 +646,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -666,7 +666,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -788,7 +788,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "not info_field_length_le_N1_&_content_is_octet_aligned",
+			Guard: "not info_field_length_le_N1_and_content_is_octet_aligned",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (O)", Kind: SignalUpper},
 				{Verb: "Establish_Data_Link", Kind: Subroutine},
@@ -803,7 +803,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
 			Actions: []ActionStep{
 				{Verb: "N(r) Recovery", Kind: Subroutine},
 			},
@@ -816,7 +816,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Discard Contents of I Frame", Kind: Processing},
@@ -834,7 +834,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Discard Contents of I Frame", Kind: Processing},
@@ -848,7 +848,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "V(r) := V(r) + 1", Kind: Processing},
@@ -869,7 +869,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_yes_no_no_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "V(r) := V(r) + 1", Kind: Processing},
@@ -888,7 +888,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_yes_no_no_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "V(r) := V(r) + 1", Kind: Processing},
@@ -905,7 +905,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Discard Contents of I Frame", Kind: Processing},
@@ -923,7 +923,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_yes_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Discard Contents of I Frame", Kind: Processing},
@@ -937,7 +937,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_no_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Discard Contents of I Frame", Kind: Processing},
@@ -956,7 +956,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Save Contents of I Frame", Kind: Processing},
@@ -976,7 +976,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Save Contents of I Frame", Kind: Processing},
@@ -994,7 +994,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t22_i_received_undefined_yes_yes_no_no_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "I_received",
-			Guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0",
+			Guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
 			Actions: []ActionStep{
 				{Verb: "Check_I_Frame_Acknowledged", Kind: Subroutine},
 				{Verb: "Save Contents of I Frame", Kind: Processing},
@@ -1012,7 +1012,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1027,7 +1027,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1046,7 +1046,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1061,7 +1061,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1076,7 +1076,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1090,7 +1090,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_yes_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1108,7 +1108,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_no_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "N(r) Recovery", Kind: Subroutine},
@@ -1122,7 +1122,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_no_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "N(r) Recovery", Kind: Subroutine},
@@ -1136,7 +1136,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1152,7 +1152,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+			Guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1168,7 +1168,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_yes_undefined_via_start_t3",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1186,7 +1186,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_yes_undefined_via_invoke_retransmission",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1264,7 +1264,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_no_no_no",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "not response and not va_le_nr_le_vs and not version_2.2",
+			Guard: "not response and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "N(r) Recovery", Kind: Subroutine},
@@ -1278,7 +1278,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_no_no_yes",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "not response and not va_le_nr_le_vs and version_2.2",
+			Guard: "not response and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "N(r) Recovery", Kind: Subroutine},
@@ -1292,7 +1292,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_yes_no_no",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "response and not va_le_nr_le_vs and not version_2.2",
+			Guard: "response and not va_le_nr_le_vs and not version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1308,7 +1308,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_yes_no_yes",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "response and not va_le_nr_le_vs and version_2.2",
+			Guard: "response and not va_le_nr_le_vs and version_2_2",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},

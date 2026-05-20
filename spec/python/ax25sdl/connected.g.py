@@ -65,7 +65,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t03_i_frame_pops_off_queue_no_yes",
             from_="Connected",
             on="I_frame_pops_off_queue",
-            guard="not peer_receiver_busy and vs_eq_va_+_k",
+            guard="not peer_receiver_busy and vs_eq_va_plus_k",
             actions=(
                 ActionStep(verb="Push on I Frame Queue", kind=ActionKind.INTERNAL_OUT),
             ),
@@ -78,7 +78,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t03_i_frame_pops_off_queue_no_no_no",
             from_="Connected",
             on="I_frame_pops_off_queue",
-            guard="not peer_receiver_busy and not vs_eq_va_+_k and not T1_running",
+            guard="not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
             actions=(
                 ActionStep(verb="N(s) := V(s)", kind=ActionKind.PROCESSING),
                 ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
@@ -98,7 +98,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t03_i_frame_pops_off_queue_no_no_yes",
             from_="Connected",
             on="I_frame_pops_off_queue",
-            guard="not peer_receiver_busy and not vs_eq_va_+_k and T1_running",
+            guard="not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
             actions=(
                 ActionStep(verb="N(s) := V(s)", kind=ActionKind.PROCESSING),
                 ActionStep(verb="N(r) := V(r)", kind=ActionKind.PROCESSING),
@@ -198,7 +198,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t07_dl_connect_request_no",
             from_="Connected",
             on="DL_CONNECT_request",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -213,7 +213,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t07_dl_connect_request_yes",
             from_="Connected",
             on="DL_CONNECT_request",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -239,7 +239,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t09_control_field_error_no",
             from_="Connected",
             on="control_field_error",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (L)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -255,7 +255,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t09_control_field_error_yes",
             from_="Connected",
             on="control_field_error",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (L)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -271,7 +271,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t10_info_not_permitted_in_frame_no",
             from_="Connected",
             on="info_not_permitted_in_frame",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (M)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -287,7 +287,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t10_info_not_permitted_in_frame_yes",
             from_="Connected",
             on="info_not_permitted_in_frame",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (M)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -303,7 +303,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t11_u_or_s_frame_length_error_no",
             from_="Connected",
             on="u_or_s_frame_length_error",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (N)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -319,7 +319,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t11_u_or_s_frame_length_error_yes",
             from_="Connected",
             on="u_or_s_frame_length_error",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (N)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
@@ -459,7 +459,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t16_frmr_received_no",
             from_="Connected",
             on="FRMR_received",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (K)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -474,7 +474,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t16_frmr_received_yes",
             from_="Connected",
             on="FRMR_received",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (K)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -489,7 +489,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t17_ua_received_no",
             from_="Connected",
             on="UA_received",
-            guard="not version_2.2",
+            guard="not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (K)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -504,7 +504,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t17_ua_received_yes",
             from_="Connected",
             on="UA_received",
-            guard="version_2.2",
+            guard="version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (K)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -596,7 +596,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t21_rr_received_no_no",
             from_="Connected",
             on="RR_received",
-            guard="not va_le_nr_le_vs and not version_2.2",
+            guard="not va_le_nr_le_vs and not version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -611,7 +611,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t21_rr_received_no_yes",
             from_="Connected",
             on="RR_received",
-            guard="not va_le_nr_le_vs and version_2.2",
+            guard="not va_le_nr_le_vs and version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -641,7 +641,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t22_rnr_received_no_no",
             from_="Connected",
             on="RNR_received",
-            guard="not va_le_nr_le_vs and not version_2.2",
+            guard="not va_le_nr_le_vs and not version_2_2",
             actions=(
                 ActionStep(verb="set_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -656,7 +656,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t22_rnr_received_no_yes",
             from_="Connected",
             on="RNR_received",
-            guard="not va_le_nr_le_vs and version_2.2",
+            guard="not va_le_nr_le_vs and version_2_2",
             actions=(
                 ActionStep(verb="set_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -699,7 +699,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t24_srej_received_yes_yes",
             from_="Connected",
             on="SREJ_received",
-            guard="va_le_nr_le_vs and p/f_eq_1",
+            guard="va_le_nr_le_vs and P_or_F_eq_1",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -722,7 +722,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t24_srej_received_yes_no",
             from_="Connected",
             on="SREJ_received",
-            guard="va_le_nr_le_vs and not p/f_eq_1",
+            guard="va_le_nr_le_vs and not P_or_F_eq_1",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -744,7 +744,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t24_srej_received_no_no",
             from_="Connected",
             on="SREJ_received",
-            guard="not va_le_nr_le_vs and not version_2.2",
+            guard="not va_le_nr_le_vs and not version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -759,7 +759,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t24_srej_received_no_yes",
             from_="Connected",
             on="SREJ_received",
-            guard="not va_le_nr_le_vs and version_2.2",
+            guard="not va_le_nr_le_vs and version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -774,7 +774,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t25_rej_received_no_no",
             from_="Connected",
             on="REJ_received",
-            guard="not va_le_nr_le_vs and not version_2.2",
+            guard="not va_le_nr_le_vs and not version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -789,7 +789,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t25_rej_received_no_yes",
             from_="Connected",
             on="REJ_received",
-            guard="not va_le_nr_le_vs and version_2.2",
+            guard="not va_le_nr_le_vs and version_2_2",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Check Need For Response", kind=ActionKind.SUBROUTINE),
@@ -824,7 +824,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_no_no",
             from_="Connected",
             on="I_received",
-            guard="not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2",
+            guard="not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (O)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -839,7 +839,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_no_yes",
             from_="Connected",
             on="I_received",
-            guard="not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2",
+            guard="not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (O)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Establish_Data_Link", kind=ActionKind.SUBROUTINE),
@@ -854,7 +854,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_yes_no_no",
             from_="Connected",
             on="I_received",
-            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2",
+            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
             actions=(
                 ActionStep(verb="N(r) Error Recovery", kind=ActionKind.SUBROUTINE),
             ),
@@ -867,7 +867,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_yes_no_yes",
             from_="Connected",
             on="I_received",
-            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2",
+            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
             actions=(
                 ActionStep(verb="N(r) Error Recovery", kind=ActionKind.SUBROUTINE),
             ),
@@ -1006,7 +1006,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_yes_yes_no_no_no_yes_no_yes",
             from_="Connected",
             on="I_received",
-            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1",
+            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Save Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -1026,7 +1026,7 @@ DATA_LINK_CONNECTED = StatePage(
             id="t26_i_received_no_yes_yes_no_no_no_yes_no_no",
             from_="Connected",
             on="I_received",
-            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1",
+            guard="not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Save Contents of I Frame", kind=ActionKind.PROCESSING),

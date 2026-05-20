@@ -145,8 +145,8 @@ func TestDataLinkConnected_t03_i_frame_pops_off_queue_no_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and vs_eq_va_+_k" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and vs_eq_va_+_k")
+	if tx.Guard != "not peer_receiver_busy and vs_eq_va_plus_k" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and vs_eq_va_plus_k")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -176,8 +176,8 @@ func TestDataLinkConnected_t03_i_frame_pops_off_queue_no_no_no(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_+_k and not T1_running")
+	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -249,8 +249,8 @@ func TestDataLinkConnected_t03_i_frame_pops_off_queue_no_no_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_+_k and T1_running" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_+_k and T1_running")
+	if tx.Guard != "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -529,8 +529,8 @@ func TestDataLinkConnected_t07_dl_connect_request_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -572,8 +572,8 @@ func TestDataLinkConnected_t07_dl_connect_request_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -637,8 +637,8 @@ func TestDataLinkConnected_t09_control_field_error_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -686,8 +686,8 @@ func TestDataLinkConnected_t09_control_field_error_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -735,8 +735,8 @@ func TestDataLinkConnected_t10_info_not_permitted_in_frame_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -784,8 +784,8 @@ func TestDataLinkConnected_t10_info_not_permitted_in_frame_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -833,8 +833,8 @@ func TestDataLinkConnected_t11_u_or_s_frame_length_error_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -882,8 +882,8 @@ func TestDataLinkConnected_t11_u_or_s_frame_length_error_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 4 {
 		t.Fatalf("len(Actions) = %d, want 4", got)
@@ -1387,8 +1387,8 @@ func TestDataLinkConnected_t16_frmr_received_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1430,8 +1430,8 @@ func TestDataLinkConnected_t16_frmr_received_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1473,8 +1473,8 @@ func TestDataLinkConnected_t17_ua_received_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2.2")
+	if tx.Guard != "not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1516,8 +1516,8 @@ func TestDataLinkConnected_t17_ua_received_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2.2")
+	if tx.Guard != "version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1780,8 +1780,8 @@ func TestDataLinkConnected_t21_rr_received_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1823,8 +1823,8 @@ func TestDataLinkConnected_t21_rr_received_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1909,8 +1909,8 @@ func TestDataLinkConnected_t22_rnr_received_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -1952,8 +1952,8 @@ func TestDataLinkConnected_t22_rnr_received_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2069,8 +2069,8 @@ func TestDataLinkConnected_t24_srej_received_yes_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "va_le_nr_le_vs and p/f_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "va_le_nr_le_vs and p/f_eq_1")
+	if tx.Guard != "va_le_nr_le_vs and P_or_F_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "va_le_nr_le_vs and P_or_F_eq_1")
 	}
 	if got := len(tx.Actions); got != 11 {
 		t.Fatalf("len(Actions) = %d, want 11", got)
@@ -2160,8 +2160,8 @@ func TestDataLinkConnected_t24_srej_received_yes_no(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "va_le_nr_le_vs and not p/f_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "va_le_nr_le_vs and not p/f_eq_1")
+	if tx.Guard != "va_le_nr_le_vs and not P_or_F_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "va_le_nr_le_vs and not P_or_F_eq_1")
 	}
 	if got := len(tx.Actions); got != 10 {
 		t.Fatalf("len(Actions) = %d, want 10", got)
@@ -2245,8 +2245,8 @@ func TestDataLinkConnected_t24_srej_received_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2288,8 +2288,8 @@ func TestDataLinkConnected_t24_srej_received_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2331,8 +2331,8 @@ func TestDataLinkConnected_t25_rej_received_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2374,8 +2374,8 @@ func TestDataLinkConnected_t25_rej_received_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2490,8 +2490,8 @@ func TestDataLinkConnected_t26_i_received_no_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2.2")
+	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2533,8 +2533,8 @@ func TestDataLinkConnected_t26_i_received_no_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2.2")
+	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2576,8 +2576,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2.2")
+	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -2607,8 +2607,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2.2")
+	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -3065,8 +3065,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes(t *test
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_+_1")
+	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -3138,8 +3138,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_no(t *testi
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_+_1")
+	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)

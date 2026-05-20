@@ -59,7 +59,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_yes",
       from: "TimerRecovery",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and vseqva+k",
+      guard: "not peer_receiver_busy and vs_eq_va_plus_k",
       actions: [
         { verb: "Push I Frame on I Queue", kind: "internal_out" },
       ],
@@ -72,7 +72,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_no_yes",
       from: "TimerRecovery",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and not vseqva+k and T1_running",
+      guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
       actions: [
         { verb: "N(s) := V(s)", kind: "processing" },
         { verb: "N(R) := V(r)", kind: "processing" },
@@ -90,7 +90,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_no_no",
       from: "TimerRecovery",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and not vseqva+k and not T1_running",
+      guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
       actions: [
         { verb: "N(s) := V(s)", kind: "processing" },
         { verb: "N(R) := V(r)", kind: "processing" },
@@ -430,7 +430,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_no_no",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
       ],
@@ -443,7 +443,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_no_yes_yes",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -458,7 +458,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_no_yes_no_no",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -473,7 +473,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_no_yes_no_yes",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -488,7 +488,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_yes_no_no",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -504,7 +504,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_yes_no_yes",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -520,7 +520,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_yes_yes_no",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -540,7 +540,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t18_rr_received_yes_yes_yes",
       from: "TimerRecovery",
       on: "RR_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -558,7 +558,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_no_no",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
       ],
@@ -571,7 +571,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_no_yes_yes",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -586,7 +586,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_no_yes_no_no",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -601,7 +601,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_no_yes_no_yes",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -616,7 +616,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_yes_no_no",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -632,7 +632,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_yes_no_yes",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -648,7 +648,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_yes_yes_no",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -668,7 +668,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t19_rnr_received_yes_yes_yes",
       from: "TimerRecovery",
       on: "RNR_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -790,7 +790,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "not info_field_length_le_N1_&_content_is_octet_aligned",
+      guard: "not info_field_length_le_N1_and_content_is_octet_aligned",
       actions: [
         { verb: "DL-ERROR Indication (O)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -805,7 +805,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and not va_le_nr_le_vs",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
       actions: [
         { verb: "N(r) Recovery", kind: "subroutine" },
       ],
@@ -818,7 +818,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_yes_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -836,7 +836,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_yes_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -850,7 +850,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_yes_no_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -871,7 +871,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_yes_no_no_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -890,7 +890,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_yes_no_no_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -907,7 +907,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_yes_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -925,7 +925,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_yes_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -939,7 +939,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_no_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -958,7 +958,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and ns_gt_vr+1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -978,7 +978,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt0 and not ns_gt_vr+1",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -996,7 +996,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t22_i_received_undefined_yes_yes_no_no_no_yes_yes",
       from: "TimerRecovery",
       on: "I_received",
-      guard: "info_field_length_le_N1_&_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt0",
+      guard: "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -1014,7 +1014,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_yes_yes_yes",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -1029,7 +1029,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_yes_yes_no",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -1048,7 +1048,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_yes_no_yes",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -1063,7 +1063,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_yes_no_no",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -1078,7 +1078,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_no_yes_yes",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "V(a) := N(r)", kind: "processing" },
@@ -1092,7 +1092,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_no_yes_no",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "V(a) := N(r)", kind: "processing" },
@@ -1110,7 +1110,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_no_no_yes",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "N(r) Recovery", kind: "subroutine" },
@@ -1124,7 +1124,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_no_no_no_no",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "not response_&_F_eq_1 and not command_&_P_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "N(r) Recovery", kind: "subroutine" },
@@ -1138,7 +1138,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_yes_no_yes",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -1154,7 +1154,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_yes_no_no",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "response_&_F_eq_1 and not va_le_nr_le_vs and not version_2.2",
+      guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -1170,7 +1170,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_yes_yes_undefined_via_start_t3",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -1188,7 +1188,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t23_rej_received_yes_yes_undefined_via_invoke_retransmission",
       from: "TimerRecovery",
       on: "REJ_received",
-      guard: "response_&_F_eq_1 and va_le_nr_le_vs",
+      guard: "response_and_F_eq_1 and va_le_nr_le_vs",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -1266,7 +1266,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t24_srej_received_no_no_no",
       from: "TimerRecovery",
       on: "SREJ_received",
-      guard: "not response and not va_le_nr_le_vs and not version_2.2",
+      guard: "not response and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "N(r) Recovery", kind: "subroutine" },
@@ -1280,7 +1280,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t24_srej_received_no_no_yes",
       from: "TimerRecovery",
       on: "SREJ_received",
-      guard: "not response and not va_le_nr_le_vs and version_2.2",
+      guard: "not response and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "N(r) Recovery", kind: "subroutine" },
@@ -1294,7 +1294,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t24_srej_received_yes_no_no",
       from: "TimerRecovery",
       on: "SREJ_received",
-      guard: "response and not va_le_nr_le_vs and not version_2.2",
+      guard: "response and not va_le_nr_le_vs and not version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
@@ -1310,7 +1310,7 @@ export const DataLinkTimerRecovery: StatePage = {
       id: "t24_srej_received_yes_no_yes",
       from: "TimerRecovery",
       on: "SREJ_received",
-      guard: "response and not va_le_nr_le_vs and version_2.2",
+      guard: "response and not va_le_nr_le_vs and version_2_2",
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Stop T1", kind: "processing" },
