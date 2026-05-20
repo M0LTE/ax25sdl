@@ -24,7 +24,7 @@ static int test_source_figure(void) {
 }
 
 static int test_transitions_count(void) {
-  ASSERT(data_link_timer_recovery.transitions_len == 86, "transitions count");
+  ASSERT(data_link_timer_recovery.transitions_len == 90, "transitions count");
   return 0;
 }
 
@@ -699,27 +699,6 @@ static int test_t17_disc_received(void) {
   return 0;
 }
 
-static int test_t18_rr_received_no_no(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
-    if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t18_rr_received_no_no") == 0) {
-      t = &data_link_timer_recovery.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t18_rr_received_no_no not found");
-  ASSERT_STREQ(t->on, "RR_received", "on");
-  ASSERT_STREQ(t->next, "Undefined", "next");
-  ASSERT_STREQ(t->guard, "not response_and_F_eq_1 and not command_and_P_eq_1",
-               "guard");
-  ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
-               "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  return 0;
-}
-
 static int test_t18_rr_received_no_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
@@ -769,7 +748,7 @@ static int test_t18_rr_received_no_yes_no_no(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Enquiry_Response_F_1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "N(r) Error Recovery", "actions[2].verb");
+  ASSERT_STREQ(t->actions[2].verb, "N(r) Recovery", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   return 0;
 }
@@ -796,8 +775,58 @@ static int test_t18_rr_received_no_yes_no_yes(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Enquiry_Response_F_1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "N(r) Error Recovery", "actions[2].verb");
+  ASSERT_STREQ(t->actions[2].verb, "N(r) Recovery", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
+  return 0;
+}
+
+static int test_t18_rr_received_no_no_yes(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t18_rr_received_no_no_yes") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t18_rr_received_no_no_yes not found");
+  ASSERT_STREQ(t->on, "RR_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(
+      t->guard,
+      "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+      "guard");
+  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
+               "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "V(a) := N(r)", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
+  return 0;
+}
+
+static int test_t18_rr_received_no_no_no(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t18_rr_received_no_no_no") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t18_rr_received_no_no_no not found");
+  ASSERT_STREQ(t->on, "RR_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(t->guard,
+               "not response_and_F_eq_1 and not command_and_P_eq_1 and not "
+               "va_le_nr_le_vs",
+               "guard");
+  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
+               "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "N(r) Recovery", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
   return 0;
 }
 
@@ -824,7 +853,7 @@ static int test_t18_rr_received_yes_no_no(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "N(r) Error Recovery", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "N(r) Recovery", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   return 0;
 }
@@ -852,7 +881,7 @@ static int test_t18_rr_received_yes_no_yes(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "N(r) Error Recovery", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "N(r) Recovery", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   return 0;
 }
@@ -925,26 +954,6 @@ static int test_t18_rr_received_yes_yes_yes(void) {
   return 0;
 }
 
-static int test_t19_rnr_received_no_no(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
-    if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t19_rnr_received_no_no") == 0) {
-      t = &data_link_timer_recovery.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t19_rnr_received_no_no not found");
-  ASSERT_STREQ(t->on, "RNR_received", "on");
-  ASSERT_STREQ(t->next, "Undefined", "next");
-  ASSERT_STREQ(t->guard, "not response_and_F_eq_1 and not command_and_P_eq_1",
-               "guard");
-  ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  return 0;
-}
-
 static int test_t19_rnr_received_no_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
@@ -992,7 +1001,7 @@ static int test_t19_rnr_received_no_yes_no_no(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Enquiry_Response_F_1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "N(r) Error Recovery", "actions[2].verb");
+  ASSERT_STREQ(t->actions[2].verb, "N(r) Recovery", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   return 0;
 }
@@ -1018,8 +1027,56 @@ static int test_t19_rnr_received_no_yes_no_yes(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Enquiry_Response_F_1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "N(r) Error Recovery", "actions[2].verb");
+  ASSERT_STREQ(t->actions[2].verb, "N(r) Recovery", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
+  return 0;
+}
+
+static int test_t19_rnr_received_no_no_yes(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t19_rnr_received_no_no_yes") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t19_rnr_received_no_no_yes not found");
+  ASSERT_STREQ(t->on, "RNR_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(
+      t->guard,
+      "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+      "guard");
+  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "V(a) := N(r)", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
+  return 0;
+}
+
+static int test_t19_rnr_received_no_no_no(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t19_rnr_received_no_no_no") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t19_rnr_received_no_no_no not found");
+  ASSERT_STREQ(t->on, "RNR_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(t->guard,
+               "not response_and_F_eq_1 and not command_and_P_eq_1 and not "
+               "va_le_nr_le_vs",
+               "guard");
+  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "N(r) Recovery", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
   return 0;
 }
 
@@ -1045,7 +1102,7 @@ static int test_t19_rnr_received_yes_no_no(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "N(r) Error Recovery", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "N(r) Recovery", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   return 0;
 }
@@ -1072,7 +1129,7 @@ static int test_t19_rnr_received_yes_no_yes(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "N(r) Error Recovery", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "N(r) Recovery", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
   return 0;
 }
@@ -1289,18 +1346,19 @@ static int test_t21_t1_expiry_yes_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined(void) {
+static int test_t22_i_received_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined") == 0) {
+               "t22_i_received_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined not found");
+  ASSERT(t != NULL, "t22_i_received_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
+  ASSERT_STREQ(t->guard, "not command", "guard");
   ASSERT(t->actions_len == 2, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (O)",
                "actions[0].verb");
@@ -1310,21 +1368,22 @@ static int test_t22_i_received_undefined(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_no(void) {
+static int test_t22_i_received_yes_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_no") == 0) {
+               "t22_i_received_yes_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard,
-               "not info_field_length_le_N1_and_content_is_octet_aligned",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and not info_field_length_le_N1_and_content_is_octet_aligned",
+      "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (O)",
                "actions[0].verb");
@@ -1337,44 +1396,46 @@ static int test_t22_i_received_undefined_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_no(void) {
+static int test_t22_i_received_yes_yes_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_no") == 0) {
+               "t22_i_received_yes_yes_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "AwaitingConnection", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and not "
-               "va_le_nr_le_vs",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "not va_le_nr_le_vs",
+      "guard");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(r) Recovery", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_yes_yes(void) {
+static int test_t22_i_received_yes_yes_yes_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_yes_yes") == 0) {
+               "t22_i_received_yes_yes_yes_yes_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_yes_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and own_receive_busy and P_eq_1",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and own_receive_busy and P_eq_1",
+      "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1394,22 +1455,23 @@ static int test_t22_i_received_undefined_yes_yes_yes_yes(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_yes_no(void) {
+static int test_t22_i_received_yes_yes_yes_yes_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_yes_no") == 0) {
+               "t22_i_received_yes_yes_yes_yes_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_yes_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_yes_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and own_receive_busy and not P_eq_1",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+      "guard");
   ASSERT(t->actions_len == 2, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1420,22 +1482,22 @@ static int test_t22_i_received_undefined_yes_yes_yes_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_yes_no_yes(void) {
+static int test_t22_i_received_yes_yes_yes_no_yes_no_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_yes_no_yes") == 0) {
+               "t22_i_received_yes_yes_yes_no_yes_no_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_no_yes_no_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(
       t->guard,
-      "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs "
-      "and not own_receive_busy and ns_eq_vr and P_eq_1",
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
       "guard");
   ASSERT(t->actions_len == 9, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1462,24 +1524,24 @@ static int test_t22_i_received_undefined_yes_yes_no_yes_no_yes(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_yes_no_no_no(void) {
+static int test_t22_i_received_yes_yes_yes_no_yes_no_no_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_yes_no_no_no") == 0) {
+               "t22_i_received_yes_yes_yes_no_yes_no_no_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t22_i_received_undefined_yes_yes_no_yes_no_no_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_no_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not "
-               "P_eq_1 and not ack_pending",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
+      "not ack_pending",
+      "guard");
   ASSERT(t->actions_len == 7, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1501,23 +1563,23 @@ static int test_t22_i_received_undefined_yes_yes_no_yes_no_no_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_yes_no_no_yes(void) {
+static int test_t22_i_received_yes_yes_yes_no_yes_no_no_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_yes_no_no_yes") == 0) {
+               "t22_i_received_yes_yes_yes_no_yes_no_no_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t22_i_received_undefined_yes_yes_no_yes_no_no_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_no_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(
       t->guard,
-      "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs "
-      "and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
+      "ack_pending",
       "guard");
   ASSERT(t->actions_len == 5, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1535,23 +1597,24 @@ static int test_t22_i_received_undefined_yes_yes_no_yes_no_no_yes(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_yes_yes(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_yes_yes") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_yes_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_no_no_yes_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_yes_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
-               "reject_exception and P_eq_1",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+      "reject_exception and P_eq_1",
+      "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1571,23 +1634,24 @@ static int test_t22_i_received_undefined_yes_yes_no_no_yes_yes(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_yes_no(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_yes_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_yes_no") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_yes_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_no_no_yes_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_yes_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
-               "reject_exception and not P_eq_1",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+      "reject_exception and not P_eq_1",
+      "guard");
   ASSERT(t->actions_len == 2, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1598,23 +1662,24 @@ static int test_t22_i_received_undefined_yes_yes_no_no_yes_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_no_no(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_no_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_no_no") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_no_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL, "t22_i_received_undefined_yes_yes_no_no_no_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_no_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard,
-               "info_field_length_le_N1_and_content_is_octet_aligned and "
-               "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
-               "not reject_exception and not SREJ_enabled",
-               "guard");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "reject_exception and not SREJ_enabled",
+      "guard");
   ASSERT(t->actions_len == 7, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
@@ -1636,24 +1701,24 @@ static int test_t22_i_received_undefined_yes_yes_no_no_no_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_no_yes_no_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(
       t->guard,
-      "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs "
-      "and not own_receive_busy and not ns_eq_vr and not reject_exception and "
-      "SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
+      "ns_gt_vr_plus_1",
       "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1679,24 +1744,24 @@ static int test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_no(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_no_yes_no_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_no_yes_no_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t22_i_received_undefined_yes_yes_no_no_no_yes_no_no not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(
       t->guard,
-      "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs "
-      "and not own_receive_busy and not ns_eq_vr and not reject_exception and "
-      "SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
+      "not ns_gt_vr_plus_1",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1716,24 +1781,23 @@ static int test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_no(void) {
   return 0;
 }
 
-static int test_t22_i_received_undefined_yes_yes_no_no_no_yes_yes(void) {
+static int test_t22_i_received_yes_yes_yes_no_no_no_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_undefined_yes_yes_no_no_no_yes_yes") == 0) {
+               "t22_i_received_yes_yes_yes_no_no_no_yes_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t22_i_received_undefined_yes_yes_no_no_no_yes_yes not found");
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_no_no_yes_yes not found");
   ASSERT_STREQ(t->on, "I_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(
       t->guard,
-      "info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs "
-      "and not own_receive_busy and not ns_eq_vr and not reject_exception and "
-      "SREJ_enabled and sreject_exception_gt_0",
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "reject_exception and SREJ_enabled and sreject_exception_gt_0",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -2035,20 +2099,20 @@ static int test_t23_rej_received_yes_no_no(void) {
   return 0;
 }
 
-static int test_t23_rej_received_yes_yes_undefined_via_start_t3(void) {
+static int test_t23_rej_received_yes_yes_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
     if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t23_rej_received_yes_yes_undefined_via_start_t3") == 0) {
+               "t23_rej_received_yes_yes_yes") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(t != NULL,
-         "t23_rej_received_yes_yes_undefined_via_start_t3 not found");
+  ASSERT(t != NULL, "t23_rej_received_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs", "guard");
+  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+               "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -2066,24 +2130,21 @@ static int test_t23_rej_received_yes_yes_undefined_via_start_t3(void) {
   return 0;
 }
 
-static int
-test_t23_rej_received_yes_yes_undefined_via_invoke_retransmission(void) {
+static int test_t23_rej_received_yes_yes_no(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
-    if (strcmp(
-            data_link_timer_recovery.transitions[i].id,
-            "t23_rej_received_yes_yes_undefined_via_invoke_retransmission") ==
-        0) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t23_rej_received_yes_yes_no") == 0) {
       t = &data_link_timer_recovery.transitions[i];
       break;
     }
   }
-  ASSERT(
-      t != NULL,
-      "t23_rej_received_yes_yes_undefined_via_invoke_retransmission not found");
+  ASSERT(t != NULL, "t23_rej_received_yes_yes_no not found");
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs", "guard");
+  ASSERT_STREQ(t->guard,
+               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+               "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
@@ -2458,6 +2519,38 @@ static int test_t24_srej_received_yes_yes_no_no(void) {
   return 0;
 }
 
+static int test_t25_all_other_primitives__from_upper_layer(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t25_all_other_primitives__from_upper_layer") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t25_all_other_primitives__from_upper_layer not found");
+  ASSERT_STREQ(t->on, "all_other_primitives__from_upper_layer", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT(t->actions_len == 0, "actions count");
+  return 0;
+}
+
+static int test_t26_all_other_primitives__from_lower_layer(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t26_all_other_primitives__from_lower_layer") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t26_all_other_primitives__from_lower_layer not found");
+  ASSERT_STREQ(t->on, "all_other_primitives__from_lower_layer", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT(t->actions_len == 0, "actions count");
+  return 0;
+}
+
 int main(void) {
   int rc = 0;
   rc |= test_source_figure();
@@ -2488,18 +2581,20 @@ int main(void) {
   rc |= test_t16_ui_received_yes();
   rc |= test_t16_ui_received_no();
   rc |= test_t17_disc_received();
-  rc |= test_t18_rr_received_no_no();
   rc |= test_t18_rr_received_no_yes_yes();
   rc |= test_t18_rr_received_no_yes_no_no();
   rc |= test_t18_rr_received_no_yes_no_yes();
+  rc |= test_t18_rr_received_no_no_yes();
+  rc |= test_t18_rr_received_no_no_no();
   rc |= test_t18_rr_received_yes_no_no();
   rc |= test_t18_rr_received_yes_no_yes();
   rc |= test_t18_rr_received_yes_yes_no();
   rc |= test_t18_rr_received_yes_yes_yes();
-  rc |= test_t19_rnr_received_no_no();
   rc |= test_t19_rnr_received_no_yes_yes();
   rc |= test_t19_rnr_received_no_yes_no_no();
   rc |= test_t19_rnr_received_no_yes_no_yes();
+  rc |= test_t19_rnr_received_no_no_yes();
+  rc |= test_t19_rnr_received_no_no_no();
   rc |= test_t19_rnr_received_yes_no_no();
   rc |= test_t19_rnr_received_yes_no_yes();
   rc |= test_t19_rnr_received_yes_yes_no();
@@ -2510,20 +2605,20 @@ int main(void) {
   rc |= test_t21_t1_expiry_yes_yes_yes();
   rc |= test_t21_t1_expiry_yes_yes_no();
   rc |= test_t21_t1_expiry_yes_no();
-  rc |= test_t22_i_received_undefined();
-  rc |= test_t22_i_received_undefined_no();
-  rc |= test_t22_i_received_undefined_yes_no();
-  rc |= test_t22_i_received_undefined_yes_yes_yes_yes();
-  rc |= test_t22_i_received_undefined_yes_yes_yes_no();
-  rc |= test_t22_i_received_undefined_yes_yes_no_yes_no_yes();
-  rc |= test_t22_i_received_undefined_yes_yes_no_yes_no_no_no();
-  rc |= test_t22_i_received_undefined_yes_yes_no_yes_no_no_yes();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_yes_yes();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_yes_no();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_no_no();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_no_yes_no_no();
-  rc |= test_t22_i_received_undefined_yes_yes_no_no_no_yes_yes();
+  rc |= test_t22_i_received_no();
+  rc |= test_t22_i_received_yes_no();
+  rc |= test_t22_i_received_yes_yes_no();
+  rc |= test_t22_i_received_yes_yes_yes_yes_yes();
+  rc |= test_t22_i_received_yes_yes_yes_yes_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_yes();
+  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_no_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_no_yes();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_yes_yes();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_yes_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_no_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_no_yes_no_yes();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_no_yes_no_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_no_no_yes_yes();
   rc |= test_t23_rej_received_no_yes_yes_yes();
   rc |= test_t23_rej_received_no_yes_yes_no();
   rc |= test_t23_rej_received_no_yes_no_yes();
@@ -2534,8 +2629,8 @@ int main(void) {
   rc |= test_t23_rej_received_no_no_no_no();
   rc |= test_t23_rej_received_yes_no_yes();
   rc |= test_t23_rej_received_yes_no_no();
-  rc |= test_t23_rej_received_yes_yes_undefined_via_start_t3();
-  rc |= test_t23_rej_received_yes_yes_undefined_via_invoke_retransmission();
+  rc |= test_t23_rej_received_yes_yes_yes();
+  rc |= test_t23_rej_received_yes_yes_no();
   rc |= test_t24_srej_received_no_yes_yes_yes();
   rc |= test_t24_srej_received_no_yes_yes_no();
   rc |= test_t24_srej_received_no_yes_no_yes();
@@ -2548,5 +2643,7 @@ int main(void) {
   rc |= test_t24_srej_received_yes_yes_yes_no();
   rc |= test_t24_srej_received_yes_yes_no_yes();
   rc |= test_t24_srej_received_yes_yes_no_no();
+  rc |= test_t25_all_other_primitives__from_upper_layer();
+  rc |= test_t26_all_other_primitives__from_lower_layer();
   return rc;
 }
