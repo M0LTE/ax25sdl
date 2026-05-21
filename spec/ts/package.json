@@ -1,16 +1,16 @@
 {
   "name": "ax25sdl",
   "version": "0.2.1",
-  "description": "AX.25 v2.2 SDL specification as TypeScript data structures, generated from the canonical SDL figure transcriptions in M0LTE/packet.net.",
+  "description": "AX.25 v2.2 SDL specification as TypeScript data structures, generated from the canonical SDL figure transcriptions in M0LTE/ax25sdl.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/M0LTE/packet.net.git",
+    "url": "https://github.com/M0LTE/ax25sdl.git",
     "directory": "spec/ts"
   },
   "homepage": "https://github.com/M0LTE/ax25sdl/tree/main/spec/ts",
   "bugs": {
-    "url": "https://github.com/M0LTE/packet.net/issues"
+    "url": "https://github.com/M0LTE/ax25sdl/issues"
   },
   "type": "module",
   "main": "dist/ax25sdl/index.js",
