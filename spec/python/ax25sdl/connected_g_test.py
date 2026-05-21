@@ -1015,15 +1015,15 @@ def test_t25_rej_received_yes() -> None:
     assert t.actions[7].kind == ActionKind.SUBROUTINE
 
 
-def test_t26_i_received_no_no_no() -> None:
+def test_t26_i_received_yes_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2"
+    assert t.guard == "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (O)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -1033,15 +1033,15 @@ def test_t26_i_received_no_no_no() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_no_yes() -> None:
+def test_t26_i_received_yes_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_no_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_no_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_no_yes not found"
+    assert t is not None, "transition t26_i_received_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2"
+    assert t.guard == "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "DL-ERROR Indication (O)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -1051,43 +1051,43 @@ def test_t26_i_received_no_no_yes() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_no_no() -> None:
+def test_t26_i_received_yes_yes_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingConnection"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "N(r) Error Recovery"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
 
 
-def test_t26_i_received_no_yes_no_yes() -> None:
+def test_t26_i_received_yes_yes_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_no_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_no_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_no_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "AwaitingV22Connection"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "N(r) Error Recovery"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
 
 
-def test_t26_i_received_no_yes_yes_no_yes_no_no_no() -> None:
+def test_t26_i_received_yes_yes_yes_no_yes_no_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
     assert len(t.actions) == 7
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1105,15 +1105,15 @@ def test_t26_i_received_no_yes_yes_no_yes_no_no_no() -> None:
     assert t.actions[6].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_yes_no_no_yes() -> None:
+def test_t26_i_received_yes_yes_yes_no_yes_no_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_no_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_no_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
     assert len(t.actions) == 5
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1127,15 +1127,15 @@ def test_t26_i_received_no_yes_yes_no_yes_no_no_yes() -> None:
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t26_i_received_no_yes_yes_no_yes_no_yes() -> None:
+def test_t26_i_received_yes_yes_yes_no_yes_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_yes_no_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_yes_no_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
     assert len(t.actions) == 9
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1157,15 +1157,15 @@ def test_t26_i_received_no_yes_yes_no_yes_no_yes() -> None:
     assert t.actions[8].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_no_yes_yes() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_yes_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_yes_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_yes_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_yes_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1181,15 +1181,15 @@ def test_t26_i_received_no_yes_yes_no_no_yes_yes() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_no_yes_no() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_yes_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_yes_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_yes_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_yes_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_yes_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1197,15 +1197,15 @@ def test_t26_i_received_no_yes_yes_no_no_yes_no() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_no_no_no() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled"
     assert len(t.actions) == 7
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1223,15 +1223,15 @@ def test_t26_i_received_no_yes_yes_no_no_no_no() -> None:
     assert t.actions[6].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_no_no_yes_yes() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_no_yes_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_no_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1247,15 +1247,15 @@ def test_t26_i_received_no_yes_yes_no_no_no_yes_yes() -> None:
     assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t26_i_received_no_yes_yes_no_no_no_yes_no_yes() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_no_yes_no_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1275,15 +1275,15 @@ def test_t26_i_received_no_yes_yes_no_no_no_yes_no_yes() -> None:
     assert t.actions[7].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_no_no_no_yes_no_no() -> None:
+def test_t26_i_received_yes_yes_yes_no_no_no_yes_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_no_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1299,15 +1299,15 @@ def test_t26_i_received_no_yes_yes_no_no_no_yes_no_no() -> None:
     assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t26_i_received_no_yes_yes_yes_yes() -> None:
+def test_t26_i_received_yes_yes_yes_yes_yes() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_yes_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_yes_yes"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_yes_yes not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1323,15 +1323,15 @@ def test_t26_i_received_no_yes_yes_yes_yes() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_no_yes_yes_yes_no() -> None:
+def test_t26_i_received_yes_yes_yes_yes_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no_yes_yes_yes_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_yes_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_no_yes_yes_yes_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_yes_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1339,15 +1339,15 @@ def test_t26_i_received_no_yes_yes_yes_no() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
 
 
-def test_t26_i_received_yes() -> None:
+def test_t26_i_received_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_yes not found"
+    assert t is not None, "transition t26_i_received_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "command"
+    assert t.guard == "not command"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "DL-ERROR Indication (O)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER

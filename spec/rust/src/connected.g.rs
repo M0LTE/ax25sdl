@@ -817,10 +817,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_no_no",
+            id: "t26_i_received_yes_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
+            guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -832,10 +832,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_no_yes",
+            id: "t26_i_received_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
+            guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
@@ -847,10 +847,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_no_no",
+            id: "t26_i_received_yes_yes_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
             actions: &[
                 ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
             ],
@@ -860,10 +860,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_no_yes",
+            id: "t26_i_received_yes_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
             actions: &[
                 ActionStep { verb: "N(r) Error Recovery", kind: ActionKind::Subroutine },
             ],
@@ -873,10 +873,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_yes_no_no_no",
+            id: "t26_i_received_yes_yes_yes_no_yes_no_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -892,10 +892,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_yes_no_no_yes",
+            id: "t26_i_received_yes_yes_yes_no_yes_no_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -909,10 +909,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_yes_no_yes",
+            id: "t26_i_received_yes_yes_yes_no_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
@@ -930,10 +930,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_yes_yes",
+            id: "t26_i_received_yes_yes_yes_no_no_yes_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -948,10 +948,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_yes_no",
+            id: "t26_i_received_yes_yes_yes_no_no_yes_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -962,10 +962,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_no_no",
+            id: "t26_i_received_yes_yes_yes_no_no_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -981,10 +981,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_no_yes_yes",
+            id: "t26_i_received_yes_yes_yes_no_no_no_yes_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -999,10 +999,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_no_yes_no_yes",
+            id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1019,10 +1019,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_no_no_no_yes_no_no",
+            id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
@@ -1037,10 +1037,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_yes_yes",
+            id: "t26_i_received_yes_yes_yes_yes_yes",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -1055,10 +1055,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_no_yes_yes_yes_no",
+            id: "t26_i_received_yes_yes_yes_yes_no",
             from: "Connected",
             on: "I_received",
-            guard: "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
+            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
             actions: &[
                 ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
@@ -1069,10 +1069,10 @@ pub static DATA_LINK_CONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_i_received_yes",
+            id: "t26_i_received_no",
             from: "Connected",
             on: "I_received",
-            guard: "command",
+            guard: "not command",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Discard I Frame", kind: ActionKind::Processing },
@@ -2161,15 +2161,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_no_no() {
+    fn t26_i_received_yes_no_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_no_no")
-            .expect("transition t26_i_received_no_no_no not found");
+            .find(|x| x.id == "t26_i_received_yes_no_no")
+            .expect("transition t26_i_received_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2");
+        assert_eq!(tx.guard, "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2180,15 +2180,18 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_no_yes() {
+    fn t26_i_received_yes_no_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_no_yes")
-            .expect("transition t26_i_received_no_no_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_no_yes")
+            .expect("transition t26_i_received_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2");
+        assert_eq!(
+            tx.guard,
+            "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2"
+        );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2199,45 +2202,45 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_no_no() {
+    fn t26_i_received_yes_yes_no_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_no_no")
-            .expect("transition t26_i_received_no_yes_no_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_no_no")
+            .expect("transition t26_i_received_yes_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Error Recovery");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
     #[test]
-    fn t26_i_received_no_yes_no_yes() {
+    fn t26_i_received_yes_yes_no_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_no_yes")
-            .expect("transition t26_i_received_no_yes_no_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_no_yes")
+            .expect("transition t26_i_received_yes_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "N(r) Error Recovery");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_yes_no_no_no() {
+    fn t26_i_received_yes_yes_yes_no_yes_no_no_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_yes_no_no_no")
-            .expect("transition t26_i_received_no_yes_yes_no_yes_no_no_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_no")
+            .expect("transition t26_i_received_yes_yes_yes_no_yes_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2256,15 +2259,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_yes_no_no_yes() {
+    fn t26_i_received_yes_yes_yes_no_yes_no_no_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_yes_no_no_yes")
-            .expect("transition t26_i_received_no_yes_yes_no_yes_no_no_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_yes")
+            .expect("transition t26_i_received_yes_yes_yes_no_yes_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending");
         assert_eq!(tx.actions.len(), 5);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2279,15 +2282,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_yes_no_yes() {
+    fn t26_i_received_yes_yes_yes_no_yes_no_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_yes_no_yes")
-            .expect("transition t26_i_received_no_yes_yes_no_yes_no_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_yes")
+            .expect("transition t26_i_received_yes_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1");
         assert_eq!(tx.actions.len(), 9);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2310,15 +2313,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_yes_yes() {
+    fn t26_i_received_yes_yes_yes_no_no_yes_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_yes_yes")
-            .expect("transition t26_i_received_no_yes_yes_no_no_yes_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_yes_yes")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2335,15 +2338,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_yes_no() {
+    fn t26_i_received_yes_yes_yes_no_no_yes_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_yes_no")
-            .expect("transition t26_i_received_no_yes_yes_no_no_yes_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_yes_no")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2352,15 +2355,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_no_no() {
+    fn t26_i_received_yes_yes_yes_no_no_no_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_no_no")
-            .expect("transition t26_i_received_no_yes_yes_no_no_no_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_no")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2379,15 +2382,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_no_yes_yes() {
+    fn t26_i_received_yes_yes_yes_no_no_no_yes_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_no_yes_yes")
-            .expect("transition t26_i_received_no_yes_yes_no_no_no_yes_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_yes")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2404,15 +2407,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_no_yes_no_yes() {
+    fn t26_i_received_yes_yes_yes_no_no_no_yes_no_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_yes")
-            .expect("transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2433,15 +2436,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_no_no_no_yes_no_no() {
+    fn t26_i_received_yes_yes_yes_no_no_no_yes_no_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_no_no_no_yes_no_no")
-            .expect("transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_no")
+            .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2458,15 +2461,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_yes_yes() {
+    fn t26_i_received_yes_yes_yes_yes_yes() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_yes_yes")
-            .expect("transition t26_i_received_no_yes_yes_yes_yes not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_yes_yes")
+            .expect("transition t26_i_received_yes_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2483,15 +2486,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_no_yes_yes_yes_no() {
+    fn t26_i_received_yes_yes_yes_yes_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_no_yes_yes_yes_no")
-            .expect("transition t26_i_received_no_yes_yes_yes_no not found");
+            .find(|x| x.id == "t26_i_received_yes_yes_yes_yes_no")
+            .expect("transition t26_i_received_yes_yes_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
@@ -2500,15 +2503,15 @@ mod tests {
     }
 
     #[test]
-    fn t26_i_received_yes() {
+    fn t26_i_received_no() {
         let tx = DATA_LINK_CONNECTED
             .transitions
             .iter()
-            .find(|x| x.id == "t26_i_received_yes")
-            .expect("transition t26_i_received_yes not found");
+            .find(|x| x.id == "t26_i_received_no")
+            .expect("transition t26_i_received_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "command");
+        assert_eq!(tx.guard, "not command");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);

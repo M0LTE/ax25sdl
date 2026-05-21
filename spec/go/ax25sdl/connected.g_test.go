@@ -2473,16 +2473,16 @@ func TestDataLinkConnected_t25_rej_received_yes(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_no_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_no_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_no_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_no_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_no_no not found")
+		t.Fatalf("transition t26_i_received_yes_no_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2490,8 +2490,8 @@ func TestDataLinkConnected_t26_i_received_no_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2")
+	if tx.Guard != "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2516,16 +2516,16 @@ func TestDataLinkConnected_t26_i_received_no_no_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_no_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_no_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_no_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_no_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_no_yes not found")
+		t.Fatalf("transition t26_i_received_yes_no_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2533,8 +2533,8 @@ func TestDataLinkConnected_t26_i_received_no_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2")
+	if tx.Guard != "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2")
 	}
 	if got := len(tx.Actions); got != 3 {
 		t.Fatalf("len(Actions) = %d, want 3", got)
@@ -2559,16 +2559,16 @@ func TestDataLinkConnected_t26_i_received_no_no_yes(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_no_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_no_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_no_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_no_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_no_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_no_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2576,8 +2576,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_no(t *testing.T) {
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -2590,16 +2590,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_no_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_no_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_no_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_no_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_no_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_no_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2607,8 +2607,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_yes(t *testing.T) {
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2")
 	}
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
@@ -2621,16 +2621,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_no_yes(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_no_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_yes_no_no_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_yes_no_no_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_yes_no_no_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_yes_no_no_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2638,8 +2638,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_no(t *testing.
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending")
 	}
 	if got := len(tx.Actions); got != 7 {
 		t.Fatalf("len(Actions) = %d, want 7", got)
@@ -2688,16 +2688,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_no(t *testing.
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_no_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_yes_no_no_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_yes_no_no_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_yes_no_no_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_yes_no_no_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2705,8 +2705,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_yes(t *testing
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending")
 	}
 	if got := len(tx.Actions); got != 5 {
 		t.Fatalf("len(Actions) = %d, want 5", got)
@@ -2743,16 +2743,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_no_yes(t *testing
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_yes_no_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_yes_no_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_yes_no_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_yes_no_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2760,8 +2760,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_yes(t *testing.T)
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 9 {
 		t.Fatalf("len(Actions) = %d, want 9", got)
@@ -2822,16 +2822,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_yes_no_yes(t *testing.T)
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_yes_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_yes_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_yes_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_yes_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_yes_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2839,8 +2839,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_yes(t *testing.T)
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -2883,16 +2883,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_yes(t *testing.T)
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_yes_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_yes_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_yes_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_yes_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_yes_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2900,8 +2900,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_no(t *testing.T) 
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -2920,16 +2920,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_yes_no(t *testing.T) 
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_no_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_no_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_no_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_no_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_no_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -2937,8 +2937,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_no(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled")
 	}
 	if got := len(tx.Actions); got != 7 {
 		t.Fatalf("len(Actions) = %d, want 7", got)
@@ -2987,16 +2987,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_no_yes_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_no_yes_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_no_yes_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_no_yes_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_no_yes_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3004,8 +3004,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_yes(t *testing
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3048,16 +3048,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_yes(t *testing
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_no_yes_no_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_no_yes_no_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_no_yes_no_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3065,8 +3065,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes(t *test
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 8 {
 		t.Fatalf("len(Actions) = %d, want 8", got)
@@ -3121,16 +3121,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes(t *test
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_no_no_yes_no_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_no_no_no_yes_no_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_no_no_no_yes_no_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_no_no_no_yes_no_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3138,8 +3138,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_no(t *testi
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3182,16 +3182,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_no_no_no_yes_no_no(t *testi
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_yes_yes(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_yes_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_yes_yes" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_yes_yes not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_yes_yes not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3199,8 +3199,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1")
 	}
 	if got := len(tx.Actions); got != 6 {
 		t.Fatalf("len(Actions) = %d, want 6", got)
@@ -3243,16 +3243,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_yes(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_no(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_yes_yes_yes_yes_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no_yes_yes_yes_no" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes_yes_yes_yes_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_no_yes_yes_yes_no not found")
+		t.Fatalf("transition t26_i_received_yes_yes_yes_yes_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3260,8 +3260,8 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_no(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "not command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1")
+	if tx.Guard != "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
@@ -3280,16 +3280,16 @@ func TestDataLinkConnected_t26_i_received_no_yes_yes_yes_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t26_i_received_yes(t *testing.T) {
+func TestDataLinkConnected_t26_i_received_no(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t26_i_received_yes" {
+		if DataLinkConnected.Transitions[i].ID == "t26_i_received_no" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_i_received_yes not found")
+		t.Fatalf("transition t26_i_received_no not found")
 	}
 	if tx.On != "I_received" {
 		t.Errorf("On = %q, want I_received", tx.On)
@@ -3297,8 +3297,8 @@ func TestDataLinkConnected_t26_i_received_yes(t *testing.T) {
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)
 	}
-	if tx.Guard != "command" {
-		t.Errorf("Guard = %q, want %q", tx.Guard, "command")
+	if tx.Guard != "not command" {
+		t.Errorf("Guard = %q, want %q", tx.Guard, "not command")
 	}
 	if got := len(tx.Actions); got != 2 {
 		t.Fatalf("len(Actions) = %d, want 2", got)
