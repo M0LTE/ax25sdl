@@ -378,14 +378,7 @@ static const ActionStep data_link_connected_t25_rej_received_yes_actions[] = {
     {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
-static const ActionStep data_link_connected_t26_i_received_no_no_no_actions[] =
-    {
-        {.verb = "DL-ERROR Indication (O)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "Establish_Data_Link", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "Clear Layer 3 Initiated", .kind = AX25SDL_KIND_PROCESSING},
-};
-
-static const ActionStep data_link_connected_t26_i_received_no_no_yes_actions[] =
+static const ActionStep data_link_connected_t26_i_received_yes_no_no_actions[] =
     {
         {.verb = "DL-ERROR Indication (O)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Establish_Data_Link", .kind = AX25SDL_KIND_SUBROUTINE},
@@ -393,17 +386,24 @@ static const ActionStep data_link_connected_t26_i_received_no_no_yes_actions[] =
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_no_no_actions[] = {
+    data_link_connected_t26_i_received_yes_no_yes_actions[] = {
+        {.verb = "DL-ERROR Indication (O)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "Establish_Data_Link", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Clear Layer 3 Initiated", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const ActionStep
+    data_link_connected_t26_i_received_yes_yes_no_no_actions[] = {
         {.verb = "N(r) Error Recovery", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_no_yes_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_no_yes_actions[] = {
         {.verb = "N(r) Error Recovery", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_yes_no_no_no_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_no_no_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
@@ -415,17 +415,19 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_yes_no_no_yes_actions[] = {
-        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Decrement Sreject Exception if > 0",
-         .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+    data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_no_yes_actions[] =
+        {
+            {.verb = "Check_I_Frame_Acknowledged",
+             .kind = AX25SDL_KIND_SUBROUTINE},
+            {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Decrement Sreject Exception if > 0",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_yes_no_yes_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_yes_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
@@ -439,7 +441,7 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_yes_yes_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_yes_yes_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Discard Contents of I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
@@ -450,14 +452,14 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_yes_no_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_yes_no_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Discard Contents of I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_no_no_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_no_no_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Discard Contents of I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
@@ -469,18 +471,21 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_yes_actions[] = {
-        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "Save Contents of I Frame", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "N(r) := N(s)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "F := 0", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Increment Sreject Exception",
-         .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "SREJ", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_yes_actions[] =
+        {
+            {.verb = "Check_I_Frame_Acknowledged",
+             .kind = AX25SDL_KIND_SUBROUTINE},
+            {.verb = "Save Contents of I Frame",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "N(r) := N(s)", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "F := 0", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Increment Sreject Exception",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "SREJ", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes_actions
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_no_yes_actions
         [] = {
             {.verb = "Check_I_Frame_Acknowledged",
              .kind = AX25SDL_KIND_SUBROUTINE},
@@ -497,8 +502,8 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_no_no_actions[] =
-        {
+    data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_no_no_actions
+        [] = {
             {.verb = "Check_I_Frame_Acknowledged",
              .kind = AX25SDL_KIND_SUBROUTINE},
             {.verb = "Save Contents of I Frame",
@@ -511,7 +516,7 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_yes_yes_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_yes_yes_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Discard Contents of I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
@@ -522,13 +527,13 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_connected_t26_i_received_no_yes_yes_yes_no_actions[] = {
+    data_link_connected_t26_i_received_yes_yes_yes_yes_no_actions[] = {
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Discard Contents of I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
 };
 
-static const ActionStep data_link_connected_t26_i_received_yes_actions[] = {
+static const ActionStep data_link_connected_t26_i_received_no_actions[] = {
     {.verb = "DL-ERROR Indication (O)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
     {.verb = "Discard I Frame", .kind = AX25SDL_KIND_PROCESSING},
 };
@@ -1243,13 +1248,13 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_no_no",
+        .id = "t26_i_received_yes_no_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and not "
+        .guard = "command and not "
                  "info_field_length_le_N1_and_content_is_octet_aligned and not "
                  "version_2_2",
-        .actions = data_link_connected_t26_i_received_no_no_no_actions,
+        .actions = data_link_connected_t26_i_received_yes_no_no_actions,
         .actions_len = 3,
         .next = "AwaitingConnection",
         .notes = "",
@@ -1259,13 +1264,13 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_no_yes",
+        .id = "t26_i_received_yes_no_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and not "
+        .guard = "command and not "
                  "info_field_length_le_N1_and_content_is_octet_aligned and "
                  "version_2_2",
-        .actions = data_link_connected_t26_i_received_no_no_yes_actions,
+        .actions = data_link_connected_t26_i_received_yes_no_yes_actions,
         .actions_len = 3,
         .next = "AwaitingV22Connection",
         .notes = "",
@@ -1275,13 +1280,13 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_no_no",
+        .id = "t26_i_received_yes_yes_no_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and not "
-                 "va_le_nr_le_vs and not version_2_2",
-        .actions = data_link_connected_t26_i_received_no_yes_no_no_actions,
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and not va_le_nr_le_vs and not version_2_2",
+        .actions = data_link_connected_t26_i_received_yes_yes_no_no_actions,
         .actions_len = 1,
         .next = "AwaitingConnection",
         .notes = "",
@@ -1291,13 +1296,13 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_no_yes",
+        .id = "t26_i_received_yes_yes_no_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and not "
-                 "va_le_nr_le_vs and version_2_2",
-        .actions = data_link_connected_t26_i_received_no_yes_no_yes_actions,
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and not va_le_nr_le_vs and version_2_2",
+        .actions = data_link_connected_t26_i_received_yes_yes_no_yes_actions,
         .actions_len = 1,
         .next = "AwaitingV22Connection",
         .notes = "",
@@ -1307,15 +1312,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_yes_no_no_no",
+        .id = "t26_i_received_yes_yes_yes_no_yes_no_no_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and "
-                 "not P_eq_1 and not ack_pending",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not "
+            "P_eq_1 and not ack_pending",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_yes_no_no_no_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_no_no_actions,
         .actions_len = 7,
         .next = "Connected",
         .notes = "",
@@ -1325,15 +1330,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_yes_no_no_yes",
+        .id = "t26_i_received_yes_yes_yes_no_yes_no_no_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and "
-                 "not P_eq_1 and ack_pending",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not "
+            "P_eq_1 and ack_pending",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_yes_no_no_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_no_yes_actions,
         .actions_len = 5,
         .next = "Connected",
         .notes = "",
@@ -1343,15 +1348,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_yes_no_yes",
+        .id = "t26_i_received_yes_yes_yes_no_yes_no_yes",
         .from = "Connected",
         .on = "I_received",
         .guard =
-            "not command and "
-            "info_field_length_le_N1_and_content_is_octet_aligned and "
-            "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and "
+            "P_eq_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_yes_no_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_yes_no_yes_actions,
         .actions_len = 9,
         .next = "Connected",
         .notes = "",
@@ -1361,15 +1366,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_yes_yes",
+        .id = "t26_i_received_yes_yes_yes_no_no_yes_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr "
-                 "and reject_exception and P_eq_1",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "reject_exception and P_eq_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_yes_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_yes_yes_actions,
         .actions_len = 6,
         .next = "Connected",
         .notes = "",
@@ -1379,15 +1384,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_yes_no",
+        .id = "t26_i_received_yes_yes_yes_no_no_yes_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr "
-                 "and reject_exception and not P_eq_1",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "reject_exception and not P_eq_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_yes_no_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_yes_no_actions,
         .actions_len = 2,
         .next = "Connected",
         .notes = "",
@@ -1397,15 +1402,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_no_no",
+        .id = "t26_i_received_yes_yes_yes_no_no_no_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr "
-                 "and not reject_exception and not SREJ_enabled",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "not reject_exception and not SREJ_enabled",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_no_no_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_no_no_actions,
         .actions_len = 7,
         .next = "Connected",
         .notes = "",
@@ -1415,16 +1420,15 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_no_yes_yes",
+        .id = "t26_i_received_yes_yes_yes_no_no_no_yes_yes",
         .from = "Connected",
         .on = "I_received",
         .guard =
-            "not command and "
-            "info_field_length_le_N1_and_content_is_octet_aligned and "
-            "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
-            "reject_exception and SREJ_enabled and sreject_exception_gt_0",
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "not reject_exception and SREJ_enabled and sreject_exception_gt_0",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_yes_actions,
         .actions_len = 6,
         .next = "Connected",
         .notes = "",
@@ -1434,16 +1438,16 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_no_yes_no_yes",
+        .id = "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr "
-                 "and not reject_exception and SREJ_enabled and not "
-                 "sreject_exception_gt_0 and ns_gt_vr_plus_1",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "not reject_exception and SREJ_enabled and not "
+            "sreject_exception_gt_0 and ns_gt_vr_plus_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_no_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_no_yes_actions,
         .actions_len = 8,
         .next = "Connected",
         .notes = "",
@@ -1453,16 +1457,16 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_no_no_no_yes_no_no",
+        .id = "t26_i_received_yes_yes_yes_no_no_no_yes_no_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr "
-                 "and not reject_exception and SREJ_enabled and not "
-                 "sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
+            "not reject_exception and SREJ_enabled and not "
+            "sreject_exception_gt_0 and not ns_gt_vr_plus_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_no_no_no_yes_no_no_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_no_no_no_yes_no_no_actions,
         .actions_len = 6,
         .next = "Connected",
         .notes = "",
@@ -1472,14 +1476,14 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_yes_yes",
+        .id = "t26_i_received_yes_yes_yes_yes_yes",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and own_receiver_busy and P_eq_1",
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
         .actions =
-            data_link_connected_t26_i_received_no_yes_yes_yes_yes_actions,
+            data_link_connected_t26_i_received_yes_yes_yes_yes_yes_actions,
         .actions_len = 6,
         .next = "Connected",
         .notes = "",
@@ -1489,13 +1493,14 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_no_yes_yes_yes_no",
+        .id = "t26_i_received_yes_yes_yes_yes_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "not command and "
-                 "info_field_length_le_N1_and_content_is_octet_aligned and "
-                 "va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
-        .actions = data_link_connected_t26_i_received_no_yes_yes_yes_no_actions,
+        .guard =
+            "command and info_field_length_le_N1_and_content_is_octet_aligned "
+            "and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
+        .actions =
+            data_link_connected_t26_i_received_yes_yes_yes_yes_no_actions,
         .actions_len = 2,
         .next = "Connected",
         .notes = "",
@@ -1505,11 +1510,11 @@ static const TransitionSpec data_link_connected_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t26_i_received_yes",
+        .id = "t26_i_received_no",
         .from = "Connected",
         .on = "I_received",
-        .guard = "command",
-        .actions = data_link_connected_t26_i_received_yes_actions,
+        .guard = "not command",
+        .actions = data_link_connected_t26_i_received_no_actions,
         .actions_len = 2,
         .next = "Connected",
         .notes = "",
