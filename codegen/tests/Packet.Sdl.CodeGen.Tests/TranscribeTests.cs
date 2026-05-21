@@ -259,6 +259,66 @@ public class TranscribeTests
         EventResolver.ShapeClassToActionKind(shapeClass).Should().Be(expectedKind);
     }
 
+    // ─── Walker strictness (#29) ──────────────────────────────────────
+
+    [Theory]
+    [InlineData("Yes", "")]
+    [InlineData("",    "No")]
+    [InlineData("",    "")]
+    public void Walker_throws_when_a_two_out_edge_decision_is_missing_a_branch_label(
+        string label0, string label1)
+    {
+        // Minimal graph: entry State → trigger → decision diamond with two
+        // out-edges → two terminal states. The decision out-edges carry the
+        // labels supplied by the test parameters.
+        var nodes = new List<GraphmlNode>
+        {
+            new("n0", "State",            "TestState",        0, 0),
+            new("n1", "Signal reception from upper layer", "DL-CONNECT Request", 1, 0),
+            new("n2", "Test or decision", "Question?",        2, 0),
+            new("n3", "State",            "TestState",        3, -1),
+            new("n4", "State",            "OtherState",       3,  1),
+        };
+        var edges = new List<GraphmlEdge>
+        {
+            new("e0", "n0", "n1", ""),
+            new("e1", "n1", "n2", ""),
+            new("e2", "n2", "n3", label0),
+            new("e3", "n2", "n4", label1),
+        };
+        var graph = new GraphmlGraph("DataLink_TestState.graphml", nodes, edges);
+
+        var act = () => Walker.Walk(graph, "DataLink_TestState.graphml");
+
+        act.Should().Throw<InvalidDataException>()
+            .WithMessage("*no branch label*every out-edge of a Test-or-decision must be labelled*");
+    }
+
+    [Fact]
+    public void Walker_accepts_a_two_out_edge_decision_when_both_branches_are_labelled()
+    {
+        var nodes = new List<GraphmlNode>
+        {
+            new("n0", "State",            "TestState",        0, 0),
+            new("n1", "Signal reception from upper layer", "DL-CONNECT Request", 1, 0),
+            new("n2", "Test or decision", "Question?",        2, 0),
+            new("n3", "State",            "TestState",        3, -1),
+            new("n4", "State",            "OtherState",       3,  1),
+        };
+        var edges = new List<GraphmlEdge>
+        {
+            new("e0", "n0", "n1", ""),
+            new("e1", "n1", "n2", ""),
+            new("e2", "n2", "n3", "Yes"),
+            new("e3", "n2", "n4", "No"),
+        };
+        var graph = new GraphmlGraph("DataLink_TestState.graphml", nodes, edges);
+
+        var act = () => Walker.Walk(graph, "DataLink_TestState.graphml");
+
+        act.Should().NotThrow();
+    }
+
     // ─── Locator helpers ──────────────────────────────────────────────
 
     private static string LocateRepoGraphml(string filename)
