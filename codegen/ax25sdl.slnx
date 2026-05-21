@@ -17,5 +17,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Packet.Sdl.CodeGen.Tests/Packet.Sdl.CodeGen.Tests.csproj" />
+    <Project Path="../spec/csharp/tests/Packet.Ax25.Sdl.Conformance.Tests.csproj" />
   </Folder>
 </Solution>
