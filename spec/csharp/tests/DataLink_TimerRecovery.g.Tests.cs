@@ -1529,18 +1529,18 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[8].Kind.Should().Be(ActionKind.Subroutine);
     }
 
-    [Fact] public void t25_all_other_primitives__from_upper_layer()
+    [Fact] public void t25_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t25_all_other_primitives__from_upper_layer");
-        t.On.Should().Be("all_other_primitives__from_upper_layer");
+        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t25_all_other_primitives__from_lower_layer");
+        t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t26_all_other_primitives__from_lower_layer()
+    [Fact] public void t26_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t26_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t26_all_other_primitives__from_upper_layer");
+        t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(0);
     }

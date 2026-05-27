@@ -199,19 +199,19 @@ func TestDataLinkAwaitingRelease_t03_ua_received_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t04_all_other_primitives__from_upper_layer(t *testing.T) {
+func TestDataLinkAwaitingRelease_t04_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t04_all_other_primitives__from_upper_layer" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t04_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t04_all_other_primitives__from_upper_layer not found")
+		t.Fatalf("transition t04_all_other_primitives__from_lower_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_upper_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
+	if tx.On != "all_other_primitives__from_lower_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
 	}
 	if tx.Next != "AwaitingRelease" {
 		t.Errorf("Next = %q, want AwaitingRelease", tx.Next)
@@ -249,19 +249,19 @@ func TestDataLinkAwaitingRelease_t05_dl_unit_data_request(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingRelease_t06_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkAwaitingRelease_t06_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingRelease.Transitions {
-		if DataLinkAwaitingRelease.Transitions[i].ID == "t06_all_other_primitives__from_lower_layer" {
+		if DataLinkAwaitingRelease.Transitions[i].ID == "t06_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkAwaitingRelease.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "AwaitingRelease" {
 		t.Errorf("Next = %q, want AwaitingRelease", tx.Next)

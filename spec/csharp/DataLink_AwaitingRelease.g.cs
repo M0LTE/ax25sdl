@@ -79,9 +79,9 @@ public static class DataLink_AwaitingRelease
             UndefinedBranches: null,
             OnLabel: "UA"),
         new TransitionSpec(
-            Id: "t04_all_other_primitives__from_upper_layer",
+            Id: "t04_all_other_primitives__from_lower_layer",
             From: "AwaitingRelease",
-            On: "all_other_primitives__from_upper_layer",
+            On: "all_other_primitives__from_lower_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",
@@ -103,9 +103,9 @@ public static class DataLink_AwaitingRelease
             UndefinedBranches: null,
             OnLabel: "DL-UNIT-DATA Request"),
         new TransitionSpec(
-            Id: "t06_all_other_primitives__from_lower_layer",
+            Id: "t06_all_other_primitives__from_upper_layer",
             From: "AwaitingRelease",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",

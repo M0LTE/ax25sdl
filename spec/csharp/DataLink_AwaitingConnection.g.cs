@@ -139,9 +139,9 @@ public static class DataLink_AwaitingConnection
             UndefinedBranches: null,
             OnLabel: "Timer T1 Expiry"),
         new TransitionSpec(
-            Id: "t06_all_other_primitives__from_upper_layer",
+            Id: "t06_all_other_primitives__from_lower_layer",
             From: "AwaitingConnection",
-            On: "all_other_primitives__from_upper_layer",
+            On: "all_other_primitives__from_lower_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingConnection",
@@ -223,9 +223,9 @@ public static class DataLink_AwaitingConnection
             UndefinedBranches: null,
             OnLabel: "I Frame Pops Off Queue"),
         new TransitionSpec(
-            Id: "t11_all_other_primitives__from_lower_layer",
+            Id: "t11_all_other_primitives__from_upper_layer",
             From: "AwaitingConnection",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingConnection",

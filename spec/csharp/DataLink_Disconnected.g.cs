@@ -55,9 +55,9 @@ public static class DataLink_Disconnected
             UndefinedBranches: null,
             OnLabel: "DL-CONNECT Request"),
         new TransitionSpec(
-            Id: "t04_all_other_primitives__from_lower_layer",
+            Id: "t04_all_other_primitives__from_upper_layer",
             From: "Disconnected",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "Disconnected",
@@ -79,9 +79,9 @@ public static class DataLink_Disconnected
             UndefinedBranches: null,
             OnLabel: "All Other Commands"),
         new TransitionSpec(
-            Id: "t06_all_other_primitives__from_upper_layer",
+            Id: "t06_all_other_primitives__from_lower_layer",
             From: "Disconnected",
-            On: "all_other_primitives__from_upper_layer",
+            On: "all_other_primitives__from_lower_layer",
             Guard: null,
             Actions: new ActionStep[] { new ActionStep("Discard Primitive", ActionKind.Processing) },
             Next: "Disconnected",

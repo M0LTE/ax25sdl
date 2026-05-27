@@ -119,19 +119,19 @@ func TestDataLinkDisconnected_t03_dl_connect_request(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t04_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkDisconnected_t04_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t04_all_other_primitives__from_lower_layer" {
+		if DataLinkDisconnected.Transitions[i].ID == "t04_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t04_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t04_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "Disconnected" {
 		t.Errorf("Next = %q, want Disconnected", tx.Next)
@@ -175,19 +175,19 @@ func TestDataLinkDisconnected_t05_all_other_commands(t *testing.T) {
 	}
 }
 
-func TestDataLinkDisconnected_t06_all_other_primitives__from_upper_layer(t *testing.T) {
+func TestDataLinkDisconnected_t06_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkDisconnected.Transitions {
-		if DataLinkDisconnected.Transitions[i].ID == "t06_all_other_primitives__from_upper_layer" {
+		if DataLinkDisconnected.Transitions[i].ID == "t06_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkDisconnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives__from_upper_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_lower_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_upper_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
+	if tx.On != "all_other_primitives__from_lower_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
 	}
 	if tx.Next != "Disconnected" {
 		t.Errorf("Next = %q, want Disconnected", tx.Next)

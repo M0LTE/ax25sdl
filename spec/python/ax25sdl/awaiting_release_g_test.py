@@ -92,13 +92,13 @@ def test_t03_ua_received_no() -> None:
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
-def test_t04_all_other_primitives__from_upper_layer() -> None:
+def test_t04_all_other_primitives__from_lower_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t04_all_other_primitives__from_upper_layer"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t04_all_other_primitives__from_lower_layer"),
         None,
     )
-    assert t is not None, "transition t04_all_other_primitives__from_upper_layer not found"
-    assert t.on == "all_other_primitives__from_upper_layer"
+    assert t is not None, "transition t04_all_other_primitives__from_lower_layer not found"
+    assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 0
 
@@ -116,13 +116,13 @@ def test_t05_dl_unit_data_request() -> None:
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t06_all_other_primitives__from_lower_layer() -> None:
+def test_t06_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t06_all_other_primitives__from_lower_layer"),
+        (x for x in DATA_LINK_AWAITING_RELEASE.transitions if x.id == "t06_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t06_all_other_primitives__from_lower_layer not found"
-    assert t.on == "all_other_primitives__from_lower_layer"
+    assert t is not None, "transition t06_all_other_primitives__from_upper_layer not found"
+    assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "AwaitingRelease"
     assert len(t.actions) == 0
 

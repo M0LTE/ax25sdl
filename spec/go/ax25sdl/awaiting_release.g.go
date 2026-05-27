@@ -81,9 +81,9 @@ var DataLinkAwaitingRelease = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t04_all_other_primitives__from_upper_layer",
+			ID:         "t04_all_other_primitives__from_lower_layer",
 			From:       "AwaitingRelease",
-			On:         "all_other_primitives__from_upper_layer",
+			On:         "all_other_primitives__from_lower_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingRelease",
@@ -105,9 +105,9 @@ var DataLinkAwaitingRelease = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t06_all_other_primitives__from_lower_layer",
+			ID:         "t06_all_other_primitives__from_upper_layer",
 			From:       "AwaitingRelease",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingRelease",

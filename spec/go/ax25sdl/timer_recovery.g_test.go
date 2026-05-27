@@ -4380,19 +4380,19 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_no_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkTimerRecovery_t25_all_other_primitives__from_upper_layer(t *testing.T) {
+func TestDataLinkTimerRecovery_t25_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkTimerRecovery.Transitions {
-		if DataLinkTimerRecovery.Transitions[i].ID == "t25_all_other_primitives__from_upper_layer" {
+		if DataLinkTimerRecovery.Transitions[i].ID == "t25_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkTimerRecovery.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t25_all_other_primitives__from_upper_layer not found")
+		t.Fatalf("transition t25_all_other_primitives__from_lower_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_upper_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
+	if tx.On != "all_other_primitives__from_lower_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
 	}
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)
@@ -4402,19 +4402,19 @@ func TestDataLinkTimerRecovery_t25_all_other_primitives__from_upper_layer(t *tes
 	}
 }
 
-func TestDataLinkTimerRecovery_t26_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkTimerRecovery_t26_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkTimerRecovery.Transitions {
-		if DataLinkTimerRecovery.Transitions[i].ID == "t26_all_other_primitives__from_lower_layer" {
+		if DataLinkTimerRecovery.Transitions[i].ID == "t26_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkTimerRecovery.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t26_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t26_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "TimerRecovery" {
 		t.Errorf("Next = %q, want TimerRecovery", tx.Next)

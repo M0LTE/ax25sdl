@@ -61,9 +61,9 @@ DATA_LINK_DISCONNECTED = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t04_all_other_primitives__from_lower_layer",
+            id="t04_all_other_primitives__from_upper_layer",
             from_="Disconnected",
-            on="all_other_primitives__from_lower_layer",
+            on="all_other_primitives__from_upper_layer",
             guard="",
             actions=(),
             next="Disconnected",
@@ -86,9 +86,9 @@ DATA_LINK_DISCONNECTED = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t06_all_other_primitives__from_upper_layer",
+            id="t06_all_other_primitives__from_lower_layer",
             from_="Disconnected",
-            on="all_other_primitives__from_upper_layer",
+            on="all_other_primitives__from_lower_layer",
             guard="",
             actions=(
                 ActionStep(verb="Discard Primitive", kind=ActionKind.PROCESSING),

@@ -1435,9 +1435,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t25_all_other_primitives__from_upper_layer",
+            id: "t25_all_other_primitives__from_lower_layer",
             from: "TimerRecovery",
-            on: "all_other_primitives__from_upper_layer",
+            on: "all_other_primitives__from_lower_layer",
             guard: "",
             actions: &[],
             next: "TimerRecovery",
@@ -1446,9 +1446,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t26_all_other_primitives__from_lower_layer",
+            id: "t26_all_other_primitives__from_upper_layer",
             from: "TimerRecovery",
-            on: "all_other_primitives__from_lower_layer",
+            on: "all_other_primitives__from_upper_layer",
             guard: "",
             actions: &[],
             next: "TimerRecovery",
@@ -1475,9 +1475,7 @@ mod tests {
 
     #[test]
     fn t01_dl_disconnect_request() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t01_dl_disconnect_request")
             .expect("transition t01_dl_disconnect_request not found");
         assert_eq!(tx.on, "DL_DISCONNECT_request");
@@ -1497,9 +1495,7 @@ mod tests {
 
     #[test]
     fn t02_dl_data_request() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t02_dl_data_request")
             .expect("transition t02_dl_data_request not found");
         assert_eq!(tx.on, "DL_DATA_request");
@@ -1511,9 +1507,7 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_yes")
             .expect("transition t03_i_frame_pops_off_queue_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -1526,9 +1520,7 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -1541,17 +1533,12 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
-        );
+        assert_eq!(tx.guard, "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1569,17 +1556,12 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_no")
             .expect("transition t03_i_frame_pops_off_queue_no_no_no not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
-        );
+        assert_eq!(tx.guard, "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1601,9 +1583,7 @@ mod tests {
 
     #[test]
     fn t04_dl_unit_data_request() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t04_dl_unit_data_request")
             .expect("transition t04_dl_unit_data_request not found");
         assert_eq!(tx.on, "DL_UNIT_DATA_request");
@@ -1615,9 +1595,7 @@ mod tests {
 
     #[test]
     fn t05_dl_flow_off_request_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t05_dl_flow_off_request_yes")
             .expect("transition t05_dl_flow_off_request_yes not found");
         assert_eq!(tx.on, "DL_FLOW_OFF_request");
@@ -1634,9 +1612,7 @@ mod tests {
 
     #[test]
     fn t05_dl_flow_off_request_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t05_dl_flow_off_request_no")
             .expect("transition t05_dl_flow_off_request_no not found");
         assert_eq!(tx.on, "DL_FLOW_OFF_request");
@@ -1647,9 +1623,7 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_no")
             .expect("transition t06_dl_flow_on_request_yes_no not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1670,9 +1644,7 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_yes")
             .expect("transition t06_dl_flow_on_request_yes_yes not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1689,9 +1661,7 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t06_dl_flow_on_request_no")
             .expect("transition t06_dl_flow_on_request_no not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1702,9 +1672,7 @@ mod tests {
 
     #[test]
     fn t07_dl_connect_request() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t07_dl_connect_request")
             .expect("transition t07_dl_connect_request not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
@@ -1720,9 +1688,7 @@ mod tests {
 
     #[test]
     fn t08_control_field_error() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t08_control_field_error")
             .expect("transition t08_control_field_error not found");
         assert_eq!(tx.on, "control_field_error");
@@ -1740,9 +1706,7 @@ mod tests {
 
     #[test]
     fn t09_info_not_permitted_in_frame() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t09_info_not_permitted_in_frame")
             .expect("transition t09_info_not_permitted_in_frame not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -1760,9 +1724,7 @@ mod tests {
 
     #[test]
     fn t10_u_or_s_frame_length_error() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t10_u_or_s_frame_length_error")
             .expect("transition t10_u_or_s_frame_length_error not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -1780,9 +1742,7 @@ mod tests {
 
     #[test]
     fn t11_ua_received() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t11_ua_received")
             .expect("transition t11_ua_received not found");
         assert_eq!(tx.on, "UA_received");
@@ -1798,9 +1758,7 @@ mod tests {
 
     #[test]
     fn t12_dm_received() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t12_dm_received")
             .expect("transition t12_dm_received not found");
         assert_eq!(tx.on, "DM_received");
@@ -1820,9 +1778,7 @@ mod tests {
 
     #[test]
     fn t13_sabm_received_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t13_sabm_received_no")
             .expect("transition t13_sabm_received_no not found");
         assert_eq!(tx.on, "SABM_received");
@@ -1857,9 +1813,7 @@ mod tests {
 
     #[test]
     fn t13_sabm_received_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t13_sabm_received_yes")
             .expect("transition t13_sabm_received_yes not found");
         assert_eq!(tx.on, "SABM_received");
@@ -1880,9 +1834,7 @@ mod tests {
 
     #[test]
     fn t14_sabme_received_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t14_sabme_received_no")
             .expect("transition t14_sabme_received_no not found");
         assert_eq!(tx.on, "SABME_received");
@@ -1917,9 +1869,7 @@ mod tests {
 
     #[test]
     fn t14_sabme_received_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t14_sabme_received_yes")
             .expect("transition t14_sabme_received_yes not found");
         assert_eq!(tx.on, "SABME_received");
@@ -1940,9 +1890,7 @@ mod tests {
 
     #[test]
     fn t15_frmr_received() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t15_frmr_received")
             .expect("transition t15_frmr_received not found");
         assert_eq!(tx.on, "FRMR_received");
@@ -1960,9 +1908,7 @@ mod tests {
 
     #[test]
     fn t16_ui_received_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t16_ui_received_yes")
             .expect("transition t16_ui_received_yes not found");
         assert_eq!(tx.on, "UI_received");
@@ -1977,9 +1923,7 @@ mod tests {
 
     #[test]
     fn t16_ui_received_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t16_ui_received_no")
             .expect("transition t16_ui_received_no not found");
         assert_eq!(tx.on, "UI_received");
@@ -1992,9 +1936,7 @@ mod tests {
 
     #[test]
     fn t17_disc_received() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t17_disc_received")
             .expect("transition t17_disc_received not found");
         assert_eq!(tx.on, "DISC_received");
@@ -2016,17 +1958,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_no_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_no_yes_yes")
             .expect("transition t18_rr_received_no_yes_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2038,9 +1975,7 @@ mod tests {
 
     #[test]
     fn t18_rr_received_no_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_no_yes_no_no")
             .expect("transition t18_rr_received_no_yes_no_no not found");
         assert_eq!(tx.on, "RR_received");
@@ -2057,17 +1992,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_no_yes_no_yes")
             .expect("transition t18_rr_received_no_yes_no_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2079,17 +2009,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_no_no_yes")
             .expect("transition t18_rr_received_no_no_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2099,17 +2024,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_no_no_no")
             .expect("transition t18_rr_received_no_no_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2119,17 +2039,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_yes_no_no")
             .expect("transition t18_rr_received_yes_no_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2143,17 +2058,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_yes_no_yes")
             .expect("transition t18_rr_received_yes_no_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2167,17 +2077,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_yes_yes_no")
             .expect("transition t18_rr_received_yes_yes_no not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2199,17 +2104,12 @@ mod tests {
 
     #[test]
     fn t18_rr_received_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t18_rr_received_yes_yes_yes")
             .expect("transition t18_rr_received_yes_yes_yes not found");
         assert_eq!(tx.on, "RR_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2227,17 +2127,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_no_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_yes")
             .expect("transition t19_rnr_received_no_yes_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2249,9 +2144,7 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_no_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_no_no")
             .expect("transition t19_rnr_received_no_yes_no_no not found");
         assert_eq!(tx.on, "RNR_received");
@@ -2268,17 +2161,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_no_yes")
             .expect("transition t19_rnr_received_no_yes_no_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2290,17 +2178,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_no_no_yes")
             .expect("transition t19_rnr_received_no_no_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2310,17 +2193,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_no_no_no")
             .expect("transition t19_rnr_received_no_no_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2330,17 +2208,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_yes_no_no")
             .expect("transition t19_rnr_received_yes_no_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2354,17 +2227,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_yes_no_yes")
             .expect("transition t19_rnr_received_yes_no_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2378,17 +2246,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_yes_yes_no")
             .expect("transition t19_rnr_received_yes_yes_no not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2410,17 +2273,12 @@ mod tests {
 
     #[test]
     fn t19_rnr_received_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t19_rnr_received_yes_yes_yes")
             .expect("transition t19_rnr_received_yes_yes_yes not found");
         assert_eq!(tx.on, "RNR_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2438,9 +2296,7 @@ mod tests {
 
     #[test]
     fn t20_lm_seize_confirm_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t20_lm_seize_confirm_yes")
             .expect("transition t20_lm_seize_confirm_yes not found");
         assert_eq!(tx.on, "LM_SEIZE_confirm");
@@ -2457,9 +2313,7 @@ mod tests {
 
     #[test]
     fn t20_lm_seize_confirm_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t20_lm_seize_confirm_no")
             .expect("transition t20_lm_seize_confirm_no not found");
         assert_eq!(tx.on, "LM_SEIZE_confirm");
@@ -2472,9 +2326,7 @@ mod tests {
 
     #[test]
     fn t21_t1_expiry_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t21_t1_expiry_no")
             .expect("transition t21_t1_expiry_no not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -2489,9 +2341,7 @@ mod tests {
 
     #[test]
     fn t21_t1_expiry_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t21_t1_expiry_yes_yes_yes")
             .expect("transition t21_t1_expiry_yes_yes_yes not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -2510,9 +2360,7 @@ mod tests {
 
     #[test]
     fn t21_t1_expiry_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t21_t1_expiry_yes_yes_no")
             .expect("transition t21_t1_expiry_yes_yes_no not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -2531,9 +2379,7 @@ mod tests {
 
     #[test]
     fn t21_t1_expiry_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t21_t1_expiry_yes_no")
             .expect("transition t21_t1_expiry_yes_no not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -2552,9 +2398,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_no")
             .expect("transition t22_i_received_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2569,17 +2413,12 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_no")
             .expect("transition t22_i_received_yes_no not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "command and not info_field_length_le_N1_and_content_is_octet_aligned"
-        );
+        assert_eq!(tx.guard, "command and not info_field_length_le_N1_and_content_is_octet_aligned");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2591,9 +2430,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_no")
             .expect("transition t22_i_received_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2606,9 +2443,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2631,9 +2466,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_no")
             .expect("transition t22_i_received_yes_yes_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2648,9 +2481,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2679,9 +2510,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_yes_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2706,9 +2535,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_yes_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2729,9 +2556,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2754,9 +2579,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_yes_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2771,9 +2594,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2798,9 +2619,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2827,9 +2646,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_no_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2852,9 +2669,7 @@ mod tests {
 
     #[test]
     fn t22_i_received_yes_yes_yes_no_no_no_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2877,17 +2692,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_yes_yes_yes")
             .expect("transition t23_rej_received_no_yes_yes_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2899,17 +2709,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_yes_yes_no")
             .expect("transition t23_rej_received_no_yes_yes_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2929,17 +2734,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_yes_no_yes")
             .expect("transition t23_rej_received_no_yes_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2951,9 +2751,7 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_yes_no_no")
             .expect("transition t23_rej_received_no_yes_no_no not found");
         assert_eq!(tx.on, "REJ_received");
@@ -2970,17 +2768,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_no_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_no_yes_yes")
             .expect("transition t23_rej_received_no_no_yes_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -2990,9 +2783,7 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_no_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_no_yes_no")
             .expect("transition t23_rej_received_no_no_yes_no not found");
         assert_eq!(tx.on, "REJ_received");
@@ -3015,9 +2806,7 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_no_no_yes")
             .expect("transition t23_rej_received_no_no_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
@@ -3032,9 +2821,7 @@ mod tests {
 
     #[test]
     fn t23_rej_received_no_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_no_no_no_no")
             .expect("transition t23_rej_received_no_no_no_no not found");
         assert_eq!(tx.on, "REJ_received");
@@ -3049,17 +2836,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_yes_no_yes")
             .expect("transition t23_rej_received_yes_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3073,17 +2855,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_yes_no_no")
             .expect("transition t23_rej_received_yes_no_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3097,17 +2874,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_yes_yes_yes")
             .expect("transition t23_rej_received_yes_yes_yes not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3125,17 +2897,12 @@ mod tests {
 
     #[test]
     fn t23_rej_received_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t23_rej_received_yes_yes_no")
             .expect("transition t23_rej_received_yes_yes_no not found");
         assert_eq!(tx.on, "REJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3157,17 +2924,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_yes_yes_yes")
             .expect("transition t24_srej_received_no_yes_yes_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va");
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3179,17 +2941,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_yes_yes_no")
             .expect("transition t24_srej_received_no_yes_yes_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3203,17 +2960,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_yes_no_yes")
             .expect("transition t24_srej_received_no_yes_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3221,17 +2973,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_yes_no_no")
             .expect("transition t24_srej_received_no_yes_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3241,17 +2988,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_no_no")
             .expect("transition t24_srej_received_no_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "not response and not va_le_nr_le_vs and not version_2_2"
-        );
+        assert_eq!(tx.guard, "not response and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3261,17 +3003,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_no_no_yes")
             .expect("transition t24_srej_received_no_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(
-            tx.guard,
-            "not response and not va_le_nr_le_vs and version_2_2"
-        );
+        assert_eq!(tx.guard, "not response and not va_le_nr_le_vs and version_2_2");
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3281,17 +3018,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_no_no")
             .expect("transition t24_srej_received_yes_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(
-            tx.guard,
-            "response and not va_le_nr_le_vs and not version_2_2"
-        );
+        assert_eq!(tx.guard, "response and not va_le_nr_le_vs and not version_2_2");
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3305,9 +3037,7 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_no_yes")
             .expect("transition t24_srej_received_yes_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
@@ -3326,17 +3056,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_yes_yes_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_yes_yes")
             .expect("transition t24_srej_received_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(
-            tx.guard,
-            "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va");
         assert_eq!(tx.actions.len(), 7);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3356,17 +3081,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_yes_yes_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_yes_no")
             .expect("transition t24_srej_received_yes_yes_yes_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va");
         assert_eq!(tx.actions.len(), 11);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3394,17 +3114,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_yes_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_no_yes")
             .expect("transition t24_srej_received_yes_yes_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(
-            tx.guard,
-            "response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va");
         assert_eq!(tx.actions.len(), 5);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3420,17 +3135,12 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_yes_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_no_no")
             .expect("transition t24_srej_received_yes_yes_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(
-            tx.guard,
-            "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va"
-        );
+        assert_eq!(tx.guard, "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va");
         assert_eq!(tx.actions.len(), 9);
         assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -3453,25 +3163,21 @@ mod tests {
     }
 
     #[test]
-    fn t25_all_other_primitives__from_upper_layer() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t25_all_other_primitives__from_upper_layer")
-            .expect("transition t25_all_other_primitives__from_upper_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+    fn t25_all_other_primitives__from_lower_layer() {
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
+            .find(|x| x.id == "t25_all_other_primitives__from_lower_layer")
+            .expect("transition t25_all_other_primitives__from_lower_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 0);
     }
 
     #[test]
-    fn t26_all_other_primitives__from_lower_layer() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t26_all_other_primitives__from_lower_layer")
-            .expect("transition t26_all_other_primitives__from_lower_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+    fn t26_all_other_primitives__from_upper_layer() {
+        let tx = DATA_LINK_TIMER_RECOVERY.transitions.iter()
+            .find(|x| x.id == "t26_all_other_primitives__from_upper_layer")
+            .expect("transition t26_all_other_primitives__from_upper_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 0);
     }

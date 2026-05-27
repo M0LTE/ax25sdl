@@ -225,9 +225,9 @@ DATA_LINK_CONNECTED = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t08_all_other_primitives__from_lower_layer",
+            id="t08_all_other_primitives__from_upper_layer",
             from_="Connected",
-            on="all_other_primitives__from_lower_layer",
+            on="all_other_primitives__from_upper_layer",
             guard="",
             actions=(),
             next="Connected",

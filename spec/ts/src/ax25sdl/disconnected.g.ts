@@ -55,9 +55,9 @@ export const DataLinkDisconnected: StatePage = {
       loops: [],
     },
     {
-      id: "t04_all_other_primitives__from_lower_layer",
+      id: "t04_all_other_primitives__from_upper_layer",
       from: "Disconnected",
-      on: "all_other_primitives__from_lower_layer",
+      on: "all_other_primitives__from_upper_layer",
       guard: "",
       actions: [],
       next: "Disconnected",
@@ -80,9 +80,9 @@ export const DataLinkDisconnected: StatePage = {
       loops: [],
     },
     {
-      id: "t06_all_other_primitives__from_upper_layer",
+      id: "t06_all_other_primitives__from_lower_layer",
       from: "Disconnected",
-      on: "all_other_primitives__from_upper_layer",
+      on: "all_other_primitives__from_lower_layer",
       guard: "",
       actions: [
         { verb: "Discard Primitive", kind: "processing" },

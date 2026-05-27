@@ -191,19 +191,19 @@ func TestDataLinkAwaitingV22Connection_t05_i_frame_pops_off_queue_no(t *testing.
 	}
 }
 
-func TestDataLinkAwaitingV22Connection_t06_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkAwaitingV22Connection_t06_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingV22Connection.Transitions {
-		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t06_all_other_primitives__from_lower_layer" {
+		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t06_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkAwaitingV22Connection.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)
@@ -947,19 +947,19 @@ func TestDataLinkAwaitingV22Connection_t17_disc_received(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingV22Connection_t18_all_other_primitives__from_upper_layer(t *testing.T) {
+func TestDataLinkAwaitingV22Connection_t18_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingV22Connection.Transitions {
-		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t18_all_other_primitives__from_upper_layer" {
+		if DataLinkAwaitingV22Connection.Transitions[i].ID == "t18_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkAwaitingV22Connection.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t18_all_other_primitives__from_upper_layer not found")
+		t.Fatalf("transition t18_all_other_primitives__from_lower_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_upper_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
+	if tx.On != "all_other_primitives__from_lower_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
 	}
 	if tx.Next != "AwaitingV22Connection" {
 		t.Errorf("Next = %q, want AwaitingV22Connection", tx.Next)

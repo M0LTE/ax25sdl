@@ -80,10 +80,10 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
-    [Fact] public void t04_all_other_primitives__from_upper_layer()
+    [Fact] public void t04_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_upper_layer");
-        t.On.Should().Be("all_other_primitives__from_upper_layer");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_lower_layer");
+        t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(0);
     }
@@ -98,10 +98,10 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t06_all_other_primitives__from_lower_layer()
+    [Fact] public void t06_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_upper_layer");
+        t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(0);
     }

@@ -219,9 +219,9 @@ export const DataLinkConnected: StatePage = {
       loops: [],
     },
     {
-      id: "t08_all_other_primitives__from_lower_layer",
+      id: "t08_all_other_primitives__from_upper_layer",
       from: "Connected",
-      on: "all_other_primitives__from_lower_layer",
+      on: "all_other_primitives__from_upper_layer",
       guard: "",
       actions: [],
       next: "Connected",

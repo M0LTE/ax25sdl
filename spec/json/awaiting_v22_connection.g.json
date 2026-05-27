@@ -100,9 +100,9 @@
       "loops": []
     },
     {
-      "id": "t06_all_other_primitives__from_lower_layer",
+      "id": "t06_all_other_primitives__from_upper_layer",
       "from": "AwaitingV22Connection",
-      "on": "all_other_primitives__from_lower_layer",
+      "on": "all_other_primitives__from_upper_layer",
       "guard": "",
       "actions": [],
       "next": "AwaitingV22Connection",
@@ -534,9 +534,9 @@
       "loops": []
     },
     {
-      "id": "t18_all_other_primitives__from_upper_layer",
+      "id": "t18_all_other_primitives__from_lower_layer",
       "from": "AwaitingV22Connection",
-      "on": "all_other_primitives__from_upper_layer",
+      "on": "all_other_primitives__from_lower_layer",
       "guard": "",
       "actions": [],
       "next": "AwaitingV22Connection",

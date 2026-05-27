@@ -94,9 +94,9 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t06_all_other_primitives__from_lower_layer",
+            id="t06_all_other_primitives__from_upper_layer",
             from_="AwaitingV22Connection",
-            on="all_other_primitives__from_lower_layer",
+            on="all_other_primitives__from_upper_layer",
             guard="",
             actions=(),
             next="AwaitingV22Connection",
@@ -363,9 +363,9 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t18_all_other_primitives__from_upper_layer",
+            id="t18_all_other_primitives__from_lower_layer",
             from_="AwaitingV22Connection",
-            on="all_other_primitives__from_upper_layer",
+            on="all_other_primitives__from_lower_layer",
             guard="",
             actions=(),
             next="AwaitingV22Connection",

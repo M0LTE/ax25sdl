@@ -167,9 +167,9 @@ export const DataLinkAwaitingConnection: StatePage = {
       loops: [],
     },
     {
-      id: "t06_all_other_primitives__from_upper_layer",
+      id: "t06_all_other_primitives__from_lower_layer",
       from: "AwaitingConnection",
-      on: "all_other_primitives__from_upper_layer",
+      on: "all_other_primitives__from_lower_layer",
       guard: "",
       actions: [],
       next: "AwaitingConnection",
@@ -253,9 +253,9 @@ export const DataLinkAwaitingConnection: StatePage = {
       loops: [],
     },
     {
-      id: "t11_all_other_primitives__from_lower_layer",
+      id: "t11_all_other_primitives__from_upper_layer",
       from: "AwaitingConnection",
-      on: "all_other_primitives__from_lower_layer",
+      on: "all_other_primitives__from_upper_layer",
       guard: "",
       actions: [],
       next: "AwaitingConnection",

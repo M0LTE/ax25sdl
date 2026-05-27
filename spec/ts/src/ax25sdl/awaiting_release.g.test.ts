@@ -82,11 +82,11 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
-  it("t04_all_other_primitives__from_upper_layer", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t04_all_other_primitives__from_upper_layer");
-    expect(t, "transition t04_all_other_primitives__from_upper_layer not found").toBeDefined();
+  it("t04_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t04_all_other_primitives__from_lower_layer");
+    expect(t, "transition t04_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_upper_layer");
+    expect(t.on).toBe("all_other_primitives__from_lower_layer");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(0);
   });
@@ -102,11 +102,11 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
-  it("t06_all_other_primitives__from_lower_layer", () => {
-    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t06_all_other_primitives__from_lower_layer");
-    expect(t, "transition t06_all_other_primitives__from_lower_layer not found").toBeDefined();
+  it("t06_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkAwaitingRelease.transitions.find((x) => x.id === "t06_all_other_primitives__from_upper_layer");
+    expect(t, "transition t06_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_lower_layer");
+    expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("AwaitingRelease");
     expect(t.actions).toHaveLength(0);
   });

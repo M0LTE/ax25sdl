@@ -477,19 +477,19 @@ func TestDataLinkAwaitingConnection_t05_t1_expiry_no(t *testing.T) {
 	}
 }
 
-func TestDataLinkAwaitingConnection_t06_all_other_primitives__from_upper_layer(t *testing.T) {
+func TestDataLinkAwaitingConnection_t06_all_other_primitives__from_lower_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingConnection.Transitions {
-		if DataLinkAwaitingConnection.Transitions[i].ID == "t06_all_other_primitives__from_upper_layer" {
+		if DataLinkAwaitingConnection.Transitions[i].ID == "t06_all_other_primitives__from_lower_layer" {
 			tx = &DataLinkAwaitingConnection.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t06_all_other_primitives__from_upper_layer not found")
+		t.Fatalf("transition t06_all_other_primitives__from_lower_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_upper_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
+	if tx.On != "all_other_primitives__from_lower_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
 	}
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
@@ -673,19 +673,19 @@ func TestDataLinkAwaitingConnection_t10_i_frame_pops_off_queue_no(t *testing.T) 
 	}
 }
 
-func TestDataLinkAwaitingConnection_t11_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkAwaitingConnection_t11_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkAwaitingConnection.Transitions {
-		if DataLinkAwaitingConnection.Transitions[i].ID == "t11_all_other_primitives__from_lower_layer" {
+		if DataLinkAwaitingConnection.Transitions[i].ID == "t11_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkAwaitingConnection.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t11_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t11_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "AwaitingConnection" {
 		t.Errorf("Next = %q, want AwaitingConnection", tx.Next)
