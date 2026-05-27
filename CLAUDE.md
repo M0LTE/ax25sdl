@@ -33,7 +33,7 @@ When transcribing any SDL transition whose semantics are non-obvious, cross-refe
 
 Each node in a `spec-sdl/**/*.graphml` file carries a `<data key="d5">` description (e.g. "Signal reception from Lower Layer", "Signal generation to upper layer", "Processing description", "Test or decision"). That `d5` text is the **only** authoritative source for the node's shape class.
 
-**Do not** infer a node's meaning from the visual direction of its parallelogram (left-notch vs right-notch) or from your prior understanding of which layer DL-\* vs frame events "should" come from. The figures in the AX.25 spec do not always use shape direction the way figc1.1's legend suggests. The figure is the source of truth; `d5` records the figure's choice verbatim; we transcribe.
+The `d5` value and the visual direction of the parallelogram (left-notch vs right-notch) are consistent: left-notch = upper layer, right-notch = lower layer.
 
 When the same label appears under two different `d5` values, those are **two distinct events** in the catalogue. Disambiguate with a `__from_<shape-class>` suffix on the event id.
 
