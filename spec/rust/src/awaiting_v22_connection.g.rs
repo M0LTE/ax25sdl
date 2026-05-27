@@ -20,8 +20,14 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "DL_CONNECT_request",
             guard: "",
             actions: &[
-                ActionStep { verb: "Discard Queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: "Discard Queue",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Set Layer 3 Initiated",
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -33,9 +39,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "DL_UNIT_DATA_request",
             guard: "",
-            actions: &[
-                ActionStep { verb: "UI Command", kind: ActionKind::SignalLower },
-            ],
+            actions: &[ActionStep {
+                verb: "UI Command",
+                kind: ActionKind::SignalLower,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -57,9 +64,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "DL_DATA_request",
             guard: "not layer_3_initiated",
-            actions: &[
-                ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-            ],
+            actions: &[ActionStep {
+                verb: "push_frame_on_queue",
+                kind: ActionKind::InternalOut,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -81,9 +89,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "I_frame_pops_off_queue",
             guard: "not layer_3_initiated",
-            actions: &[
-                ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-            ],
+            actions: &[ActionStep {
+                verb: "push_frame_on_queue",
+                kind: ActionKind::InternalOut,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -105,9 +114,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "control_field_error",
             guard: "",
-            actions: &[
-                ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
-            ],
+            actions: &[ActionStep {
+                verb: "DL-ERROR Indication (L)",
+                kind: ActionKind::SignalUpper,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -118,9 +128,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "info_not_permitted_in_frame",
             guard: "",
-            actions: &[
-                ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
-            ],
+            actions: &[ActionStep {
+                verb: "DL-ERROR Indication (M)",
+                kind: ActionKind::SignalUpper,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -131,9 +142,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "u_or_s_frame_length_error",
             guard: "",
-            actions: &[
-                ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
-            ],
+            actions: &[ActionStep {
+                verb: "DL-ERROR Indication (N)",
+                kind: ActionKind::SignalUpper,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -145,8 +157,14 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "UI_received",
             guard: "not P_eq_1",
             actions: &[
-                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
-                ActionStep { verb: "DM (F = 1)", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: "UI Check",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "DM (F = 1)",
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -158,9 +176,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "UI_received",
             guard: "P_eq_1",
-            actions: &[
-                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
-            ],
+            actions: &[ActionStep {
+                verb: "UI Check",
+                kind: ActionKind::Subroutine,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -183,9 +202,18 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "DM_received",
             guard: "F_eq_1",
             actions: &[
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: "discard_I_frame_queue",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "DL-DISCONNECT Indication",
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: "Stop T1",
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -197,9 +225,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             from: "AwaitingV22Connection",
             on: "UA_received",
             guard: "not F_eq_1",
-            actions: &[
-                ActionStep { verb: "DL-ERROR Indication (D)", kind: ActionKind::SignalUpper },
-            ],
+            actions: &[ActionStep {
+                verb: "DL-ERROR Indication (D)",
+                kind: ActionKind::SignalUpper,
+            }],
             next: "AwaitingV22Connection",
             notes: "",
             references: &[],
@@ -211,14 +240,38 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "UA_received",
             guard: "F_eq_1 and layer_3_initiated",
             actions: &[
-                ActionStep { verb: "DL-CONNECT Confirm", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "MDL-NEGOTIATE Request", kind: ActionKind::InternalOut },
+                ActionStep {
+                    verb: "DL-CONNECT Confirm",
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: "Stop T1",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Start T3",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(s) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(a) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(r) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Select_T1_Value",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "MDL-NEGOTIATE Request",
+                    kind: ActionKind::InternalOut,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -231,17 +284,50 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "UA_received",
             guard: "F_eq_1 and not layer_3_initiated and not vs_eq_va",
             actions: &[
-                ActionStep { verb: "SRT := Initial Default", kind: ActionKind::Processing },
-                ActionStep { verb: "T1V := 2 * SRT", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-CONNECT Confirm", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "MDL-NEGOTIATE Request", kind: ActionKind::InternalOut },
+                ActionStep {
+                    verb: "SRT := Initial Default",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "T1V := 2 * SRT",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Start T3",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "DL-CONNECT Confirm",
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: "Stop T1",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Start T3",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(s) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(a) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(r) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Select_T1_Value",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "MDL-NEGOTIATE Request",
+                    kind: ActionKind::InternalOut,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -254,13 +340,34 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "UA_received",
             guard: "F_eq_1 and not layer_3_initiated and vs_eq_va",
             actions: &[
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "MDL-NEGOTIATE Request", kind: ActionKind::InternalOut },
+                ActionStep {
+                    verb: "Stop T1",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Start T3",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(s) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(a) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "V(r) := 0",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Select_T1_Value",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "MDL-NEGOTIATE Request",
+                    kind: ActionKind::InternalOut,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -273,9 +380,18 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "T1_expiry",
             guard: "RC_eq_N2",
             actions: &[
-                ActionStep { verb: "discard_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-ERROR Indication (G)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep {
+                    verb: "discard_frame_queue",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "DL-ERROR Indication (G)",
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: "DL-DISCONNECT Indication",
+                    kind: ActionKind::SignalUpper,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -288,10 +404,22 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "T1_expiry",
             guard: "not RC_eq_N2",
             actions: &[
-                ActionStep { verb: "RC := RC + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "SABME (P = 1)", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: "RC := RC + 1",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "SABME (P = 1)",
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: "Select_T1_Value",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "Start T1",
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -304,11 +432,26 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "FRMR_received",
             guard: "",
             actions: &[
-                ActionStep { verb: "SRT := Initial Default", kind: ActionKind::Processing },
-                ActionStep { verb: "T1V := 2 * SRT", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: "SRT := Initial Default",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "T1V := 2 * SRT",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "Establish_Data_Link",
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: "Set Layer 3 Initiated",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "set_version_2_0",
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -321,8 +464,14 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "SABME_received",
             guard: "",
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: "F := P",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "UA",
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -335,9 +484,18 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "SABM_received",
             guard: "",
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: "F := P",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "UA",
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: "set_version_2_0",
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -350,8 +508,14 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
             on: "DISC_received",
             guard: "",
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: "F := P",
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: "DM",
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -388,7 +552,9 @@ mod tests {
 
     #[test]
     fn t02_dl_connect_request() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t02_dl_connect_request")
             .expect("transition t02_dl_connect_request not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
@@ -402,7 +568,9 @@ mod tests {
 
     #[test]
     fn t03_dl_unit_data_request() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t03_dl_unit_data_request")
             .expect("transition t03_dl_unit_data_request not found");
         assert_eq!(tx.on, "DL_UNIT_DATA_request");
@@ -414,7 +582,9 @@ mod tests {
 
     #[test]
     fn t04_dl_data_request_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t04_dl_data_request_yes")
             .expect("transition t04_dl_data_request_yes not found");
         assert_eq!(tx.on, "DL_DATA_request");
@@ -425,7 +595,9 @@ mod tests {
 
     #[test]
     fn t04_dl_data_request_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t04_dl_data_request_no")
             .expect("transition t04_dl_data_request_no not found");
         assert_eq!(tx.on, "DL_DATA_request");
@@ -438,7 +610,9 @@ mod tests {
 
     #[test]
     fn t05_i_frame_pops_off_queue_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t05_i_frame_pops_off_queue_yes")
             .expect("transition t05_i_frame_pops_off_queue_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -449,7 +623,9 @@ mod tests {
 
     #[test]
     fn t05_i_frame_pops_off_queue_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t05_i_frame_pops_off_queue_no")
             .expect("transition t05_i_frame_pops_off_queue_no not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -462,7 +638,9 @@ mod tests {
 
     #[test]
     fn t06_all_other_primitives__from_upper_layer() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t06_all_other_primitives__from_upper_layer")
             .expect("transition t06_all_other_primitives__from_upper_layer not found");
         assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
@@ -472,7 +650,9 @@ mod tests {
 
     #[test]
     fn t07_control_field_error() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t07_control_field_error")
             .expect("transition t07_control_field_error not found");
         assert_eq!(tx.on, "control_field_error");
@@ -484,7 +664,9 @@ mod tests {
 
     #[test]
     fn t08_info_not_permitted_in_frame() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t08_info_not_permitted_in_frame")
             .expect("transition t08_info_not_permitted_in_frame not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -496,7 +678,9 @@ mod tests {
 
     #[test]
     fn t09_u_or_s_frame_length_error() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t09_u_or_s_frame_length_error")
             .expect("transition t09_u_or_s_frame_length_error not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -508,7 +692,9 @@ mod tests {
 
     #[test]
     fn t10_ui_received_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t10_ui_received_no")
             .expect("transition t10_ui_received_no not found");
         assert_eq!(tx.on, "UI_received");
@@ -523,7 +709,9 @@ mod tests {
 
     #[test]
     fn t10_ui_received_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t10_ui_received_yes")
             .expect("transition t10_ui_received_yes not found");
         assert_eq!(tx.on, "UI_received");
@@ -536,7 +724,9 @@ mod tests {
 
     #[test]
     fn t11_dm_received_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t11_dm_received_no")
             .expect("transition t11_dm_received_no not found");
         assert_eq!(tx.on, "DM_received");
@@ -547,7 +737,9 @@ mod tests {
 
     #[test]
     fn t11_dm_received_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t11_dm_received_yes")
             .expect("transition t11_dm_received_yes not found");
         assert_eq!(tx.on, "DM_received");
@@ -564,7 +756,9 @@ mod tests {
 
     #[test]
     fn t12_ua_received_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t12_ua_received_no")
             .expect("transition t12_ua_received_no not found");
         assert_eq!(tx.on, "UA_received");
@@ -577,7 +771,9 @@ mod tests {
 
     #[test]
     fn t12_ua_received_yes_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t12_ua_received_yes_yes")
             .expect("transition t12_ua_received_yes_yes not found");
         assert_eq!(tx.on, "UA_received");
@@ -604,12 +800,17 @@ mod tests {
 
     #[test]
     fn t12_ua_received_yes_no_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t12_ua_received_yes_no_no")
             .expect("transition t12_ua_received_yes_no_no not found");
         assert_eq!(tx.on, "UA_received");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "F_eq_1 and not layer_3_initiated and not vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            "F_eq_1 and not layer_3_initiated and not vs_eq_va"
+        );
         assert_eq!(tx.actions.len(), 11);
         assert_eq!(tx.actions[0].verb, "SRT := Initial Default");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -637,7 +838,9 @@ mod tests {
 
     #[test]
     fn t12_ua_received_yes_no_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t12_ua_received_yes_no_yes")
             .expect("transition t12_ua_received_yes_no_yes not found");
         assert_eq!(tx.on, "UA_received");
@@ -662,7 +865,9 @@ mod tests {
 
     #[test]
     fn t13_t1_expiry_yes() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t13_t1_expiry_yes")
             .expect("transition t13_t1_expiry_yes not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -679,7 +884,9 @@ mod tests {
 
     #[test]
     fn t13_t1_expiry_no() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t13_t1_expiry_no")
             .expect("transition t13_t1_expiry_no not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -698,7 +905,9 @@ mod tests {
 
     #[test]
     fn t14_frmr_received() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t14_frmr_received")
             .expect("transition t14_frmr_received not found");
         assert_eq!(tx.on, "FRMR_received");
@@ -718,7 +927,9 @@ mod tests {
 
     #[test]
     fn t15_sabme_received() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t15_sabme_received")
             .expect("transition t15_sabme_received not found");
         assert_eq!(tx.on, "SABME_received");
@@ -732,7 +943,9 @@ mod tests {
 
     #[test]
     fn t16_sabm_received() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t16_sabm_received")
             .expect("transition t16_sabm_received not found");
         assert_eq!(tx.on, "SABM_received");
@@ -748,7 +961,9 @@ mod tests {
 
     #[test]
     fn t17_disc_received() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t17_disc_received")
             .expect("transition t17_disc_received not found");
         assert_eq!(tx.on, "DISC_received");
@@ -762,7 +977,9 @@ mod tests {
 
     #[test]
     fn t18_all_other_primitives__from_lower_layer() {
-        let tx = DATA_LINK_AWAITING_V_22_CONNECTION.transitions.iter()
+        let tx = DATA_LINK_AWAITING_V_22_CONNECTION
+            .transitions
+            .iter()
             .find(|x| x.id == "t18_all_other_primitives__from_lower_layer")
             .expect("transition t18_all_other_primitives__from_lower_layer not found");
         assert_eq!(tx.on, "all_other_primitives__from_lower_layer");

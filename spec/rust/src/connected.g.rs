@@ -1101,7 +1101,9 @@ mod tests {
 
     #[test]
     fn t01_dl_disconnect_request() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t01_dl_disconnect_request")
             .expect("transition t01_dl_disconnect_request not found");
         assert_eq!(tx.on, "DL_DISCONNECT_request");
@@ -1121,19 +1123,26 @@ mod tests {
 
     #[test]
     fn t02_dl_data_request() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t02_dl_data_request")
             .expect("transition t02_dl_data_request not found");
         assert_eq!(tx.on, "DL_DATA_request");
         assert_eq!(tx.next, "Connected");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "Push on I Frame Queue (note: word order?)");
+        assert_eq!(
+            tx.actions[0].verb,
+            "Push on I Frame Queue (note: word order?)"
+        );
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
     #[test]
     fn t03_i_frame_pops_off_queue_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_yes")
             .expect("transition t03_i_frame_pops_off_queue_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -1146,7 +1155,9 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
@@ -1159,12 +1170,17 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_no")
             .expect("transition t03_i_frame_pops_off_queue_no_no_no not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running");
+        assert_eq!(
+            tx.guard,
+            "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
+        );
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1186,12 +1202,17 @@ mod tests {
 
     #[test]
     fn t03_i_frame_pops_off_queue_no_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_no_yes not found");
         assert_eq!(tx.on, "I_frame_pops_off_queue");
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running");
+        assert_eq!(
+            tx.guard,
+            "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
+        );
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
@@ -1209,7 +1230,9 @@ mod tests {
 
     #[test]
     fn t04_dl_unit_data_request() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t04_dl_unit_data_request")
             .expect("transition t04_dl_unit_data_request not found");
         assert_eq!(tx.on, "DL_UNIT_DATA_request");
@@ -1221,7 +1244,9 @@ mod tests {
 
     #[test]
     fn t05_dl_flow_off_request_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t05_dl_flow_off_request_yes")
             .expect("transition t05_dl_flow_off_request_yes not found");
         assert_eq!(tx.on, "DL_FLOW_OFF_request");
@@ -1238,7 +1263,9 @@ mod tests {
 
     #[test]
     fn t05_dl_flow_off_request_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t05_dl_flow_off_request_no")
             .expect("transition t05_dl_flow_off_request_no not found");
         assert_eq!(tx.on, "DL_FLOW_OFF_request");
@@ -1249,7 +1276,9 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_no")
             .expect("transition t06_dl_flow_on_request_no not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1260,7 +1289,9 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_yes_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_yes")
             .expect("transition t06_dl_flow_on_request_yes_yes not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1277,7 +1308,9 @@ mod tests {
 
     #[test]
     fn t06_dl_flow_on_request_yes_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_no")
             .expect("transition t06_dl_flow_on_request_yes_no not found");
         assert_eq!(tx.on, "DL_FLOW_ON_request");
@@ -1298,7 +1331,9 @@ mod tests {
 
     #[test]
     fn t07_dl_connect_request_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t07_dl_connect_request_no")
             .expect("transition t07_dl_connect_request_no not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
@@ -1315,7 +1350,9 @@ mod tests {
 
     #[test]
     fn t07_dl_connect_request_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t07_dl_connect_request_yes")
             .expect("transition t07_dl_connect_request_yes not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
@@ -1332,7 +1369,9 @@ mod tests {
 
     #[test]
     fn t08_all_other_primitives__from_upper_layer() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t08_all_other_primitives__from_upper_layer")
             .expect("transition t08_all_other_primitives__from_upper_layer not found");
         assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
@@ -1342,7 +1381,9 @@ mod tests {
 
     #[test]
     fn t09_control_field_error_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t09_control_field_error_no")
             .expect("transition t09_control_field_error_no not found");
         assert_eq!(tx.on, "control_field_error");
@@ -1361,7 +1402,9 @@ mod tests {
 
     #[test]
     fn t09_control_field_error_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t09_control_field_error_yes")
             .expect("transition t09_control_field_error_yes not found");
         assert_eq!(tx.on, "control_field_error");
@@ -1380,7 +1423,9 @@ mod tests {
 
     #[test]
     fn t10_info_not_permitted_in_frame_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t10_info_not_permitted_in_frame_no")
             .expect("transition t10_info_not_permitted_in_frame_no not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -1399,7 +1444,9 @@ mod tests {
 
     #[test]
     fn t10_info_not_permitted_in_frame_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t10_info_not_permitted_in_frame_yes")
             .expect("transition t10_info_not_permitted_in_frame_yes not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -1418,7 +1465,9 @@ mod tests {
 
     #[test]
     fn t11_u_or_s_frame_length_error_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t11_u_or_s_frame_length_error_no")
             .expect("transition t11_u_or_s_frame_length_error_no not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -1437,7 +1486,9 @@ mod tests {
 
     #[test]
     fn t11_u_or_s_frame_length_error_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t11_u_or_s_frame_length_error_yes")
             .expect("transition t11_u_or_s_frame_length_error_yes not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -1456,7 +1507,9 @@ mod tests {
 
     #[test]
     fn t12_t1_expiry() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t12_t1_expiry")
             .expect("transition t12_t1_expiry not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -1470,7 +1523,9 @@ mod tests {
 
     #[test]
     fn t13_t3_expiry() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t13_t3_expiry")
             .expect("transition t13_t3_expiry not found");
         assert_eq!(tx.on, "T3_expiry");
@@ -1484,7 +1539,9 @@ mod tests {
 
     #[test]
     fn t14_sabm_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t14_sabm_received_yes")
             .expect("transition t14_sabm_received_yes not found");
         assert_eq!(tx.on, "SABM_received");
@@ -1517,7 +1574,9 @@ mod tests {
 
     #[test]
     fn t14_sabm_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t14_sabm_received_no")
             .expect("transition t14_sabm_received_no not found");
         assert_eq!(tx.on, "SABM_received");
@@ -1554,7 +1613,9 @@ mod tests {
 
     #[test]
     fn t15_sabme_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t15_sabme_received_yes")
             .expect("transition t15_sabme_received_yes not found");
         assert_eq!(tx.on, "SABME_received");
@@ -1587,7 +1648,9 @@ mod tests {
 
     #[test]
     fn t15_sabme_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t15_sabme_received_no")
             .expect("transition t15_sabme_received_no not found");
         assert_eq!(tx.on, "SABME_received");
@@ -1624,7 +1687,9 @@ mod tests {
 
     #[test]
     fn t16_frmr_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t16_frmr_received_no")
             .expect("transition t16_frmr_received_no not found");
         assert_eq!(tx.on, "FRMR_received");
@@ -1641,7 +1706,9 @@ mod tests {
 
     #[test]
     fn t16_frmr_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t16_frmr_received_yes")
             .expect("transition t16_frmr_received_yes not found");
         assert_eq!(tx.on, "FRMR_received");
@@ -1658,7 +1725,9 @@ mod tests {
 
     #[test]
     fn t17_ua_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t17_ua_received_no")
             .expect("transition t17_ua_received_no not found");
         assert_eq!(tx.on, "UA_received");
@@ -1675,7 +1744,9 @@ mod tests {
 
     #[test]
     fn t17_ua_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t17_ua_received_yes")
             .expect("transition t17_ua_received_yes not found");
         assert_eq!(tx.on, "UA_received");
@@ -1692,7 +1763,9 @@ mod tests {
 
     #[test]
     fn t18_ui_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t18_ui_received_yes")
             .expect("transition t18_ui_received_yes not found");
         assert_eq!(tx.on, "UI_received");
@@ -1707,7 +1780,9 @@ mod tests {
 
     #[test]
     fn t18_ui_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t18_ui_received_no")
             .expect("transition t18_ui_received_no not found");
         assert_eq!(tx.on, "UI_received");
@@ -1720,7 +1795,9 @@ mod tests {
 
     #[test]
     fn t19_disc_received() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t19_disc_received")
             .expect("transition t19_disc_received not found");
         assert_eq!(tx.on, "DISC_received");
@@ -1742,7 +1819,9 @@ mod tests {
 
     #[test]
     fn t20_dm_received() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t20_dm_received")
             .expect("transition t20_dm_received not found");
         assert_eq!(tx.on, "DM_received");
@@ -1762,7 +1841,9 @@ mod tests {
 
     #[test]
     fn t21_rr_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t21_rr_received_yes")
             .expect("transition t21_rr_received_yes not found");
         assert_eq!(tx.on, "RR_received");
@@ -1779,7 +1860,9 @@ mod tests {
 
     #[test]
     fn t21_rr_received_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t21_rr_received_no_no")
             .expect("transition t21_rr_received_no_no not found");
         assert_eq!(tx.on, "RR_received");
@@ -1796,7 +1879,9 @@ mod tests {
 
     #[test]
     fn t21_rr_received_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t21_rr_received_no_yes")
             .expect("transition t21_rr_received_no_yes not found");
         assert_eq!(tx.on, "RR_received");
@@ -1813,7 +1898,9 @@ mod tests {
 
     #[test]
     fn t22_rnr_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t22_rnr_received_yes")
             .expect("transition t22_rnr_received_yes not found");
         assert_eq!(tx.on, "RNR_received");
@@ -1830,7 +1917,9 @@ mod tests {
 
     #[test]
     fn t22_rnr_received_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t22_rnr_received_no_no")
             .expect("transition t22_rnr_received_no_no not found");
         assert_eq!(tx.on, "RNR_received");
@@ -1847,7 +1936,9 @@ mod tests {
 
     #[test]
     fn t22_rnr_received_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t22_rnr_received_no_yes")
             .expect("transition t22_rnr_received_no_yes not found");
         assert_eq!(tx.on, "RNR_received");
@@ -1864,7 +1955,9 @@ mod tests {
 
     #[test]
     fn t23_lm_seize_confirm_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t23_lm_seize_confirm_yes")
             .expect("transition t23_lm_seize_confirm_yes not found");
         assert_eq!(tx.on, "LM_SEIZE_confirm");
@@ -1881,7 +1974,9 @@ mod tests {
 
     #[test]
     fn t23_lm_seize_confirm_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t23_lm_seize_confirm_no")
             .expect("transition t23_lm_seize_confirm_no not found");
         assert_eq!(tx.on, "LM_SEIZE_confirm");
@@ -1894,7 +1989,9 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t24_srej_received_yes_yes")
             .expect("transition t24_srej_received_yes_yes not found");
         assert_eq!(tx.on, "SREJ_received");
@@ -1927,7 +2024,9 @@ mod tests {
 
     #[test]
     fn t24_srej_received_yes_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t24_srej_received_yes_no")
             .expect("transition t24_srej_received_yes_no not found");
         assert_eq!(tx.on, "SREJ_received");
@@ -1958,7 +2057,9 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t24_srej_received_no_no")
             .expect("transition t24_srej_received_no_no not found");
         assert_eq!(tx.on, "SREJ_received");
@@ -1975,7 +2076,9 @@ mod tests {
 
     #[test]
     fn t24_srej_received_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t24_srej_received_no_yes")
             .expect("transition t24_srej_received_no_yes not found");
         assert_eq!(tx.on, "SREJ_received");
@@ -1992,7 +2095,9 @@ mod tests {
 
     #[test]
     fn t25_rej_received_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t25_rej_received_no_no")
             .expect("transition t25_rej_received_no_no not found");
         assert_eq!(tx.on, "REJ_received");
@@ -2009,7 +2114,9 @@ mod tests {
 
     #[test]
     fn t25_rej_received_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t25_rej_received_no_yes")
             .expect("transition t25_rej_received_no_yes not found");
         assert_eq!(tx.on, "REJ_received");
@@ -2026,7 +2133,9 @@ mod tests {
 
     #[test]
     fn t25_rej_received_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t25_rej_received_yes")
             .expect("transition t25_rej_received_yes not found");
         assert_eq!(tx.on, "REJ_received");
@@ -2053,7 +2162,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_no_no")
             .expect("transition t26_i_received_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2070,12 +2181,17 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_no_yes")
             .expect("transition t26_i_received_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2");
+        assert_eq!(
+            tx.guard,
+            "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2"
+        );
         assert_eq!(tx.actions.len(), 3);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
@@ -2087,7 +2203,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_no_no")
             .expect("transition t26_i_received_yes_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2100,7 +2218,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_no_yes")
             .expect("transition t26_i_received_yes_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2113,7 +2233,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_yes_no_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_no")
             .expect("transition t26_i_received_yes_yes_yes_no_yes_no_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2138,7 +2260,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_yes_no_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_yes")
             .expect("transition t26_i_received_yes_yes_yes_no_yes_no_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2159,7 +2283,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_yes_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_yes_no_yes")
             .expect("transition t26_i_received_yes_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2188,7 +2314,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_yes_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_yes_yes")
             .expect("transition t26_i_received_yes_yes_yes_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2211,7 +2339,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_yes_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_yes_no")
             .expect("transition t26_i_received_yes_yes_yes_no_no_yes_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2226,7 +2356,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_no")
             .expect("transition t26_i_received_yes_yes_yes_no_no_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2251,7 +2383,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_no_yes_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_yes")
             .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2274,7 +2408,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_no_yes_no_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes")
             .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2301,7 +2437,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_no_no_no_yes_no_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_no_no_no_yes_no_no")
             .expect("transition t26_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2324,7 +2462,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_yes_yes() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_yes_yes")
             .expect("transition t26_i_received_yes_yes_yes_yes_yes not found");
         assert_eq!(tx.on, "I_received");
@@ -2347,7 +2487,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_yes_yes_yes_yes_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_yes_yes_yes_yes_no")
             .expect("transition t26_i_received_yes_yes_yes_yes_no not found");
         assert_eq!(tx.on, "I_received");
@@ -2362,7 +2504,9 @@ mod tests {
 
     #[test]
     fn t26_i_received_no() {
-        let tx = DATA_LINK_CONNECTED.transitions.iter()
+        let tx = DATA_LINK_CONNECTED
+            .transitions
+            .iter()
             .find(|x| x.id == "t26_i_received_no")
             .expect("transition t26_i_received_no not found");
         assert_eq!(tx.on, "I_received");
