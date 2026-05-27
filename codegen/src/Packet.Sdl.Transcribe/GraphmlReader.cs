@@ -48,7 +48,7 @@ public static class GraphmlReader
 
     private static string ReadNodeShapeClass(XElement nodeEl)
     {
-        // d5 carries the SDL shape class, e.g. "Signal reception from Lower Layer"
+        // d5 carries the SDL shape class, e.g. "Signal reception from lower layer"
         var d5 = nodeEl.Elements(G + "data").FirstOrDefault(e => (string?)e.Attribute("key") == "d5");
         return d5?.Value.Trim() ?? "";
     }

@@ -238,7 +238,7 @@ figc1.1 defines four "signal" shape-classes that are visually
 direction-coded:
 
 - **Left-notch** input = "Signal reception from upper layer" (DL-* primitives from Layer 3)
-- **Right-notch** input = "Signal reception from Lower Layer" (frames from the peer)
+- **Right-notch** input = "Signal reception from lower layer" (frames from the peer)
 - **Left-tab** output = "Signal generation to upper layer" (indications/confirms to Layer 3)
 - **Right-tab** output = "Signal generation to lower layer" (frames to transmit)
 

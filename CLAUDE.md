@@ -31,7 +31,7 @@ When transcribing any SDL transition whose semantics are non-obvious, cross-refe
 
 ### Reading SDL graphml: `d5` is the authoritative shape class
 
-Each node in a `spec-sdl/**/*.graphml` file carries a `<data key="d5">` description (e.g. "Signal reception from Lower Layer", "Signal generation to upper layer", "Processing description", "Test or decision"). That `d5` text is the **only** authoritative source for the node's shape class.
+Each node in a `spec-sdl/**/*.graphml` file carries a `<data key="d5">` description (e.g. "Signal reception from lower layer", "Signal generation to upper layer", "Processing description", "Test or decision"). That `d5` text is the **only** authoritative source for the node's shape class.
 
 The `d5` value and the visual direction of the parallelogram (left-notch vs right-notch) are consistent: left-notch = upper layer, right-notch = lower layer.
 

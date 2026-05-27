@@ -52,9 +52,9 @@
     </node>
     <node id="n2">
       <data key="d3" xml:space="preserve"><![CDATA[ax25sdl.SignalReceptionFromUpperLayer]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d5" xml:space="preserve"/>
-      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d7">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="415.97789115646253" y="-15.163265306122497"/>

@@ -48,7 +48,7 @@
     </node>
     <node id="n2">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="29.0" y="372.05102040816325"/>

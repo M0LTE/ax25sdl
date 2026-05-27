@@ -563,7 +563,7 @@ transitions:
   t25_all_other_primitives_from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from Lower Layer". No action — stay.
+      "Signal reception from lower layer". No action — stay.
 
       '
     references: []
