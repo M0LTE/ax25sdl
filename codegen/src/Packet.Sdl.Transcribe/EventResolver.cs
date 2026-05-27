@@ -5,11 +5,9 @@ namespace Packet.Sdl.Transcribe;
 /// event name defined in spec-sdl/events.yaml.
 /// </summary>
 /// <remarks>
-/// d5 shape-class is informational, NOT semantic — CLAUDE.md is explicit that
-/// the figures don't always use "lower layer" / "upper layer" consistently
-/// with what they really mean. The resolver therefore looks at the label
-/// shape primarily and consults d5 only to disambiguate the two "All Other
-/// Primitives" catch-alls.
+/// The resolver uses the label text as its primary signal and consults
+/// d5 only to disambiguate the two "All Other Primitives" catch-alls
+/// (which share a label but differ in shape class).
 /// </remarks>
 public static class EventResolver
 {
@@ -56,7 +54,7 @@ public static class EventResolver
         // "received an I-frame from the peer". Sibling of the other bare
         // frame receptions (RR_received, REJ_received, etc.) — canonical
         // event name follows that pattern. events.yaml needs an entry.
-        [("I Frame", "Signal reception from upper layer")] = "I_received",
+        [("I Frame", "Signal reception from Lower Layer")] = "I_received",
     };
 
     public static string ResolveTriggerEvent(string label, string shapeClass)
