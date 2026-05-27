@@ -232,28 +232,22 @@ transcription is the path to interoperability — not "fixing" the figures.
 
 [upstream]: https://github.com/packethacking/ax25spec/issues
 
-## Shape direction is not always load-bearing
+## Shape direction and the d5 shape class
 
-Worth knowing before reading the Data-Link figures: figc1.1 defines four
-"signal" shape-classes that are visually direction-coded — left-notch for
-"Signal reception from Lower Layer", right-notch for upper, and similar
-for outputs. **The Data-Link figures don't always honour the legend's
-direction.** For example, figc4.1 draws `DL-DISCONNECT Request` and
-`DL-UNIT-DATA Request` with the **left-notch (lower-layer)** input shape,
-even though both are upper-layer service primitives per §5.
+figc1.1 defines four "signal" shape-classes that are visually
+direction-coded:
 
-What this means in practice:
+- **Left-notch** input = "Signal reception from upper layer" (DL-* primitives from Layer 3)
+- **Right-notch** input = "Signal reception from lower layer" (frames from the peer)
+- **Left-tab** output = "Signal generation to upper layer" (indications/confirms to Layer 3)
+- **Right-tab** output = "Signal generation to lower layer" (frames to transmit)
 
-- The **text label** on a shape is what identifies the event/action.
-- The **shape class** (event vs. signal-out vs. processing vs. test) is
-  load-bearing.
-- The **left/right direction** of input/output shapes is *not* load-bearing
-  and should be ignored when reasoning about which layer a signal comes
-  from or goes to.
+Each node in the GraphML files carries a `d5` description that records
+the shape class. The d5 value and the visual direction are consistent
+and both correctly identify which layer a signal comes from or goes to.
 
-This is "trust the figure" (§2.1) plus a corollary: the figure is the
-source of truth, even when it disagrees with its own legend. Don't try to
-"correct" it.
+The **text label** on a shape identifies the specific event or action;
+the **d5 shape class** identifies the layer direction.
 
 ## YAML schema (lossless encoding)
 

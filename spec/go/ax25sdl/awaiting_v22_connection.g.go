@@ -86,9 +86,9 @@ var DataLinkAwaitingV22Connection = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t06_all_other_primitives__from_lower_layer",
+			ID:         "t06_all_other_primitives__from_upper_layer",
 			From:       "AwaitingV22Connection",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingV22Connection",
@@ -355,9 +355,9 @@ var DataLinkAwaitingV22Connection = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t18_all_other_primitives__from_upper_layer",
+			ID:         "t18_all_other_primitives__from_lower_layer",
 			From:       "AwaitingV22Connection",
-			On:         "all_other_primitives__from_upper_layer",
+			On:         "all_other_primitives__from_lower_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingV22Connection",

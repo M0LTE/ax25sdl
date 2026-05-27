@@ -19,10 +19,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "DL_DISCONNECT_request",
             guard: "",
-            actions: &[ActionStep {
-                verb: "Expedited DM",
-                kind: ActionKind::SignalLower,
-            }],
+            actions: &[
+                ActionStep { verb: "Expedited DM", kind: ActionKind::SignalLower },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -34,14 +33,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "T1_expiry",
             guard: "RC_eq_N2",
             actions: &[
-                ActionStep {
-                    verb: "DL-ERROR Indication (G)",
-                    kind: ActionKind::SignalUpper,
-                },
-                ActionStep {
-                    verb: "DL-DISCONNECT Indication",
-                    kind: ActionKind::SignalUpper,
-                },
+                ActionStep { verb: "DL-ERROR Indication (G)", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
             ],
             next: "Disconnected",
             notes: "",
@@ -54,22 +47,10 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "T1_expiry",
             guard: "not RC_eq_N2",
             actions: &[
-                ActionStep {
-                    verb: "RC := RC + 1",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DISC (P = 1)",
-                    kind: ActionKind::SignalLower,
-                },
-                ActionStep {
-                    verb: "Select_T1_Value",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "Start T1",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "RC := RC + 1", kind: ActionKind::Processing },
+                ActionStep { verb: "DISC (P = 1)", kind: ActionKind::SignalLower },
+                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -82,14 +63,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "UA_received",
             guard: "F_eq_1",
             actions: &[
-                ActionStep {
-                    verb: "DL-DISCONNECT Confirm",
-                    kind: ActionKind::SignalUpper,
-                },
-                ActionStep {
-                    verb: "Stop T1",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "DL-DISCONNECT Confirm", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
             ],
             next: "Disconnected",
             notes: "",
@@ -101,19 +76,18 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "UA_received",
             guard: "not F_eq_1",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (D)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (D)", kind: ActionKind::SignalUpper },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
             loops: &[],
         },
         TransitionSpec {
-            id: "t04_all_other_primitives__from_upper_layer",
+            id: "t04_all_other_primitives__from_lower_layer",
             from: "AwaitingRelease",
-            on: "all_other_primitives__from_upper_layer",
+            on: "all_other_primitives__from_lower_layer",
             guard: "",
             actions: &[],
             next: "AwaitingRelease",
@@ -126,19 +100,18 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "DL_UNIT_DATA_request",
             guard: "",
-            actions: &[ActionStep {
-                verb: "UI Command",
-                kind: ActionKind::SignalLower,
-            }],
+            actions: &[
+                ActionStep { verb: "UI Command", kind: ActionKind::SignalLower },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
             loops: &[],
         },
         TransitionSpec {
-            id: "t06_all_other_primitives__from_lower_layer",
+            id: "t06_all_other_primitives__from_upper_layer",
             from: "AwaitingRelease",
-            on: "all_other_primitives__from_lower_layer",
+            on: "all_other_primitives__from_upper_layer",
             guard: "",
             actions: &[],
             next: "AwaitingRelease",
@@ -151,10 +124,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "control_field_error",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (L)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -165,10 +137,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "info_not_permitted_in_frame",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (M)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -179,10 +150,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "u_or_s_frame_length_error",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (N)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -194,14 +164,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "SABM_received",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Expedited DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "Expedited DM", kind: ActionKind::SignalLower },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -214,14 +178,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "SABME_received",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Expedited DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "Expedited DM", kind: ActionKind::SignalLower },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -234,14 +192,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "DISC_received",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Expedited UA",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "Expedited UA", kind: ActionKind::SignalLower },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -254,14 +206,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "DM_received",
             guard: "F_eq_1",
             actions: &[
-                ActionStep {
-                    verb: "DL-DISCONNECT Confirm",
-                    kind: ActionKind::SignalUpper,
-                },
-                ActionStep {
-                    verb: "Stop T1",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "DL-DISCONNECT Confirm", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
             ],
             next: "Disconnected",
             notes: "",
@@ -285,14 +231,8 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "UI_received",
             guard: "P_eq_1",
             actions: &[
-                ActionStep {
-                    verb: "UI Check",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "DM (F = 1)",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
+                ActionStep { verb: "DM (F = 1)", kind: ActionKind::SignalLower },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -304,10 +244,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "UI_received",
             guard: "not P_eq_1",
-            actions: &[ActionStep {
-                verb: "UI Check",
-                kind: ActionKind::Subroutine,
-            }],
+            actions: &[
+                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -318,10 +257,9 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             from: "AwaitingRelease",
             on: "i_or_s_command_received",
             guard: "P_eq_1",
-            actions: &[ActionStep {
-                verb: "DM (F = 1)",
-                kind: ActionKind::SignalLower,
-            }],
+            actions: &[
+                ActionStep { verb: "DM (F = 1)", kind: ActionKind::SignalLower },
+            ],
             next: "AwaitingRelease",
             notes: "",
             references: &[],
@@ -357,9 +295,7 @@ mod tests {
 
     #[test]
     fn t01_dl_disconnect_request() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t01_dl_disconnect_request")
             .expect("transition t01_dl_disconnect_request not found");
         assert_eq!(tx.on, "DL_DISCONNECT_request");
@@ -371,9 +307,7 @@ mod tests {
 
     #[test]
     fn t02_t1_expiry_yes() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t02_t1_expiry_yes")
             .expect("transition t02_t1_expiry_yes not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -388,9 +322,7 @@ mod tests {
 
     #[test]
     fn t02_t1_expiry_no() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t02_t1_expiry_no")
             .expect("transition t02_t1_expiry_no not found");
         assert_eq!(tx.on, "T1_expiry");
@@ -409,9 +341,7 @@ mod tests {
 
     #[test]
     fn t03_ua_received_yes() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t03_ua_received_yes")
             .expect("transition t03_ua_received_yes not found");
         assert_eq!(tx.on, "UA_received");
@@ -426,9 +356,7 @@ mod tests {
 
     #[test]
     fn t03_ua_received_no() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t03_ua_received_no")
             .expect("transition t03_ua_received_no not found");
         assert_eq!(tx.on, "UA_received");
@@ -440,22 +368,18 @@ mod tests {
     }
 
     #[test]
-    fn t04_all_other_primitives__from_upper_layer() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
-            .find(|x| x.id == "t04_all_other_primitives__from_upper_layer")
-            .expect("transition t04_all_other_primitives__from_upper_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+    fn t04_all_other_primitives__from_lower_layer() {
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
+            .find(|x| x.id == "t04_all_other_primitives__from_lower_layer")
+            .expect("transition t04_all_other_primitives__from_lower_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
         assert_eq!(tx.next, "AwaitingRelease");
         assert_eq!(tx.actions.len(), 0);
     }
 
     #[test]
     fn t05_dl_unit_data_request() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t05_dl_unit_data_request")
             .expect("transition t05_dl_unit_data_request not found");
         assert_eq!(tx.on, "DL_UNIT_DATA_request");
@@ -466,22 +390,18 @@ mod tests {
     }
 
     #[test]
-    fn t06_all_other_primitives__from_lower_layer() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
-            .find(|x| x.id == "t06_all_other_primitives__from_lower_layer")
-            .expect("transition t06_all_other_primitives__from_lower_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+    fn t06_all_other_primitives__from_upper_layer() {
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
+            .find(|x| x.id == "t06_all_other_primitives__from_upper_layer")
+            .expect("transition t06_all_other_primitives__from_upper_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
         assert_eq!(tx.next, "AwaitingRelease");
         assert_eq!(tx.actions.len(), 0);
     }
 
     #[test]
     fn t07_control_field_error() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t07_control_field_error")
             .expect("transition t07_control_field_error not found");
         assert_eq!(tx.on, "control_field_error");
@@ -493,9 +413,7 @@ mod tests {
 
     #[test]
     fn t08_info_not_permitted_in_frame() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t08_info_not_permitted_in_frame")
             .expect("transition t08_info_not_permitted_in_frame not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -507,9 +425,7 @@ mod tests {
 
     #[test]
     fn t09_u_or_s_frame_length_error() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t09_u_or_s_frame_length_error")
             .expect("transition t09_u_or_s_frame_length_error not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -521,9 +437,7 @@ mod tests {
 
     #[test]
     fn t10_sabm_received() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t10_sabm_received")
             .expect("transition t10_sabm_received not found");
         assert_eq!(tx.on, "SABM_received");
@@ -537,9 +451,7 @@ mod tests {
 
     #[test]
     fn t11_sabme_received() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t11_sabme_received")
             .expect("transition t11_sabme_received not found");
         assert_eq!(tx.on, "SABME_received");
@@ -553,9 +465,7 @@ mod tests {
 
     #[test]
     fn t12_disc_received() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t12_disc_received")
             .expect("transition t12_disc_received not found");
         assert_eq!(tx.on, "DISC_received");
@@ -569,9 +479,7 @@ mod tests {
 
     #[test]
     fn t13_dm_received_yes() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t13_dm_received_yes")
             .expect("transition t13_dm_received_yes not found");
         assert_eq!(tx.on, "DM_received");
@@ -586,9 +494,7 @@ mod tests {
 
     #[test]
     fn t13_dm_received_no() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t13_dm_received_no")
             .expect("transition t13_dm_received_no not found");
         assert_eq!(tx.on, "DM_received");
@@ -599,9 +505,7 @@ mod tests {
 
     #[test]
     fn t14_ui_received_yes() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t14_ui_received_yes")
             .expect("transition t14_ui_received_yes not found");
         assert_eq!(tx.on, "UI_received");
@@ -616,9 +520,7 @@ mod tests {
 
     #[test]
     fn t14_ui_received_no() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t14_ui_received_no")
             .expect("transition t14_ui_received_no not found");
         assert_eq!(tx.on, "UI_received");
@@ -631,9 +533,7 @@ mod tests {
 
     #[test]
     fn t15_i_or_s_command_received_yes() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t15_i_or_s_command_received_yes")
             .expect("transition t15_i_or_s_command_received_yes not found");
         assert_eq!(tx.on, "i_or_s_command_received");
@@ -646,9 +546,7 @@ mod tests {
 
     #[test]
     fn t15_i_or_s_command_received_no() {
-        let tx = DATA_LINK_AWAITING_RELEASE
-            .transitions
-            .iter()
+        let tx = DATA_LINK_AWAITING_RELEASE.transitions.iter()
             .find(|x| x.id == "t15_i_or_s_command_received_no")
             .expect("transition t15_i_or_s_command_received_no not found");
         assert_eq!(tx.on, "i_or_s_command_received");

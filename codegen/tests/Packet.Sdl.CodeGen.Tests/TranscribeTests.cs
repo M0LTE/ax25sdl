@@ -228,20 +228,20 @@ public class TranscribeTests
     // ─── EventResolver unit tests ─────────────────────────────────────
 
     [Theory]
-    [InlineData("DL-DISCONNECT Request",   "Signal reception from Lower Layer", "DL_DISCONNECT_request")]
-    [InlineData("DL-CONNECT Request",      "Signal reception from Lower Layer", "DL_CONNECT_request")]
-    [InlineData("DL-UNIT-DATA Request",    "Signal reception from Lower Layer", "DL_UNIT_DATA_request")]
-    [InlineData("SABM",                    "Signal reception from upper layer", "SABM_received")]
-    [InlineData("SABME",                   "Signal reception from upper layer", "SABME_received")]
-    [InlineData("UI",                      "Signal reception from upper layer", "UI_received")]
-    [InlineData("DISC",                    "Signal reception from upper layer", "DISC_received")]
-    [InlineData("UA",                      "Signal reception from upper layer", "UA_received")]
-    [InlineData("All Other Commands",      "Signal reception from upper layer", "all_other_commands")]
-    [InlineData("All Other Primitives",    "Signal reception from Lower Layer", "all_other_primitives__from_lower_layer")]
+    [InlineData("DL-DISCONNECT Request",   "Signal reception from upper layer", "DL_DISCONNECT_request")]
+    [InlineData("DL-CONNECT Request",      "Signal reception from upper layer", "DL_CONNECT_request")]
+    [InlineData("DL-UNIT-DATA Request",    "Signal reception from upper layer", "DL_UNIT_DATA_request")]
+    [InlineData("SABM",                    "Signal reception from lower layer", "SABM_received")]
+    [InlineData("SABME",                   "Signal reception from lower layer", "SABME_received")]
+    [InlineData("UI",                      "Signal reception from lower layer", "UI_received")]
+    [InlineData("DISC",                    "Signal reception from lower layer", "DISC_received")]
+    [InlineData("UA",                      "Signal reception from lower layer", "UA_received")]
+    [InlineData("All Other Commands",      "Signal reception from lower layer", "all_other_commands")]
+    [InlineData("All Other Primitives",    "Signal reception from lower layer", "all_other_primitives__from_lower_layer")]
     [InlineData("All Other Primitives",    "Signal reception from upper layer", "all_other_primitives__from_upper_layer")]
-    [InlineData("Control Field Error",     "Signal reception from upper layer", "control_field_error")]
-    [InlineData("Info Not Permitted In Frame", "Signal reception from upper layer", "info_not_permitted_in_frame")]
-    [InlineData("U or S Frame Length Error", "Signal reception from upper layer", "u_or_s_frame_length_error")]
+    [InlineData("Control Field Error",     "Signal reception from lower layer", "control_field_error")]
+    [InlineData("Info Not Permitted In Frame", "Signal reception from lower layer", "info_not_permitted_in_frame")]
+    [InlineData("U or S Frame Length Error", "Signal reception from lower layer", "u_or_s_frame_length_error")]
     public void EventResolver_canonicalises_trigger_labels(string label, string shapeClass, string expected)
     {
         EventResolver.ResolveTriggerEvent(label, shapeClass).Should().Be(expected);

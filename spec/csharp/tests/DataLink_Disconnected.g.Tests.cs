@@ -52,10 +52,10 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t04_all_other_primitives__from_lower_layer()
+    [Fact] public void t04_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_upper_layer");
+        t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(0);
     }
@@ -72,10 +72,10 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
-    [Fact] public void t06_all_other_primitives__from_upper_layer()
+    [Fact] public void t06_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_upper_layer");
-        t.On.Should().Be("all_other_primitives__from_upper_layer");
+        var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_lower_layer");
+        t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be("Discard Primitive");

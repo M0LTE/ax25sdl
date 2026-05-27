@@ -230,11 +230,11 @@ describe("DataLinkConnected", () => {
     expect(t.actions[2].kind).toBe("processing");
   });
 
-  it("t08_all_other_primitives__from_lower_layer", () => {
-    const t = DataLinkConnected.transitions.find((x) => x.id === "t08_all_other_primitives__from_lower_layer");
-    expect(t, "transition t08_all_other_primitives__from_lower_layer not found").toBeDefined();
+  it("t08_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkConnected.transitions.find((x) => x.id === "t08_all_other_primitives__from_upper_layer");
+    expect(t, "transition t08_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_lower_layer");
+    expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("Connected");
     expect(t.actions).toHaveLength(0);
   });

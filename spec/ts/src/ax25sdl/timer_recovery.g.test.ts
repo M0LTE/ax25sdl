@@ -1614,20 +1614,20 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[8].kind).toBe("subroutine");
   });
 
-  it("t25_all_other_primitives__from_upper_layer", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t25_all_other_primitives__from_upper_layer");
-    expect(t, "transition t25_all_other_primitives__from_upper_layer not found").toBeDefined();
+  it("t25_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t25_all_other_primitives__from_lower_layer");
+    expect(t, "transition t25_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_upper_layer");
+    expect(t.on).toBe("all_other_primitives__from_lower_layer");
     expect(t.next).toBe("TimerRecovery");
     expect(t.actions).toHaveLength(0);
   });
 
-  it("t26_all_other_primitives__from_lower_layer", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t26_all_other_primitives__from_lower_layer");
-    expect(t, "transition t26_all_other_primitives__from_lower_layer not found").toBeDefined();
+  it("t26_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t26_all_other_primitives__from_upper_layer");
+    expect(t, "transition t26_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_lower_layer");
+    expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("TimerRecovery");
     expect(t.actions).toHaveLength(0);
   });

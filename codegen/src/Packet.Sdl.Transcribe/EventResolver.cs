@@ -5,11 +5,9 @@ namespace Packet.Sdl.Transcribe;
 /// event name defined in spec-sdl/events.yaml.
 /// </summary>
 /// <remarks>
-/// d5 shape-class is informational, NOT semantic — CLAUDE.md is explicit that
-/// the figures don't always use "lower layer" / "upper layer" consistently
-/// with what they really mean. The resolver therefore looks at the label
-/// shape primarily and consults d5 only to disambiguate the two "All Other
-/// Primitives" catch-alls.
+/// The resolver uses the label text as its primary signal and consults
+/// d5 only to disambiguate the two "All Other Primitives" catch-alls
+/// (which share a label but differ in shape class).
 /// </remarks>
 public static class EventResolver
 {
@@ -32,17 +30,17 @@ public static class EventResolver
     {
         // The "All Other Primitives" catch-all has two flavours, distinguished
         // by which shape class drew them. Encoded verbatim per events.yaml.
-        [("All Other Primitives", "Signal reception from Lower Layer")] = "all_other_primitives__from_lower_layer",
+        [("All Other Primitives", "Signal reception from lower layer")] = "all_other_primitives__from_lower_layer",
         [("All Other Primitives", "Signal reception from upper layer")] = "all_other_primitives__from_upper_layer",
 
         // Composite "I, RR, RNR, REJ or SREJ Commands" — figc4.3.
-        [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from Lower Layer")] = "i_or_s_command_received",
+        [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from lower layer")] = "i_or_s_command_received",
         [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from upper layer")] = "i_or_s_command_received",
 
         // Internal events with specific spelling per events.yaml — only
         // I_frame_pops_off_queue preserves a capital because it's an
         // I-frame name; the others are fully lowercase.
-        [("I Frame Pops Off Queue", "Signal reception from Lower Layer")] = "I_frame_pops_off_queue",
+        [("I Frame Pops Off Queue", "Signal reception from lower layer")] = "I_frame_pops_off_queue",
         [("I Frame Pops Off Queue", "Signal reception from upper layer")] = "I_frame_pops_off_queue",
         // figc4.5 TimerRecovery draws "I Frame Pops Off Queue" as an
         // Internal Signal Reception shape (which is semantically correct —
@@ -56,7 +54,7 @@ public static class EventResolver
         // "received an I-frame from the peer". Sibling of the other bare
         // frame receptions (RR_received, REJ_received, etc.) — canonical
         // event name follows that pattern. events.yaml needs an entry.
-        [("I Frame", "Signal reception from upper layer")] = "I_received",
+        [("I Frame", "Signal reception from lower layer")] = "I_received",
     };
 
     public static string ResolveTriggerEvent(string label, string shapeClass)

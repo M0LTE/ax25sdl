@@ -19,10 +19,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "DL_DISCONNECT_request",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-DISCONNECT Confirm",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-DISCONNECT Confirm", kind: ActionKind::SignalUpper },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -33,10 +32,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "DL_UNIT_DATA_request",
             guard: "",
-            actions: &[ActionStep {
-                verb: "UI Command",
-                kind: ActionKind::SignalLower,
-            }],
+            actions: &[
+                ActionStep { verb: "UI Command", kind: ActionKind::SignalLower },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -48,22 +46,10 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "DL_CONNECT_request",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "SRT := Initial Default",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "T1V := 2 * SRT",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Establish_Data_Link",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "Set Layer 3 Initiated",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "SRT := Initial Default", kind: ActionKind::Processing },
+                ActionStep { verb: "T1V := 2 * SRT", kind: ActionKind::Processing },
+                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -71,9 +57,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t04_all_other_primitives__from_lower_layer",
+            id: "t04_all_other_primitives__from_upper_layer",
             from: "Disconnected",
-            on: "all_other_primitives__from_lower_layer",
+            on: "all_other_primitives__from_upper_layer",
             guard: "",
             actions: &[],
             next: "Disconnected",
@@ -87,14 +73,8 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "all_other_commands",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
             ],
             next: "Disconnected",
             notes: "",
@@ -102,14 +82,13 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t06_all_other_primitives__from_upper_layer",
+            id: "t06_all_other_primitives__from_lower_layer",
             from: "Disconnected",
-            on: "all_other_primitives__from_upper_layer",
+            on: "all_other_primitives__from_lower_layer",
             guard: "",
-            actions: &[ActionStep {
-                verb: "Discard Primitive",
-                kind: ActionKind::Processing,
-            }],
+            actions: &[
+                ActionStep { verb: "Discard Primitive", kind: ActionKind::Processing },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -120,10 +99,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "control_field_error",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (L)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -134,10 +112,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "info_not_permitted_in_frame",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (M)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -148,10 +125,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "u_or_s_frame_length_error",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (N)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -162,10 +138,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "UA_received",
             guard: "",
-            actions: &[ActionStep {
-                verb: "DL-ERROR Indication (C,D)",
-                kind: ActionKind::SignalUpper,
-            }],
+            actions: &[
+                ActionStep { verb: "DL-ERROR Indication (C,D)", kind: ActionKind::SignalUpper },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -176,10 +151,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             from: "Disconnected",
             on: "UI_received",
             guard: "not P_eq_1",
-            actions: &[ActionStep {
-                verb: "UI Check",
-                kind: ActionKind::Subroutine,
-            }],
+            actions: &[
+                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
+            ],
             next: "Disconnected",
             notes: "",
             references: &[],
@@ -191,18 +165,9 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "UI_received",
             guard: "P_eq_1",
             actions: &[
-                ActionStep {
-                    verb: "UI Check",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "F := 1",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
+                ActionStep { verb: "F := 1", kind: ActionKind::Processing },
+                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
             ],
             next: "Disconnected",
             notes: "",
@@ -215,14 +180,8 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "DISC_received",
             guard: "",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
             ],
             next: "Disconnected",
             notes: "",
@@ -235,14 +194,8 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "SABM_received",
             guard: "not able_to_establish",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
             ],
             next: "Disconnected",
             notes: "",
@@ -255,54 +208,18 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "SABM_received",
             guard: "able_to_establish",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "set_version_2_0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "UA",
-                    kind: ActionKind::SignalLower,
-                },
-                ActionStep {
-                    verb: "Clear Exception Conditions",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "V(s) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "V(a) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "V(r) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DL Connect Indication",
-                    kind: ActionKind::SignalUpper,
-                },
-                ActionStep {
-                    verb: "SRT := Initial Default",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "T1V := 2 * SRT",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Start T3",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "RC := 0",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
+                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
+                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
+                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "DL Connect Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "SRT := Initial Default", kind: ActionKind::Processing },
+                ActionStep { verb: "T1V := 2 * SRT", kind: ActionKind::Processing },
+                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
+                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
             ],
             next: "Connected",
             notes: "",
@@ -315,14 +232,8 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "SABME_received",
             guard: "not able_to_establish",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DM",
-                    kind: ActionKind::SignalLower,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "DM", kind: ActionKind::SignalLower },
             ],
             next: "Disconnected",
             notes: "",
@@ -335,54 +246,18 @@ pub static DATA_LINK_DISCONNECTED: StatePage = StatePage {
             on: "SABME_received",
             guard: "able_to_establish",
             actions: &[
-                ActionStep {
-                    verb: "F := P",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Set Version 2.2",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "UA",
-                    kind: ActionKind::SignalLower,
-                },
-                ActionStep {
-                    verb: "Clear Exception Conditions",
-                    kind: ActionKind::Subroutine,
-                },
-                ActionStep {
-                    verb: "V(s) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "V(a) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "V(r) := 0",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "DL Connect Indication",
-                    kind: ActionKind::SignalUpper,
-                },
-                ActionStep {
-                    verb: "SRT := Initial Default",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "T1V := 2 * SRT",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "Start T3",
-                    kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: "RC := 0",
-                    kind: ActionKind::Processing,
-                },
+                ActionStep { verb: "F := P", kind: ActionKind::Processing },
+                ActionStep { verb: "Set Version 2.2", kind: ActionKind::Processing },
+                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
+                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
+                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
+                ActionStep { verb: "DL Connect Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "SRT := Initial Default", kind: ActionKind::Processing },
+                ActionStep { verb: "T1V := 2 * SRT", kind: ActionKind::Processing },
+                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
+                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
             ],
             next: "Connected",
             notes: "",
@@ -408,9 +283,7 @@ mod tests {
 
     #[test]
     fn t01_dl_disconnect_request() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t01_dl_disconnect_request")
             .expect("transition t01_dl_disconnect_request not found");
         assert_eq!(tx.on, "DL_DISCONNECT_request");
@@ -422,9 +295,7 @@ mod tests {
 
     #[test]
     fn t02_dl_unit_data_request() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t02_dl_unit_data_request")
             .expect("transition t02_dl_unit_data_request not found");
         assert_eq!(tx.on, "DL_UNIT_DATA_request");
@@ -436,9 +307,7 @@ mod tests {
 
     #[test]
     fn t03_dl_connect_request() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t03_dl_connect_request")
             .expect("transition t03_dl_connect_request not found");
         assert_eq!(tx.on, "DL_CONNECT_request");
@@ -455,22 +324,18 @@ mod tests {
     }
 
     #[test]
-    fn t04_all_other_primitives__from_lower_layer() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
-            .find(|x| x.id == "t04_all_other_primitives__from_lower_layer")
-            .expect("transition t04_all_other_primitives__from_lower_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+    fn t04_all_other_primitives__from_upper_layer() {
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
+            .find(|x| x.id == "t04_all_other_primitives__from_upper_layer")
+            .expect("transition t04_all_other_primitives__from_upper_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.actions.len(), 0);
     }
 
     #[test]
     fn t05_all_other_commands() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t05_all_other_commands")
             .expect("transition t05_all_other_commands not found");
         assert_eq!(tx.on, "all_other_commands");
@@ -483,13 +348,11 @@ mod tests {
     }
 
     #[test]
-    fn t06_all_other_primitives__from_upper_layer() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
-            .find(|x| x.id == "t06_all_other_primitives__from_upper_layer")
-            .expect("transition t06_all_other_primitives__from_upper_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+    fn t06_all_other_primitives__from_lower_layer() {
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
+            .find(|x| x.id == "t06_all_other_primitives__from_lower_layer")
+            .expect("transition t06_all_other_primitives__from_lower_layer not found");
+        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.actions.len(), 1);
         assert_eq!(tx.actions[0].verb, "Discard Primitive");
@@ -498,9 +361,7 @@ mod tests {
 
     #[test]
     fn t07_control_field_error() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t07_control_field_error")
             .expect("transition t07_control_field_error not found");
         assert_eq!(tx.on, "control_field_error");
@@ -512,9 +373,7 @@ mod tests {
 
     #[test]
     fn t08_info_not_permitted_in_frame() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t08_info_not_permitted_in_frame")
             .expect("transition t08_info_not_permitted_in_frame not found");
         assert_eq!(tx.on, "info_not_permitted_in_frame");
@@ -526,9 +385,7 @@ mod tests {
 
     #[test]
     fn t09_u_or_s_frame_length_error() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t09_u_or_s_frame_length_error")
             .expect("transition t09_u_or_s_frame_length_error not found");
         assert_eq!(tx.on, "u_or_s_frame_length_error");
@@ -540,9 +397,7 @@ mod tests {
 
     #[test]
     fn t10_ua_received() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t10_ua_received")
             .expect("transition t10_ua_received not found");
         assert_eq!(tx.on, "UA_received");
@@ -554,9 +409,7 @@ mod tests {
 
     #[test]
     fn t11_ui_received_no() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t11_ui_received_no")
             .expect("transition t11_ui_received_no not found");
         assert_eq!(tx.on, "UI_received");
@@ -569,9 +422,7 @@ mod tests {
 
     #[test]
     fn t11_ui_received_yes() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t11_ui_received_yes")
             .expect("transition t11_ui_received_yes not found");
         assert_eq!(tx.on, "UI_received");
@@ -588,9 +439,7 @@ mod tests {
 
     #[test]
     fn t12_disc_received() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t12_disc_received")
             .expect("transition t12_disc_received not found");
         assert_eq!(tx.on, "DISC_received");
@@ -604,9 +453,7 @@ mod tests {
 
     #[test]
     fn t13_sabm_received_no() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t13_sabm_received_no")
             .expect("transition t13_sabm_received_no not found");
         assert_eq!(tx.on, "SABM_received");
@@ -621,9 +468,7 @@ mod tests {
 
     #[test]
     fn t13_sabm_received_yes() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t13_sabm_received_yes")
             .expect("transition t13_sabm_received_yes not found");
         assert_eq!(tx.on, "SABM_received");
@@ -658,9 +503,7 @@ mod tests {
 
     #[test]
     fn t14_sabme_received_no() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t14_sabme_received_no")
             .expect("transition t14_sabme_received_no not found");
         assert_eq!(tx.on, "SABME_received");
@@ -675,9 +518,7 @@ mod tests {
 
     #[test]
     fn t14_sabme_received_yes() {
-        let tx = DATA_LINK_DISCONNECTED
-            .transitions
-            .iter()
+        let tx = DATA_LINK_DISCONNECTED.transitions.iter()
             .find(|x| x.id == "t14_sabme_received_yes")
             .expect("transition t14_sabme_received_yes not found");
         assert_eq!(tx.on, "SABME_received");

@@ -598,19 +598,19 @@ func TestDataLinkConnected_t07_dl_connect_request_yes(t *testing.T) {
 	}
 }
 
-func TestDataLinkConnected_t08_all_other_primitives__from_lower_layer(t *testing.T) {
+func TestDataLinkConnected_t08_all_other_primitives__from_upper_layer(t *testing.T) {
 	var tx *TransitionSpec
 	for i := range DataLinkConnected.Transitions {
-		if DataLinkConnected.Transitions[i].ID == "t08_all_other_primitives__from_lower_layer" {
+		if DataLinkConnected.Transitions[i].ID == "t08_all_other_primitives__from_upper_layer" {
 			tx = &DataLinkConnected.Transitions[i]
 			break
 		}
 	}
 	if tx == nil {
-		t.Fatalf("transition t08_all_other_primitives__from_lower_layer not found")
+		t.Fatalf("transition t08_all_other_primitives__from_upper_layer not found")
 	}
-	if tx.On != "all_other_primitives__from_lower_layer" {
-		t.Errorf("On = %q, want all_other_primitives__from_lower_layer", tx.On)
+	if tx.On != "all_other_primitives__from_upper_layer" {
+		t.Errorf("On = %q, want all_other_primitives__from_upper_layer", tx.On)
 	}
 	if tx.Next != "Connected" {
 		t.Errorf("Next = %q, want Connected", tx.Next)

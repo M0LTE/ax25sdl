@@ -1075,9 +1075,9 @@ public static class DataLink_TimerRecovery
             UndefinedBranches: null,
             OnLabel: "SREJ"),
         new TransitionSpec(
-            Id: "t25_all_other_primitives__from_upper_layer",
+            Id: "t25_all_other_primitives__from_lower_layer",
             From: "TimerRecovery",
-            On: "all_other_primitives__from_upper_layer",
+            On: "all_other_primitives__from_lower_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",
@@ -1087,9 +1087,9 @@ public static class DataLink_TimerRecovery
             UndefinedBranches: null,
             OnLabel: "All Other Primitives"),
         new TransitionSpec(
-            Id: "t26_all_other_primitives__from_lower_layer",
+            Id: "t26_all_other_primitives__from_upper_layer",
             From: "TimerRecovery",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",

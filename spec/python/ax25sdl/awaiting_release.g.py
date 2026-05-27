@@ -89,9 +89,9 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t04_all_other_primitives__from_upper_layer",
+            id="t04_all_other_primitives__from_lower_layer",
             from_="AwaitingRelease",
-            on="all_other_primitives__from_upper_layer",
+            on="all_other_primitives__from_lower_layer",
             guard="",
             actions=(),
             next="AwaitingRelease",
@@ -113,9 +113,9 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t06_all_other_primitives__from_lower_layer",
+            id="t06_all_other_primitives__from_upper_layer",
             from_="AwaitingRelease",
-            on="all_other_primitives__from_lower_layer",
+            on="all_other_primitives__from_upper_layer",
             guard="",
             actions=(),
             next="AwaitingRelease",

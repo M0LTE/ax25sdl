@@ -203,13 +203,13 @@ def test_t05_t1_expiry_no() -> None:
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t06_all_other_primitives__from_upper_layer() -> None:
+def test_t06_all_other_primitives__from_lower_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_CONNECTION.transitions if x.id == "t06_all_other_primitives__from_upper_layer"),
+        (x for x in DATA_LINK_AWAITING_CONNECTION.transitions if x.id == "t06_all_other_primitives__from_lower_layer"),
         None,
     )
-    assert t is not None, "transition t06_all_other_primitives__from_upper_layer not found"
-    assert t.on == "all_other_primitives__from_upper_layer"
+    assert t is not None, "transition t06_all_other_primitives__from_lower_layer not found"
+    assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "AwaitingConnection"
     assert len(t.actions) == 0
 
@@ -294,13 +294,13 @@ def test_t10_i_frame_pops_off_queue_no() -> None:
     assert len(t.actions) == 0
 
 
-def test_t11_all_other_primitives__from_lower_layer() -> None:
+def test_t11_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_AWAITING_CONNECTION.transitions if x.id == "t11_all_other_primitives__from_lower_layer"),
+        (x for x in DATA_LINK_AWAITING_CONNECTION.transitions if x.id == "t11_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t11_all_other_primitives__from_lower_layer not found"
-    assert t.on == "all_other_primitives__from_lower_layer"
+    assert t is not None, "transition t11_all_other_primitives__from_upper_layer not found"
+    assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "AwaitingConnection"
     assert len(t.actions) == 0
 

@@ -258,13 +258,13 @@ def test_t07_dl_connect_request_yes() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
 
 
-def test_t08_all_other_primitives__from_lower_layer() -> None:
+def test_t08_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t08_all_other_primitives__from_lower_layer"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t08_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t08_all_other_primitives__from_lower_layer not found"
-    assert t.on == "all_other_primitives__from_lower_layer"
+    assert t is not None, "transition t08_all_other_primitives__from_upper_layer not found"
+    assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "Connected"
     assert len(t.actions) == 0
 

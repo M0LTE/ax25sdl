@@ -58,13 +58,13 @@ def test_t03_dl_connect_request() -> None:
     assert t.actions[3].kind == ActionKind.PROCESSING
 
 
-def test_t04_all_other_primitives__from_lower_layer() -> None:
+def test_t04_all_other_primitives__from_upper_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t04_all_other_primitives__from_lower_layer"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t04_all_other_primitives__from_upper_layer"),
         None,
     )
-    assert t is not None, "transition t04_all_other_primitives__from_lower_layer not found"
-    assert t.on == "all_other_primitives__from_lower_layer"
+    assert t is not None, "transition t04_all_other_primitives__from_upper_layer not found"
+    assert t.on == "all_other_primitives__from_upper_layer"
     assert t.next == "Disconnected"
     assert len(t.actions) == 0
 
@@ -84,13 +84,13 @@ def test_t05_all_other_commands() -> None:
     assert t.actions[1].kind == ActionKind.SIGNAL_LOWER
 
 
-def test_t06_all_other_primitives__from_upper_layer() -> None:
+def test_t06_all_other_primitives__from_lower_layer() -> None:
     t = next(
-        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t06_all_other_primitives__from_upper_layer"),
+        (x for x in DATA_LINK_DISCONNECTED.transitions if x.id == "t06_all_other_primitives__from_lower_layer"),
         None,
     )
-    assert t is not None, "transition t06_all_other_primitives__from_upper_layer not found"
-    assert t.on == "all_other_primitives__from_upper_layer"
+    assert t is not None, "transition t06_all_other_primitives__from_lower_layer not found"
+    assert t.on == "all_other_primitives__from_lower_layer"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "Discard Primitive"

@@ -165,9 +165,9 @@ var DataLinkAwaitingConnection = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t06_all_other_primitives__from_upper_layer",
+			ID:         "t06_all_other_primitives__from_lower_layer",
 			From:       "AwaitingConnection",
-			On:         "all_other_primitives__from_upper_layer",
+			On:         "all_other_primitives__from_lower_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingConnection",
@@ -251,9 +251,9 @@ var DataLinkAwaitingConnection = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t11_all_other_primitives__from_lower_layer",
+			ID:         "t11_all_other_primitives__from_upper_layer",
 			From:       "AwaitingConnection",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "AwaitingConnection",

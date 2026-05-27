@@ -91,9 +91,9 @@ public static class DataLink_AwaitingV22Connection
             UndefinedBranches: null,
             OnLabel: "I Frame Pops Off Queue"),
         new TransitionSpec(
-            Id: "t06_all_other_primitives__from_lower_layer",
+            Id: "t06_all_other_primitives__from_upper_layer",
             From: "AwaitingV22Connection",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",
@@ -307,9 +307,9 @@ public static class DataLink_AwaitingV22Connection
             UndefinedBranches: null,
             OnLabel: "DISC"),
         new TransitionSpec(
-            Id: "t18_all_other_primitives__from_upper_layer",
+            Id: "t18_all_other_primitives__from_lower_layer",
             From: "AwaitingV22Connection",
-            On: "all_other_primitives__from_upper_layer",
+            On: "all_other_primitives__from_lower_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",

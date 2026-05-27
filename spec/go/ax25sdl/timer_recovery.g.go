@@ -1431,9 +1431,9 @@ var DataLinkTimerRecovery = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t25_all_other_primitives__from_upper_layer",
+			ID:         "t25_all_other_primitives__from_lower_layer",
 			From:       "TimerRecovery",
-			On:         "all_other_primitives__from_upper_layer",
+			On:         "all_other_primitives__from_lower_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "TimerRecovery",
@@ -1442,9 +1442,9 @@ var DataLinkTimerRecovery = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t26_all_other_primitives__from_lower_layer",
+			ID:         "t26_all_other_primitives__from_upper_layer",
 			From:       "TimerRecovery",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "TimerRecovery",

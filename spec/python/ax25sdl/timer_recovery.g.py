@@ -1439,9 +1439,9 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t25_all_other_primitives__from_upper_layer",
+            id="t25_all_other_primitives__from_lower_layer",
             from_="TimerRecovery",
-            on="all_other_primitives__from_upper_layer",
+            on="all_other_primitives__from_lower_layer",
             guard="",
             actions=(),
             next="TimerRecovery",
@@ -1450,9 +1450,9 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             loops=(),
         ),
         TransitionSpec(
-            id="t26_all_other_primitives__from_lower_layer",
+            id="t26_all_other_primitives__from_upper_layer",
             from_="TimerRecovery",
-            on="all_other_primitives__from_lower_layer",
+            on="all_other_primitives__from_upper_layer",
             guard="",
             actions=(),
             next="TimerRecovery",

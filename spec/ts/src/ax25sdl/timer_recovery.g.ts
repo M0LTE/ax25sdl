@@ -1433,9 +1433,9 @@ export const DataLinkTimerRecovery: StatePage = {
       loops: [],
     },
     {
-      id: "t25_all_other_primitives__from_upper_layer",
+      id: "t25_all_other_primitives__from_lower_layer",
       from: "TimerRecovery",
-      on: "all_other_primitives__from_upper_layer",
+      on: "all_other_primitives__from_lower_layer",
       guard: "",
       actions: [],
       next: "TimerRecovery",
@@ -1444,9 +1444,9 @@ export const DataLinkTimerRecovery: StatePage = {
       loops: [],
     },
     {
-      id: "t26_all_other_primitives__from_lower_layer",
+      id: "t26_all_other_primitives__from_upper_layer",
       from: "TimerRecovery",
-      on: "all_other_primitives__from_lower_layer",
+      on: "all_other_primitives__from_upper_layer",
       guard: "",
       actions: [],
       next: "TimerRecovery",

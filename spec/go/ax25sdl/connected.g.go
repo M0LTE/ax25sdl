@@ -217,9 +217,9 @@ var DataLinkConnected = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t08_all_other_primitives__from_lower_layer",
+			ID:         "t08_all_other_primitives__from_upper_layer",
 			From:       "Connected",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "Connected",

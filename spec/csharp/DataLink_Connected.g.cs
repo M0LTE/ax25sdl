@@ -187,9 +187,9 @@ public static class DataLink_Connected
             UndefinedBranches: null,
             OnLabel: "DL-CONNECT Request"),
         new TransitionSpec(
-            Id: "t08_all_other_primitives__from_lower_layer",
+            Id: "t08_all_other_primitives__from_upper_layer",
             From: "Connected",
-            On: "all_other_primitives__from_lower_layer",
+            On: "all_other_primitives__from_upper_layer",
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "Connected",

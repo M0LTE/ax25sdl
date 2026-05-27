@@ -53,9 +53,9 @@ var DataLinkDisconnected = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:         "t04_all_other_primitives__from_lower_layer",
+			ID:         "t04_all_other_primitives__from_upper_layer",
 			From:       "Disconnected",
-			On:         "all_other_primitives__from_lower_layer",
+			On:         "all_other_primitives__from_upper_layer",
 			Guard:      "",
 			Actions:    []ActionStep{},
 			Next:       "Disconnected",
@@ -78,9 +78,9 @@ var DataLinkDisconnected = StatePage{
 			Loops:      []LoopRange{},
 		},
 		{
-			ID:    "t06_all_other_primitives__from_upper_layer",
+			ID:    "t06_all_other_primitives__from_lower_layer",
 			From:  "Disconnected",
-			On:    "all_other_primitives__from_upper_layer",
+			On:    "all_other_primitives__from_lower_layer",
 			Guard: "",
 			Actions: []ActionStep{
 				{Verb: "Discard Primitive", Kind: Processing},

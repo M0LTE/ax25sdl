@@ -176,10 +176,10 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t06_all_other_primitives__from_upper_layer()
+    [Fact] public void t06_all_other_primitives__from_lower_layer()
     {
-        var t = DataLink_AwaitingConnection.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_upper_layer");
-        t.On.Should().Be("all_other_primitives__from_upper_layer");
+        var t = DataLink_AwaitingConnection.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_lower_layer");
+        t.On.Should().Be("all_other_primitives__from_lower_layer");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(0);
     }
@@ -246,10 +246,10 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Actions.Count.Should().Be(0);
     }
 
-    [Fact] public void t11_all_other_primitives__from_lower_layer()
+    [Fact] public void t11_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_AwaitingConnection.Transitions.Single(x => x.Id == "t11_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        var t = DataLink_AwaitingConnection.Transitions.Single(x => x.Id == "t11_all_other_primitives__from_upper_layer");
+        t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(0);
     }

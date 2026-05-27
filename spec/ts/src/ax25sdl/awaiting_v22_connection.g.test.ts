@@ -81,11 +81,11 @@ describe("DataLinkAwaitingV22Connection", () => {
     expect(t.actions[0].kind).toBe("internal_out");
   });
 
-  it("t06_all_other_primitives__from_lower_layer", () => {
-    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t06_all_other_primitives__from_lower_layer");
-    expect(t, "transition t06_all_other_primitives__from_lower_layer not found").toBeDefined();
+  it("t06_all_other_primitives__from_upper_layer", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t06_all_other_primitives__from_upper_layer");
+    expect(t, "transition t06_all_other_primitives__from_upper_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_lower_layer");
+    expect(t.on).toBe("all_other_primitives__from_upper_layer");
     expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(0);
   });
@@ -363,11 +363,11 @@ describe("DataLinkAwaitingV22Connection", () => {
     expect(t.actions[1].kind).toBe("signal_lower");
   });
 
-  it("t18_all_other_primitives__from_upper_layer", () => {
-    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t18_all_other_primitives__from_upper_layer");
-    expect(t, "transition t18_all_other_primitives__from_upper_layer not found").toBeDefined();
+  it("t18_all_other_primitives__from_lower_layer", () => {
+    const t = DataLinkAwaitingV22Connection.transitions.find((x) => x.id === "t18_all_other_primitives__from_lower_layer");
+    expect(t, "transition t18_all_other_primitives__from_lower_layer not found").toBeDefined();
     if (!t) return;
-    expect(t.on).toBe("all_other_primitives__from_upper_layer");
+    expect(t.on).toBe("all_other_primitives__from_lower_layer");
     expect(t.next).toBe("AwaitingV22Connection");
     expect(t.actions).toHaveLength(0);
   });

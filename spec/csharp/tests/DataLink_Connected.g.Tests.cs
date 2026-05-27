@@ -219,10 +219,10 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
-    [Fact] public void t08_all_other_primitives__from_lower_layer()
+    [Fact] public void t08_all_other_primitives__from_upper_layer()
     {
-        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t08_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        var t = DataLink_Connected.Transitions.Single(x => x.Id == "t08_all_other_primitives__from_upper_layer");
+        t.On.Should().Be("all_other_primitives__from_upper_layer");
         t.Next.Should().Be("Connected");
         t.Actions.Count.Should().Be(0);
     }
