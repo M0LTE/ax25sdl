@@ -146,9 +146,18 @@ jobs:
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
-            echo "::error::Generated Rust files are out of sync."
+            echo "::error::Generated Rust files are out of sync. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --rust\` locally and commit the diff."
             exit 1
           fi
+      - name: cargo fmt --check
+        working-directory: spec/rust
+        run: cargo fmt --check
+      - name: cargo build
+        working-directory: spec/rust
+        run: cargo build
+      - name: cargo test
+        working-directory: spec/rust
+        run: cargo test
 
   c-drift:
     name: codegen drift — C + cmake build/ctest/clang-format
@@ -161,9 +170,15 @@ jobs:
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
-            echo "::error::Generated C files are out of sync."
+            echo "::error::Generated C files are out of sync. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --c\` locally and commit the diff."
             exit 1
           fi
+      - name: cmake build + ctest
+        working-directory: spec/c
+        run: |
+          cmake -B build -S .
+          cmake --build build
+          ctest --test-dir build --output-on-failure
 
   python-drift:
     name: codegen drift — Python + pytest/ruff
@@ -176,9 +191,17 @@ jobs:
       - name: assert no diff
         run: |
           if ! git diff --exit-code; then
-            echo "::error::Generated Python files are out of sync."
+            echo "::error::Generated Python files are out of sync. Run \`dotnet run --project codegen/src/Packet.Sdl.CodeGen -- --python\` locally and commit the diff."
             exit 1
           fi
+      - name: pytest + ruff
+        working-directory: spec/python
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet --upgrade pip
+          .venv/bin/pip install --quiet pytest ruff
+          .venv/bin/ruff check .
+          .venv/bin/pytest -q --import-mode=importlib
 
   transcribe-drift:
     name: transcribe drift — graphml → yaml

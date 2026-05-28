@@ -80,11 +80,20 @@ cd spec/go && go build ./... && go vet ./... && go test ./... && gofmt -l .
 
 # Verify generated TS typechecks + tests pass
 cd spec/ts && npm ci && npm run typecheck && npm test
+
+# Verify generated Rust compiles + tests + fmt clean
+cd spec/rust && cargo build && cargo test && cargo fmt --check
+
+# Verify generated C compiles + tests (cmake + ctest)
+cd spec/c && cmake -B build -S . && cmake --build build && ctest --test-dir build --output-on-failure
+
+# Verify generated Python imports + tests + lint
+cd spec/python && python3 -m pytest --import-mode=importlib && ruff check .
 ```
 
 ## Things to avoid
 
-- Don't hand-edit `spec/csharp/*.g.cs`, `spec/go/ax25sdl/*.g.go`, or `spec/ts/src/ax25sdl/*.g.ts`. They are generated. Edit the corresponding `*.sdl.yaml` and rerun the codegen. (`spec/go/ax25sdl/types.go`, `spec/ts/src/ax25sdl/types.ts`, and `spec/ts/src/ax25sdl/*.test.ts` ARE hand-written — keep the type files in sync with the C# types in `spec/csharp/`.)
+- Don't hand-edit the generated files: `spec/csharp/*.g.cs`, `spec/go/ax25sdl/*.g.go`, `spec/ts/src/ax25sdl/*.g.ts`, `spec/rust/src/*.g.rs`, `spec/c/src/*.g.{c,h}`, `spec/python/ax25sdl/*.g.py` (+ `*_g_test.py`). Edit the corresponding `*.sdl.yaml` and rerun the codegen. The per-backend **runtime type homes are hand-written** and must stay in sync with the C# types in `spec/csharp/`: `spec/go/ax25sdl/types.go`, `spec/ts/src/ax25sdl/types.ts` (+ `*.test.ts`), `spec/rust/src/types.rs`, `spec/c/src/ax25sdl.h`, `spec/python/ax25sdl/types.py`. The per-backend build files are also hand-written: `spec/rust/Cargo.toml`, `spec/c/CMakeLists.txt`. All six backends are built + tested in CI (not just drift-checked) — see the verify commands above.
 - Don't add `[Version=...]` on `<PackageReference>` items — CPM enforces a central version table.
 - Don't infer protocol semantics from the spec PNGs. See "Encode-then-verify" above.
 - **Don't add new GitHub Actions jobs with `runs-on: ubuntu-latest`** (or any other GitHub-hosted runner label). This project has no Actions minutes budget for hosted runners — every workflow job MUST target `[self-hosted, Linux, X64]`. Same rule as `m0lte/packet.net`.

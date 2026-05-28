@@ -70,3 +70,13 @@ ehthumbs.db
 
 # TypeScript build artefacts for the ax25 web library
 web/ax25/dist/
+
+# Spec backend build artefacts (built by CI / locally, never committed).
+# The Rust crate is a lib, so its lockfile is not tracked.
+spec/rust/target/
+spec/rust/Cargo.lock
+spec/c/build/
+**/__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/

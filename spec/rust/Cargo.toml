@@ -1,0 +1,16 @@
+# Hand-written crate manifest — lives outside the *.g.rs codegen glob (like
+# spec/go/go.mod for the Go backend). Not published to crates.io; it exists so
+# CI can `cargo build` / `cargo test` / `cargo fmt` the generated SDL tables.
+# The version is nominal (tracks the spec release line loosely); the crate is a
+# build/test target, not a published artifact.
+[package]
+name = "ax25sdl"
+version = "0.7.0"
+edition = "2021"
+description = "Generated AX.25 v2.2 SDL state-machine tables (Rust backend)."
+license = "MIT"
+repository = "https://github.com/M0LTE/ax25sdl"
+publish = false
+
+[lib]
+path = "src/lib.rs"
