@@ -542,7 +542,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t18_rr_received_yes_yes_no",
             from_="TimerRecovery",
             on="RR_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -562,7 +562,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t18_rr_received_yes_yes_yes",
             from_="TimerRecovery",
             on="RR_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -685,7 +685,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t19_rnr_received_yes_yes_no",
             from_="TimerRecovery",
             on="RNR_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
             actions=(
                 ActionStep(verb="set_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -705,7 +705,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t19_rnr_received_yes_yes_yes",
             from_="TimerRecovery",
             on="RNR_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
             actions=(
                 ActionStep(verb="set_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -1066,7 +1066,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_no_yes_yes_yes",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard="not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Enquiry_Response_F_1", kind=ActionKind.SUBROUTINE),
@@ -1081,7 +1081,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_no_yes_yes_no",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard="not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Enquiry_Response_F_1", kind=ActionKind.SUBROUTINE),
@@ -1130,7 +1130,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_no_no_yes_yes",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard="not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(a) := N(r)", kind=ActionKind.PROCESSING),
@@ -1144,7 +1144,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_no_no_yes_no",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard="not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(a) := N(r)", kind=ActionKind.PROCESSING),
@@ -1222,7 +1222,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_yes_yes_yes",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -1240,7 +1240,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t23_rej_received_yes_yes_no",
             from_="TimerRecovery",
             on="REJ_received",
-            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+            guard="response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -1260,7 +1260,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t24_srej_received_no_yes_yes_yes",
             from_="TimerRecovery",
             on="SREJ_received",
-            guard="not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va",
+            guard="not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(a) := N(r)", kind=ActionKind.PROCESSING),
@@ -1275,7 +1275,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t24_srej_received_no_yes_yes_no",
             from_="TimerRecovery",
             on="SREJ_received",
-            guard="not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va",
+            guard="not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(a) := N(r)", kind=ActionKind.PROCESSING),
@@ -1378,7 +1378,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t24_srej_received_yes_yes_yes_yes",
             from_="TimerRecovery",
             on="SREJ_received",
-            guard="response and va_le_nr_le_vs and F_eq_1 and vs_eq_va",
+            guard="response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
@@ -1397,7 +1397,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t24_srej_received_yes_yes_yes_no",
             from_="TimerRecovery",
             on="SREJ_received",
-            guard="response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va",
+            guard="response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
             actions=(
                 ActionStep(verb="clear_peer_receiver_busy", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),

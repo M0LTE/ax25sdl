@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Packet.Sdl.IR;
 
 /// <summary>
@@ -111,6 +113,15 @@ public static class Resolver
         List<ResolvedLoop> loops,
         List<ResolvedUndefinedBranch>? undefined = null)
     {
+        // Variables assigned by processing actions earlier in this path, mapped
+        // to the bare-variable value assigned (or null when the right-hand side
+        // is not a bare variable). The figure may draw a decision *after* such
+        // an assignment — SDL semantics say it reads the post-assignment value —
+        // but the guard is evaluated before any action runs, so we substitute
+        // the assigned value into the guard predicate to preserve the figure's
+        // meaning. (ax25sdl#53 — figc4.5 recovery-complete read stale V(a).)
+        var assigned = new Dictionary<string, string?>(StringComparer.Ordinal);
+
         foreach (var step in path)
         {
             if (!string.IsNullOrWhiteSpace(step.Decision))
@@ -126,7 +137,8 @@ public static class Resolver
                 }
                 else
                 {
-                    predicates.Add(step.Branch == "Yes" ? decision.Predicate : "not " + decision.Predicate);
+                    var pred = ResolveStaleReads(decision.Predicate, assigned, decision.Id);
+                    predicates.Add(step.Branch == "Yes" ? pred : "not " + pred);
                 }
             }
             else if (!string.IsNullOrWhiteSpace(step.LoopWhile))
@@ -138,12 +150,17 @@ public static class Resolver
                     if (!string.IsNullOrWhiteSpace(body.Action))
                     {
                         actions.Add(new ResolvedAction(body.Action!, ParseKind(body.Kind!)));
+                        RecordAssignment(body.Action!, assigned);
                     }
                 }
                 // The continuing edge is the figure branch that loops back. Yes
                 // (default) means "keep looping while the predicate holds"; No
                 // means the predicate is the exit test, so negate it to get the
                 // continue condition — same convention as decision-branch guards.
+                // NOTE: a loop continue-predicate is re-evaluated by the runtime
+                // each iteration against current state, so — unlike a decision
+                // guard, which is hoisted ahead of the actions — it is never
+                // stale and must NOT be substituted. (ax25sdl#53)
                 var continueBranch = string.IsNullOrWhiteSpace(step.Branch) ? "Yes" : step.Branch!;
                 var continuePredicate = continueBranch == "No" ? "not " + loopGuard.Predicate : loopGuard.Predicate;
                 var testAtEnd = string.Equals(step.Test, "tail", StringComparison.Ordinal);
@@ -152,9 +169,76 @@ public static class Resolver
             else
             {
                 actions.Add(new ResolvedAction(step.Action!, ParseKind(step.Kind!)));
+                RecordAssignment(step.Action!, assigned);
             }
         }
     }
+
+    /// <summary>Spec variable spelling → guard-predicate token.</summary>
+    private static readonly IReadOnlyDictionary<string, string> SpecToToken =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["V(s)"] = "vs", ["V(a)"] = "va", ["V(r)"] = "vr", ["N(r)"] = "nr", ["N(s)"] = "ns",
+        };
+
+    /// <summary>
+    /// Records a processing action of the form "X := Y" / "X &lt;- Y" into the
+    /// per-path assignment map: token → assigned bare-variable token, or null
+    /// when the right-hand side is not a bare variable (e.g. "V(s) := 0").
+    /// Non-assignment actions are ignored.
+    /// </summary>
+    private static void RecordAssignment(string action, Dictionary<string, string?> assigned)
+    {
+        var m = Regex.Match(action.Trim(),
+            @"^(V\(s\)|V\(a\)|V\(r\)|N\(r\)|N\(s\))\s*(?::=|<-|=)\s*(.+)$");
+        if (!m.Success) return;
+        var lhs = SpecToToken[m.Groups[1].Value];
+        var rhsRaw = m.Groups[2].Value.Trim();
+        assigned[lhs] = SpecToToken.TryGetValue(rhsRaw, out var rhsTok) ? rhsTok : null;
+    }
+
+    /// <summary>
+    /// Substitutes any variable assigned earlier in the path into a guard
+    /// predicate, so a decision the figure draws after an assignment reads the
+    /// post-assignment value even though the guard is evaluated before actions
+    /// run. Throws if a stale read cannot be resolved to a bare-variable value
+    /// (assignment from a non-variable expression, or an assignment cycle): such
+    /// a table cannot be faithfully flattened to a pre-action guard and must not
+    /// be emitted silently. (ax25sdl#53.)
+    /// </summary>
+    private static string ResolveStaleReads(
+        string predicate,
+        Dictionary<string, string?> assigned,
+        string decisionId)
+    {
+        if (assigned.Count == 0) return predicate;
+        var pred = predicate;
+        for (var iter = 0; iter <= SpecToToken.Count; iter++)
+        {
+            var stale = ReadVars(pred).Where(assigned.ContainsKey).ToList();
+            if (stale.Count == 0) return pred;
+            foreach (var tok in stale)
+            {
+                var rhs = assigned[tok];
+                if (rhs is null)
+                    throw new InvalidOperationException(
+                        $"decision '{decisionId}' guard '{predicate}' reads variable '{tok}' " +
+                        $"that an earlier action in the same path assigns from a non-variable " +
+                        $"expression; cannot derive a pre-action guard (ax25sdl#53).");
+                pred = ReplaceToken(pred, tok, rhs);
+            }
+        }
+        throw new InvalidOperationException(
+            $"decision '{decisionId}' guard '{predicate}': unresolved stale variable read " +
+            $"(possible assignment cycle) (ax25sdl#53).");
+    }
+
+    /// <summary>Bare-variable tokens a guard predicate reads (whole-token match).</summary>
+    private static IEnumerable<string> ReadVars(string predicate) =>
+        SpecToToken.Values.Where(tok => Regex.IsMatch(predicate, $@"(?:^|_){tok}(?:$|_)"));
+
+    private static string ReplaceToken(string predicate, string tok, string rhs) =>
+        Regex.Replace(predicate, $@"(?<=^|_){tok}(?=$|_)", rhs);
 
     public static ResolvedActionKind ParseKind(string kind) => kind switch
     {

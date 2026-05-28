@@ -656,7 +656,7 @@ def test_t18_rr_received_yes_yes_no() -> None:
     assert t is not None, "transition t18_rr_received_yes_yes_no not found"
     assert t.on == "RR_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -684,7 +684,7 @@ def test_t18_rr_received_yes_yes_yes() -> None:
     assert t is not None, "transition t18_rr_received_yes_yes_yes not found"
     assert t.on == "RR_received"
     assert t.next == "Connected"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -834,7 +834,7 @@ def test_t19_rnr_received_yes_yes_no() -> None:
     assert t is not None, "transition t19_rnr_received_yes_yes_no not found"
     assert t.on == "RNR_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -862,7 +862,7 @@ def test_t19_rnr_received_yes_yes_yes() -> None:
     assert t is not None, "transition t19_rnr_received_yes_yes_yes not found"
     assert t.on == "RNR_received"
     assert t.next == "Connected"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "set_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1320,7 +1320,7 @@ def test_t23_rej_received_no_yes_yes_yes() -> None:
     assert t is not None, "transition t23_rej_received_no_yes_yes_yes not found"
     assert t.on == "REJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
+    assert t.guard == "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1338,7 +1338,7 @@ def test_t23_rej_received_no_yes_yes_no() -> None:
     assert t is not None, "transition t23_rej_received_no_yes_yes_no not found"
     assert t.on == "REJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+    assert t.guard == "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
     assert len(t.actions) == 7
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1400,7 +1400,7 @@ def test_t23_rej_received_no_no_yes_yes() -> None:
     assert t is not None, "transition t23_rej_received_no_no_yes_yes not found"
     assert t.on == "REJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va"
+    assert t.guard == "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1416,7 +1416,7 @@ def test_t23_rej_received_no_no_yes_no() -> None:
     assert t is not None, "transition t23_rej_received_no_no_yes_no not found"
     assert t.on == "REJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+    assert t.guard == "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1512,7 +1512,7 @@ def test_t23_rej_received_yes_yes_yes() -> None:
     assert t is not None, "transition t23_rej_received_yes_yes_yes not found"
     assert t.on == "REJ_received"
     assert t.next == "Connected"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1536,7 +1536,7 @@ def test_t23_rej_received_yes_yes_no() -> None:
     assert t is not None, "transition t23_rej_received_yes_yes_no not found"
     assert t.on == "REJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va"
+    assert t.guard == "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1564,7 +1564,7 @@ def test_t24_srej_received_no_yes_yes_yes() -> None:
     assert t is not None, "transition t24_srej_received_no_yes_yes_yes not found"
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va"
+    assert t.guard == "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1582,7 +1582,7 @@ def test_t24_srej_received_no_yes_yes_no() -> None:
     assert t is not None, "transition t24_srej_received_no_yes_yes_no not found"
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va"
+    assert t.guard == "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1704,7 +1704,7 @@ def test_t24_srej_received_yes_yes_yes_yes() -> None:
     assert t is not None, "transition t24_srej_received_yes_yes_yes_yes not found"
     assert t.on == "SREJ_received"
     assert t.next == "Connected"
-    assert t.guard == "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va"
+    assert t.guard == "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr"
     assert len(t.actions) == 7
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -1730,7 +1730,7 @@ def test_t24_srej_received_yes_yes_yes_no() -> None:
     assert t is not None, "transition t24_srej_received_yes_yes_yes_no not found"
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va"
+    assert t.guard == "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr"
     assert len(t.actions) == 11
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING

@@ -533,7 +533,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -553,7 +553,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t18_rr_received_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RR_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -676,7 +676,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -696,7 +696,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t19_rnr_received_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "RNR_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "set_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1057,7 +1057,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1072,7 +1072,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Enquiry_Response_F_1", Kind: Subroutine},
@@ -1121,7 +1121,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_yes_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1135,7 +1135,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_no_no_yes_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1213,7 +1213,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1231,7 +1231,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t23_rej_received_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "REJ_received",
-			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+			Guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1251,7 +1251,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_no_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va",
+			Guard: "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1266,7 +1266,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_no_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va",
+			Guard: "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "V(a) := N(r)", Kind: Processing},
@@ -1369,7 +1369,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_yes_yes_yes_yes",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va",
+			Guard: "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},
@@ -1388,7 +1388,7 @@ var DataLinkTimerRecovery = StatePage{
 			ID:    "t24_srej_received_yes_yes_yes_no",
 			From:  "TimerRecovery",
 			On:    "SREJ_received",
-			Guard: "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va",
+			Guard: "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
 			Actions: []ActionStep{
 				{Verb: "clear_peer_receiver_busy", Kind: Processing},
 				{Verb: "Stop T1", Kind: Processing},

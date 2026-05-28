@@ -899,7 +899,7 @@ static int test_t18_rr_received_yes_yes_no(void) {
   ASSERT_STREQ(t->on, "RR_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -935,7 +935,7 @@ static int test_t18_rr_received_yes_yes_yes(void) {
   ASSERT(t != NULL, "t18_rr_received_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "RR_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -1147,7 +1147,7 @@ static int test_t19_rnr_received_yes_yes_no(void) {
   ASSERT_STREQ(t->on, "RNR_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
@@ -1182,7 +1182,7 @@ static int test_t19_rnr_received_yes_yes_yes(void) {
   ASSERT(t != NULL, "t19_rnr_received_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "RNR_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "set_peer_receiver_busy", "actions[0].verb");
@@ -1852,7 +1852,7 @@ static int test_t23_rej_received_no_yes_yes_yes(void) {
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
                "not response_and_F_eq_1 and command_and_P_eq_1 and "
-               "va_le_nr_le_vs and vs_eq_va",
+               "va_le_nr_le_vs and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -1879,7 +1879,7 @@ static int test_t23_rej_received_no_yes_yes_no(void) {
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
                "not response_and_F_eq_1 and command_and_P_eq_1 and "
-               "va_le_nr_le_vs and not vs_eq_va",
+               "va_le_nr_le_vs and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 7, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -1969,7 +1969,7 @@ static int test_t23_rej_received_no_no_yes_yes(void) {
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
                "not response_and_F_eq_1 and not command_and_P_eq_1 and "
-               "va_le_nr_le_vs and vs_eq_va",
+               "va_le_nr_le_vs and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 2, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -1994,7 +1994,7 @@ static int test_t23_rej_received_no_no_yes_no(void) {
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
                "not response_and_F_eq_1 and not command_and_P_eq_1 and "
-               "va_le_nr_le_vs and not vs_eq_va",
+               "va_le_nr_le_vs and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2132,7 +2132,7 @@ static int test_t23_rej_received_yes_yes_yes(void) {
   ASSERT(t != NULL, "t23_rej_received_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+  ASSERT_STREQ(t->guard, "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2164,7 +2164,7 @@ static int test_t23_rej_received_yes_yes_no(void) {
   ASSERT_STREQ(t->on, "REJ_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+               "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2201,7 +2201,7 @@ static int test_t24_srej_received_no_yes_yes_yes(void) {
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va",
+               "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2228,7 +2228,7 @@ static int test_t24_srej_received_no_yes_yes_no(void) {
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va",
+               "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2404,7 +2404,7 @@ static int test_t24_srej_received_yes_yes_yes_yes(void) {
   ASSERT(t != NULL, "t24_srej_received_yes_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "Connected", "next");
-  ASSERT_STREQ(t->guard, "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va",
+  ASSERT_STREQ(t->guard, "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 7, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
@@ -2439,7 +2439,7 @@ static int test_t24_srej_received_yes_yes_yes_no(void) {
   ASSERT_STREQ(t->on, "SREJ_received", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard,
-               "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va",
+               "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
                "guard");
   ASSERT(t->actions_len == 11, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
