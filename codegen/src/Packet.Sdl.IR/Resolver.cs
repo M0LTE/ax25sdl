@@ -140,7 +140,14 @@ public static class Resolver
                         actions.Add(new ResolvedAction(body.Action!, ParseKind(body.Kind!)));
                     }
                 }
-                loops.Add(new ResolvedLoop(startIndex, actions.Count - startIndex, loopGuard.Predicate));
+                // The continuing edge is the figure branch that loops back. Yes
+                // (default) means "keep looping while the predicate holds"; No
+                // means the predicate is the exit test, so negate it to get the
+                // continue condition — same convention as decision-branch guards.
+                var continueBranch = string.IsNullOrWhiteSpace(step.Branch) ? "Yes" : step.Branch!;
+                var continuePredicate = continueBranch == "No" ? "not " + loopGuard.Predicate : loopGuard.Predicate;
+                var testAtEnd = string.Equals(step.Test, "tail", StringComparison.Ordinal);
+                loops.Add(new ResolvedLoop(startIndex, actions.Count - startIndex, continuePredicate, testAtEnd));
             }
             else
             {

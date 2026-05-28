@@ -59,11 +59,15 @@ type ActionStep struct {
 
 // LoopRange records a loop_while construct as a slice over the flat
 // Actions list. Start + Length describe the body; Predicate is the
-// boolean expression gating re-execution.
+// continue condition (already negated where the figure's continuing edge
+// is the decision's No branch). TestAtEnd selects the loop topology:
+// false = test-at-head (while; body may run zero times), true =
+// test-at-tail (do-while; body runs at least once).
 type LoopRange struct {
 	Start     int
 	Length    int
 	Predicate string
+	TestAtEnd bool
 }
 
 // ImplementationReference points at one citation supporting a

@@ -1507,7 +1507,7 @@
       "loops": []
     },
     {
-      "id": "t26_i_received_yes_yes_yes_no_yes_no_no_no",
+      "id": "t26_i_received_yes_yes_yes_no_yes_no_no",
       "from": "Connected",
       "on": "I_received",
       "guard": "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
@@ -1533,6 +1533,18 @@
           "kind": "signal_upper"
         },
         {
+          "verb": "Retrieve Stored V(r) I Frame",
+          "kind": "processing"
+        },
+        {
+          "verb": "DL-DATA Indication",
+          "kind": "signal_upper"
+        },
+        {
+          "verb": "V(r) := V(r) + 1",
+          "kind": "processing"
+        },
+        {
           "verb": "LM-SEIZE Request",
           "kind": "signal_lower"
         },
@@ -1544,10 +1556,17 @@
       "next": "Connected",
       "notes": "",
       "references": [],
-      "loops": []
+      "loops": [
+        {
+          "start": 5,
+          "length": 3,
+          "predicate": "vr_I_frame_stored",
+          "test_at_end": false
+        }
+      ]
     },
     {
-      "id": "t26_i_received_yes_yes_yes_no_yes_no_no_yes",
+      "id": "t26_i_received_yes_yes_yes_no_yes_no_yes",
       "from": "Connected",
       "on": "I_received",
       "guard": "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
@@ -1571,15 +1590,34 @@
         {
           "verb": "DL-DATA Indication",
           "kind": "signal_upper"
+        },
+        {
+          "verb": "Retrieve Stored V(r) I Frame",
+          "kind": "processing"
+        },
+        {
+          "verb": "DL-DATA Indication",
+          "kind": "signal_upper"
+        },
+        {
+          "verb": "V(r) := V(r) + 1",
+          "kind": "processing"
         }
       ],
       "next": "Connected",
       "notes": "",
       "references": [],
-      "loops": []
+      "loops": [
+        {
+          "start": 5,
+          "length": 3,
+          "predicate": "vr_I_frame_stored",
+          "test_at_end": false
+        }
+      ]
     },
     {
-      "id": "t26_i_received_yes_yes_yes_no_yes_no_yes",
+      "id": "t26_i_received_yes_yes_yes_no_yes_yes",
       "from": "Connected",
       "on": "I_received",
       "guard": "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
@@ -1605,6 +1643,18 @@
           "kind": "signal_upper"
         },
         {
+          "verb": "Retrieve Stored V(r) I Frame",
+          "kind": "processing"
+        },
+        {
+          "verb": "DL-DATA Indication",
+          "kind": "signal_upper"
+        },
+        {
+          "verb": "V(r) := V(r) + 1",
+          "kind": "processing"
+        },
+        {
           "verb": "F := 1",
           "kind": "processing"
         },
@@ -1624,7 +1674,14 @@
       "next": "Connected",
       "notes": "",
       "references": [],
-      "loops": []
+      "loops": [
+        {
+          "start": 5,
+          "length": 3,
+          "predicate": "vr_I_frame_stored",
+          "test_at_end": false
+        }
+      ]
     },
     {
       "id": "t26_i_received_yes_yes_yes_no_no_yes_yes",

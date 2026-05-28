@@ -35,6 +35,7 @@ public static class Walker
         };
 
         var decisionsSeen = new Dictionary<string, Decision>();
+        var loops = LoopRecovery.FindLoops(graph);
         int triggerIndex = 0;
 
         foreach (var trigger in triggerEdges)
@@ -60,7 +61,7 @@ public static class Walker
 
             // From the trigger, recursively walk paths. Decisions cause branching.
             var perTriggerTransitions = new List<(string BaseId, string Next, List<PathStep> Path)>();
-            foreach (var (path, next, branchLabels) in WalkFromTrigger(graph, triggerNode, triggerPrefix, decisionsSeen))
+            foreach (var (path, next, branchLabels) in WalkFromTrigger(graph, triggerNode, triggerPrefix, decisionsSeen, loops))
             {
                 perTriggerTransitions.Add((
                     BuildTransitionId(triggerIndex, triggerEvent, branchLabels),
@@ -354,15 +355,17 @@ public static class Walker
     /// </summary>
     private static IEnumerable<(List<PathStep> Path, string Next, List<string> BranchLabels)>
         WalkFromTrigger(GraphmlGraph graph, GraphmlNode triggerNode, string triggerPrefix,
-                        Dictionary<string, Decision> decisionsSeen)
+                        Dictionary<string, Decision> decisionsSeen,
+                        IReadOnlyDictionary<string, LoopRecovery.LoopInfo> loops)
     {
-        return WalkFrom(graph, triggerNode, [], [], [triggerNode.Id], triggerPrefix, decisionsSeen);
+        return WalkFrom(graph, triggerNode, [], [], [triggerNode.Id], triggerPrefix, decisionsSeen, loops);
     }
 
     private static IEnumerable<(List<PathStep>, string, List<string>)>
         WalkFrom(GraphmlGraph graph, GraphmlNode current, List<PathStep> pathSoFar, List<string> branchLabelsSoFar,
                  HashSet<string> visitedInThisWalk, string triggerPrefix,
-                 Dictionary<string, Decision> decisionsSeen)
+                 Dictionary<string, Decision> decisionsSeen,
+                 IReadOnlyDictionary<string, LoopRecovery.LoopInfo> loops)
     {
         var outEdges = graph.OutgoingByNodeId[current.Id];
 
@@ -388,6 +391,27 @@ public static class Walker
             throw new InvalidDataException(
                 $"dead end at non-terminal node {current.Id} ('{current.Label}', d5='{current.ShapeClass}')");
 
+        // Loop header: emit one loop_while step (its body + controlling test)
+        // and continue the walk from the loop's exit edge. The body nodes and
+        // the test decision are consumed here — never traversed by the normal
+        // walk — so the back-edge is recovered as a loop rather than silently
+        // skipped. See LoopRecovery / m0lte/ax25sdl#44.
+        if (loops.TryGetValue(current.Id, out var loop))
+        {
+            var loopDecisionId = ContextualDecisionId(triggerPrefix, loop.TestNode.Label);
+            RecordDecision(loop.TestNode, loopDecisionId, decisionsSeen);
+            var loopStep = new LoopWhileStep(
+                loopDecisionId, loop.ContinueBranch, loop.TestAtEnd,
+                LoopRecovery.BuildBodySteps(loop.BodyNodes));
+            var loopPath = new List<PathStep>(pathSoFar) { loopStep };
+            var loopVisited = new HashSet<string>(visitedInThisWalk);
+            foreach (var id in loop.LoopNodeIds) loopVisited.Add(id);
+            loopVisited.Add(loop.ExitTargetId);
+            foreach (var result in WalkFrom(graph, graph.NodesById[loop.ExitTargetId], loopPath, branchLabelsSoFar, loopVisited, triggerPrefix, decisionsSeen, loops))
+                yield return result;
+            yield break;
+        }
+
         // Skip the trigger itself in the path (it becomes the `on:` field instead).
         // For every other node, append step(s) before recursing.
         var stepsToAppend = NodeToPathSteps(current, decisionsSeen);
@@ -395,10 +419,10 @@ public static class Walker
         if (current.ShapeClass == "Test or decision")
         {
             // Each outgoing edge carries a branch label (Yes / No / sometimes other).
-            // Append the decision-branch step then recurse along each edge.
-            // Skip edges that lead back to an already-visited node (SDL loop body
-            // — the existing yaml convention is to enumerate only the non-cycling
-            // branch and document the loop in a transition-level note).
+            // Append the decision-branch step then recurse along each edge. A
+            // decision that is a loop header is intercepted above (LoopRecovery),
+            // so any edge back to an already-visited node here is an unrecovered
+            // cycle — fail loudly rather than silently drop it.
             var decisionId = ContextualDecisionId(triggerPrefix, current.Label);
             RecordDecision(current, decisionId, decisionsSeen);
             var resolvedBranchLabels = ResolveBranchLabels(current, outEdges);
@@ -406,7 +430,9 @@ public static class Walker
             {
                 var edge = outEdges[i];
                 if (visitedInThisWalk.Contains(edge.Target))
-                    continue;
+                    throw new InvalidDataException(
+                        $"{Path.GetFileName(graph.SourcePath)}: decision {current.Id} ('{current.Label}') edge {edge.Id} " +
+                        $"leads back to already-visited {edge.Target} but was not recovered as a loop. Unhandled cycle.");
                 var branchLabel = resolvedBranchLabels[i];
                 if (string.IsNullOrWhiteSpace(branchLabel))
                     throw new InvalidDataException(
@@ -419,7 +445,7 @@ public static class Walker
                 newPath.Add(new DecisionBranch(decisionId, canonicalBranch));
                 var newBranchLabels = new List<string>(branchLabelsSoFar) { canonicalBranch };
                 var newVisited = new HashSet<string>(visitedInThisWalk) { edge.Target };
-                foreach (var result in WalkFrom(graph, graph.NodesById[edge.Target], newPath, newBranchLabels, newVisited, triggerPrefix, decisionsSeen))
+                foreach (var result in WalkFrom(graph, graph.NodesById[edge.Target], newPath, newBranchLabels, newVisited, triggerPrefix, decisionsSeen, loops))
                     yield return result;
             }
             yield break;
@@ -446,15 +472,15 @@ public static class Walker
 
         var nextTarget = outEdges[0].Target;
         if (visitedInThisWalk.Contains(nextTarget))
-        {
-            // Defensive: a non-decision node forming a cycle. Terminate
-            // the walk at the cycle origin; the caller will see a
-            // truncated transition. Shouldn't happen in well-formed SDL.
-            yield break;
-        }
+            // A non-decision node forming a cycle. Loop bodies are recovered at
+            // the header above, so reaching this point means an unguarded /
+            // unrecovered back-edge — fail loudly rather than truncate silently.
+            throw new InvalidDataException(
+                $"{Path.GetFileName(graph.SourcePath)}: node {current.Id} ('{current.Label}') edge leads back to " +
+                $"already-visited {nextTarget} but was not recovered as a loop. Unhandled cycle.");
         var nextNode = graph.NodesById[nextTarget];
         var newVisitedLinear = new HashSet<string>(visitedInThisWalk) { nextTarget };
-        foreach (var result in WalkFrom(graph, nextNode, newPathLinear, branchLabelsSoFar, newVisitedLinear, triggerPrefix, decisionsSeen))
+        foreach (var result in WalkFrom(graph, nextNode, newPathLinear, branchLabelsSoFar, newVisitedLinear, triggerPrefix, decisionsSeen, loops))
             yield return result;
     }
 

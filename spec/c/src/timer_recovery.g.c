@@ -419,6 +419,59 @@ static const ActionStep
 };
 
 static const ActionStep
+    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_yes_actions[] = {
+        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Decrement Sreject Exception if > 0",
+         .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "Retrieve Stored V(r) I Frame",
+         .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "F := 1", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "RR", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const LoopRange
+    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_yes_loops[] = {
+        {.start = 5,
+         .length = 3,
+         .predicate = "vr_I_frame_stored",
+         .test_at_end = false},
+};
+
+static const ActionStep
+    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_actions[] =
+        {
+            {.verb = "Check_I_Frame_Acknowledged",
+             .kind = AX25SDL_KIND_SUBROUTINE},
+            {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Decrement Sreject Exception if > 0",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "Retrieve Stored V(r) I Frame",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "Set Acknowledge Pending",
+             .kind = AX25SDL_KIND_PROCESSING},
+            {.verb = "LM-SIEZE Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+};
+
+static const LoopRange
+    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_loops[] = {
+        {.start = 5,
+         .length = 3,
+         .predicate = "vr_I_frame_stored",
+         .test_at_end = false},
+};
+
+static const ActionStep
     data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_actions
         [] = {
             {.verb = "Check_I_Frame_Acknowledged",
@@ -428,38 +481,19 @@ static const ActionStep
             {.verb = "Decrement Sreject Exception if > 0",
              .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-            {.verb = "F := 1", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "RR", .kind = AX25SDL_KIND_SIGNAL_LOWER},
-            {.verb = "Clear Acknowledge Pending",
-             .kind = AX25SDL_KIND_PROCESSING},
-};
-
-static const ActionStep
-    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_no_actions
-        [] = {
-            {.verb = "Check_I_Frame_Acknowledged",
-             .kind = AX25SDL_KIND_SUBROUTINE},
-            {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "Decrement Sreject Exception if > 0",
+            {.verb = "Retrieve Stored V(r) I Frame",
              .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-            {.verb = "Set Acknowledge Pending",
-             .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "LM-SIEZE Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
 };
 
-static const ActionStep
-    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_yes_actions
-        [] = {
-            {.verb = "Check_I_Frame_Acknowledged",
-             .kind = AX25SDL_KIND_SUBROUTINE},
-            {.verb = "V(r) := V(r) + 1", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "Decrement Sreject Exception if > 0",
-             .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+static const LoopRange
+    data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_loops[] =
+        {
+            {.start = 5,
+             .length = 3,
+             .predicate = "vr_I_frame_stored",
+             .test_at_end = false},
 };
 
 static const ActionStep
@@ -1551,7 +1585,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .loops_len = 0,
     },
     {
-        .id = "t22_i_received_yes_yes_yes_no_yes_no_yes",
+        .id = "t22_i_received_yes_yes_yes_no_yes_yes",
         .from = "TimerRecovery",
         .on = "I_received",
         .guard =
@@ -1559,17 +1593,18 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
             "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and "
             "P_eq_1",
         .actions =
-            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_actions,
-        .actions_len = 9,
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_yes_actions,
+        .actions_len = 12,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
         .references_len = 0,
-        .loops = NULL,
-        .loops_len = 0,
+        .loops =
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_yes_loops,
+        .loops_len = 1,
     },
     {
-        .id = "t22_i_received_yes_yes_yes_no_yes_no_no_no",
+        .id = "t22_i_received_yes_yes_yes_no_yes_no_no",
         .from = "TimerRecovery",
         .on = "I_received",
         .guard =
@@ -1577,17 +1612,18 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
             "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not "
             "P_eq_1 and not ack_pending",
         .actions =
-            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_no_actions,
-        .actions_len = 7,
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_actions,
+        .actions_len = 10,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
         .references_len = 0,
-        .loops = NULL,
-        .loops_len = 0,
+        .loops =
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_loops,
+        .loops_len = 1,
     },
     {
-        .id = "t22_i_received_yes_yes_yes_no_yes_no_no_yes",
+        .id = "t22_i_received_yes_yes_yes_no_yes_no_yes",
         .from = "TimerRecovery",
         .on = "I_received",
         .guard =
@@ -1595,14 +1631,15 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
             "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not "
             "P_eq_1 and ack_pending",
         .actions =
-            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_yes_actions,
-        .actions_len = 5,
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_actions,
+        .actions_len = 8,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
         .references_len = 0,
-        .loops = NULL,
-        .loops_len = 0,
+        .loops =
+            data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_loops,
+        .loops_len = 1,
     },
     {
         .id = "t22_i_received_yes_yes_yes_no_no_yes_yes",

@@ -274,6 +274,7 @@ public static class RustEmitter
             sb.Append(indent).Append("LoopRange { start: ").Append(l.Start.ToString(CultureInfo.InvariantCulture))
               .Append(", length: ").Append(l.Length.ToString(CultureInfo.InvariantCulture))
               .Append(", predicate: ").Append(RustStringLiteral(l.Predicate))
+              .Append(", test_at_end: ").Append(l.TestAtEnd ? "true" : "false")
               .Append(" },\n");
         }
         sb.Append(closer).Append(']');

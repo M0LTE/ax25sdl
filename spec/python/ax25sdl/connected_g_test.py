@@ -1079,16 +1079,16 @@ def test_t26_i_received_yes_yes_no_yes() -> None:
     assert t.actions[0].kind == ActionKind.SUBROUTINE
 
 
-def test_t26_i_received_yes_yes_yes_no_yes_no_no_no() -> None:
+def test_t26_i_received_yes_yes_yes_no_yes_no_no() -> None:
     t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_no"),
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_no"),
         None,
     )
-    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_no_no not found"
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
     assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
-    assert len(t.actions) == 7
+    assert len(t.actions) == 10
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "V(r) := V(r) + 1"
@@ -1099,32 +1099,16 @@ def test_t26_i_received_yes_yes_yes_no_yes_no_no_no() -> None:
     assert t.actions[3].kind == ActionKind.PROCESSING
     assert t.actions[4].verb == "DL-DATA Indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "LM-SEIZE Request"
-    assert t.actions[5].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[6].verb == "set_acknowledge_pending"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-
-
-def test_t26_i_received_yes_yes_yes_no_yes_no_no_yes() -> None:
-    t = next(
-        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_no_no_yes"),
-        None,
-    )
-    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_no_yes not found"
-    assert t.on == "I_received"
-    assert t.next == "Connected"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
-    assert len(t.actions) == 5
-    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
-    assert t.actions[0].kind == ActionKind.SUBROUTINE
-    assert t.actions[1].verb == "V(r) := V(r) + 1"
-    assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "Clear Reject Exception"
-    assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
-    assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL-DATA Indication"
-    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[7].verb == "V(r) := V(r) + 1"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+    assert t.actions[8].verb == "LM-SEIZE Request"
+    assert t.actions[8].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[9].verb == "set_acknowledge_pending"
+    assert t.actions[9].kind == ActionKind.PROCESSING
 
 
 def test_t26_i_received_yes_yes_yes_no_yes_no_yes() -> None:
@@ -1135,8 +1119,8 @@ def test_t26_i_received_yes_yes_yes_no_yes_no_yes() -> None:
     assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "Connected"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
-    assert len(t.actions) == 9
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
+    assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
     assert t.actions[1].verb == "V(r) := V(r) + 1"
@@ -1147,14 +1131,48 @@ def test_t26_i_received_yes_yes_yes_no_yes_no_yes() -> None:
     assert t.actions[3].kind == ActionKind.PROCESSING
     assert t.actions[4].verb == "DL-DATA Indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[5].verb == "F := 1"
+    assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "N(r) := V(r)"
-    assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "RR"
-    assert t.actions[7].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[8].verb == "Clear Acknowledge Pending"
+    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[7].verb == "V(r) := V(r) + 1"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+
+
+def test_t26_i_received_yes_yes_yes_no_yes_yes() -> None:
+    t = next(
+        (x for x in DATA_LINK_CONNECTED.transitions if x.id == "t26_i_received_yes_yes_yes_no_yes_yes"),
+        None,
+    )
+    assert t is not None, "transition t26_i_received_yes_yes_yes_no_yes_yes not found"
+    assert t.on == "I_received"
+    assert t.next == "Connected"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
+    assert len(t.actions) == 12
+    assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
+    assert t.actions[0].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "V(r) := V(r) + 1"
+    assert t.actions[1].kind == ActionKind.PROCESSING
+    assert t.actions[2].verb == "Clear Reject Exception"
+    assert t.actions[2].kind == ActionKind.PROCESSING
+    assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
+    assert t.actions[7].verb == "V(r) := V(r) + 1"
+    assert t.actions[7].kind == ActionKind.PROCESSING
+    assert t.actions[8].verb == "F := 1"
     assert t.actions[8].kind == ActionKind.PROCESSING
+    assert t.actions[9].verb == "N(r) := V(r)"
+    assert t.actions[9].kind == ActionKind.PROCESSING
+    assert t.actions[10].verb == "RR"
+    assert t.actions[10].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[11].verb == "Clear Acknowledge Pending"
+    assert t.actions[11].kind == ActionKind.PROCESSING
 
 
 def test_t26_i_received_yes_yes_yes_no_no_yes_yes() -> None:

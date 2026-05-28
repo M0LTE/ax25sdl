@@ -241,8 +241,8 @@ var DataLinkSubroutines = SubroutinesPage{
 			Name: "Invoke_Retransmission",
 			Paths: []SubroutinePath{
 				{
-					ID:    "t01_invoke_retransmission_yes",
-					Guard: "vs_eq_X",
+					ID:    "t01_invoke_retransmission",
+					Guard: "",
 					Actions: []ActionStep{
 						{Verb: "Backtrack", Kind: Processing},
 						{Verb: "X := V(s)", Kind: Processing},
@@ -252,7 +252,9 @@ var DataLinkSubroutines = SubroutinesPage{
 					},
 					Notes:      "",
 					References: []ImplementationReference{},
-					Loops:      []LoopRange{},
+					Loops: []LoopRange{
+						{Start: 3, Length: 2, Predicate: "not vs_eq_X", TestAtEnd: true},
+					},
 				},
 			},
 			Notes:      "",

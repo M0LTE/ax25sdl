@@ -245,8 +245,8 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             name: "Invoke_Retransmission",
             paths: &[
                 SubroutinePath {
-                    id: "t01_invoke_retransmission_yes",
-                    guard: "vs_eq_X",
+                    id: "t01_invoke_retransmission",
+                    guard: "",
                     actions: &[
                         ActionStep { verb: "Backtrack", kind: ActionKind::Processing },
                         ActionStep { verb: "X := V(s)", kind: ActionKind::Processing },
@@ -256,7 +256,9 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                     ],
                     notes: "",
                     references: &[],
-                    loops: &[],
+                    loops: &[
+                        LoopRange { start: 3, length: 2, predicate: "not vs_eq_X", test_at_end: true },
+                    ],
                 },
             ],
             notes: "",

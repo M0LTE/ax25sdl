@@ -201,7 +201,9 @@ public class CodegenSmokeTests
         // Action retrieve_one (after the implicit decision skipping the
         // gate which doesn't appear in Actions), [1] deliver_one,
         // [2] cleanup. The loop range covers indices 0..1 (length 2).
-        gen.Should().Contain("new LoopRange(0, 2, \"more_available\")");
+        // 4-arg form: default branch (Yes) keeps the predicate un-negated;
+        // default test position (head/while) ⇒ TestAtEnd = false.
+        gen.Should().Contain("new LoopRange(0, 2, \"more_available\", false)");
     }
 
     [Fact]

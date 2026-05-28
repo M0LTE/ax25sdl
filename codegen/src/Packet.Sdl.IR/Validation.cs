@@ -229,6 +229,10 @@ public static class Validation
             {
                 if (!decisionsById.ContainsKey(step.LoopWhile!))
                     errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] loop_while references undefined decision `{step.LoopWhile}`. Add it to the page-level decisions[].");
+                if (step.Branch is not (null or "Yes" or "No"))
+                    errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] loop_while `branch:` must be 'Yes' or 'No' (the figure edge that continues the loop; was `{step.Branch}`)");
+                if (step.Test is not (null or "head" or "tail"))
+                    errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] loop_while `test:` must be 'head' (while) or 'tail' (do-while) (was `{step.Test}`)");
                 if (step.Body is null || step.Body.Count == 0)
                 {
                     errors.Add($"{loc}: transition `{transitionId}` {contextLabel}[{i}] loop_while missing or empty `body:`. Loop bodies must have at least one step.");
@@ -324,10 +328,17 @@ public static class Validation
         List<string> errors)
     {
         var branchUses = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+        // Decisions that control a loop (referenced by a loop_while step) rather
+        // than fanning out into two transition paths. Their continue + exit
+        // edges are both encoded by the loop_while step, so they count as
+        // referenced and are exempt from the bilateral Yes/No coverage check.
+        var loopControlled = new HashSet<string>(StringComparer.Ordinal);
         foreach (var t in page.Transitions)
         {
             foreach (var step in t.Path ?? new())
             {
+                if (!string.IsNullOrWhiteSpace(step.LoopWhile))
+                    loopControlled.Add(step.LoopWhile!);
                 if (string.IsNullOrWhiteSpace(step.Decision)) continue;
                 if (!branchUses.TryGetValue(step.Decision!, out var seen))
                 {
@@ -343,16 +354,21 @@ public static class Validation
 
         foreach (var id in decisionsById.Keys)
         {
-            if (!branchUses.TryGetValue(id, out var seen))
+            var hasBranchUses = branchUses.TryGetValue(id, out var seen);
+            if (!hasBranchUses && !loopControlled.Contains(id))
             {
                 errors.Add($"{page.SourcePath}: decision `{id}` is declared but never referenced in any transition path.");
                 continue;
             }
+            // Loop-controlling decisions encode both edges (continue + exit) in
+            // the loop_while step, not as two transition paths — bilateral
+            // coverage doesn't apply.
+            if (loopControlled.Contains(id)) continue;
             // 'Undefined'-only decisions encode the SDL marker where both
             // edges of a diamond carry the literal 'undefined' label. They
             // never branch to Yes/No at runtime — codegen emits a throw stub
             // — so the bilateral-coverage lint doesn't apply.
-            if (seen.Count == 1 && seen.Contains("Undefined")) continue;
+            if (seen!.Count == 1 && seen.Contains("Undefined")) continue;
             if (!seen.Contains("Yes"))
                 errors.Add($"{page.SourcePath}: decision `{id}` missing 'Yes' branch in any transition (seen: {string.Join(", ", seen.OrderBy(s => s, StringComparer.Ordinal))}). Add the missing column or mark `coverage: partial` with a verification_pending note.");
             if (!seen.Contains("No"))

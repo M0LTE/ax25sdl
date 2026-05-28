@@ -39,13 +39,17 @@ export interface ActionStep {
 
 /**
  * Records a loop_while construct as a slice over the flat actions
- * list. start/length describe the body; predicate is the boolean
- * expression gating re-execution.
+ * list. start/length describe the body; predicate is the continue
+ * condition (already negated where the figure's continuing edge is the
+ * decision's No branch). testAtEnd selects the loop topology: false =
+ * test-at-head (while; body may run zero times), true = test-at-tail
+ * (do-while; body runs at least once).
  */
 export interface LoopRange {
   readonly start: number;
   readonly length: number;
   readonly predicate: string;
+  readonly testAtEnd: boolean;
 }
 
 /**

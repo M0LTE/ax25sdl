@@ -31,6 +31,8 @@ public static class SubroutinesWalker
             .OrderBy(n => n.Y).ThenBy(n => n.X)
             .ToList();
 
+        var loops = LoopRecovery.FindLoops(graph);
+
         foreach (var start in subroutineStarts)
         {
             var name = NormaliseSubroutineName(start.Label);
@@ -45,7 +47,7 @@ public static class SubroutinesWalker
 
             try
             {
-                foreach (var (steps, branchLabels) in WalkFromSubroutineStart(graph, start, name, decisionsSeen))
+                foreach (var (steps, branchLabels) in WalkFromSubroutineStart(graph, start, name, decisionsSeen, loops))
                 {
                     pathIndex++;
                     var pathId = BuildSubroutinePathId(pathIndex, name, branchLabels);
@@ -117,18 +119,20 @@ public static class SubroutinesWalker
     /// </summary>
     private static IEnumerable<(List<PathStep> Steps, List<string> BranchLabels)>
         WalkFromSubroutineStart(GraphmlGraph graph, GraphmlNode start, string subroutineName,
-                                Dictionary<string, Decision> decisionsSeen)
+                                Dictionary<string, Decision> decisionsSeen,
+                                IReadOnlyDictionary<string, LoopRecovery.LoopInfo> loops)
     {
         // Prefix decisions with the subroutine name so the same question text
         // gets a different id in different subroutines (mirrors the state-page
         // convention with trigger prefix).
         var triggerPrefix = subroutineName.ToLowerInvariant();
-        return WalkFrom(graph, start, [], [], [start.Id], triggerPrefix, decisionsSeen);
+        return WalkFrom(graph, start, [], [], [start.Id], triggerPrefix, decisionsSeen, loops);
     }
 
     private static IEnumerable<(List<PathStep>, List<string>)>
         WalkFrom(GraphmlGraph graph, GraphmlNode current, List<PathStep> stepsSoFar, List<string> branchLabelsSoFar,
-                 HashSet<string> visited, string triggerPrefix, Dictionary<string, Decision> decisionsSeen)
+                 HashSet<string> visited, string triggerPrefix, Dictionary<string, Decision> decisionsSeen,
+                 IReadOnlyDictionary<string, LoopRecovery.LoopInfo> loops)
     {
         // Reached a Return → emit the path.
         if (current.ShapeClass == "Return from Subroutine")
@@ -141,6 +145,25 @@ public static class SubroutinesWalker
         if (outEdges.Count == 0)
             throw new InvalidDataException(
                 $"dead end at non-Return node {current.Id} ('{current.Label}', d5='{current.ShapeClass}')");
+
+        // Loop header: emit one loop_while step and continue from the exit edge
+        // (see LoopRecovery / m0lte/ax25sdl#44 — Invoke_Retransmission is the
+        // tail-test do-while case that lives on a subroutine page).
+        if (loops.TryGetValue(current.Id, out var loop))
+        {
+            var loopDecisionId = Walker.ContextualDecisionIdPublic(triggerPrefix, loop.TestNode.Label);
+            Walker.RecordDecisionPublic(loop.TestNode, loopDecisionId, decisionsSeen);
+            var loopStep = new LoopWhileStep(
+                loopDecisionId, loop.ContinueBranch, loop.TestAtEnd,
+                LoopRecovery.BuildBodySteps(loop.BodyNodes));
+            var loopSteps = new List<PathStep>(stepsSoFar) { loopStep };
+            var loopVisited = new HashSet<string>(visited);
+            foreach (var id in loop.LoopNodeIds) loopVisited.Add(id);
+            loopVisited.Add(loop.ExitTargetId);
+            foreach (var r in WalkFrom(graph, graph.NodesById[loop.ExitTargetId], loopSteps, branchLabelsSoFar, loopVisited, triggerPrefix, decisionsSeen, loops))
+                yield return r;
+            yield break;
+        }
 
         // Skip the start node itself in the steps (just like state-page triggers).
         var stepsToAppend = current.ShapeClass == "Subroutine start"
@@ -155,7 +178,10 @@ public static class SubroutinesWalker
             for (int i = 0; i < outEdges.Count; i++)
             {
                 var edge = outEdges[i];
-                if (visited.Contains(edge.Target)) continue;
+                if (visited.Contains(edge.Target))
+                    throw new InvalidDataException(
+                        $"{Path.GetFileName(graph.SourcePath)}: decision {current.Id} ('{current.Label}') edge {edge.Id} " +
+                        $"leads back to already-visited {edge.Target} but was not recovered as a loop. Unhandled cycle.");
                 var branchLabel = resolvedLabels[i];
                 if (string.IsNullOrWhiteSpace(branchLabel))
                     throw new InvalidDataException(
@@ -163,7 +189,7 @@ public static class SubroutinesWalker
                 var newSteps = new List<PathStep>(stepsSoFar) { new DecisionBranch(decisionId, branchLabel) };
                 var newBranchLabels = new List<string>(branchLabelsSoFar) { branchLabel };
                 var newVisited = new HashSet<string>(visited) { edge.Target };
-                foreach (var r in WalkFrom(graph, graph.NodesById[edge.Target], newSteps, newBranchLabels, newVisited, triggerPrefix, decisionsSeen))
+                foreach (var r in WalkFrom(graph, graph.NodesById[edge.Target], newSteps, newBranchLabels, newVisited, triggerPrefix, decisionsSeen, loops))
                     yield return r;
             }
             yield break;
@@ -177,9 +203,11 @@ public static class SubroutinesWalker
         newSteps2.AddRange(stepsToAppend);
         var nextTarget = outEdges[0].Target;
         if (visited.Contains(nextTarget))
-            yield break;  // cycle — terminate this branch
+            throw new InvalidDataException(
+                $"{Path.GetFileName(graph.SourcePath)}: node {current.Id} ('{current.Label}') edge leads back to " +
+                $"already-visited {nextTarget} but was not recovered as a loop. Unhandled cycle.");
         var newVisited2 = new HashSet<string>(visited) { nextTarget };
-        foreach (var r in WalkFrom(graph, graph.NodesById[nextTarget], newSteps2, branchLabelsSoFar, newVisited2, triggerPrefix, decisionsSeen))
+        foreach (var r in WalkFrom(graph, graph.NodesById[nextTarget], newSteps2, branchLabelsSoFar, newVisited2, triggerPrefix, decisionsSeen, loops))
             yield return r;
     }
 

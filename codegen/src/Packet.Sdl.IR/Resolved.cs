@@ -23,9 +23,15 @@ public sealed record ResolvedAction(string Verb, ResolvedActionKind Kind);
 /// <summary>
 /// One loop range over the flat <see cref="ResolvedTransition.Actions"/> list.
 /// <see cref="Start"/> and <see cref="Length"/> point at the body slice;
-/// <see cref="Predicate"/> is the boolean expression gating re-execution.
+/// <see cref="Predicate"/> is the loop's <em>continue</em> condition (already
+/// negated where the figure's continuing branch is the decision's No edge, so
+/// it reads directly as "keep looping while this holds").
+/// <see cref="TestAtEnd"/> distinguishes the two SDL loop topologies: false =
+/// test-at-head (while; the figure's decision sits before the body, body runs
+/// zero-or-more times); true = test-at-tail (do-while; the decision sits after
+/// the body, body runs one-or-more times).
 /// </summary>
-public sealed record ResolvedLoop(int Start, int Length, string Predicate);
+public sealed record ResolvedLoop(int Start, int Length, string Predicate, bool TestAtEnd);
 
 /// <summary>
 /// One cross-reference citation. <see cref="Source"/> is "spec_prose" or

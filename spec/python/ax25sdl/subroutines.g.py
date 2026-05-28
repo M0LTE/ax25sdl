@@ -4,6 +4,7 @@
 from .types import (
     ActionKind,
     ActionStep,
+    LoopRange,
     SdlSource,
     SubroutinePath,
     SubroutineSpec,
@@ -250,8 +251,8 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
             name="Invoke_Retransmission",
             paths=(
                 SubroutinePath(
-                    id="t01_invoke_retransmission_yes",
-                    guard="vs_eq_X",
+                    id="t01_invoke_retransmission",
+                    guard="",
                     actions=(
                         ActionStep(verb="Backtrack", kind=ActionKind.PROCESSING),
                         ActionStep(verb="X := V(s)", kind=ActionKind.PROCESSING),
@@ -261,7 +262,9 @@ DATA_LINK_SUBROUTINES = SubroutinesPage(
                     ),
                     notes="",
                     references=(),
-                    loops=(),
+                    loops=(
+                        LoopRange(start=3, length=2, predicate="not vs_eq_X", test_at_end=True),
+                    ),
                 ),
             ),
             notes="",
