@@ -18,6 +18,8 @@
     <!-- Transcribe is API-tested directly: tests load each committed
          graphml, run the walker, and assert on the IR. -->
     <ProjectReference Include="..\..\src\Packet.Sdl.Transcribe\Packet.Sdl.Transcribe.csproj" />
+    <!-- IR is API-tested directly: ResolverStaleReadTests drives Resolver.Resolve. -->
+    <ProjectReference Include="..\..\src\Packet.Sdl.IR\Packet.Sdl.IR.csproj" />
   </ItemGroup>
 
   <ItemGroup>

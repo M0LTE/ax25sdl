@@ -1262,7 +1262,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t18_rr_received_yes_yes_no",
         .from = "TimerRecovery",
         .on = "RR_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
         .actions = data_link_timer_recovery_t18_rr_received_yes_yes_no_actions,
         .actions_len = 8,
         .next = "TimerRecovery",
@@ -1276,7 +1276,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t18_rr_received_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "RR_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
         .actions = data_link_timer_recovery_t18_rr_received_yes_yes_yes_actions,
         .actions_len = 6,
         .next = "Connected",
@@ -1396,7 +1396,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t19_rnr_received_yes_yes_no",
         .from = "TimerRecovery",
         .on = "RNR_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
         .actions = data_link_timer_recovery_t19_rnr_received_yes_yes_no_actions,
         .actions_len = 8,
         .next = "TimerRecovery",
@@ -1410,7 +1410,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t19_rnr_received_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "RNR_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t19_rnr_received_yes_yes_yes_actions,
         .actions_len = 6,
@@ -1756,7 +1756,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .from = "TimerRecovery",
         .on = "REJ_received",
         .guard = "not response_and_F_eq_1 and command_and_P_eq_1 and "
-                 "va_le_nr_le_vs and vs_eq_va",
+                 "va_le_nr_le_vs and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t23_rej_received_no_yes_yes_yes_actions,
         .actions_len = 3,
@@ -1772,7 +1772,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .from = "TimerRecovery",
         .on = "REJ_received",
         .guard = "not response_and_F_eq_1 and command_and_P_eq_1 and "
-                 "va_le_nr_le_vs and not vs_eq_va",
+                 "va_le_nr_le_vs and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t23_rej_received_no_yes_yes_no_actions,
         .actions_len = 7,
@@ -1820,7 +1820,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .from = "TimerRecovery",
         .on = "REJ_received",
         .guard = "not response_and_F_eq_1 and not command_and_P_eq_1 and "
-                 "va_le_nr_le_vs and vs_eq_va",
+                 "va_le_nr_le_vs and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t23_rej_received_no_no_yes_yes_actions,
         .actions_len = 2,
@@ -1836,7 +1836,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .from = "TimerRecovery",
         .on = "REJ_received",
         .guard = "not response_and_F_eq_1 and not command_and_P_eq_1 and "
-                 "va_le_nr_le_vs and not vs_eq_va",
+                 "va_le_nr_le_vs and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t23_rej_received_no_no_yes_no_actions,
         .actions_len = 6,
@@ -1912,7 +1912,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t23_rej_received_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "REJ_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t23_rej_received_yes_yes_yes_actions,
         .actions_len = 6,
@@ -1927,7 +1927,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t23_rej_received_yes_yes_no",
         .from = "TimerRecovery",
         .on = "REJ_received",
-        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va",
+        .guard = "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
         .actions = data_link_timer_recovery_t23_rej_received_yes_yes_no_actions,
         .actions_len = 8,
         .next = "TimerRecovery",
@@ -1941,7 +1941,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t24_srej_received_no_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "SREJ_received",
-        .guard = "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va",
+        .guard = "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_no_yes_yes_yes_actions,
         .actions_len = 3,
@@ -1956,7 +1956,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t24_srej_received_no_yes_yes_no",
         .from = "TimerRecovery",
         .on = "SREJ_received",
-        .guard = "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va",
+        .guard = "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_no_yes_yes_no_actions,
         .actions_len = 4,
@@ -2059,7 +2059,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t24_srej_received_yes_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "SREJ_received",
-        .guard = "response and va_le_nr_le_vs and F_eq_1 and vs_eq_va",
+        .guard = "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_yes_yes_yes_yes_actions,
         .actions_len = 7,
@@ -2074,7 +2074,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t24_srej_received_yes_yes_yes_no",
         .from = "TimerRecovery",
         .on = "SREJ_received",
-        .guard = "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va",
+        .guard = "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_yes_yes_yes_no_actions,
         .actions_len = 11,

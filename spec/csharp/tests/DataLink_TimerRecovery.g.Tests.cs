@@ -557,7 +557,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t18_rr_received_yes_yes_no");
         t.On.Should().Be("RR_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -582,7 +582,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t18_rr_received_yes_yes_yes");
         t.On.Should().Be("RR_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -708,7 +708,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t19_rnr_received_yes_yes_no");
         t.On.Should().Be("RNR_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -733,7 +733,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t19_rnr_received_yes_yes_yes");
         t.On.Should().Be("RNR_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1128,7 +1128,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_no_yes_yes_yes");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va");
+        t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1143,7 +1143,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_no_yes_yes_no");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va");
+        t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(7);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1196,7 +1196,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_no_no_yes_yes");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_va");
+        t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1209,7 +1209,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_no_no_yes_no");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_va");
+        t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1290,7 +1290,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_yes_yes_yes");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1311,7 +1311,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t23_rej_received_yes_yes_no");
         t.On.Should().Be("REJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_va");
+        t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1336,7 +1336,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t24_srej_received_no_yes_yes_yes");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and vs_eq_va");
+        t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1351,7 +1351,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t24_srej_received_no_yes_yes_no");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_va");
+        t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr");
         t.Actions.Count.Should().Be(4);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1452,7 +1452,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t24_srej_received_yes_yes_yes_yes");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and vs_eq_va");
+        t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr");
         t.Actions.Count.Should().Be(7);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -1475,7 +1475,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t24_srej_received_yes_yes_yes_no");
         t.On.Should().Be("SREJ_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and not vs_eq_va");
+        t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr");
         t.Actions.Count.Should().Be(11);
         t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
