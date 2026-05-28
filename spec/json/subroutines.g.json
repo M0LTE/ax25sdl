@@ -378,8 +378,8 @@
       "name": "Invoke_Retransmission",
       "paths": [
         {
-          "id": "t01_invoke_retransmission_yes",
-          "guard": "vs_eq_X",
+          "id": "t01_invoke_retransmission",
+          "guard": "",
           "actions": [
             {
               "verb": "Backtrack",
@@ -404,7 +404,14 @@
           ],
           "notes": "",
           "references": [],
-          "loops": []
+          "loops": [
+            {
+              "start": 3,
+              "length": 2,
+              "predicate": "not vs_eq_X",
+              "test_at_end": true
+            }
+          ]
         }
       ],
       "notes": "",

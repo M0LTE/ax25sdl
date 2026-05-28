@@ -243,8 +243,8 @@ export const DataLinkSubroutines: SubroutinesPage = {
       name: "Invoke_Retransmission",
       paths: [
         {
-          id: "t01_invoke_retransmission_yes",
-          guard: "vs_eq_X",
+          id: "t01_invoke_retransmission",
+          guard: "",
           actions: [
             { verb: "Backtrack", kind: "processing" },
             { verb: "X := V(s)", kind: "processing" },
@@ -254,7 +254,9 @@ export const DataLinkSubroutines: SubroutinesPage = {
           ],
           notes: "",
           references: [],
-          loops: [],
+          loops: [
+            { start: 3, length: 2, predicate: "not vs_eq_X", testAtEnd: true },
+          ],
         },
       ],
       notes: "",

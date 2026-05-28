@@ -1482,6 +1482,101 @@ static int test_t22_i_received_yes_yes_yes_yes_no(void) {
   return 0;
 }
 
+static int test_t22_i_received_yes_yes_yes_no_yes_yes(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t22_i_received_yes_yes_yes_no_yes_yes") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_yes not found");
+  ASSERT_STREQ(t->on, "I_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+      "guard");
+  ASSERT(t->actions_len == 12, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
+               "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "V(r) := V(r) + 1", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
+  ASSERT_STREQ(t->actions[2].verb, "Clear Reject Exception", "actions[2].verb");
+  ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
+  ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
+               "actions[3].verb");
+  ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
+  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
+  ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
+  ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
+               "actions[5].verb");
+  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
+  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
+  ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
+  ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
+  ASSERT_STREQ(t->actions[8].verb, "F := 1", "actions[8].verb");
+  ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
+  ASSERT_STREQ(t->actions[9].verb, "N(r) := V(r)", "actions[9].verb");
+  ASSERT(t->actions[9].kind == AX25SDL_KIND_PROCESSING, "actions[9].kind");
+  ASSERT_STREQ(t->actions[10].verb, "RR", "actions[10].verb");
+  ASSERT(t->actions[10].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[10].kind");
+  ASSERT_STREQ(t->actions[11].verb, "Clear Acknowledge Pending",
+               "actions[11].verb");
+  ASSERT(t->actions[11].kind == AX25SDL_KIND_PROCESSING, "actions[11].kind");
+  return 0;
+}
+
+static int test_t22_i_received_yes_yes_yes_no_yes_no_no(void) {
+  const TransitionSpec *t = NULL;
+  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
+    if (strcmp(data_link_timer_recovery.transitions[i].id,
+               "t22_i_received_yes_yes_yes_no_yes_no_no") == 0) {
+      t = &data_link_timer_recovery.transitions[i];
+      break;
+    }
+  }
+  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_no not found");
+  ASSERT_STREQ(t->on, "I_received", "on");
+  ASSERT_STREQ(t->next, "TimerRecovery", "next");
+  ASSERT_STREQ(
+      t->guard,
+      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
+      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
+      "not ack_pending",
+      "guard");
+  ASSERT(t->actions_len == 10, "actions count");
+  ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
+               "actions[0].verb");
+  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
+  ASSERT_STREQ(t->actions[1].verb, "V(r) := V(r) + 1", "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
+  ASSERT_STREQ(t->actions[2].verb, "Clear Reject Exception", "actions[2].verb");
+  ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
+  ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
+               "actions[3].verb");
+  ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
+  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
+  ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
+  ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
+               "actions[5].verb");
+  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
+  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
+  ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
+  ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
+  ASSERT_STREQ(t->actions[8].verb, "Set Acknowledge Pending",
+               "actions[8].verb");
+  ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
+  ASSERT_STREQ(t->actions[9].verb, "LM-SIEZE Request", "actions[9].verb");
+  ASSERT(t->actions[9].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[9].kind");
+  return 0;
+}
+
 static int test_t22_i_received_yes_yes_yes_no_yes_no_yes(void) {
   const TransitionSpec *t = NULL;
   for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
@@ -1497,91 +1592,10 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
-      "guard");
-  ASSERT(t->actions_len == 9, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
-               "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "V(r) := V(r) + 1", "actions[1].verb");
-  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "Clear Reject Exception", "actions[2].verb");
-  ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
-               "actions[3].verb");
-  ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
-  ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
-  ASSERT_STREQ(t->actions[5].verb, "F := 1", "actions[5].verb");
-  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "N(r) := V(r)", "actions[6].verb");
-  ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "RR", "actions[7].verb");
-  ASSERT(t->actions[7].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[7].kind");
-  ASSERT_STREQ(t->actions[8].verb, "Clear Acknowledge Pending",
-               "actions[8].verb");
-  ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
-  return 0;
-}
-
-static int test_t22_i_received_yes_yes_yes_no_yes_no_no_no(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
-    if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_yes_yes_yes_no_yes_no_no_no") == 0) {
-      t = &data_link_timer_recovery.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_no_no not found");
-  ASSERT_STREQ(t->on, "I_received", "on");
-  ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(
-      t->guard,
-      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
-      "not ack_pending",
-      "guard");
-  ASSERT(t->actions_len == 7, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
-               "actions[0].verb");
-  ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "V(r) := V(r) + 1", "actions[1].verb");
-  ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "Clear Reject Exception", "actions[2].verb");
-  ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
-               "actions[3].verb");
-  ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
-  ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
-  ASSERT_STREQ(t->actions[5].verb, "Set Acknowledge Pending",
-               "actions[5].verb");
-  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "LM-SIEZE Request", "actions[6].verb");
-  ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[6].kind");
-  return 0;
-}
-
-static int test_t22_i_received_yes_yes_yes_no_yes_no_no_yes(void) {
-  const TransitionSpec *t = NULL;
-  for (size_t i = 0; i < data_link_timer_recovery.transitions_len; i++) {
-    if (strcmp(data_link_timer_recovery.transitions[i].id,
-               "t22_i_received_yes_yes_yes_no_yes_no_no_yes") == 0) {
-      t = &data_link_timer_recovery.transitions[i];
-      break;
-    }
-  }
-  ASSERT(t != NULL, "t22_i_received_yes_yes_yes_no_yes_no_no_yes not found");
-  ASSERT_STREQ(t->on, "I_received", "on");
-  ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(
-      t->guard,
-      "command and info_field_length_le_N1_and_content_is_octet_aligned and "
       "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
       "ack_pending",
       "guard");
-  ASSERT(t->actions_len == 5, "actions count");
+  ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SUBROUTINE, "actions[0].kind");
@@ -1594,6 +1608,13 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_no_yes(void) {
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
+  ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
+               "actions[5].verb");
+  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
+  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
+  ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
+  ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
   return 0;
 }
 
@@ -2610,9 +2631,9 @@ int main(void) {
   rc |= test_t22_i_received_yes_yes_no();
   rc |= test_t22_i_received_yes_yes_yes_yes_yes();
   rc |= test_t22_i_received_yes_yes_yes_yes_no();
+  rc |= test_t22_i_received_yes_yes_yes_no_yes_yes();
+  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_no();
   rc |= test_t22_i_received_yes_yes_yes_no_yes_no_yes();
-  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_no_no();
-  rc |= test_t22_i_received_yes_yes_yes_no_yes_no_no_yes();
   rc |= test_t22_i_received_yes_yes_yes_no_no_yes_yes();
   rc |= test_t22_i_received_yes_yes_yes_no_no_yes_no();
   rc |= test_t22_i_received_yes_yes_yes_no_no_no_no();

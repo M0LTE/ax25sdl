@@ -265,6 +265,7 @@ public static class GoEmitter
             sb.Append(indent).Append("{Start: ").Append(l.Start.ToString(CultureInfo.InvariantCulture))
               .Append(", Length: ").Append(l.Length.ToString(CultureInfo.InvariantCulture))
               .Append(", Predicate: ").Append(GoStringLiteral(l.Predicate))
+              .Append(", TestAtEnd: ").Append(l.TestAtEnd ? "true" : "false")
               .Append("},\n");
         }
         sb.Append(closer).Append('}');

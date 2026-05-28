@@ -176,12 +176,12 @@ public static class DataLink_Subroutines
             Paths: new SubroutinePath[]
             {
                 new SubroutinePath(
-                    Id: "t01_invoke_retransmission_yes",
-                    Guard: "vs_eq_X",
+                    Id: "t01_invoke_retransmission",
+                    Guard: null,
                     Actions: new ActionStep[] { new ActionStep("Backtrack", ActionKind.Processing), new ActionStep("X := V(s)", ActionKind.Processing), new ActionStep("V(s) := N(r)", ActionKind.Processing), new ActionStep("Push Old I Frame onto Queue", ActionKind.InternalOut), new ActionStep("V(s) := V(s) + 1", ActionKind.Processing) },
                     Notes: null,
                     References: new ImplementationReference[] {  },
-                    Loops: new LoopRange[] {  }),
+                    Loops: new LoopRange[] { new LoopRange(3, 2, "not vs_eq_X", true) }),
             },
             Notes: null,
             References: new ImplementationReference[] {  }),

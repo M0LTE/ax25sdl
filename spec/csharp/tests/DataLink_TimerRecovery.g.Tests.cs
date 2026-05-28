@@ -912,63 +912,75 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
+    [Fact] public void t22_i_received_yes_yes_yes_no_yes_yes()
+    {
+        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t22_i_received_yes_yes_yes_no_yes_yes");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("TimerRecovery");
+        t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+        t.Actions.Count.Should().Be(12);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[8].Verb.Should().Be("F := 1");
+        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[9].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[9].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[10].Verb.Should().Be("RR");
+        t.Actions[10].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[11].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[11].Kind.Should().Be(ActionKind.Processing);
+    }
+
+    [Fact] public void t22_i_received_yes_yes_yes_no_yes_no_no()
+    {
+        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t22_i_received_yes_yes_yes_no_yes_no_no");
+        t.On.Should().Be("I_received");
+        t.Next.Should().Be("TimerRecovery");
+        t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        t.Actions.Count.Should().Be(10);
+        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[8].Verb.Should().Be("Set Acknowledge Pending");
+        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[9].Verb.Should().Be("LM-SIEZE Request");
+        t.Actions[9].Kind.Should().Be(ActionKind.SignalLower);
+    }
+
     [Fact] public void t22_i_received_yes_yes_yes_no_yes_no_yes()
     {
         var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t22_i_received_yes_yes_yes_no_yes_no_yes");
         t.On.Should().Be("I_received");
         t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
-        t.Actions.Count.Should().Be(9);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("F := 1");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("N(r) := V(r)");
-        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("RR");
-        t.Actions[7].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[8].Verb.Should().Be("Clear Acknowledge Pending");
-        t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-    }
-
-    [Fact] public void t22_i_received_yes_yes_yes_no_yes_no_no_no()
-    {
-        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t22_i_received_yes_yes_yes_no_yes_no_no_no");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("TimerRecovery");
-        t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
-        t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
-        t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
-        t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
-        t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
-        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
-        t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("Set Acknowledge Pending");
-        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("LM-SIEZE Request");
-        t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
-    }
-
-    [Fact] public void t22_i_received_yes_yes_yes_no_yes_no_no_yes()
-    {
-        var t = DataLink_TimerRecovery.Transitions.Single(x => x.Id == "t22_i_received_yes_yes_yes_no_yes_no_no_yes");
-        t.On.Should().Be("I_received");
-        t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
-        t.Actions.Count.Should().Be(5);
+        t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
@@ -979,6 +991,12 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
         t.Actions[4].Verb.Should().Be("DL-DATA Indication");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
+        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
     [Fact] public void t22_i_received_yes_yes_yes_no_no_yes_yes()

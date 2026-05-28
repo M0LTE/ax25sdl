@@ -964,66 +964,78 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
   });
 
+  it("t22_i_received_yes_yes_yes_no_yes_yes", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_yes");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_yes not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("I_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+    expect(t.actions).toHaveLength(12);
+    expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
+    expect(t.actions[0].kind).toBe("subroutine");
+    expect(t.actions[1].verb).toBe("V(r) := V(r) + 1");
+    expect(t.actions[1].kind).toBe("processing");
+    expect(t.actions[2].verb).toBe("Clear Reject Exception");
+    expect(t.actions[2].kind).toBe("processing");
+    expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
+    expect(t.actions[3].kind).toBe("processing");
+    expect(t.actions[4].verb).toBe("DL-DATA Indication");
+    expect(t.actions[4].kind).toBe("signal_upper");
+    expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
+    expect(t.actions[5].kind).toBe("processing");
+    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].kind).toBe("signal_upper");
+    expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
+    expect(t.actions[7].kind).toBe("processing");
+    expect(t.actions[8].verb).toBe("F := 1");
+    expect(t.actions[8].kind).toBe("processing");
+    expect(t.actions[9].verb).toBe("N(r) := V(r)");
+    expect(t.actions[9].kind).toBe("processing");
+    expect(t.actions[10].verb).toBe("RR");
+    expect(t.actions[10].kind).toBe("signal_lower");
+    expect(t.actions[11].verb).toBe("Clear Acknowledge Pending");
+    expect(t.actions[11].kind).toBe("processing");
+  });
+
+  it("t22_i_received_yes_yes_yes_no_yes_no_no", () => {
+    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_no");
+    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_no not found").toBeDefined();
+    if (!t) return;
+    expect(t.on).toBe("I_received");
+    expect(t.next).toBe("TimerRecovery");
+    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+    expect(t.actions).toHaveLength(10);
+    expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
+    expect(t.actions[0].kind).toBe("subroutine");
+    expect(t.actions[1].verb).toBe("V(r) := V(r) + 1");
+    expect(t.actions[1].kind).toBe("processing");
+    expect(t.actions[2].verb).toBe("Clear Reject Exception");
+    expect(t.actions[2].kind).toBe("processing");
+    expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
+    expect(t.actions[3].kind).toBe("processing");
+    expect(t.actions[4].verb).toBe("DL-DATA Indication");
+    expect(t.actions[4].kind).toBe("signal_upper");
+    expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
+    expect(t.actions[5].kind).toBe("processing");
+    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].kind).toBe("signal_upper");
+    expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
+    expect(t.actions[7].kind).toBe("processing");
+    expect(t.actions[8].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[8].kind).toBe("processing");
+    expect(t.actions[9].verb).toBe("LM-SIEZE Request");
+    expect(t.actions[9].kind).toBe("signal_lower");
+  });
+
   it("t22_i_received_yes_yes_yes_no_yes_no_yes", () => {
     const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_yes");
     expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_yes not found").toBeDefined();
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
-    expect(t.actions).toHaveLength(9);
-    expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
-    expect(t.actions[0].kind).toBe("subroutine");
-    expect(t.actions[1].verb).toBe("V(r) := V(r) + 1");
-    expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("Clear Reject Exception");
-    expect(t.actions[2].kind).toBe("processing");
-    expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
-    expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("DL-DATA Indication");
-    expect(t.actions[4].kind).toBe("signal_upper");
-    expect(t.actions[5].verb).toBe("F := 1");
-    expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("N(r) := V(r)");
-    expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("RR");
-    expect(t.actions[7].kind).toBe("signal_lower");
-    expect(t.actions[8].verb).toBe("Clear Acknowledge Pending");
-    expect(t.actions[8].kind).toBe("processing");
-  });
-
-  it("t22_i_received_yes_yes_yes_no_yes_no_no_no", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_no_no");
-    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_no_no not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("I_received");
-    expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
-    expect(t.actions).toHaveLength(7);
-    expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
-    expect(t.actions[0].kind).toBe("subroutine");
-    expect(t.actions[1].verb).toBe("V(r) := V(r) + 1");
-    expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("Clear Reject Exception");
-    expect(t.actions[2].kind).toBe("processing");
-    expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
-    expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("DL-DATA Indication");
-    expect(t.actions[4].kind).toBe("signal_upper");
-    expect(t.actions[5].verb).toBe("Set Acknowledge Pending");
-    expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("LM-SIEZE Request");
-    expect(t.actions[6].kind).toBe("signal_lower");
-  });
-
-  it("t22_i_received_yes_yes_yes_no_yes_no_no_yes", () => {
-    const t = DataLinkTimerRecovery.transitions.find((x) => x.id === "t22_i_received_yes_yes_yes_no_yes_no_no_yes");
-    expect(t, "transition t22_i_received_yes_yes_yes_no_yes_no_no_yes not found").toBeDefined();
-    if (!t) return;
-    expect(t.on).toBe("I_received");
-    expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
-    expect(t.actions).toHaveLength(5);
+    expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
     expect(t.actions[1].verb).toBe("V(r) := V(r) + 1");
@@ -1034,6 +1046,12 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[3].kind).toBe("processing");
     expect(t.actions[4].verb).toBe("DL-DATA Indication");
     expect(t.actions[4].kind).toBe("signal_upper");
+    expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
+    expect(t.actions[5].kind).toBe("processing");
+    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].kind).toBe("signal_upper");
+    expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
+    expect(t.actions[7].kind).toBe("processing");
   });
 
   it("t22_i_received_yes_yes_yes_no_no_yes_yes", () => {

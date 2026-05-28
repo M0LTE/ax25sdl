@@ -35,7 +35,8 @@
       "required": [
         "start",
         "length",
-        "predicate"
+        "predicate",
+        "test_at_end"
       ],
       "additionalProperties": false,
       "properties": {
@@ -49,6 +50,9 @@
         },
         "predicate": {
           "type": "string"
+        },
+        "test_at_end": {
+          "type": "boolean"
         }
       }
     },

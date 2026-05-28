@@ -336,6 +336,7 @@ public static class CEmitter
             sb.Append("    { .start = ").Append(l.Start.ToString(CultureInfo.InvariantCulture))
               .Append(", .length = ").Append(l.Length.ToString(CultureInfo.InvariantCulture))
               .Append(", .predicate = ").Append(CStringLiteral(l.Predicate))
+              .Append(", .test_at_end = ").Append(l.TestAtEnd ? "true" : "false")
               .Append(" },\n");
         }
         sb.Append("};\n\n");

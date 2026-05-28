@@ -52,6 +52,16 @@ public sealed record ActionStep(string Action, string Kind) : PathStep;
 public sealed record DecisionBranch(string DecisionId, string Branch) : PathStep;
 
 /// <summary>
+/// A loop recovered from an SDL back-edge. <see cref="DecisionId"/> is the
+/// controlling test; <see cref="Branch"/> is the figure edge that <em>continues</em>
+/// the loop ("Yes" or "No"); <see cref="TestAtEnd"/> records whether the test
+/// sits after the body (do-while) or before it (while); <see cref="Body"/> is
+/// the action-only sequence repeated each iteration. Serialised to a
+/// <c>loop_while:</c> step by the YAML emitter.
+/// </summary>
+public sealed record LoopWhileStep(string DecisionId, string Branch, bool TestAtEnd, IReadOnlyList<PathStep> Body) : PathStep;
+
+/// <summary>
 /// In-memory representation of an SDL subroutines page (figc4.7-style).
 /// Schema at spec-sdl/schema/sdl-subroutines.schema.json.
 /// </summary>

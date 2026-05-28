@@ -105,7 +105,8 @@ public static class CsharpEmitter
         => string.Join(", ", loops.Select(l =>
             $"new LoopRange({l.Start.ToString(CultureInfo.InvariantCulture)}, " +
             $"{l.Length.ToString(CultureInfo.InvariantCulture)}, " +
-            $"{CSharpStringLiteral(l.Predicate)})"));
+            $"{CSharpStringLiteral(l.Predicate)}, " +
+            $"{(l.TestAtEnd ? "true" : "false")})"));
 
     internal static string EscapeMermaid(string s) => s
         .Replace("\"", "&quot;", StringComparison.Ordinal)

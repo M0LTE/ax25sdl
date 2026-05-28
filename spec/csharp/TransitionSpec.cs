@@ -68,9 +68,19 @@ public sealed record ActionStep(string Verb, ActionKind Kind);
 /// The flat Actions list captures one iteration of the body. Non-loop-aware
 /// consumers can ignore <see cref="TransitionSpec.Loops"/> and execute Actions
 /// linearly — that runs each loop body once, which is the existing smoke-test
-/// behaviour. Loop-aware consumers iterate while the predicate is true.
+/// behaviour. Loop-aware consumers iterate while <see cref="Predicate"/> holds.
+/// <para>
+/// <see cref="Predicate"/> is the <em>continue</em> condition (already negated
+/// where the figure's continuing edge is the decision's No branch).
+/// <see cref="TestAtEnd"/> selects the loop topology: <c>false</c> = test-at-head
+/// (while; predicate checked before each iteration, body may run zero times);
+/// <c>true</c> = test-at-tail (do-while; predicate checked after each iteration,
+/// body runs at least once). A loop-aware consumer must honour
+/// <see cref="TestAtEnd"/> — for a head-test loop the flat body slice must be
+/// gated by the predicate even on the first pass.
+/// </para>
 /// </remarks>
-public sealed record LoopRange(int Start, int Length, string Predicate);
+public sealed record LoopRange(int Start, int Length, string Predicate, bool TestAtEnd);
 
 /// <summary>
 /// The five SDL action shape-classes from figc1.1 that produce entries in a

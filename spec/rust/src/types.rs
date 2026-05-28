@@ -43,13 +43,17 @@ pub struct SdlSource {
 }
 
 /// A `loop_while` construct rendered as a slice over the flat
-/// `actions` list. `start` + `length` describe the body;
-/// `predicate` is the boolean expression gating re-execution.
+/// `actions` list. `start` + `length` describe the body; `predicate`
+/// is the continue condition (already negated where the figure's
+/// continuing edge is the decision's No branch). `test_at_end` selects
+/// the loop topology: `false` = test-at-head (while; body may run zero
+/// times), `true` = test-at-tail (do-while; body runs at least once).
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct LoopRange {
     pub start: usize,
     pub length: usize,
     pub predicate: &'static str,
+    pub test_at_end: bool,
 }
 
 /// One citation supporting a transition or subroutine path.

@@ -164,13 +164,14 @@ public static class JsonEmitter
         var loopRange = new JsonObject
         {
             ["type"] = "object",
-            ["required"] = new JsonArray("start", "length", "predicate"),
+            ["required"] = new JsonArray("start", "length", "predicate", "test_at_end"),
             ["additionalProperties"] = false,
             ["properties"] = new JsonObject
             {
                 ["start"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
                 ["length"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0 },
                 ["predicate"] = new JsonObject { ["type"] = "string" },
+                ["test_at_end"] = new JsonObject { ["type"] = "boolean" },
             },
         };
 
@@ -559,6 +560,7 @@ public static class JsonEmitter
                 ["start"] = l.Start,
                 ["length"] = l.Length,
                 ["predicate"] = l.Predicate,
+                ["test_at_end"] = l.TestAtEnd,
             });
         }
         return arr;

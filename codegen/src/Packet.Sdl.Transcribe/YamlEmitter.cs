@@ -81,9 +81,7 @@ public static class YamlEmitter
             {
                 sb.AppendLine("    path:");
                 foreach (var step in t.Path)
-                {
-                    sb.AppendLine(Inv, $"      - {FormatStep(step)}");
-                }
+                    AppendStep(sb, "      ", step);
             }
             sb.AppendLine(Inv, $"    next: {t.Next}");
         }
@@ -139,11 +137,36 @@ public static class YamlEmitter
                 {
                     sb.AppendLine("        path:");
                     foreach (var step in p.Steps)
-                        sb.AppendLine(Inv, $"          - {FormatStep(step)}");
+                        AppendStep(sb, "          ", step);
                 }
             }
         }
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Appends one path step at the given indent. Action and decision steps are
+    /// single-line flow maps; a <see cref="LoopWhileStep"/> is a block map with
+    /// an optional <c>branch:</c> (omitted when the continuing edge is Yes) and
+    /// <c>test:</c> (omitted for the default head-test while), and a nested
+    /// <c>body:</c> list of action steps.
+    /// </summary>
+    private static void AppendStep(StringBuilder sb, string indent, PathStep step)
+    {
+        if (step is LoopWhileStep l)
+        {
+            sb.AppendLine(Inv, $"{indent}- loop_while: {l.DecisionId}");
+            var c = indent + "  ";
+            if (l.Branch != "Yes")
+                sb.AppendLine(Inv, $"{c}branch: {l.Branch}");
+            if (l.TestAtEnd)
+                sb.AppendLine(Inv, $"{c}test: tail");
+            sb.AppendLine(Inv, $"{c}body:");
+            foreach (var b in l.Body)
+                AppendStep(sb, c + "  ", b);
+            return;
+        }
+        sb.AppendLine(Inv, $"{indent}- {FormatStep(step)}");
     }
 
     private static string FormatStep(PathStep step) => step switch

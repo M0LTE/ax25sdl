@@ -123,5 +123,8 @@ public sealed class SdlPathStep
     public string? Kind { get; set; }
     [YamlMember(Alias = "loop_while", ApplyNamingConventions = false)]
     public string? LoopWhile { get; set; }
+    /// <summary>For a <c>loop_while</c> step, which test position the figure
+    /// draws: "head" (while; default) or "tail" (do-while). Ignored otherwise.</summary>
+    public string? Test { get; set; }
     public List<SdlPathStep>? Body { get; set; }
 }

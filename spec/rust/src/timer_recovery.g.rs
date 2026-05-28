@@ -879,7 +879,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             loops: &[],
         },
         TransitionSpec {
-            id: "t22_i_received_yes_yes_yes_no_yes_no_yes",
+            id: "t22_i_received_yes_yes_yes_no_yes_yes",
             from: "TimerRecovery",
             on: "I_received",
             guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
@@ -889,6 +889,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
                 ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
+                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
                 ActionStep { verb: "F := 1", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
                 ActionStep { verb: "RR", kind: ActionKind::SignalLower },
@@ -897,10 +900,12 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[],
+            loops: &[
+                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
+            ],
         },
         TransitionSpec {
-            id: "t22_i_received_yes_yes_yes_no_yes_no_no_no",
+            id: "t22_i_received_yes_yes_yes_no_yes_no_no",
             from: "TimerRecovery",
             on: "I_received",
             guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
@@ -910,16 +915,21 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
                 ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
+                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
                 ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
                 ActionStep { verb: "LM-SIEZE Request", kind: ActionKind::SignalLower },
             ],
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[],
+            loops: &[
+                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
+            ],
         },
         TransitionSpec {
-            id: "t22_i_received_yes_yes_yes_no_yes_no_no_yes",
+            id: "t22_i_received_yes_yes_yes_no_yes_no_yes",
             from: "TimerRecovery",
             on: "I_received",
             guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
@@ -929,11 +939,16 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
                 ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
+                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[],
+            loops: &[
+                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
+            ],
         },
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_yes_yes",
@@ -2647,6 +2662,76 @@ mod tests {
     }
 
     #[test]
+    fn t22_i_received_yes_yes_yes_no_yes_yes() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_yes")
+            .expect("transition t22_i_received_yes_yes_yes_no_yes_yes not found");
+        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+        assert_eq!(tx.actions.len(), 12);
+        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
+        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
+        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
+        assert_eq!(tx.actions[2].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
+        assert_eq!(tx.actions[3].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[8].verb, "F := 1");
+        assert_eq!(tx.actions[8].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[9].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[9].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[10].verb, "RR");
+        assert_eq!(tx.actions[10].kind, ActionKind::SignalLower);
+        assert_eq!(tx.actions[11].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[11].kind, ActionKind::Processing);
+    }
+
+    #[test]
+    fn t22_i_received_yes_yes_yes_no_yes_no_no() {
+        let tx = DATA_LINK_TIMER_RECOVERY
+            .transitions
+            .iter()
+            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no")
+            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no not found");
+        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.next, "TimerRecovery");
+        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        assert_eq!(tx.actions.len(), 10);
+        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
+        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
+        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
+        assert_eq!(tx.actions[2].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
+        assert_eq!(tx.actions[3].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[8].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[8].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[9].verb, "LM-SIEZE Request");
+        assert_eq!(tx.actions[9].kind, ActionKind::SignalLower);
+    }
+
+    #[test]
     fn t22_i_received_yes_yes_yes_no_yes_no_yes() {
         let tx = DATA_LINK_TIMER_RECOVERY
             .transitions
@@ -2655,66 +2740,8 @@ mod tests {
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_yes not found");
         assert_eq!(tx.on, "I_received");
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
-        assert_eq!(tx.actions.len(), 9);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
-        assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
-        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
-        assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
-        assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
-        assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "F := 1");
-        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "N(r) := V(r)");
-        assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "RR");
-        assert_eq!(tx.actions[7].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[8].verb, "Clear Acknowledge Pending");
-        assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-    }
-
-    #[test]
-    fn t22_i_received_yes_yes_yes_no_yes_no_no_no() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_no")
-            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_no not found");
-        assert_eq!(tx.on, "I_received");
-        assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
-        assert_eq!(tx.actions.len(), 7);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
-        assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
-        assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
-        assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
-        assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
-        assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "Set Acknowledge Pending");
-        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "LM-SIEZE Request");
-        assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
-    }
-
-    #[test]
-    fn t22_i_received_yes_yes_yes_no_yes_no_no_yes() {
-        let tx = DATA_LINK_TIMER_RECOVERY
-            .transitions
-            .iter()
-            .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no_yes")
-            .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no_yes not found");
-        assert_eq!(tx.on, "I_received");
-        assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
-        assert_eq!(tx.actions.len(), 5);
+        assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
@@ -2725,6 +2752,12 @@ mod tests {
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
         assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
+        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
     #[test]

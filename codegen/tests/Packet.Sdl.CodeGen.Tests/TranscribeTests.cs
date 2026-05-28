@@ -27,12 +27,12 @@ public class TranscribeTests
         yield return ["DataLink_AwaitingConnection.graphml",   "data_link", "AwaitingConnection",    25, 8];
         yield return ["DataLink_AwaitingV22Connection.graphml","data_link", "AwaitingV22Connection", 25, 8];
         yield return ["DataLink_AwaitingRelease.graphml",      "data_link", "AwaitingRelease",       20, 5];
-        yield return ["DataLink_Connected.graphml",            "data_link", "Connected",             66, 37];
+        yield return ["DataLink_Connected.graphml",            "data_link", "Connected",             66, 38];
         // figc4.5 — has two decision diamonds whose edges are both labelled
         // "undefined" (raised against the spec authors at
         // packethacking/ax25spec#10 and #11). Walker yields paths through
         // those edges with branch: Undefined and marks the page coverage: partial.
-        yield return ["DataLink_TimerRecovery.graphml",        "data_link", "TimerRecovery",         90, 45];
+        yield return ["DataLink_TimerRecovery.graphml",        "data_link", "TimerRecovery",         90, 46];
     }
 
     [Theory]
@@ -317,6 +317,87 @@ public class TranscribeTests
         var act = () => Walker.Walk(graph, "DataLink_TestState.graphml");
 
         act.Should().NotThrow();
+    }
+
+    // ─── Loop recovery (m0lte/ax25sdl#44 / #48 / #49) ─────────────────
+    //
+    // These assert, against the real spec graphmls, that each back-edge is
+    // recovered as a faithful loop_while — not flattened to one iteration
+    // (the pre-fix bug) and not silently dropped.
+
+    [Fact]
+    public void Invoke_Retransmission_recovered_as_tail_test_do_while_loop()
+    {
+        var graph = GraphmlReader.Load(LocateRepoGraphml("DataLink_Subroutines.graphml"));
+        var page = SubroutinesWalker.Walk(graph, "DataLink_Subroutines.graphml");
+
+        var sub = page.Subroutines.Single(s => s.Name == "Invoke_Retransmission");
+        var steps = sub.Paths.Single().Steps;
+        var loop = steps.OfType<LoopWhileStep>().Single();
+
+        loop.DecisionId.Should().Be("invoke_retransmission_vs_eq_x");
+        loop.Branch.Should().Be("No", "the figure's V(s)==X? Yes edge exits; the No edge re-enters the body");
+        loop.TestAtEnd.Should().BeTrue("V(s)==X? is drawn after the body — a do-while");
+        loop.Body.OfType<ActionStep>().Select(a => a.Action).Should()
+            .Equal("Push Old I Frame onto Queue", "V(s) := V(s) + 1");
+
+        // Set-up runs once, before the loop step (not part of the body).
+        steps.OfType<ActionStep>().Select(a => a.Action).Should()
+            .Equal("Backtrack", "X := V(s)", "V(s) := N(r)");
+    }
+
+    [Fact]
+    public void Connected_drain_recovered_as_head_test_while_loop()
+    {
+        var graph = GraphmlReader.Load(LocateRepoGraphml("DataLink_Connected.graphml"));
+        var page = Walker.Walk(graph, "DataLink_Connected.graphml");
+
+        var loop = page.Transitions.SelectMany(t => t.Path).OfType<LoopWhileStep>().First();
+        loop.DecisionId.Should().Be("i_vr_i_frame_stored");
+        loop.Branch.Should().Be("Yes", "the Yes edge re-enters the body — loop while a frame is stored");
+        loop.TestAtEnd.Should().BeFalse("V(r) I Frame Stored? is drawn before the body — a while");
+        loop.Body.OfType<ActionStep>().Select(a => a.Action).Should()
+            .Equal("Retrieve Stored V(r) I Frame", "DL-DATA Indication", "V(r) := V(r) + 1");
+    }
+
+    [Fact]
+    public void TimerRecovery_drain_recovered_as_head_test_while_loop()
+    {
+        var graph = GraphmlReader.Load(LocateRepoGraphml("DataLink_TimerRecovery.graphml"));
+        var page = Walker.Walk(graph, "DataLink_TimerRecovery.graphml");
+
+        var loop = page.Transitions.SelectMany(t => t.Path).OfType<LoopWhileStep>().First();
+        loop.DecisionId.Should().Be("i_vr_i_frame_stored");
+        loop.Branch.Should().Be("Yes");
+        loop.TestAtEnd.Should().BeFalse();
+        // figc4.5 draws V(r) := V(r) - 1 here (verification_pending — see #49).
+        loop.Body.OfType<ActionStep>().Select(a => a.Action).Should()
+            .Equal("Retrieve Stored V(r) I Frame", "DL-DATA Indication", "V(r) := V(r) - 1");
+    }
+
+    [Fact]
+    public void Unguarded_back_edge_is_rejected_rather_than_silently_dropped()
+    {
+        // A cycle with no controlling Test-or-decision at either end. The
+        // walker must throw rather than truncate it (the pre-fix behaviour
+        // silently skipped any back-edge to an already-visited node).
+        var nodes = new List<GraphmlNode>
+        {
+            new("n0", "State",                  "TestState", 0, 0),
+            new("n1", "Processing description", "step A",    1, 0),
+            new("n2", "Processing description", "step B",    2, 0),
+        };
+        var edges = new List<GraphmlEdge>
+        {
+            new("e0", "n0", "n1", ""),
+            new("e1", "n1", "n2", ""),
+            new("e2", "n2", "n1", ""),   // unguarded back-edge
+        };
+        var graph = new GraphmlGraph("DataLink_TestState.graphml", nodes, edges);
+
+        var act = () => Walker.Walk(graph, "DataLink_TestState.graphml");
+
+        act.Should().Throw<System.IO.InvalidDataException>().WithMessage("*guarded*");
     }
 
     // ─── Locator helpers ──────────────────────────────────────────────

@@ -116,7 +116,7 @@ static const ActionStep
 };
 
 static const ActionStep
-    data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_yes_actions
+    data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_actions
         [] = {
             {.verb = "Backtrack", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "X := V(s)", .kind = AX25SDL_KIND_PROCESSING},
@@ -124,6 +124,15 @@ static const ActionStep
             {.verb = "Push Old I Frame onto Queue",
              .kind = AX25SDL_KIND_INTERNAL_OUT},
             {.verb = "V(s) := V(s) + 1", .kind = AX25SDL_KIND_PROCESSING},
+};
+
+static const LoopRange
+    data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_loops
+        [] = {
+            {.start = 3,
+             .length = 2,
+             .predicate = "not vs_eq_X",
+             .test_at_end = true},
 };
 
 static const ActionStep
@@ -469,16 +478,17 @@ static const SubroutinePath data_link_subroutines_establish_data_link_paths[] = 
 
 static const SubroutinePath data_link_subroutines_invoke_retransmission_paths[] = {
     {
-        .id = "t01_invoke_retransmission_yes",
-        .guard = "vs_eq_X",
+        .id = "t01_invoke_retransmission",
+        .guard = "",
         .actions =
-            data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_yes_actions,
+            data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_actions,
         .actions_len = 5,
         .notes = "",
         .references = NULL,
         .references_len = 0,
-        .loops = NULL,
-        .loops_len = 0,
+        .loops =
+            data_link_subroutines_invoke_retransmission_t01_invoke_retransmission_loops,
+        .loops_len = 1,
     },
 };
 
