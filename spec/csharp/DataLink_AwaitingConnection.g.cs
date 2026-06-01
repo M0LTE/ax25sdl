@@ -209,7 +209,7 @@ public static class DataLink_AwaitingConnection
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t10_i_frame_pops_off_queue_no",
             From: "AwaitingConnection",
@@ -221,7 +221,7 @@ public static class DataLink_AwaitingConnection
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t11_all_other_primitives__from_upper_layer",
             From: "AwaitingConnection",

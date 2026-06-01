@@ -37,7 +37,7 @@ public sealed class Transition
     public required string Id { get; init; }
     public required string On { get; init; }
     /// <summary>Verbatim trigger-box NodeLabel text from the source graphml
-    /// (e.g. "I Frame Pops Off Queue"). Preserved so generated code can quote
+    /// (e.g. "I Frame Pops Off I Frame Queue"). Preserved so generated code can quote
     /// the figure when raising errors against transitions whose behaviour is
     /// undefined in the SDL.</summary>
     public required string OnLabel { get; init; }

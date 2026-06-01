@@ -53,7 +53,7 @@ public static class DataLink_TimerRecovery
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_yes",
             From: "TimerRecovery",
@@ -65,7 +65,7 @@ public static class DataLink_TimerRecovery
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_yes",
             From: "TimerRecovery",
@@ -77,7 +77,7 @@ public static class DataLink_TimerRecovery
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_no",
             From: "TimerRecovery",
@@ -89,7 +89,7 @@ public static class DataLink_TimerRecovery
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t04_dl_unit_data_request",
             From: "TimerRecovery",
