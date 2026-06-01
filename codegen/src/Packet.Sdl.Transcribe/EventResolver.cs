@@ -37,18 +37,13 @@ public static class EventResolver
         [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from lower layer")] = "i_or_s_command_received",
         [("I, RR, RNR, REJ or SREJ Commands", "Signal reception from upper layer")] = "i_or_s_command_received",
 
-        // Internal events with specific spelling per events.yaml — only
-        // I_frame_pops_off_queue preserves a capital because it's an
-        // I-frame name; the others are fully lowercase.
-        [("I Frame Pops Off Queue", "Signal reception from lower layer")] = "I_frame_pops_off_queue",
-        [("I Frame Pops Off Queue", "Signal reception from upper layer")] = "I_frame_pops_off_queue",
-        // figc4.5 TimerRecovery draws "I Frame Pops Off Queue" as an
-        // Internal Signal Reception shape (which is semantically correct —
-        // it's the local upper layer's I-frame queue producing a frame);
-        // Connected (older graphml) drew it as "Signal reception from Lower
-        // Layer" which is a real authoring inconsistency. Map both to the
-        // same canonical event so the pages converge.
-        [("I Frame Pops Off Queue", "Internal Signal Reception")] = "I_frame_pops_off_queue",
+        // "I Frame Pops Off I Frame Queue" — the I-frame send queue producing a
+        // frame to transmit. Drawn as an Internal Signal Reception on every page
+        // (figc4.4 Connected, figc4.5 Timer Recovery, and the Awaiting pages)
+        // after the wording + symbol harmonisation in packethacking/ax25spec#36.
+        // The canonical event id keeps its capital I because it is an I-frame
+        // name (events.yaml § frames); the others are fully lowercase.
+        [("I Frame Pops Off I Frame Queue", "Internal Signal Reception")] = "I_frame_pops_off_queue",
 
         // figc4.5 has an "I Frame" trigger (bare, no qualifier) meaning
         // "received an I-frame from the peer". Sibling of the other bare

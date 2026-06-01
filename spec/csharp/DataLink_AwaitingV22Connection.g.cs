@@ -77,7 +77,7 @@ public static class DataLink_AwaitingV22Connection
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t05_i_frame_pops_off_queue_no",
             From: "AwaitingV22Connection",
@@ -89,7 +89,7 @@ public static class DataLink_AwaitingV22Connection
             References: new ImplementationReference[] {  },
             Loops: new LoopRange[] {  },
             UndefinedBranches: null,
-            OnLabel: "I Frame Pops Off Queue"),
+            OnLabel: "I Frame Pops Off I Frame Queue"),
         new TransitionSpec(
             Id: "t06_all_other_primitives__from_upper_layer",
             From: "AwaitingV22Connection",

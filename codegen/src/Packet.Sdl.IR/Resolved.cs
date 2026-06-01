@@ -67,7 +67,7 @@ public sealed class ResolvedTransition
     public string Id { get; init; } = "";
     public string On { get; init; } = "";
     /// <summary>Verbatim trigger-box NodeLabel text from the source SDL (e.g.
-    /// "I Frame Pops Off Queue"). Empty for transitions transcribed before the
+    /// "I Frame Pops Off I Frame Queue"). Empty for transitions transcribed before the
     /// on_label field landed. Emitters include this in error messages so a
     /// runtime trace can quote the figure.</summary>
     public string OnLabel { get; init; } = "";
