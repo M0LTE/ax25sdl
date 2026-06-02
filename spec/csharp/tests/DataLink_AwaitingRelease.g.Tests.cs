@@ -22,7 +22,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("DL_DISCONNECT_request");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("Expedited DM");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ExpeditedDM);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -33,9 +33,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (G)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationG);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -46,13 +46,13 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not RC_eq_N2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("RC := RC + 1");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.RCAssignRCPlus1);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DISC (P = 1)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DISCPEq1);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Start T1");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -63,9 +63,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("F_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTConfirm);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -76,7 +76,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not F_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_D");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationD);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -94,7 +94,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Command");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICommand);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -112,7 +112,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationL);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -122,7 +122,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationM);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -132,7 +132,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationN);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -142,9 +142,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Expedited DM");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.ExpeditedDM);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -154,9 +154,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Expedited DM");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.ExpeditedDM);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -166,9 +166,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Expedited UA");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.ExpeditedUA);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -179,9 +179,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("F_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTConfirm);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -201,9 +201,9 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("DM (F = 1)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DMFEq1);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -214,7 +214,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("not P_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -225,7 +225,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         t.Next.Should().Be("AwaitingRelease");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DM (F = 1)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DMFEq1);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 

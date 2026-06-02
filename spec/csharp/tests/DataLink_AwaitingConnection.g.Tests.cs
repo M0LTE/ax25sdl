@@ -30,9 +30,9 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DM");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DM);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -43,11 +43,11 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("F_eq_1");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("discard_frame_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("Stop T1");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -67,7 +67,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not F_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_D");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationD);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -78,19 +78,19 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("F_eq_1 and layer_3_initiated");
         t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("DL_CONNECT_confirm");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLCONNECTConfirm);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Start T3");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("V(s) := 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VSAssign0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("V(a) := 0");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.VAAssign0);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("V(r) := 0");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.VRAssign0);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Select_T1_Value");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[6].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -101,17 +101,17 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("F_eq_1 and not layer_3_initiated and vs_eq_va");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Stop T1");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Start T3");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("V(s) := 0");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.VSAssign0);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("V(a) := 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssign0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("V(r) := 0");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.VRAssign0);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Select_T1_Value");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[5].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -122,25 +122,25 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("F_eq_1 and not layer_3_initiated and not vs_eq_va");
         t.Actions.Count.Should().Be(10);
-        t.Actions[0].Verb.Should().Be("SRT := Initial Default");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SRTAssignInitialDefault);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("T1V := 2 * SRT");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.T1VAssign2TimesSRT);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Start T1");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("DL_CONNECT_confirm");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DLCONNECTConfirm);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[4].Verb.Should().Be("Stop T1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Start T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("V(s) := 0");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.VSAssign0);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("V(a) := 0");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.VAAssign0);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("V(r) := 0");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.VRAssign0);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("Select_T1_Value");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[9].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -151,11 +151,11 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("discard_frame_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DL-ERROR Indication (G)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationG);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -166,13 +166,13 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not RC_eq_N2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("RC := RC + 1");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.RCAssignRCPlus1);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("SABM (P == 1)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SABMPEqEq1);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Start T1");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -190,9 +190,9 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("DL_CONNECT_request");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Discard Queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetLayer3Initiated);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -202,7 +202,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Command");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICommand);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -213,7 +213,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("layer_3_initiated");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("push_frame_on_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
@@ -233,7 +233,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("layer_3_initiated");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("push_frame_on_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
@@ -261,9 +261,9 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("DM (F = 1)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DMFEq1);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -274,7 +274,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not P_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -284,7 +284,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationL);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -294,7 +294,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationM);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -304,7 +304,7 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationN);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -314,9 +314,9 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("UA");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -326,9 +326,9 @@ public class DataLink_AwaitingConnection_GeneratedTests
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("AwaitingV22Connection");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DM");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DM);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
     }
 

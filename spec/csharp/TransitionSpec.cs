@@ -56,7 +56,7 @@ public sealed record ImplementationReference(
     string? Note);
 
 /// <summary>One step in a transition's action chain — a verb + the SDL shape class that produced it.</summary>
-public sealed record ActionStep(string Verb, ActionKind Kind);
+public sealed record ActionStep(Ax25ActionVerb Verb, ActionKind Kind);
 
 /// <summary>
 /// Marks a region of a transition's flat <see cref="TransitionSpec.Actions"/>

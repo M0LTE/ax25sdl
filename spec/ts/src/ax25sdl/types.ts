@@ -1,6 +1,10 @@
 // Hand-written runtime types for the ax25sdl package. The .g.ts files
 // in this directory import from this module; do not regenerate it.
 //
+// Exception: the closed action-verb union lives in the generated
+// ax25-action-verb.g.ts (data-driven, one member per canonical verb);
+// it is imported + re-exported here so ActionStep.verb is strongly typed.
+//
 // Empty-string and zero-int conventions stand in for nullable fields
 // throughout, to keep generated object literals readable. A guard of
 // "" means "no guard"; a line of 0 in an ImplementationReference means
@@ -19,6 +23,10 @@ export type ActionKind =
   | "subroutine"
   | "internal_out";
 
+// The closed set of canonical action verbs (generated from spec-sdl/actions.yaml).
+export type { Ax25ActionVerb } from "./ax25-action-verb.g.js";
+import type { Ax25ActionVerb } from "./ax25-action-verb.g.js";
+
 /** Identifies which figure of which specification a page was transcribed from. */
 export interface SdlSource {
   readonly spec: string;
@@ -33,7 +41,7 @@ export interface SdlSource {
  * are normalised at codegen time.
  */
 export interface ActionStep {
-  readonly verb: string;
+  readonly verb: Ax25ActionVerb;
   readonly kind: ActionKind;
 }
 

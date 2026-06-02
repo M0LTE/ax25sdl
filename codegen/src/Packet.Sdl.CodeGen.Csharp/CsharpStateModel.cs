@@ -96,12 +96,14 @@ public sealed class CsharpActionModel
 {
     public string Verb { get; init; } = "";
     public string VerbLiteral { get; init; } = "";
+    public string VerbEnum { get; init; } = "";
     public string KindEnum { get; init; } = "";
 
     public static CsharpActionModel From(ResolvedAction a) => new()
     {
         Verb        = a.Verb,
         VerbLiteral = CsharpEmitter.CSharpStringLiteral(a.Verb),
+        VerbEnum    = CsharpEmitter.VerbEnumLiteral(a.Verb),
         KindEnum    = CsharpEmitter.KindEnumLiteral(a.Kind),
     };
 }

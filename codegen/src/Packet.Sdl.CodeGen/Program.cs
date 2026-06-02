@@ -431,6 +431,35 @@ internal static class Program
             Console.WriteLine($"  ok  {subPage.SourcePath}  (subroutines){(className.Length > 0 ? "  →  " + className + ".g.cs" : "")}");
         }
 
+        // Generated closed verb set (SP-010 / packet.net#260): every canonical
+        // action verb across all pages + subroutines, so a runtime dispatcher can
+        // switch exhaustively (a new/renamed verb becomes a compile error rather
+        // than an "unknown SDL action" thrown at runtime). Emitted as a C# enum
+        // and a TS string-literal union; the other backends keep the string verb.
+        if (plan.EmitCsharp || plan.EmitTs)
+        {
+            var allVerbs = resolvedPages
+                .SelectMany(p => p.Transitions).SelectMany(t => t.Actions).Select(a => a.Verb)
+                .Concat(resolvedSubPages
+                    .SelectMany(p => p.Subroutines).SelectMany(s => s.Paths).SelectMany(path => path.Actions).Select(a => a.Verb))
+                .ToList();
+
+            if (plan.EmitCsharp)
+            {
+                var verbEnumPath = Path.Combine(plan.CsharpOut, "Ax25ActionVerb.g.cs");
+                WriteIfChanged(verbEnumPath, CsharpEmitter.EmitActionVerbEnum(allVerbs));
+                writtenCsharpCode.Add(Path.GetFullPath(verbEnumPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  Ax25ActionVerb.g.cs");
+            }
+            if (plan.EmitTs)
+            {
+                var verbUnionPath = Path.Combine(plan.TsOut, "ax25-action-verb.g.ts");
+                WriteIfChanged(verbUnionPath, TsEmitter.EmitActionVerbUnion(allVerbs));
+                writtenTs.Add(Path.GetFullPath(verbUnionPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  ax25-action-verb.g.ts");
+            }
+        }
+
         // TS package needs an index.ts that re-exports every page so
         // consumers can `import { DataLinkConnected } from "ax25sdl"`.
         // Go doesn't need this — every var declared in a package is

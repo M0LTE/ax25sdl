@@ -49,7 +49,8 @@ public class CodegenSmokeTests
         var gen = r.ReadGenerated("DataLink_Connected.g.cs");
         gen.Should().Contain("public static class DataLink_Connected");
         gen.Should().Contain("t01_dl_disconnect_request");
-        gen.Should().Contain("send_disc");
+        // Verbs are emitted as the generated Ax25ActionVerb enum (SP-010), not raw strings.
+        gen.Should().Contain("Ax25ActionVerb.SendDisc");
     }
 
     [Fact]
@@ -191,10 +192,11 @@ public class CodegenSmokeTests
         result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
         var gen = r.ReadGenerated("DataLink_Connected.g.cs");
 
-        // The loop body actions are inlined into Actions[] (one iteration).
-        gen.Should().Contain("retrieve_one");
-        gen.Should().Contain("deliver_one");
-        gen.Should().Contain("cleanup");
+        // The loop body actions are inlined into Actions[] (one iteration),
+        // emitted as Ax25ActionVerb enum members (SP-010).
+        gen.Should().Contain("Ax25ActionVerb.RetrieveOne");
+        gen.Should().Contain("Ax25ActionVerb.DeliverOne");
+        gen.Should().Contain("Ax25ActionVerb.Cleanup");
 
         // A LoopRange entry is emitted, pointing at the body. Loop body
         // is two actions long; in this transition, indices are [0]
@@ -360,9 +362,10 @@ public class CodegenSmokeTests
         result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
         var gen = r.ReadGenerated("DataLink_Connected.g.cs");
 
-        // All three alias / canonical spellings normalise to the canonical
-        // emitted into .g.cs. The verbatim alias spellings never appear.
-        gen.Should().Contain("\"DM (F = 1)\"");
+        // All three alias / canonical spellings normalise to the one canonical,
+        // emitted into .g.cs as its Ax25ActionVerb member (SP-010). The verbatim
+        // alias spellings never appear.
+        gen.Should().Contain("Ax25ActionVerb.DMFEq1");
         gen.Should().NotContain("\"DM F=1\"");
         gen.Should().NotContain("\"DM F = 1\"");
     }
