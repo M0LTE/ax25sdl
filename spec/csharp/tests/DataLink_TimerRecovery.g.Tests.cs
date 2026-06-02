@@ -22,15 +22,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DL_DISCONNECT_request");
         t.Next.Should().Be("AwaitingRelease");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RC := 0");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("DISC (P = 1)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DISCPEq1);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Stop T3");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -40,7 +40,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DL_DATA_request");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("Push on I Frame Queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.PushOnIFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
@@ -51,7 +51,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("peer_receiver_busy");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("Push I Frame on I Queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.PushIFrameOnIQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
@@ -62,7 +62,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not peer_receiver_busy and vs_eq_va_plus_k");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("Push I Frame on I Queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.PushIFrameOnIQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.InternalOut);
     }
 
@@ -73,17 +73,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not peer_receiver_busy and not vs_eq_va_plus_k and T1_running");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.NSAssignVS);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("P := 0");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.PAssign0);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("I Command");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ICommand);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.VSAssignVSPlus1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -94,21 +94,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("N(s) := V(s)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.NSAssignVS);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("P := 0");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.PAssign0);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("I Command");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ICommand);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[4].Verb.Should().Be("V(s) := V(s) + 1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.VSAssignVSPlus1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Stop T3");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("Start T1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -118,7 +118,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DL_UNIT_DATA_request");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Command");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICommand);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -129,11 +129,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("own_receiver_busy");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("Set Own Receiver Busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetOwnReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RNR Response (F = 0)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.RNRResponseFEq0);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -153,15 +153,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("own_receiver_busy and not T1_running");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("Clear Own Receiver Busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearOwnReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RR Command (P = 0)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.RRCommandPEq0);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Stop T3");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -172,11 +172,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("own_receiver_busy and T1_running");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("Clear Own Receiver Busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearOwnReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("RR Command (P = 0)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.RRCommandPEq0);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[2].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -195,11 +195,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DL_CONNECT_request");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SetLayer3Initiated);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -209,13 +209,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("control_field_error");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (L)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationL);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.SetLayer3Initiated);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -225,13 +225,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("info_not_permitted_in_frame");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (M)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationM);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.SetLayer3Initiated);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -241,13 +241,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("u_or_s_frame_length_error");
         t.Next.Should().Be("TimerRecovery");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationN);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Set Layer 3 Initiated");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.SetLayer3Initiated);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -257,11 +257,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (N)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationN);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearLayer3Initiated);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -271,15 +271,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (E)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationE);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Stop T1");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Stop T3");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -290,29 +290,29 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not vs_eq_va");
         t.Actions.Count.Should().Be(12);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_0");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetVersion20);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ClearExceptionConditions);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationF);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.DLCONNECTIndication);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("Stop T1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("Stop T3");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("V(s) := 0");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.VSAssign0);
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("V(a) := 0");
+        t.Actions[10].Verb.Should().Be(Ax25ActionVerb.VAAssign0);
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[11].Verb.Should().Be("V(r) := 0");
+        t.Actions[11].Verb.Should().Be(Ax25ActionVerb.VRAssign0);
         t.Actions[11].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -323,15 +323,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("vs_eq_va");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("set_version_2_0");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetVersion20);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ClearExceptionConditions);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationF);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -342,29 +342,29 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not vs_eq_va");
         t.Actions.Count.Should().Be(12);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Set Version 2.2");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetVersion22);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ClearExceptionConditions);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationF);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.DLCONNECTIndication);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("Stop T1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("Stop T3");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("V(s) := 0");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.VSAssign0);
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("V(a) := 0");
+        t.Actions[10].Verb.Should().Be(Ax25ActionVerb.VAAssign0);
         t.Actions[10].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[11].Verb.Should().Be("V(r) := 0");
+        t.Actions[11].Verb.Should().Be(Ax25ActionVerb.VRAssign0);
         t.Actions[11].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -375,15 +375,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("vs_eq_va");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("F := P");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Set Version 2.2");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetVersion22);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("Clear Exception Conditions");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ClearExceptionConditions);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("DL-ERROR Indication (F)");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationF);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -393,13 +393,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("FRMR_received");
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (K)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationK);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("set_version_2_0");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SetVersion20);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.ClearLayer3Initiated);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -410,9 +410,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -423,7 +423,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not P_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("UI Check");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -433,17 +433,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be("DISC_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("F := P");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("UA");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.UA);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[4].Verb.Should().Be("Stop T1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Stop T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -454,11 +454,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -469,11 +469,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -484,11 +484,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -499,9 +499,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -512,9 +512,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -525,13 +525,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -542,13 +542,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -559,21 +559,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("Stop T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Start T1");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.SetAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -584,17 +584,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T3");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("RC := 0");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -605,11 +605,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -620,11 +620,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -635,11 +635,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -650,9 +650,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -663,9 +663,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -676,13 +676,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -693,13 +693,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -710,21 +710,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("Stop T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Start T1");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.SetAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -735,17 +735,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("set_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T3");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("RC := 0");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -756,11 +756,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("ACK_pending");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry Response (F = 0)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseFEq0);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("LM_release_request");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.LMReleaseRequest);
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -771,7 +771,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not ACK_pending");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("LM_release_request");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.LMReleaseRequest);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -782,9 +782,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not RC_eq_N2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Transmit Enquiry");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.TransmitEnquiry);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("RC := RC + 1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.RCAssignRCPlus1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -795,13 +795,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2 and vs_eq_va and peer_busy");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (U)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationU);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("DM Response (F = 0)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DMResponseFEq0);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -812,13 +812,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2 and vs_eq_va and not peer_busy");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (T)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationT);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("DM Response (F = 0)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DMResponseFEq0);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -829,13 +829,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Be("RC_eq_N2 and not vs_eq_va");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (I)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationI);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTIndication);
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DiscardIFrameQueue);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("DM Response (F = 0)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DMResponseFEq0);
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -846,9 +846,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not command");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (O)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationO);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Discard I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -859,11 +859,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("command and not info_field_length_le_N1_and_content_is_octet_aligned");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (O)");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationO);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("Establish_Data_Link");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EstablishDataLink);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Clear Layer 3 Initiated");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearLayer3Initiated);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -874,7 +874,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("N(r) Recovery");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -885,17 +885,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("F := 1");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.FAssign1);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("RNR");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.RNR);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -906,9 +906,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -919,29 +919,29 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
         t.Actions.Count.Should().Be(12);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VRAssignVRPlus1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearRejectException);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DecrementSrejectExceptionIf0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RetrieveStoredVRIFrame);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.VRAssignVR1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("F := 1");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.FAssign1);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("RR");
+        t.Actions[10].Verb.Should().Be(Ax25ActionVerb.RR);
         t.Actions[10].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[11].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[11].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[11].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -952,25 +952,25 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
         t.Actions.Count.Should().Be(10);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VRAssignVRPlus1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearRejectException);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DecrementSrejectExceptionIf0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RetrieveStoredVRIFrame);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.VRAssignVR1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.SetAcknowledgePending);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("LM_seize_request");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.LMSeizeRequest);
         t.Actions[9].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -981,21 +981,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("V(r) := V(r) + 1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VRAssignVRPlus1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Clear Reject Exception");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.ClearRejectException);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.DecrementSrejectExceptionIf0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RetrieveStoredVRIFrame);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.DLDATAIndication);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[7].Verb.Should().Be("V(r) := V(r) - 1");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.VRAssignVR1);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1006,17 +1006,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("F := 1");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.FAssign1);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("RR");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.RR);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1027,9 +1027,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1040,19 +1040,19 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
         t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Set Reject Exception");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SetRejectException);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := P");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("REJ");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.REJ);
         t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[6].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.SetAcknowledgePending);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1063,21 +1063,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SaveContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Discard Contents of I Frame");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.DiscardContentsOfIFrame);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Set Reject Exception");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.SetRejectException);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("F := P");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("REJ");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.REJ);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[7].Verb.Should().Be("set_acknowledge_pending");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.SetAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1088,17 +1088,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SaveContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := 1");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.FAssign1);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Sreject := Sreject + 1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.SrejectAssignSrejectPlus1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("SREJ");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.SREJ);
         t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -1109,17 +1109,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[1].Verb.Should().Be("Save Contents of I Frame");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.SaveContentsOfIFrame);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("N(r) := V(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRAssignVR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("F := 0");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.FAssign0);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Sreject := Sreject + 1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.SrejectAssignSrejectPlus1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("SREJ");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.SREJ);
         t.Actions[5].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -1130,11 +1130,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1145,19 +1145,19 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[4].Verb.Should().Be("Stop T3");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Start T1");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1168,11 +1168,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1183,11 +1183,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Enquiry_Response_F_1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.EnquiryResponseF1);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("N(r) Recovery");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1198,9 +1198,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1211,17 +1211,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Stop T3");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T1");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1232,9 +1232,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1245,9 +1245,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1258,13 +1258,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1275,13 +1275,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1292,17 +1292,17 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
         t.Actions.Count.Should().Be(6);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Start T3");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[5].Verb.Should().Be("RC := 0");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1313,21 +1313,21 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("Stop T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Start T1");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1338,11 +1338,11 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr");
         t.Actions.Count.Should().Be(3);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1353,13 +1353,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1370,7 +1370,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1381,9 +1381,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1394,9 +1394,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("not response and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1407,9 +1407,9 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not response and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(2);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("N(r) Recovery");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1420,13 +1420,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingConnection");
         t.Guard.Should().Be("response and not va_le_nr_le_vs and not version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1437,13 +1437,13 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("response and not va_le_nr_le_vs and version_2_2");
         t.Actions.Count.Should().Be(4);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("N(r) Recovery");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.NRRecovery);
         t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1454,19 +1454,19 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr");
         t.Actions.Count.Should().Be(7);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("Start T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("RC := 0");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1477,27 +1477,27 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr");
         t.Actions.Count.Should().Be(11);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("V(a) := N(r)");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("Check_I_Frame_Acknowledged");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be("push_frame_on_queue");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
         t.Actions[5].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[6].Verb.Should().Be("LM_data_request");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[7].Verb.Should().Be("Stop T3");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("Start T1");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[9].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[9].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[10].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[10].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -1508,15 +1508,15 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va");
         t.Actions.Count.Should().Be(5);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("Start T3");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StartT3);
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("RC := 0");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
     }
 
@@ -1527,23 +1527,23 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Be("response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va");
         t.Actions.Count.Should().Be(9);
-        t.Actions[0].Verb.Should().Be("clear_peer_receiver_busy");
+        t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("Stop T1");
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("Select_T1_Value");
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be("push_frame_on_queue");
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
         t.Actions[3].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[4].Verb.Should().Be("LM_data_request");
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[5].Verb.Should().Be("Stop T3");
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("Start T1");
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StartT1);
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("Clear Acknowledge Pending");
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("Invoke Retransmission");
+        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
         t.Actions[8].Kind.Should().Be(ActionKind.Subroutine);
     }
 
