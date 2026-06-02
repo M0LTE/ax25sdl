@@ -2,6 +2,7 @@
 // The closed set of canonical AX.25 SDL action verbs — see spec-sdl/actions.yaml.
 
 export type Ax25ActionVerb =
+  | "Apply Negotiated Parameters"
   | "Backtrack"
   | "Check Need For Response"
   | "Check_I_Frame_Acknowledged"
@@ -60,6 +61,10 @@ export type Ax25ActionVerb =
   | "LM_release_request"
   | "LM_seize_request"
   | "MDL-NEGOTIATE Request"
+  | "MDL_ERROR_indicate_B"
+  | "MDL_ERROR_indicate_C"
+  | "MDL_ERROR_indicate_D"
+  | "MDL_NEGOTIATE_confirm"
   | "Modulo := 128"
   | "Modulo := 8"
   | "N(r) := N(s)"
@@ -110,8 +115,10 @@ export type Ax25ActionVerb =
   | "Sreject := Sreject + 1"
   | "Start T1"
   | "Start T3"
+  | "Start TM201"
   | "Stop T1"
   | "Stop T3"
+  | "Stop TM201"
   | "T1V := 2 * SRT"
   | "T2 := 3000"
   | "Transmit Enquery"
@@ -128,6 +135,7 @@ export type Ax25ActionVerb =
   | "V(s) := N(r)"
   | "V(s) := V(s) + 1"
   | "X := V(s)"
+  | "XID_command"
   | "clear_peer_receiver_busy"
   | "discard_I_frame_queue"
   | "discard_frame_queue"
