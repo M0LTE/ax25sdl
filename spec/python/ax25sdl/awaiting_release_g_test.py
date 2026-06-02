@@ -38,7 +38,7 @@ def test_t02_t1_expiry_yes() -> None:
     assert len(t.actions) == 2
     assert t.actions[0].verb == "DL-ERROR Indication (G)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "DL-DISCONNECT Indication"
+    assert t.actions[1].verb == "DL_DISCONNECT_indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -72,7 +72,7 @@ def test_t03_ua_received_yes() -> None:
     assert t.next == "Disconnected"
     assert t.guard == "F_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
+    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
@@ -88,7 +88,7 @@ def test_t03_ua_received_no() -> None:
     assert t.next == "AwaitingRelease"
     assert t.guard == "not F_eq_1"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL-ERROR Indication (D)"
+    assert t.actions[0].verb == "DL_ERROR_indication_D"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -221,7 +221,7 @@ def test_t13_dm_received_yes() -> None:
     assert t.next == "Disconnected"
     assert t.guard == "F_eq_1"
     assert len(t.actions) == 2
-    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
+    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING

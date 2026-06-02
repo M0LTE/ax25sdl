@@ -42,7 +42,7 @@ var DataLinkAwaitingConnection = StatePage{
 			Guard: "F_eq_1",
 			Actions: []ActionStep{
 				{Verb: "discard_frame_queue", Kind: Processing},
-				{Verb: "DL-DISCONNECT indication", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_indication", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 			},
 			Next:       "Disconnected",
@@ -67,7 +67,7 @@ var DataLinkAwaitingConnection = StatePage{
 			On:    "UA_received",
 			Guard: "not F_eq_1",
 			Actions: []ActionStep{
-				{Verb: "DL-ERROR indication (D)", Kind: SignalUpper},
+				{Verb: "DL_ERROR_indication_D", Kind: SignalUpper},
 			},
 			Next:       "AwaitingConnection",
 			Notes:      "",
@@ -80,7 +80,7 @@ var DataLinkAwaitingConnection = StatePage{
 			On:    "UA_received",
 			Guard: "F_eq_1 and layer_3_initiated",
 			Actions: []ActionStep{
-				{Verb: "DL-CONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_CONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 				{Verb: "Start T3", Kind: Processing},
 				{Verb: "V(s) := 0", Kind: Processing},
@@ -120,7 +120,7 @@ var DataLinkAwaitingConnection = StatePage{
 				{Verb: "SRT := Initial Default", Kind: Processing},
 				{Verb: "T1V := 2 * SRT", Kind: Processing},
 				{Verb: "Start T1", Kind: Processing},
-				{Verb: "DL-CONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_CONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 				{Verb: "Start T3", Kind: Processing},
 				{Verb: "V(s) := 0", Kind: Processing},
@@ -141,7 +141,7 @@ var DataLinkAwaitingConnection = StatePage{
 			Actions: []ActionStep{
 				{Verb: "discard_frame_queue", Kind: Processing},
 				{Verb: "DL-ERROR Indication (G)", Kind: SignalUpper},
-				{Verb: "DL-DISCONNECT Indication", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_indication", Kind: SignalUpper},
 			},
 			Next:       "Disconnected",
 			Notes:      "",
@@ -208,7 +208,7 @@ var DataLinkAwaitingConnection = StatePage{
 			On:    "DL_DATA_request",
 			Guard: "layer_3_initiated",
 			Actions: []ActionStep{
-				{Verb: "Push Frame on Queue", Kind: InternalOut},
+				{Verb: "push_frame_on_queue", Kind: InternalOut},
 			},
 			Next:       "AwaitingConnection",
 			Notes:      "",
@@ -232,7 +232,7 @@ var DataLinkAwaitingConnection = StatePage{
 			On:    "I_frame_pops_off_queue",
 			Guard: "layer_3_initiated",
 			Actions: []ActionStep{
-				{Verb: "Push Frame on Queue", Kind: InternalOut},
+				{Verb: "push_frame_on_queue", Kind: InternalOut},
 			},
 			Next:       "AwaitingConnection",
 			Notes:      "",

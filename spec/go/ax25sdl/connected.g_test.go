@@ -194,8 +194,8 @@ func TestDataLinkConnected_t03_i_frame_pops_off_queue_no_no_no(t *testing.T) {
 	if tx.Actions[1].Kind != Processing {
 		t.Errorf("Actions[1].Kind = %v, want Processing", tx.Actions[1].Kind)
 	}
-	if tx.Actions[2].Verb != "p := 0" {
-		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "p := 0")
+	if tx.Actions[2].Verb != "P := 0" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "P := 0")
 	}
 	if tx.Actions[2].Kind != Processing {
 		t.Errorf("Actions[2].Kind = %v, want Processing", tx.Actions[2].Kind)
@@ -267,8 +267,8 @@ func TestDataLinkConnected_t03_i_frame_pops_off_queue_no_no_yes(t *testing.T) {
 	if tx.Actions[1].Kind != Processing {
 		t.Errorf("Actions[1].Kind = %v, want Processing", tx.Actions[1].Kind)
 	}
-	if tx.Actions[2].Verb != "p := 0" {
-		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "p := 0")
+	if tx.Actions[2].Verb != "P := 0" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "P := 0")
 	}
 	if tx.Actions[2].Kind != Processing {
 		t.Errorf("Actions[2].Kind = %v, want Processing", tx.Actions[2].Kind)
@@ -1132,8 +1132,8 @@ func TestDataLinkConnected_t14_sabm_received_no(t *testing.T) {
 	if tx.Actions[5].Kind != Processing {
 		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "DL-CONNECT Indication" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL-CONNECT Indication")
+	if tx.Actions[6].Verb != "DL_CONNECT_indication" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL_CONNECT_indication")
 	}
 	if tx.Actions[6].Kind != SignalUpper {
 		t.Errorf("Actions[6].Kind = %v, want SignalUpper", tx.Actions[6].Kind)
@@ -1326,8 +1326,8 @@ func TestDataLinkConnected_t15_sabme_received_no(t *testing.T) {
 	if tx.Actions[5].Kind != Processing {
 		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "DL-CONNECT Indication" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL-CONNECT Indication")
+	if tx.Actions[6].Verb != "DL_CONNECT_indication" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL_CONNECT_indication")
 	}
 	if tx.Actions[6].Kind != SignalUpper {
 		t.Errorf("Actions[6].Kind = %v, want SignalUpper", tx.Actions[6].Kind)
@@ -1648,8 +1648,8 @@ func TestDataLinkConnected_t19_disc_received(t *testing.T) {
 	if tx.Actions[2].Kind != SignalLower {
 		t.Errorf("Actions[2].Kind = %v, want SignalLower", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "DL-DISCONNECT Indication" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "DL-DISCONNECT Indication")
+	if tx.Actions[3].Verb != "DL_DISCONNECT_indication" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "DL_DISCONNECT_indication")
 	}
 	if tx.Actions[3].Kind != SignalUpper {
 		t.Errorf("Actions[3].Kind = %v, want SignalUpper", tx.Actions[3].Kind)
@@ -1694,8 +1694,8 @@ func TestDataLinkConnected_t20_dm_received(t *testing.T) {
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "DL-DISCONNECT Indication" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DL-DISCONNECT Indication")
+	if tx.Actions[1].Verb != "DL_DISCONNECT_indication" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "DL_DISCONNECT_indication")
 	}
 	if tx.Actions[1].Kind != SignalUpper {
 		t.Errorf("Actions[1].Kind = %v, want SignalUpper", tx.Actions[1].Kind)
@@ -1755,8 +1755,8 @@ func TestDataLinkConnected_t21_rr_received_yes(t *testing.T) {
 	if tx.Actions[1].Kind != Subroutine {
 		t.Errorf("Actions[1].Kind = %v, want Subroutine", tx.Actions[1].Kind)
 	}
-	if tx.Actions[2].Verb != "Check I Frame Acknowledged" {
-		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "Check I Frame Acknowledged")
+	if tx.Actions[2].Verb != "Check_I_Frame_Acknowledged" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "Check_I_Frame_Acknowledged")
 	}
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
@@ -1884,8 +1884,8 @@ func TestDataLinkConnected_t22_rnr_received_yes(t *testing.T) {
 	if tx.Actions[1].Kind != Subroutine {
 		t.Errorf("Actions[1].Kind = %v, want Subroutine", tx.Actions[1].Kind)
 	}
-	if tx.Actions[2].Verb != "Check I Frame Acknowledged" {
-		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "Check I Frame Acknowledged")
+	if tx.Actions[2].Verb != "Check_I_Frame_Acknowledged" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "Check_I_Frame_Acknowledged")
 	}
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
@@ -2013,8 +2013,8 @@ func TestDataLinkConnected_t23_lm_seize_confirm_yes(t *testing.T) {
 	if tx.Actions[1].Kind != Subroutine {
 		t.Errorf("Actions[1].Kind = %v, want Subroutine", tx.Actions[1].Kind)
 	}
-	if tx.Actions[2].Verb != "LM-RELEASE Request" {
-		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "LM-RELEASE Request")
+	if tx.Actions[2].Verb != "LM_release_request" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "LM_release_request")
 	}
 	if tx.Actions[2].Kind != SignalLower {
 		t.Errorf("Actions[2].Kind = %v, want SignalLower", tx.Actions[2].Kind)
@@ -2044,8 +2044,8 @@ func TestDataLinkConnected_t23_lm_seize_confirm_no(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "LM-RELEASE Request" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "LM-RELEASE Request")
+	if tx.Actions[0].Verb != "LM_release_request" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "LM_release_request")
 	}
 	if tx.Actions[0].Kind != SignalLower {
 		t.Errorf("Actions[0].Kind = %v, want SignalLower", tx.Actions[0].Kind)
@@ -2117,8 +2117,8 @@ func TestDataLinkConnected_t24_srej_received_yes_yes(t *testing.T) {
 	if tx.Actions[6].Kind != InternalOut {
 		t.Errorf("Actions[6].Kind = %v, want InternalOut", tx.Actions[6].Kind)
 	}
-	if tx.Actions[7].Verb != "LM-DATA Request" {
-		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "LM-DATA Request")
+	if tx.Actions[7].Verb != "LM_data_request" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "LM_data_request")
 	}
 	if tx.Actions[7].Kind != SignalLower {
 		t.Errorf("Actions[7].Kind = %v, want SignalLower", tx.Actions[7].Kind)
@@ -2202,8 +2202,8 @@ func TestDataLinkConnected_t24_srej_received_yes_no(t *testing.T) {
 	if tx.Actions[5].Kind != InternalOut {
 		t.Errorf("Actions[5].Kind = %v, want InternalOut", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "LM-DATA Request" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "LM-DATA Request")
+	if tx.Actions[6].Verb != "LM_data_request" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "LM_data_request")
 	}
 	if tx.Actions[6].Kind != SignalLower {
 		t.Errorf("Actions[6].Kind = %v, want SignalLower", tx.Actions[6].Kind)
@@ -2668,8 +2668,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_no(t *testing.T)
 	if tx.Actions[3].Kind != Processing {
 		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
 	}
-	if tx.Actions[4].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL-DATA Indication")
+	if tx.Actions[4].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[4].Kind != SignalUpper {
 		t.Errorf("Actions[4].Kind = %v, want SignalUpper", tx.Actions[4].Kind)
@@ -2680,8 +2680,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_no(t *testing.T)
 	if tx.Actions[5].Kind != Processing {
 		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL-DATA Indication")
+	if tx.Actions[6].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[6].Kind != SignalUpper {
 		t.Errorf("Actions[6].Kind = %v, want SignalUpper", tx.Actions[6].Kind)
@@ -2692,8 +2692,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_no(t *testing.T)
 	if tx.Actions[7].Kind != Processing {
 		t.Errorf("Actions[7].Kind = %v, want Processing", tx.Actions[7].Kind)
 	}
-	if tx.Actions[8].Verb != "LM-SEIZE Request" {
-		t.Errorf("Actions[8].Verb = %q, want %q", tx.Actions[8].Verb, "LM-SEIZE Request")
+	if tx.Actions[8].Verb != "LM_seize_request" {
+		t.Errorf("Actions[8].Verb = %q, want %q", tx.Actions[8].Verb, "LM_seize_request")
 	}
 	if tx.Actions[8].Kind != SignalLower {
 		t.Errorf("Actions[8].Kind = %v, want SignalLower", tx.Actions[8].Kind)
@@ -2753,8 +2753,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_yes(t *testing.T
 	if tx.Actions[3].Kind != Processing {
 		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
 	}
-	if tx.Actions[4].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL-DATA Indication")
+	if tx.Actions[4].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[4].Kind != SignalUpper {
 		t.Errorf("Actions[4].Kind = %v, want SignalUpper", tx.Actions[4].Kind)
@@ -2765,8 +2765,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_no_yes(t *testing.T
 	if tx.Actions[5].Kind != Processing {
 		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL-DATA Indication")
+	if tx.Actions[6].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[6].Kind != SignalUpper {
 		t.Errorf("Actions[6].Kind = %v, want SignalUpper", tx.Actions[6].Kind)
@@ -2826,8 +2826,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_yes(t *testing.T) {
 	if tx.Actions[3].Kind != Processing {
 		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
 	}
-	if tx.Actions[4].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL-DATA Indication")
+	if tx.Actions[4].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[4].Kind != SignalUpper {
 		t.Errorf("Actions[4].Kind = %v, want SignalUpper", tx.Actions[4].Kind)
@@ -2838,8 +2838,8 @@ func TestDataLinkConnected_t26_i_received_yes_yes_yes_no_yes_yes(t *testing.T) {
 	if tx.Actions[5].Kind != Processing {
 		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
-	if tx.Actions[6].Verb != "DL-DATA Indication" {
-		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL-DATA Indication")
+	if tx.Actions[6].Verb != "DL_DATA_indication" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "DL_DATA_indication")
 	}
 	if tx.Actions[6].Kind != SignalUpper {
 		t.Errorf("Actions[6].Kind = %v, want SignalUpper", tx.Actions[6].Kind)

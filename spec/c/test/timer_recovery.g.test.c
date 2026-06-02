@@ -130,7 +130,7 @@ static int test_t03_i_frame_pops_off_queue_no_no_yes(void) {
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(s) := V(s)", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "N(R) := V(r)", "actions[1].verb");
+  ASSERT_STREQ(t->actions[1].verb, "N(r) := V(r)", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "P := 0", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
@@ -163,7 +163,7 @@ static int test_t03_i_frame_pops_off_queue_no_no_no(void) {
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "N(s) := V(s)", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "N(R) := V(r)", "actions[1].verb");
+  ASSERT_STREQ(t->actions[1].verb, "N(r) := V(r)", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "P := 0", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
@@ -448,7 +448,7 @@ static int test_t12_dm_received(void) {
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (E)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "discard_I_frame_queue", "actions[2].verb");
@@ -488,7 +488,7 @@ static int test_t13_sabm_received_no(void) {
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "discard_I_frame_queue", "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "DL-CONNECT Indication", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "DL_CONNECT_indication", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "Stop T1", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
@@ -560,7 +560,7 @@ static int test_t14_sabme_received_no(void) {
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "discard_I_frame_queue", "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "DL-CONNECT Indication", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "DL_CONNECT_indication", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "Stop T1", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
@@ -689,7 +689,7 @@ static int test_t17_disc_received(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "UA", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[3].verb, "DL_DISCONNECT_indication",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "Stop T1", "actions[4].verb");
@@ -917,7 +917,7 @@ static int test_t18_rr_received_yes_yes_no(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "Start T1", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "Set Acknowledge Pending",
+  ASSERT_STREQ(t->actions[7].verb, "set_acknowledge_pending",
                "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
   return 0;
@@ -1164,7 +1164,7 @@ static int test_t19_rnr_received_yes_yes_no(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "Start T1", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "Set Acknowledge Pending",
+  ASSERT_STREQ(t->actions[7].verb, "set_acknowledge_pending",
                "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
   return 0;
@@ -1220,7 +1220,7 @@ static int test_t20_lm_seize_confirm_yes(void) {
   ASSERT_STREQ(t->actions[1].verb, "Enquiry Response (F = 0)",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "LM_RELEASE Request", "actions[2].verb");
+  ASSERT_STREQ(t->actions[2].verb, "LM_release_request", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[2].kind");
   return 0;
 }
@@ -1239,7 +1239,7 @@ static int test_t20_lm_seize_confirm_no(void) {
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
   ASSERT_STREQ(t->guard, "not ACK_pending", "guard");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "LM_RELEASE Request", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "LM_release_request", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[0].kind");
   return 0;
 }
@@ -1282,7 +1282,7 @@ static int test_t21_t1_expiry_yes_yes_yes(void) {
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (U)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "discard_I_frame_queue", "actions[2].verb");
@@ -1309,7 +1309,7 @@ static int test_t21_t1_expiry_yes_yes_no(void) {
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (T)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "discard_I_frame_queue", "actions[2].verb");
@@ -1336,7 +1336,7 @@ static int test_t21_t1_expiry_yes_no(void) {
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (I)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "discard_I_frame_queue", "actions[2].verb");
@@ -1510,12 +1510,12 @@ static int test_t22_i_received_yes_yes_yes_no_yes_yes(void) {
   ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
+  ASSERT_STREQ(t->actions[4].verb, "DL_DATA_indication", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
                "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "DL_DATA_indication", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
@@ -1560,19 +1560,19 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_no(void) {
   ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
+  ASSERT_STREQ(t->actions[4].verb, "DL_DATA_indication", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
                "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "DL_DATA_indication", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
-  ASSERT_STREQ(t->actions[8].verb, "Set Acknowledge Pending",
+  ASSERT_STREQ(t->actions[8].verb, "set_acknowledge_pending",
                "actions[8].verb");
   ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
-  ASSERT_STREQ(t->actions[9].verb, "LM-SIEZE Request", "actions[9].verb");
+  ASSERT_STREQ(t->actions[9].verb, "LM_seize_request", "actions[9].verb");
   ASSERT(t->actions[9].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[9].kind");
   return 0;
 }
@@ -1606,12 +1606,12 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_yes(void) {
   ASSERT_STREQ(t->actions[3].verb, "Decrement Sreject Exception if > 0",
                "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "DL-DATA Indication", "actions[4].verb");
+  ASSERT_STREQ(t->actions[4].verb, "DL_DATA_indication", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "Retrieve Stored V(r) I Frame",
                "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "DL-DATA Indication", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "DL_DATA_indication", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "V(r) := V(r) - 1", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
@@ -1716,7 +1716,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_no(void) {
   ASSERT(t->actions[4].kind == AX25SDL_KIND_PROCESSING, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "REJ", "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "Set Acknowledge Pending",
+  ASSERT_STREQ(t->actions[6].verb, "set_acknowledge_pending",
                "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
   return 0;
@@ -1759,7 +1759,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_yes_no_yes(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "REJ", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "Set Acknowledge Pending",
+  ASSERT_STREQ(t->actions[7].verb, "set_acknowledge_pending",
                "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
   return 0;
@@ -2209,7 +2209,7 @@ static int test_t24_srej_received_no_yes_yes_yes(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "V(a) := N(r)", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "Check I Frame Acknowledged",
+  ASSERT_STREQ(t->actions[2].verb, "Check_I_Frame_Acknowledged",
                "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   return 0;
@@ -2236,7 +2236,7 @@ static int test_t24_srej_received_no_yes_yes_no(void) {
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "V(a) := N(r)", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "Check I Frame Acknowledged",
+  ASSERT_STREQ(t->actions[2].verb, "Check_I_Frame_Acknowledged",
                "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   ASSERT_STREQ(t->actions[3].verb, "Invoke Retransmission", "actions[3].verb");
@@ -2416,7 +2416,7 @@ static int test_t24_srej_received_yes_yes_yes_yes(void) {
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   ASSERT_STREQ(t->actions[3].verb, "V(a) := N(r)", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "Check I Frame Acknowledged",
+  ASSERT_STREQ(t->actions[4].verb, "Check_I_Frame_Acknowledged",
                "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SUBROUTINE, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "Start T3", "actions[5].verb");
@@ -2451,12 +2451,12 @@ static int test_t24_srej_received_yes_yes_yes_no(void) {
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   ASSERT_STREQ(t->actions[3].verb, "V(a) := N(r)", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "Check I Frame Acknowledged",
+  ASSERT_STREQ(t->actions[4].verb, "Check_I_Frame_Acknowledged",
                "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SUBROUTINE, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "push_frame_on_queue", "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[5].kind");
-  ASSERT_STREQ(t->actions[6].verb, "LM-DATA Request", "actions[6].verb");
+  ASSERT_STREQ(t->actions[6].verb, "LM_data_request", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[6].kind");
   ASSERT_STREQ(t->actions[7].verb, "Stop T3", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
@@ -2526,7 +2526,7 @@ static int test_t24_srej_received_yes_yes_no_no(void) {
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
   ASSERT_STREQ(t->actions[3].verb, "push_frame_on_queue", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[3].kind");
-  ASSERT_STREQ(t->actions[4].verb, "LM-DATA Request", "actions[4].verb");
+  ASSERT_STREQ(t->actions[4].verb, "LM_data_request", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[4].kind");
   ASSERT_STREQ(t->actions[5].verb, "Stop T3", "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");

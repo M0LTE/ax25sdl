@@ -104,7 +104,7 @@
           "kind": "processing"
         },
         {
-          "verb": "p := 0",
+          "verb": "P := 0",
           "kind": "processing"
         },
         {
@@ -148,7 +148,7 @@
           "kind": "processing"
         },
         {
-          "verb": "p := 0",
+          "verb": "P := 0",
           "kind": "processing"
         },
         {
@@ -641,7 +641,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-CONNECT Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -761,7 +761,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-CONNECT Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -945,7 +945,7 @@
           "kind": "signal_lower"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -973,7 +973,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -1009,7 +1009,7 @@
           "kind": "subroutine"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         }
       ],
@@ -1081,7 +1081,7 @@
           "kind": "subroutine"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         }
       ],
@@ -1153,7 +1153,7 @@
           "kind": "subroutine"
         },
         {
-          "verb": "LM-RELEASE Request",
+          "verb": "LM_release_request",
           "kind": "signal_lower"
         }
       ],
@@ -1169,7 +1169,7 @@
       "guard": "not ack_pending",
       "actions": [
         {
-          "verb": "LM-RELEASE Request",
+          "verb": "LM_release_request",
           "kind": "signal_lower"
         }
       ],
@@ -1213,7 +1213,7 @@
           "kind": "internal_out"
         },
         {
-          "verb": "LM-DATA Request",
+          "verb": "LM_data_request",
           "kind": "signal_lower"
         },
         {
@@ -1265,7 +1265,7 @@
           "kind": "internal_out"
         },
         {
-          "verb": "LM-DATA Request",
+          "verb": "LM_data_request",
           "kind": "signal_lower"
         },
         {
@@ -1529,7 +1529,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1537,7 +1537,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1545,7 +1545,7 @@
           "kind": "processing"
         },
         {
-          "verb": "LM-SEIZE Request",
+          "verb": "LM_seize_request",
           "kind": "signal_lower"
         },
         {
@@ -1588,7 +1588,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1596,7 +1596,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1639,7 +1639,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1647,7 +1647,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {

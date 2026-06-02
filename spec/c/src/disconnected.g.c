@@ -6,7 +6,7 @@
 
 static const ActionStep
     data_link_disconnected_t01_dl_disconnect_request_actions[] = {
-        {.verb = "DL-DISCONNECT Confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep
@@ -50,7 +50,7 @@ static const ActionStep
 };
 
 static const ActionStep data_link_disconnected_t10_ua_received_actions[] = {
-    {.verb = "DL-ERROR Indication (C,D)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+    {.verb = "DL_ERROR_indication_C_D", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep data_link_disconnected_t11_ui_received_no_actions[] = {
@@ -83,7 +83,7 @@ static const ActionStep data_link_disconnected_t13_sabm_received_yes_actions[] =
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(a) := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(r) := 0", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL Connect Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "SRT := Initial Default", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "T1V := 2 * SRT", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},
@@ -105,7 +105,7 @@ static const ActionStep
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(a) := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(r) := 0", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL Connect Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "SRT := Initial Default", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "T1V := 2 * SRT", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},

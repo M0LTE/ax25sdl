@@ -182,7 +182,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       guard: "F_eq_1",
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
-        { verb: "DL-DISCONNECT Indication", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
       ],
       next: "Disconnected",
@@ -196,7 +196,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       on: "UA_received",
       guard: "not F_eq_1",
       actions: [
-        { verb: "DL-ERROR Indication (D)", kind: "signal_upper" },
+        { verb: "DL_ERROR_indication_D", kind: "signal_upper" },
       ],
       next: "AwaitingV22Connection",
       notes: "",
@@ -209,7 +209,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       on: "UA_received",
       guard: "F_eq_1 and layer_3_initiated",
       actions: [
-        { verb: "DL-CONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_CONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
         { verb: "V(s) := 0", kind: "processing" },
@@ -232,7 +232,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
         { verb: "SRT := Initial Default", kind: "processing" },
         { verb: "T1V := 2 * SRT", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
-        { verb: "DL-CONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_CONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
         { verb: "V(s) := 0", kind: "processing" },
@@ -273,7 +273,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       actions: [
         { verb: "discard_frame_queue", kind: "processing" },
         { verb: "DL-ERROR Indication (G)", kind: "signal_upper" },
-        { verb: "DL-DISCONNECT Indication", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
       ],
       next: "Disconnected",
       notes: "",

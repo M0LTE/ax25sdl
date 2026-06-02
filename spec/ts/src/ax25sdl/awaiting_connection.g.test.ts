@@ -45,7 +45,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
     expect(t.actions[2].verb).toBe("Stop T1");
     expect(t.actions[2].kind).toBe("processing");
@@ -69,7 +69,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.next).toBe("AwaitingConnection");
     expect(t.guard).toBe("not F_eq_1");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL-ERROR indication (D)");
+    expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -81,7 +81,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.next).toBe("Connected");
     expect(t.guard).toBe("F_eq_1 and layer_3_initiated");
     expect(t.actions).toHaveLength(7);
-    expect(t.actions[0].verb).toBe("DL-CONNECT Confirm");
+    expect(t.actions[0].verb).toBe("DL_CONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
     expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
@@ -133,7 +133,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Start T1");
     expect(t.actions[2].kind).toBe("processing");
-    expect(t.actions[3].verb).toBe("DL-CONNECT Confirm");
+    expect(t.actions[3].verb).toBe("DL_CONNECT_confirm");
     expect(t.actions[3].kind).toBe("signal_upper");
     expect(t.actions[4].verb).toBe("Stop T1");
     expect(t.actions[4].kind).toBe("processing");
@@ -161,7 +161,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("DL-ERROR Indication (G)");
     expect(t.actions[1].kind).toBe("signal_upper");
-    expect(t.actions[2].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[2].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[2].kind).toBe("signal_upper");
   });
 
@@ -224,7 +224,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.next).toBe("AwaitingConnection");
     expect(t.guard).toBe("layer_3_initiated");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("Push Frame on Queue");
+    expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
   });
 
@@ -246,7 +246,7 @@ describe("DataLinkAwaitingConnection", () => {
     expect(t.next).toBe("AwaitingConnection");
     expect(t.guard).toBe("layer_3_initiated");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("Push Frame on Queue");
+    expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
   });
 

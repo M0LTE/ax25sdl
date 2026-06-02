@@ -60,18 +60,18 @@ static const ActionStep
 static const ActionStep
     data_link_awaiting_v22_connection_t11_dm_received_yes_actions[] = {
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
     data_link_awaiting_v22_connection_t12_ua_received_no_actions[] = {
-        {.verb = "DL-ERROR Indication (D)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_ERROR_indication_D", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep
     data_link_awaiting_v22_connection_t12_ua_received_yes_yes_actions[] = {
-        {.verb = "DL-CONNECT Confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
@@ -86,7 +86,7 @@ static const ActionStep
         {.verb = "SRT := Initial Default", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "T1V := 2 * SRT", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-CONNECT Confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
@@ -111,7 +111,7 @@ static const ActionStep
     data_link_awaiting_v22_connection_t13_t1_expiry_yes_actions[] = {
         {.verb = "discard_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "DL-ERROR Indication (G)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep

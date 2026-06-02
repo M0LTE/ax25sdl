@@ -31,7 +31,7 @@ static const ActionStep
 static const ActionStep
     data_link_timer_recovery_t03_i_frame_pops_off_queue_no_no_yes_actions[] = {
         {.verb = "N(s) := V(s)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "N(R) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "P := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "I Command", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "V(s) := V(s) + 1", .kind = AX25SDL_KIND_PROCESSING},
@@ -41,7 +41,7 @@ static const ActionStep
 static const ActionStep
     data_link_timer_recovery_t03_i_frame_pops_off_queue_no_no_no_actions[] = {
         {.verb = "N(s) := V(s)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "N(R) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "P := 0", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "I Command", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "V(s) := V(s) + 1", .kind = AX25SDL_KIND_PROCESSING},
@@ -117,7 +117,7 @@ static const ActionStep data_link_timer_recovery_t11_ua_received_actions[] = {
 
 static const ActionStep data_link_timer_recovery_t12_dm_received_actions[] = {
     {.verb = "DL-ERROR Indication (E)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-    {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+    {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
     {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
     {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
     {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
@@ -131,7 +131,7 @@ static const ActionStep
         {.verb = "Clear Exception Conditions", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "DL-ERROR Indication (F)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-CONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
@@ -156,7 +156,7 @@ static const ActionStep
         {.verb = "Clear Exception Conditions", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "DL-ERROR Indication (F)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-CONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_CONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(s) := 0", .kind = AX25SDL_KIND_PROCESSING},
@@ -195,7 +195,7 @@ static const ActionStep data_link_timer_recovery_t17_disc_received_actions[] = {
     {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
     {.verb = "F := P", .kind = AX25SDL_KIND_PROCESSING},
     {.verb = "UA", .kind = AX25SDL_KIND_SIGNAL_LOWER},
-    {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+    {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
     {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
     {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
 };
@@ -258,7 +258,7 @@ static const ActionStep
         {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Set Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "set_acknowledge_pending", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
@@ -329,7 +329,7 @@ static const ActionStep
         {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Set Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "set_acknowledge_pending", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
@@ -346,12 +346,12 @@ static const ActionStep
     data_link_timer_recovery_t20_lm_seize_confirm_yes_actions[] = {
         {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Enquiry Response (F = 0)", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "LM_RELEASE Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "LM_release_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
 
 static const ActionStep
     data_link_timer_recovery_t20_lm_seize_confirm_no_actions[] = {
-        {.verb = "LM_RELEASE Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "LM_release_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
 
 static const ActionStep data_link_timer_recovery_t21_t1_expiry_no_actions[] = {
@@ -362,7 +362,7 @@ static const ActionStep data_link_timer_recovery_t21_t1_expiry_no_actions[] = {
 static const ActionStep
     data_link_timer_recovery_t21_t1_expiry_yes_yes_yes_actions[] = {
         {.verb = "DL-ERROR Indication (U)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "DM Response (F = 0)", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
@@ -370,7 +370,7 @@ static const ActionStep
 static const ActionStep
     data_link_timer_recovery_t21_t1_expiry_yes_yes_no_actions[] = {
         {.verb = "DL-ERROR Indication (T)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "DM Response (F = 0)", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
@@ -378,7 +378,7 @@ static const ActionStep
 static const ActionStep
     data_link_timer_recovery_t21_t1_expiry_yes_no_actions[] = {
         {.verb = "DL-ERROR Indication (I)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "discard_I_frame_queue", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "DM Response (F = 0)", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
@@ -425,10 +425,10 @@ static const ActionStep
         {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Decrement Sreject Exception if > 0",
          .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Retrieve Stored V(r) I Frame",
          .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "F := 1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
@@ -453,14 +453,14 @@ static const ActionStep
             {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "Decrement Sreject Exception if > 0",
              .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
             {.verb = "Retrieve Stored V(r) I Frame",
              .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
             {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "Set Acknowledge Pending",
+            {.verb = "set_acknowledge_pending",
              .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "LM-SIEZE Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+            {.verb = "LM_seize_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
 };
 
 static const LoopRange
@@ -480,10 +480,10 @@ static const ActionStep
             {.verb = "Clear Reject Exception", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "Decrement Sreject Exception if > 0",
              .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
             {.verb = "Retrieve Stored V(r) I Frame",
              .kind = AX25SDL_KIND_PROCESSING},
-            {.verb = "DL-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+            {.verb = "DL_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
             {.verb = "V(r) := V(r) - 1", .kind = AX25SDL_KIND_PROCESSING},
 };
 
@@ -530,7 +530,7 @@ static const ActionStep
             {.verb = "F := P", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "REJ", .kind = AX25SDL_KIND_SIGNAL_LOWER},
-            {.verb = "Set Acknowledge Pending",
+            {.verb = "set_acknowledge_pending",
              .kind = AX25SDL_KIND_PROCESSING},
 };
 
@@ -547,7 +547,7 @@ static const ActionStep
             {.verb = "F := P", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "N(r) := V(r)", .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "REJ", .kind = AX25SDL_KIND_SIGNAL_LOWER},
-            {.verb = "Set Acknowledge Pending",
+            {.verb = "set_acknowledge_pending",
              .kind = AX25SDL_KIND_PROCESSING},
 };
 
@@ -679,14 +679,14 @@ static const ActionStep
     data_link_timer_recovery_t24_srej_received_no_yes_yes_yes_actions[] = {
         {.verb = "clear_peer_receiver_busy", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Check I Frame Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
 static const ActionStep
     data_link_timer_recovery_t24_srej_received_no_yes_yes_no_actions[] = {
         {.verb = "clear_peer_receiver_busy", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Check I Frame Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
@@ -735,7 +735,7 @@ static const ActionStep
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Select_T1_Value", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Check I Frame Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "Start T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "RC := 0", .kind = AX25SDL_KIND_PROCESSING},
 };
@@ -746,9 +746,9 @@ static const ActionStep
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Select_T1_Value", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Check I Frame Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "push_frame_on_queue", .kind = AX25SDL_KIND_INTERNAL_OUT},
-        {.verb = "LM-DATA Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
@@ -770,7 +770,7 @@ static const ActionStep
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Select_T1_Value", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "push_frame_on_queue", .kind = AX25SDL_KIND_INTERNAL_OUT},
-        {.verb = "LM-DATA Request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},

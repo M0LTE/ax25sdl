@@ -63,7 +63,7 @@ static int test_t02_t1_expiry_yes(void) {
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (G)",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   return 0;
@@ -108,7 +108,7 @@ static int test_t03_ua_received_yes(void) {
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "F_eq_1", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Stop T1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
@@ -129,8 +129,7 @@ static int test_t03_ua_received_no(void) {
   ASSERT_STREQ(t->next, "AwaitingRelease", "next");
   ASSERT_STREQ(t->guard, "not F_eq_1", "guard");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (D)",
-               "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_D", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -316,7 +315,7 @@ static int test_t13_dm_received_yes(void) {
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT_STREQ(t->guard, "F_eq_1", "guard");
   ASSERT(t->actions_len == 2, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Stop T1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");

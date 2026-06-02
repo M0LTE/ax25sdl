@@ -30,7 +30,7 @@ var DataLinkAwaitingRelease = StatePage{
 			Guard: "RC_eq_N2",
 			Actions: []ActionStep{
 				{Verb: "DL-ERROR Indication (G)", Kind: SignalUpper},
-				{Verb: "DL-DISCONNECT Indication", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_indication", Kind: SignalUpper},
 			},
 			Next:       "Disconnected",
 			Notes:      "",
@@ -59,7 +59,7 @@ var DataLinkAwaitingRelease = StatePage{
 			On:    "UA_received",
 			Guard: "F_eq_1",
 			Actions: []ActionStep{
-				{Verb: "DL-DISCONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 			},
 			Next:       "Disconnected",
@@ -73,7 +73,7 @@ var DataLinkAwaitingRelease = StatePage{
 			On:    "UA_received",
 			Guard: "not F_eq_1",
 			Actions: []ActionStep{
-				{Verb: "DL-ERROR Indication (D)", Kind: SignalUpper},
+				{Verb: "DL_ERROR_indication_D", Kind: SignalUpper},
 			},
 			Next:       "AwaitingRelease",
 			Notes:      "",
@@ -202,7 +202,7 @@ var DataLinkAwaitingRelease = StatePage{
 			On:    "DM_received",
 			Guard: "F_eq_1",
 			Actions: []ActionStep{
-				{Verb: "DL-DISCONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 			},
 			Next:       "Disconnected",

@@ -22,7 +22,7 @@ def test_t01_dl_disconnect_request() -> None:
     assert t.on == "DL_DISCONNECT_request"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL-DISCONNECT Confirm"
+    assert t.actions[0].verb == "DL_DISCONNECT_confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -145,7 +145,7 @@ def test_t10_ua_received() -> None:
     assert t.on == "UA_received"
     assert t.next == "Disconnected"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL-ERROR Indication (C,D)"
+    assert t.actions[0].verb == "DL_ERROR_indication_C_D"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -236,7 +236,7 @@ def test_t13_sabm_received_yes() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
     assert t.actions[6].verb == "V(r) := 0"
     assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "DL Connect Indication"
+    assert t.actions[7].verb == "DL_CONNECT_indication"
     assert t.actions[7].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[8].verb == "SRT := Initial Default"
     assert t.actions[8].kind == ActionKind.PROCESSING
@@ -288,7 +288,7 @@ def test_t14_sabme_received_yes() -> None:
     assert t.actions[5].kind == ActionKind.PROCESSING
     assert t.actions[6].verb == "V(r) := 0"
     assert t.actions[6].kind == ActionKind.PROCESSING
-    assert t.actions[7].verb == "DL Connect Indication"
+    assert t.actions[7].verb == "DL_CONNECT_indication"
     assert t.actions[7].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[8].verb == "SRT := Initial Default"
     assert t.actions[8].kind == ActionKind.PROCESSING

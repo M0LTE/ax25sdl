@@ -180,7 +180,7 @@ var DataLinkAwaitingV22Connection = StatePage{
 			Guard: "F_eq_1",
 			Actions: []ActionStep{
 				{Verb: "discard_I_frame_queue", Kind: Processing},
-				{Verb: "DL-DISCONNECT Indication", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_indication", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 			},
 			Next:       "Disconnected",
@@ -194,7 +194,7 @@ var DataLinkAwaitingV22Connection = StatePage{
 			On:    "UA_received",
 			Guard: "not F_eq_1",
 			Actions: []ActionStep{
-				{Verb: "DL-ERROR Indication (D)", Kind: SignalUpper},
+				{Verb: "DL_ERROR_indication_D", Kind: SignalUpper},
 			},
 			Next:       "AwaitingV22Connection",
 			Notes:      "",
@@ -207,7 +207,7 @@ var DataLinkAwaitingV22Connection = StatePage{
 			On:    "UA_received",
 			Guard: "F_eq_1 and layer_3_initiated",
 			Actions: []ActionStep{
-				{Verb: "DL-CONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_CONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 				{Verb: "Start T3", Kind: Processing},
 				{Verb: "V(s) := 0", Kind: Processing},
@@ -230,7 +230,7 @@ var DataLinkAwaitingV22Connection = StatePage{
 				{Verb: "SRT := Initial Default", Kind: Processing},
 				{Verb: "T1V := 2 * SRT", Kind: Processing},
 				{Verb: "Start T3", Kind: Processing},
-				{Verb: "DL-CONNECT Confirm", Kind: SignalUpper},
+				{Verb: "DL_CONNECT_confirm", Kind: SignalUpper},
 				{Verb: "Stop T1", Kind: Processing},
 				{Verb: "Start T3", Kind: Processing},
 				{Verb: "V(s) := 0", Kind: Processing},
@@ -271,7 +271,7 @@ var DataLinkAwaitingV22Connection = StatePage{
 			Actions: []ActionStep{
 				{Verb: "discard_frame_queue", Kind: Processing},
 				{Verb: "DL-ERROR Indication (G)", Kind: SignalUpper},
-				{Verb: "DL-DISCONNECT Indication", Kind: SignalUpper},
+				{Verb: "DL_DISCONNECT_indication", Kind: SignalUpper},
 			},
 			Next:       "Disconnected",
 			Notes:      "",

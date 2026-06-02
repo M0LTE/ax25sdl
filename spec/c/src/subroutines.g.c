@@ -22,7 +22,7 @@ static const ActionStep
 
 static const ActionStep
     data_link_subroutines_u_i_check_t02_ui_check_yes_yes_actions[] = {
-        {.verb = "DL-UNIT-DATA Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_UNIT_DATA_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep
@@ -169,7 +169,7 @@ static const ActionStep
 static const ActionStep
     data_link_subroutines_clear_exception_conditions_t01_clear_exception_conditions_actions
         [] = {
-            {.verb = "Clear Peer Receiver Busy",
+            {.verb = "clear_peer_receiver_busy",
              .kind = AX25SDL_KIND_PROCESSING},
             {.verb = "Clear Own Receiver Busy",
              .kind = AX25SDL_KIND_PROCESSING},

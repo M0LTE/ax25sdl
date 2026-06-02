@@ -45,7 +45,7 @@ public static class DataLink_Subroutines
                 new SubroutinePath(
                     Id: "t02_ui_check_yes_yes",
                     Guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
-                    Actions: new ActionStep[] { new ActionStep("DL-UNIT-DATA Indication", ActionKind.SignalUpper) },
+                    Actions: new ActionStep[] { new ActionStep("DL_UNIT_DATA_indication", ActionKind.SignalUpper) },
                     Notes: null,
                     References: new ImplementationReference[] {  },
                     Loops: new LoopRange[] {  }),
@@ -234,7 +234,7 @@ public static class DataLink_Subroutines
                 new SubroutinePath(
                     Id: "t01_clear_exception_conditions",
                     Guard: null,
-                    Actions: new ActionStep[] { new ActionStep("Clear Peer Receiver Busy", ActionKind.Processing), new ActionStep("Clear Own Receiver Busy", ActionKind.Processing), new ActionStep("Clear Reject Condition", ActionKind.Processing), new ActionStep("Clear Sreject Condition", ActionKind.Processing), new ActionStep("Clear Acknowledge Pending", ActionKind.Processing), new ActionStep("Discard I Queue Entries", ActionKind.Processing) },
+                    Actions: new ActionStep[] { new ActionStep("clear_peer_receiver_busy", ActionKind.Processing), new ActionStep("Clear Own Receiver Busy", ActionKind.Processing), new ActionStep("Clear Reject Condition", ActionKind.Processing), new ActionStep("Clear Sreject Condition", ActionKind.Processing), new ActionStep("Clear Acknowledge Pending", ActionKind.Processing), new ActionStep("Discard I Queue Entries", ActionKind.Processing) },
                     Notes: null,
                     References: new ImplementationReference[] {  },
                     Loops: new LoopRange[] {  }),

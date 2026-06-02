@@ -37,8 +37,8 @@ func TestDataLinkDisconnected_t01_dl_disconnect_request(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL-DISCONNECT Confirm" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-DISCONNECT Confirm")
+	if tx.Actions[0].Verb != "DL_DISCONNECT_confirm" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_DISCONNECT_confirm")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -307,8 +307,8 @@ func TestDataLinkDisconnected_t10_ua_received(t *testing.T) {
 	if got := len(tx.Actions); got != 1 {
 		t.Fatalf("len(Actions) = %d, want 1", got)
 	}
-	if tx.Actions[0].Verb != "DL-ERROR Indication (C,D)" {
-		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL-ERROR Indication (C,D)")
+	if tx.Actions[0].Verb != "DL_ERROR_indication_C_D" {
+		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "DL_ERROR_indication_C_D")
 	}
 	if tx.Actions[0].Kind != SignalUpper {
 		t.Errorf("Actions[0].Kind = %v, want SignalUpper", tx.Actions[0].Kind)
@@ -525,8 +525,8 @@ func TestDataLinkDisconnected_t13_sabm_received_yes(t *testing.T) {
 	if tx.Actions[6].Kind != Processing {
 		t.Errorf("Actions[6].Kind = %v, want Processing", tx.Actions[6].Kind)
 	}
-	if tx.Actions[7].Verb != "DL Connect Indication" {
-		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL Connect Indication")
+	if tx.Actions[7].Verb != "DL_CONNECT_indication" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL_CONNECT_indication")
 	}
 	if tx.Actions[7].Kind != SignalUpper {
 		t.Errorf("Actions[7].Kind = %v, want SignalUpper", tx.Actions[7].Kind)
@@ -659,8 +659,8 @@ func TestDataLinkDisconnected_t14_sabme_received_yes(t *testing.T) {
 	if tx.Actions[6].Kind != Processing {
 		t.Errorf("Actions[6].Kind = %v, want Processing", tx.Actions[6].Kind)
 	}
-	if tx.Actions[7].Verb != "DL Connect Indication" {
-		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL Connect Indication")
+	if tx.Actions[7].Verb != "DL_CONNECT_indication" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "DL_CONNECT_indication")
 	}
 	if tx.Actions[7].Kind != SignalUpper {
 		t.Errorf("Actions[7].Kind = %v, want SignalUpper", tx.Actions[7].Kind)

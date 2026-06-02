@@ -77,7 +77,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
-                ActionStep { verb: "N(R) := V(r)", kind: ActionKind::Processing },
+                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
                 ActionStep { verb: "P := 0", kind: ActionKind::Processing },
                 ActionStep { verb: "I Command", kind: ActionKind::SignalLower },
                 ActionStep { verb: "V(s) := V(s) + 1", kind: ActionKind::Processing },
@@ -95,7 +95,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
             actions: &[
                 ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
-                ActionStep { verb: "N(R) := V(r)", kind: ActionKind::Processing },
+                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
                 ActionStep { verb: "P := 0", kind: ActionKind::Processing },
                 ActionStep { verb: "I Command", kind: ActionKind::SignalLower },
                 ActionStep { verb: "V(s) := V(s) + 1", kind: ActionKind::Processing },
@@ -275,7 +275,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (E)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
@@ -297,7 +297,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
                 ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-CONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_CONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
@@ -338,7 +338,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
                 ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-CONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_CONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
@@ -419,7 +419,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "F := P", kind: ActionKind::Processing },
                 ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
             ],
@@ -546,7 +546,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -689,7 +689,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -722,7 +722,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
                 ActionStep { verb: "Enquiry Response (F = 0)", kind: ActionKind::Subroutine },
-                ActionStep { verb: "LM_RELEASE Request", kind: ActionKind::SignalLower },
+                ActionStep { verb: "LM_release_request", kind: ActionKind::SignalLower },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -735,7 +735,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             on: "LM_SEIZE_confirm",
             guard: "not ACK_pending",
             actions: &[
-                ActionStep { verb: "LM_RELEASE Request", kind: ActionKind::SignalLower },
+                ActionStep { verb: "LM_release_request", kind: ActionKind::SignalLower },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -763,7 +763,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "RC_eq_N2 and vs_eq_va and peer_busy",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (U)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
             ],
@@ -779,7 +779,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "RC_eq_N2 and vs_eq_va and not peer_busy",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (T)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
             ],
@@ -795,7 +795,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             guard: "RC_eq_N2 and not vs_eq_va",
             actions: &[
                 ActionStep { verb: "DL-ERROR Indication (I)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL-DISCONNECT Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
                 ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
             ],
@@ -888,9 +888,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
                 ActionStep { verb: "F := 1", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
@@ -914,12 +914,12 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "LM-SIEZE Request", kind: ActionKind::SignalLower },
+                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
+                ActionStep { verb: "LM_seize_request", kind: ActionKind::SignalLower },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -938,9 +938,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
                 ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
                 ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL-DATA Indication", kind: ActionKind::SignalUpper },
+                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
                 ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
@@ -994,7 +994,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "F := P", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
                 ActionStep { verb: "REJ", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1014,7 +1014,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "F := P", kind: ActionKind::Processing },
                 ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
                 ActionStep { verb: "REJ", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Set Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1259,7 +1259,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check I Frame Acknowledged", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1274,7 +1274,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
             actions: &[
                 ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check I Frame Acknowledged", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
             ],
             next: "TimerRecovery",
@@ -1379,7 +1379,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check I Frame Acknowledged", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "Start T3", kind: ActionKind::Processing },
                 ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
             ],
@@ -1398,9 +1398,9 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
                 ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check I Frame Acknowledged", kind: ActionKind::Subroutine },
+                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
                 ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-                ActionStep { verb: "LM-DATA Request", kind: ActionKind::SignalLower },
+                ActionStep { verb: "LM_data_request", kind: ActionKind::SignalLower },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "Start T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
@@ -1438,7 +1438,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
                 ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-                ActionStep { verb: "LM-DATA Request", kind: ActionKind::SignalLower },
+                ActionStep { verb: "LM_data_request", kind: ActionKind::SignalLower },
                 ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
                 ActionStep { verb: "Start T1", kind: ActionKind::Processing },
                 ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
@@ -1570,7 +1570,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(R) := V(r)");
+        assert_eq!(tx.actions[1].verb, "N(r) := V(r)");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "P := 0");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -1598,7 +1598,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(R) := V(r)");
+        assert_eq!(tx.actions[1].verb, "N(r) := V(r)");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "P := 0");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -1823,7 +1823,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 5);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (E)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -1856,7 +1856,7 @@ mod tests {
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[5].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL-CONNECT Indication");
+        assert_eq!(tx.actions[6].verb, "DL_CONNECT_indication");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[7].verb, "Stop T1");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
@@ -1916,7 +1916,7 @@ mod tests {
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[5].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL-CONNECT Indication");
+        assert_eq!(tx.actions[6].verb, "DL_CONNECT_indication");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[7].verb, "Stop T1");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
@@ -2021,7 +2021,7 @@ mod tests {
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, "UA");
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[3].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[3].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[4].verb, "Stop T1");
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
@@ -2208,7 +2208,7 @@ mod tests {
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
         assert_eq!(tx.actions[6].verb, "Start T1");
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2419,7 +2419,7 @@ mod tests {
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
         assert_eq!(tx.actions[6].verb, "Start T1");
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2466,7 +2466,7 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "Enquiry Response (F = 0)");
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "LM_RELEASE Request");
+        assert_eq!(tx.actions[2].verb, "LM_release_request");
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
     }
 
@@ -2481,7 +2481,7 @@ mod tests {
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.guard, "not ACK_pending");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "LM_RELEASE Request");
+        assert_eq!(tx.actions[0].verb, "LM_release_request");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalLower);
     }
 
@@ -2515,7 +2515,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (U)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -2536,7 +2536,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (T)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -2557,7 +2557,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 4);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (I)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
@@ -2680,11 +2680,11 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
         assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
@@ -2717,17 +2717,17 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
         assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[8].verb, "set_acknowledge_pending");
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "LM-SIEZE Request");
+        assert_eq!(tx.actions[9].verb, "LM_seize_request");
         assert_eq!(tx.actions[9].kind, ActionKind::SignalLower);
     }
 
@@ -2750,11 +2750,11 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
         assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL-DATA Indication");
+        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
@@ -2825,7 +2825,7 @@ mod tests {
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
         assert_eq!(tx.actions[5].verb, "REJ");
         assert_eq!(tx.actions[5].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[6].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[6].verb, "set_acknowledge_pending");
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
     }
 
@@ -2854,7 +2854,7 @@ mod tests {
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
         assert_eq!(tx.actions[6].verb, "REJ");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[7].verb, "Set Acknowledge Pending");
+        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -3206,7 +3206,7 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Check I Frame Acknowledged");
+        assert_eq!(tx.actions[2].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -3228,7 +3228,7 @@ mod tests {
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Check I Frame Acknowledged");
+        assert_eq!(tx.actions[2].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[3].verb, "Invoke Retransmission");
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
@@ -3379,7 +3379,7 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Check I Frame Acknowledged");
+        assert_eq!(tx.actions[4].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[5].verb, "Start T3");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
@@ -3409,11 +3409,11 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Check I Frame Acknowledged");
+        assert_eq!(tx.actions[4].verb, "Check_I_Frame_Acknowledged");
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[5].verb, "push_frame_on_queue");
         assert_eq!(tx.actions[5].kind, ActionKind::InternalOut);
-        assert_eq!(tx.actions[6].verb, "LM-DATA Request");
+        assert_eq!(tx.actions[6].verb, "LM_data_request");
         assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
         assert_eq!(tx.actions[7].verb, "Stop T3");
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
@@ -3473,7 +3473,7 @@ mod tests {
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
         assert_eq!(tx.actions[3].verb, "push_frame_on_queue");
         assert_eq!(tx.actions[3].kind, ActionKind::InternalOut);
-        assert_eq!(tx.actions[4].verb, "LM-DATA Request");
+        assert_eq!(tx.actions[4].verb, "LM_data_request");
         assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
         assert_eq!(tx.actions[5].verb, "Stop T3");
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);

@@ -39,7 +39,7 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
-                    verb: "DL-DISCONNECT Indication",
+                    verb: "DL_DISCONNECT_indication",
                     kind: ActionKind::SignalUpper,
                 },
             ],
@@ -83,7 +83,7 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             guard: "F_eq_1",
             actions: &[
                 ActionStep {
-                    verb: "DL-DISCONNECT Confirm",
+                    verb: "DL_DISCONNECT_confirm",
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
@@ -102,7 +102,7 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             on: "UA_received",
             guard: "not F_eq_1",
             actions: &[ActionStep {
-                verb: "DL-ERROR Indication (D)",
+                verb: "DL_ERROR_indication_D",
                 kind: ActionKind::SignalUpper,
             }],
             next: "AwaitingRelease",
@@ -255,7 +255,7 @@ pub static DATA_LINK_AWAITING_RELEASE: StatePage = StatePage {
             guard: "F_eq_1",
             actions: &[
                 ActionStep {
-                    verb: "DL-DISCONNECT Confirm",
+                    verb: "DL_DISCONNECT_confirm",
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
@@ -382,7 +382,7 @@ mod tests {
         assert_eq!(tx.actions.len(), 2);
         assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (G)");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL-DISCONNECT Indication");
+        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
     }
 
@@ -418,7 +418,7 @@ mod tests {
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.guard, "F_eq_1");
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "DL-DISCONNECT Confirm");
+        assert_eq!(tx.actions[0].verb, "DL_DISCONNECT_confirm");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[1].verb, "Stop T1");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
@@ -435,7 +435,7 @@ mod tests {
         assert_eq!(tx.next, "AwaitingRelease");
         assert_eq!(tx.guard, "not F_eq_1");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (D)");
+        assert_eq!(tx.actions[0].verb, "DL_ERROR_indication_D");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -578,7 +578,7 @@ mod tests {
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.guard, "F_eq_1");
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "DL-DISCONNECT Confirm");
+        assert_eq!(tx.actions[0].verb, "DL_DISCONNECT_confirm");
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
         assert_eq!(tx.actions[1].verb, "Stop T1");
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);

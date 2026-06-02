@@ -188,7 +188,7 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             guard="F_eq_1",
             actions=(
                 ActionStep(verb="discard_I_frame_queue", kind=ActionKind.PROCESSING),
-                ActionStep(verb="DL-DISCONNECT Indication", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_DISCONNECT_indication", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
             ),
             next="Disconnected",
@@ -202,7 +202,7 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             on="UA_received",
             guard="not F_eq_1",
             actions=(
-                ActionStep(verb="DL-ERROR Indication (D)", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_ERROR_indication_D", kind=ActionKind.SIGNAL_UPPER),
             ),
             next="AwaitingV22Connection",
             notes="",
@@ -215,7 +215,7 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             on="UA_received",
             guard="F_eq_1 and layer_3_initiated",
             actions=(
-                ActionStep(verb="DL-CONNECT Confirm", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_CONNECT_confirm", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Start T3", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(s) := 0", kind=ActionKind.PROCESSING),
@@ -238,7 +238,7 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
                 ActionStep(verb="SRT := Initial Default", kind=ActionKind.PROCESSING),
                 ActionStep(verb="T1V := 2 * SRT", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Start T3", kind=ActionKind.PROCESSING),
-                ActionStep(verb="DL-CONNECT Confirm", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_CONNECT_confirm", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Start T3", kind=ActionKind.PROCESSING),
                 ActionStep(verb="V(s) := 0", kind=ActionKind.PROCESSING),
@@ -279,7 +279,7 @@ DATA_LINK_AWAITING_V_22_CONNECTION = StatePage(
             actions=(
                 ActionStep(verb="discard_frame_queue", kind=ActionKind.PROCESSING),
                 ActionStep(verb="DL-ERROR Indication (G)", kind=ActionKind.SIGNAL_UPPER),
-                ActionStep(verb="DL-DISCONNECT Indication", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_DISCONNECT_indication", kind=ActionKind.SIGNAL_UPPER),
             ),
             next="Disconnected",
             notes="",

@@ -89,7 +89,7 @@ def test_t03_i_frame_pops_off_queue_no_no_no() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "N(r) := V(r)"
     assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "p := 0"
+    assert t.actions[2].verb == "P := 0"
     assert t.actions[2].kind == ActionKind.PROCESSING
     assert t.actions[3].verb == "I Command"
     assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
@@ -117,7 +117,7 @@ def test_t03_i_frame_pops_off_queue_no_no_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "N(r) := V(r)"
     assert t.actions[1].kind == ActionKind.PROCESSING
-    assert t.actions[2].verb == "p := 0"
+    assert t.actions[2].verb == "P := 0"
     assert t.actions[2].kind == ActionKind.PROCESSING
     assert t.actions[3].verb == "I Command"
     assert t.actions[3].kind == ActionKind.SIGNAL_LOWER
@@ -475,7 +475,7 @@ def test_t14_sabm_received_no() -> None:
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "discard_I_frame_queue"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL-CONNECT Indication"
+    assert t.actions[6].verb == "DL_CONNECT_indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[7].verb == "Stop T1"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -547,7 +547,7 @@ def test_t15_sabme_received_no() -> None:
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "discard_I_frame_queue"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL-CONNECT Indication"
+    assert t.actions[6].verb == "DL_CONNECT_indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[7].verb == "Stop T1"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -680,7 +680,7 @@ def test_t19_disc_received() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "UA"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
-    assert t.actions[3].verb == "DL-DISCONNECT Indication"
+    assert t.actions[3].verb == "DL_DISCONNECT_indication"
     assert t.actions[3].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[4].verb == "Stop T3"
     assert t.actions[4].kind == ActionKind.PROCESSING
@@ -699,7 +699,7 @@ def test_t20_dm_received() -> None:
     assert len(t.actions) == 5
     assert t.actions[0].verb == "DL-ERROR Indication (E)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[1].verb == "DL-DISCONNECT Indication"
+    assert t.actions[1].verb == "DL_DISCONNECT_indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[2].verb == "discard_I_frame_queue"
     assert t.actions[2].kind == ActionKind.PROCESSING
@@ -723,7 +723,7 @@ def test_t21_rr_received_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "Check I Frame Acknowledged"
+    assert t.actions[2].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
@@ -777,7 +777,7 @@ def test_t22_rnr_received_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Check Need For Response"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "Check I Frame Acknowledged"
+    assert t.actions[2].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
 
 
@@ -831,7 +831,7 @@ def test_t23_lm_seize_confirm_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Enquiry Response (F = 0)"
     assert t.actions[1].kind == ActionKind.SUBROUTINE
-    assert t.actions[2].verb == "LM-RELEASE Request"
+    assert t.actions[2].verb == "LM_release_request"
     assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
 
 
@@ -845,7 +845,7 @@ def test_t23_lm_seize_confirm_no() -> None:
     assert t.next == "Connected"
     assert t.guard == "not ack_pending"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "LM-RELEASE Request"
+    assert t.actions[0].verb == "LM_release_request"
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
 
 
@@ -873,7 +873,7 @@ def test_t24_srej_received_yes_yes() -> None:
     assert t.actions[5].kind == ActionKind.SUBROUTINE
     assert t.actions[6].verb == "Push Old I Frame N(r) on Queue"
     assert t.actions[6].kind == ActionKind.INTERNAL_OUT
-    assert t.actions[7].verb == "LM-DATA Request"
+    assert t.actions[7].verb == "LM_data_request"
     assert t.actions[7].kind == ActionKind.SIGNAL_LOWER
     assert t.actions[8].verb == "Stop T3"
     assert t.actions[8].kind == ActionKind.PROCESSING
@@ -905,7 +905,7 @@ def test_t24_srej_received_yes_no() -> None:
     assert t.actions[4].kind == ActionKind.SUBROUTINE
     assert t.actions[5].verb == "Push Old I Frame N(r) on Queue"
     assert t.actions[5].kind == ActionKind.INTERNAL_OUT
-    assert t.actions[6].verb == "LM-DATA Request"
+    assert t.actions[6].verb == "LM_data_request"
     assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
     assert t.actions[7].verb == "Stop T3"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -1097,15 +1097,15 @@ def test_t26_i_received_yes_yes_yes_no_yes_no_no() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
     assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].verb == "DL_DATA_indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].verb == "DL_DATA_indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[7].verb == "V(r) := V(r) + 1"
     assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "LM-SEIZE Request"
+    assert t.actions[8].verb == "LM_seize_request"
     assert t.actions[8].kind == ActionKind.SIGNAL_LOWER
     assert t.actions[9].verb == "set_acknowledge_pending"
     assert t.actions[9].kind == ActionKind.PROCESSING
@@ -1129,11 +1129,11 @@ def test_t26_i_received_yes_yes_yes_no_yes_no_yes() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
     assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].verb == "DL_DATA_indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].verb == "DL_DATA_indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[7].verb == "V(r) := V(r) + 1"
     assert t.actions[7].kind == ActionKind.PROCESSING
@@ -1157,11 +1157,11 @@ def test_t26_i_received_yes_yes_yes_no_yes_yes() -> None:
     assert t.actions[2].kind == ActionKind.PROCESSING
     assert t.actions[3].verb == "Decrement Sreject Exception if > 0"
     assert t.actions[3].kind == ActionKind.PROCESSING
-    assert t.actions[4].verb == "DL-DATA Indication"
+    assert t.actions[4].verb == "DL_DATA_indication"
     assert t.actions[4].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[5].verb == "Retrieve Stored V(r) I Frame"
     assert t.actions[5].kind == ActionKind.PROCESSING
-    assert t.actions[6].verb == "DL-DATA Indication"
+    assert t.actions[6].verb == "DL_DATA_indication"
     assert t.actions[6].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[7].verb == "V(r) := V(r) + 1"
     assert t.actions[7].kind == ActionKind.PROCESSING

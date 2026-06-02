@@ -34,7 +34,7 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (G)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
   });
 
@@ -64,7 +64,7 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("F_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
+    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
     expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
@@ -78,7 +78,7 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.next).toBe("AwaitingRelease");
     expect(t.guard).toBe("not F_eq_1");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL-ERROR Indication (D)");
+    expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -191,7 +191,7 @@ describe("DataLinkAwaitingRelease", () => {
     expect(t.next).toBe("Disconnected");
     expect(t.guard).toBe("F_eq_1");
     expect(t.actions).toHaveLength(2);
-    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
+    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
     expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");

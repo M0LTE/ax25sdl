@@ -73,7 +73,7 @@
           "guard": "command and info_field_length_le_N1_and_content_is_octet_aligned",
           "actions": [
             {
-              "verb": "DL-UNIT-DATA Indication",
+              "verb": "DL_UNIT_DATA_indication",
               "kind": "signal_upper"
             }
           ],
@@ -520,7 +520,7 @@
           "guard": "",
           "actions": [
             {
-              "verb": "Clear Peer Receiver Busy",
+              "verb": "clear_peer_receiver_busy",
               "kind": "processing"
             },
             {

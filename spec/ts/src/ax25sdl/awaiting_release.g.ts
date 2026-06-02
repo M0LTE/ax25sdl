@@ -32,7 +32,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       guard: "RC_eq_N2",
       actions: [
         { verb: "DL-ERROR Indication (G)", kind: "signal_upper" },
-        { verb: "DL-DISCONNECT Indication", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
       ],
       next: "Disconnected",
       notes: "",
@@ -61,7 +61,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       on: "UA_received",
       guard: "F_eq_1",
       actions: [
-        { verb: "DL-DISCONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
       ],
       next: "Disconnected",
@@ -75,7 +75,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       on: "UA_received",
       guard: "not F_eq_1",
       actions: [
-        { verb: "DL-ERROR Indication (D)", kind: "signal_upper" },
+        { verb: "DL_ERROR_indication_D", kind: "signal_upper" },
       ],
       next: "AwaitingRelease",
       notes: "",
@@ -204,7 +204,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       on: "DM_received",
       guard: "F_eq_1",
       actions: [
-        { verb: "DL-DISCONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
       ],
       next: "Disconnected",
