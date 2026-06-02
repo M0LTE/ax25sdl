@@ -197,7 +197,7 @@ def test_t11_dm_received_yes() -> None:
     assert len(t.actions) == 3
     assert t.actions[0].verb == "discard_I_frame_queue"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "DL-DISCONNECT Indication"
+    assert t.actions[1].verb == "DL_DISCONNECT_indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[2].verb == "Stop T1"
     assert t.actions[2].kind == ActionKind.PROCESSING
@@ -213,7 +213,7 @@ def test_t12_ua_received_no() -> None:
     assert t.next == "AwaitingV22Connection"
     assert t.guard == "not F_eq_1"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL-ERROR Indication (D)"
+    assert t.actions[0].verb == "DL_ERROR_indication_D"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -227,7 +227,7 @@ def test_t12_ua_received_yes_yes() -> None:
     assert t.next == "Connected"
     assert t.guard == "F_eq_1 and layer_3_initiated"
     assert len(t.actions) == 8
-    assert t.actions[0].verb == "DL-CONNECT Confirm"
+    assert t.actions[0].verb == "DL_CONNECT_confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
@@ -261,7 +261,7 @@ def test_t12_ua_received_yes_no_no() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Start T3"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "DL-CONNECT Confirm"
+    assert t.actions[3].verb == "DL_CONNECT_confirm"
     assert t.actions[3].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[4].verb == "Stop T1"
     assert t.actions[4].kind == ActionKind.PROCESSING
@@ -319,7 +319,7 @@ def test_t13_t1_expiry_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "DL-ERROR Indication (G)"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[2].verb == "DL-DISCONNECT Indication"
+    assert t.actions[2].verb == "DL_DISCONNECT_indication"
     assert t.actions[2].kind == ActionKind.SIGNAL_UPPER
 
 

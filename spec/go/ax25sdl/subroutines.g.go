@@ -49,7 +49,7 @@ var DataLinkSubroutines = SubroutinesPage{
 					ID:    "t02_ui_check_yes_yes",
 					Guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
 					Actions: []ActionStep{
-						{Verb: "DL-UNIT-DATA Indication", Kind: SignalUpper},
+						{Verb: "DL_UNIT_DATA_indication", Kind: SignalUpper},
 					},
 					Notes:      "",
 					References: []ImplementationReference{},
@@ -329,7 +329,7 @@ var DataLinkSubroutines = SubroutinesPage{
 					ID:    "t01_clear_exception_conditions",
 					Guard: "",
 					Actions: []ActionStep{
-						{Verb: "Clear Peer Receiver Busy", Kind: Processing},
+						{Verb: "clear_peer_receiver_busy", Kind: Processing},
 						{Verb: "Clear Own Receiver Busy", Kind: Processing},
 						{Verb: "Clear Reject Condition", Kind: Processing},
 						{Verb: "Clear Sreject Condition", Kind: Processing},

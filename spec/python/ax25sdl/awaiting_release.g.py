@@ -38,7 +38,7 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             guard="RC_eq_N2",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (G)", kind=ActionKind.SIGNAL_UPPER),
-                ActionStep(verb="DL-DISCONNECT Indication", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_DISCONNECT_indication", kind=ActionKind.SIGNAL_UPPER),
             ),
             next="Disconnected",
             notes="",
@@ -67,7 +67,7 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             on="UA_received",
             guard="F_eq_1",
             actions=(
-                ActionStep(verb="DL-DISCONNECT Confirm", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_DISCONNECT_confirm", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
             ),
             next="Disconnected",
@@ -81,7 +81,7 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             on="UA_received",
             guard="not F_eq_1",
             actions=(
-                ActionStep(verb="DL-ERROR Indication (D)", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_ERROR_indication_D", kind=ActionKind.SIGNAL_UPPER),
             ),
             next="AwaitingRelease",
             notes="",
@@ -210,7 +210,7 @@ DATA_LINK_AWAITING_RELEASE = StatePage(
             on="DM_received",
             guard="F_eq_1",
             actions=(
-                ActionStep(verb="DL-DISCONNECT Confirm", kind=ActionKind.SIGNAL_UPPER),
+                ActionStep(verb="DL_DISCONNECT_confirm", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="Stop T1", kind=ActionKind.PROCESSING),
             ),
             next="Disconnected",

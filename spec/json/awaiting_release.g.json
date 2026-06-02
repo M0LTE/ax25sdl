@@ -36,7 +36,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         }
       ],
@@ -80,7 +80,7 @@
       "guard": "F_eq_1",
       "actions": [
         {
-          "verb": "DL-DISCONNECT Confirm",
+          "verb": "DL_DISCONNECT_confirm",
           "kind": "signal_upper"
         },
         {
@@ -100,7 +100,7 @@
       "guard": "not F_eq_1",
       "actions": [
         {
-          "verb": "DL-ERROR Indication (D)",
+          "verb": "DL_ERROR_indication_D",
           "kind": "signal_upper"
         }
       ],
@@ -262,7 +262,7 @@
       "guard": "F_eq_1",
       "actions": [
         {
-          "verb": "DL-DISCONNECT Confirm",
+          "verb": "DL_DISCONNECT_confirm",
           "kind": "signal_upper"
         },
         {

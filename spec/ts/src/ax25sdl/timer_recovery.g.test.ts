@@ -77,7 +77,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("N(R) := V(r)");
+    expect(t.actions[1].verb).toBe("N(r) := V(r)");
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("P := 0");
     expect(t.actions[2].kind).toBe("processing");
@@ -99,7 +99,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("N(R) := V(r)");
+    expect(t.actions[1].verb).toBe("N(r) := V(r)");
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("P := 0");
     expect(t.actions[2].kind).toBe("processing");
@@ -288,7 +288,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (E)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
     expect(t.actions[2].verb).toBe("discard_I_frame_queue");
     expect(t.actions[2].kind).toBe("processing");
@@ -318,7 +318,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[4].kind).toBe("signal_upper");
     expect(t.actions[5].verb).toBe("discard_I_frame_queue");
     expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("DL-CONNECT Indication");
+    expect(t.actions[6].verb).toBe("DL_CONNECT_indication");
     expect(t.actions[6].kind).toBe("signal_upper");
     expect(t.actions[7].verb).toBe("Stop T1");
     expect(t.actions[7].kind).toBe("processing");
@@ -372,7 +372,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[4].kind).toBe("signal_upper");
     expect(t.actions[5].verb).toBe("discard_I_frame_queue");
     expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("DL-CONNECT Indication");
+    expect(t.actions[6].verb).toBe("DL_CONNECT_indication");
     expect(t.actions[6].kind).toBe("signal_upper");
     expect(t.actions[7].verb).toBe("Stop T1");
     expect(t.actions[7].kind).toBe("processing");
@@ -462,7 +462,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("UA");
     expect(t.actions[2].kind).toBe("signal_lower");
-    expect(t.actions[3].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[3].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[3].kind).toBe("signal_upper");
     expect(t.actions[4].verb).toBe("Stop T1");
     expect(t.actions[4].kind).toBe("processing");
@@ -604,7 +604,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("Start T1");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[7].verb).toBe("set_acknowledge_pending");
     expect(t.actions[7].kind).toBe("processing");
   });
 
@@ -764,7 +764,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("Start T1");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[7].verb).toBe("set_acknowledge_pending");
     expect(t.actions[7].kind).toBe("processing");
   });
 
@@ -802,7 +802,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Enquiry Response (F = 0)");
     expect(t.actions[1].kind).toBe("subroutine");
-    expect(t.actions[2].verb).toBe("LM_RELEASE Request");
+    expect(t.actions[2].verb).toBe("LM_release_request");
     expect(t.actions[2].kind).toBe("signal_lower");
   });
 
@@ -814,7 +814,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toBe("not ACK_pending");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("LM_RELEASE Request");
+    expect(t.actions[0].verb).toBe("LM_release_request");
     expect(t.actions[0].kind).toBe("signal_lower");
   });
 
@@ -842,7 +842,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (U)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
     expect(t.actions[2].verb).toBe("discard_I_frame_queue");
     expect(t.actions[2].kind).toBe("processing");
@@ -860,7 +860,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (T)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
     expect(t.actions[2].verb).toBe("discard_I_frame_queue");
     expect(t.actions[2].kind).toBe("processing");
@@ -878,7 +878,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (I)");
     expect(t.actions[0].kind).toBe("signal_upper");
-    expect(t.actions[1].verb).toBe("DL-DISCONNECT Indication");
+    expect(t.actions[1].verb).toBe("DL_DISCONNECT_indication");
     expect(t.actions[1].kind).toBe("signal_upper");
     expect(t.actions[2].verb).toBe("discard_I_frame_queue");
     expect(t.actions[2].kind).toBe("processing");
@@ -980,11 +980,11 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("processing");
     expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
     expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("DL-DATA Indication");
+    expect(t.actions[4].verb).toBe("DL_DATA_indication");
     expect(t.actions[4].kind).toBe("signal_upper");
     expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
     expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].verb).toBe("DL_DATA_indication");
     expect(t.actions[6].kind).toBe("signal_upper");
     expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
     expect(t.actions[7].kind).toBe("processing");
@@ -1014,17 +1014,17 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("processing");
     expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
     expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("DL-DATA Indication");
+    expect(t.actions[4].verb).toBe("DL_DATA_indication");
     expect(t.actions[4].kind).toBe("signal_upper");
     expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
     expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].verb).toBe("DL_DATA_indication");
     expect(t.actions[6].kind).toBe("signal_upper");
     expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
     expect(t.actions[7].kind).toBe("processing");
-    expect(t.actions[8].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[8].verb).toBe("set_acknowledge_pending");
     expect(t.actions[8].kind).toBe("processing");
-    expect(t.actions[9].verb).toBe("LM-SIEZE Request");
+    expect(t.actions[9].verb).toBe("LM_seize_request");
     expect(t.actions[9].kind).toBe("signal_lower");
   });
 
@@ -1044,11 +1044,11 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("processing");
     expect(t.actions[3].verb).toBe("Decrement Sreject Exception if > 0");
     expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("DL-DATA Indication");
+    expect(t.actions[4].verb).toBe("DL_DATA_indication");
     expect(t.actions[4].kind).toBe("signal_upper");
     expect(t.actions[5].verb).toBe("Retrieve Stored V(r) I Frame");
     expect(t.actions[5].kind).toBe("processing");
-    expect(t.actions[6].verb).toBe("DL-DATA Indication");
+    expect(t.actions[6].verb).toBe("DL_DATA_indication");
     expect(t.actions[6].kind).toBe("signal_upper");
     expect(t.actions[7].verb).toBe("V(r) := V(r) - 1");
     expect(t.actions[7].kind).toBe("processing");
@@ -1110,7 +1110,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[4].kind).toBe("processing");
     expect(t.actions[5].verb).toBe("REJ");
     expect(t.actions[5].kind).toBe("signal_lower");
-    expect(t.actions[6].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[6].verb).toBe("set_acknowledge_pending");
     expect(t.actions[6].kind).toBe("processing");
   });
 
@@ -1136,7 +1136,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("REJ");
     expect(t.actions[6].kind).toBe("signal_lower");
-    expect(t.actions[7].verb).toBe("Set Acknowledge Pending");
+    expect(t.actions[7].verb).toBe("set_acknowledge_pending");
     expect(t.actions[7].kind).toBe("processing");
   });
 
@@ -1416,7 +1416,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("V(a) := N(r)");
     expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("Check I Frame Acknowledged");
+    expect(t.actions[2].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[2].kind).toBe("subroutine");
   });
 
@@ -1432,7 +1432,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("V(a) := N(r)");
     expect(t.actions[1].kind).toBe("processing");
-    expect(t.actions[2].verb).toBe("Check I Frame Acknowledged");
+    expect(t.actions[2].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[2].kind).toBe("subroutine");
     expect(t.actions[3].verb).toBe("Invoke Retransmission");
     expect(t.actions[3].kind).toBe("subroutine");
@@ -1544,7 +1544,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("subroutine");
     expect(t.actions[3].verb).toBe("V(a) := N(r)");
     expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("Check I Frame Acknowledged");
+    expect(t.actions[4].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[4].kind).toBe("subroutine");
     expect(t.actions[5].verb).toBe("Start T3");
     expect(t.actions[5].kind).toBe("processing");
@@ -1568,11 +1568,11 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("subroutine");
     expect(t.actions[3].verb).toBe("V(a) := N(r)");
     expect(t.actions[3].kind).toBe("processing");
-    expect(t.actions[4].verb).toBe("Check I Frame Acknowledged");
+    expect(t.actions[4].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[4].kind).toBe("subroutine");
     expect(t.actions[5].verb).toBe("push_frame_on_queue");
     expect(t.actions[5].kind).toBe("internal_out");
-    expect(t.actions[6].verb).toBe("LM-DATA Request");
+    expect(t.actions[6].verb).toBe("LM_data_request");
     expect(t.actions[6].kind).toBe("signal_lower");
     expect(t.actions[7].verb).toBe("Stop T3");
     expect(t.actions[7].kind).toBe("processing");
@@ -1620,7 +1620,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[2].kind).toBe("subroutine");
     expect(t.actions[3].verb).toBe("push_frame_on_queue");
     expect(t.actions[3].kind).toBe("internal_out");
-    expect(t.actions[4].verb).toBe("LM-DATA Request");
+    expect(t.actions[4].verb).toBe("LM_data_request");
     expect(t.actions[4].kind).toBe("signal_lower");
     expect(t.actions[5].verb).toBe("Stop T3");
     expect(t.actions[5].kind).toBe("processing");

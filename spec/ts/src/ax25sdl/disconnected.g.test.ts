@@ -20,7 +20,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("DL_DISCONNECT_request");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL-DISCONNECT Confirm");
+    expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -125,7 +125,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Disconnected");
     expect(t.actions).toHaveLength(1);
-    expect(t.actions[0].verb).toBe("DL-ERROR Indication (C,D)");
+    expect(t.actions[0].verb).toBe("DL_ERROR_indication_C_D");
     expect(t.actions[0].kind).toBe("signal_upper");
   });
 
@@ -206,7 +206,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("V(r) := 0");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("DL Connect Indication");
+    expect(t.actions[7].verb).toBe("DL_CONNECT_indication");
     expect(t.actions[7].kind).toBe("signal_upper");
     expect(t.actions[8].verb).toBe("SRT := Initial Default");
     expect(t.actions[8].kind).toBe("processing");
@@ -254,7 +254,7 @@ describe("DataLinkDisconnected", () => {
     expect(t.actions[5].kind).toBe("processing");
     expect(t.actions[6].verb).toBe("V(r) := 0");
     expect(t.actions[6].kind).toBe("processing");
-    expect(t.actions[7].verb).toBe("DL Connect Indication");
+    expect(t.actions[7].verb).toBe("DL_CONNECT_indication");
     expect(t.actions[7].kind).toBe("signal_upper");
     expect(t.actions[8].verb).toBe("SRT := Initial Default");
     expect(t.actions[8].kind).toBe("processing");

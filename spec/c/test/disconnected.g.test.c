@@ -41,7 +41,7 @@ static int test_t01_dl_disconnect_request(void) {
   ASSERT_STREQ(t->on, "DL_DISCONNECT_request", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-DISCONNECT Confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_DISCONNECT_confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -212,7 +212,7 @@ static int test_t10_ua_received(void) {
   ASSERT_STREQ(t->on, "UA_received", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (C,D)",
+  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_C_D",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
@@ -330,7 +330,7 @@ static int test_t13_sabm_received_yes(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "V(r) := 0", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "DL Connect Indication", "actions[7].verb");
+  ASSERT_STREQ(t->actions[7].verb, "DL_CONNECT_indication", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[7].kind");
   ASSERT_STREQ(t->actions[8].verb, "SRT := Initial Default", "actions[8].verb");
   ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");
@@ -393,7 +393,7 @@ static int test_t14_sabme_received_yes(void) {
   ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "V(r) := 0", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
-  ASSERT_STREQ(t->actions[7].verb, "DL Connect Indication", "actions[7].verb");
+  ASSERT_STREQ(t->actions[7].verb, "DL_CONNECT_indication", "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[7].kind");
   ASSERT_STREQ(t->actions[8].verb, "SRT := Initial Default", "actions[8].verb");
   ASSERT(t->actions[8].kind == AX25SDL_KIND_PROCESSING, "actions[8].kind");

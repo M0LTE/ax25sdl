@@ -44,7 +44,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       guard: "F_eq_1",
       actions: [
         { verb: "discard_frame_queue", kind: "processing" },
-        { verb: "DL-DISCONNECT indication", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
       ],
       next: "Disconnected",
@@ -69,7 +69,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       on: "UA_received",
       guard: "not F_eq_1",
       actions: [
-        { verb: "DL-ERROR indication (D)", kind: "signal_upper" },
+        { verb: "DL_ERROR_indication_D", kind: "signal_upper" },
       ],
       next: "AwaitingConnection",
       notes: "",
@@ -82,7 +82,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       on: "UA_received",
       guard: "F_eq_1 and layer_3_initiated",
       actions: [
-        { verb: "DL-CONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_CONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
         { verb: "V(s) := 0", kind: "processing" },
@@ -122,7 +122,7 @@ export const DataLinkAwaitingConnection: StatePage = {
         { verb: "SRT := Initial Default", kind: "processing" },
         { verb: "T1V := 2 * SRT", kind: "processing" },
         { verb: "Start T1", kind: "processing" },
-        { verb: "DL-CONNECT Confirm", kind: "signal_upper" },
+        { verb: "DL_CONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
         { verb: "V(s) := 0", kind: "processing" },
@@ -143,7 +143,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       actions: [
         { verb: "discard_frame_queue", kind: "processing" },
         { verb: "DL-ERROR Indication (G)", kind: "signal_upper" },
-        { verb: "DL-DISCONNECT Indication", kind: "signal_upper" },
+        { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
       ],
       next: "Disconnected",
       notes: "",
@@ -210,7 +210,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       on: "DL_DATA_request",
       guard: "layer_3_initiated",
       actions: [
-        { verb: "Push Frame on Queue", kind: "internal_out" },
+        { verb: "push_frame_on_queue", kind: "internal_out" },
       ],
       next: "AwaitingConnection",
       notes: "",
@@ -234,7 +234,7 @@ export const DataLinkAwaitingConnection: StatePage = {
       on: "I_frame_pops_off_queue",
       guard: "layer_3_initiated",
       actions: [
-        { verb: "Push Frame on Queue", kind: "internal_out" },
+        { verb: "push_frame_on_queue", kind: "internal_out" },
       ],
       next: "AwaitingConnection",
       notes: "",

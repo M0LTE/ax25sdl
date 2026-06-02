@@ -12,7 +12,7 @@ static const ActionStep
 static const ActionStep data_link_awaiting_release_t02_t1_expiry_yes_actions[] =
     {
         {.verb = "DL-ERROR Indication (G)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
-        {.verb = "DL-DISCONNECT Indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_indication", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep data_link_awaiting_release_t02_t1_expiry_no_actions[] =
@@ -25,13 +25,13 @@ static const ActionStep data_link_awaiting_release_t02_t1_expiry_no_actions[] =
 
 static const ActionStep
     data_link_awaiting_release_t03_ua_received_yes_actions[] = {
-        {.verb = "DL-DISCONNECT Confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
     data_link_awaiting_release_t03_ua_received_no_actions[] = {
-        {.verb = "DL-ERROR Indication (D)", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_ERROR_indication_D", .kind = AX25SDL_KIND_SIGNAL_UPPER},
 };
 
 static const ActionStep
@@ -74,7 +74,7 @@ static const ActionStep data_link_awaiting_release_t12_disc_received_actions[] =
 
 static const ActionStep
     data_link_awaiting_release_t13_dm_received_yes_actions[] = {
-        {.verb = "DL-DISCONNECT Confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
+        {.verb = "DL_DISCONNECT_confirm", .kind = AX25SDL_KIND_SIGNAL_UPPER},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
 };
 

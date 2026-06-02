@@ -300,7 +300,7 @@ static int test_t11_dm_received_yes(void) {
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "discard_I_frame_queue", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[1].verb, "DL_DISCONNECT_indication",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Stop T1", "actions[2].verb");
@@ -323,8 +323,7 @@ static int test_t12_ua_received_no(void) {
   ASSERT_STREQ(t->next, "AwaitingV22Connection", "next");
   ASSERT_STREQ(t->guard, "not F_eq_1", "guard");
   ASSERT(t->actions_len == 1, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (D)",
-               "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_ERROR_indication_D", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   return 0;
 }
@@ -344,7 +343,7 @@ static int test_t12_ua_received_yes_yes(void) {
   ASSERT_STREQ(t->next, "Connected", "next");
   ASSERT_STREQ(t->guard, "F_eq_1 and layer_3_initiated", "guard");
   ASSERT(t->actions_len == 8, "actions count");
-  ASSERT_STREQ(t->actions[0].verb, "DL-CONNECT Confirm", "actions[0].verb");
+  ASSERT_STREQ(t->actions[0].verb, "DL_CONNECT_confirm", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[0].kind");
   ASSERT_STREQ(t->actions[1].verb, "Stop T1", "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
@@ -385,7 +384,7 @@ static int test_t12_ua_received_yes_no_no(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Start T3", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_PROCESSING, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "DL-CONNECT Confirm", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "DL_CONNECT_confirm", "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "Stop T1", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_PROCESSING, "actions[4].kind");
@@ -458,7 +457,7 @@ static int test_t13_t1_expiry_yes(void) {
   ASSERT_STREQ(t->actions[1].verb, "DL-ERROR Indication (G)",
                "actions[1].verb");
   ASSERT(t->actions[1].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[1].kind");
-  ASSERT_STREQ(t->actions[2].verb, "DL-DISCONNECT Indication",
+  ASSERT_STREQ(t->actions[2].verb, "DL_DISCONNECT_indication",
                "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_UPPER, "actions[2].kind");
   return 0;

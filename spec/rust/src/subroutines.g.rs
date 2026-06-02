@@ -53,7 +53,7 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                     id: "t02_ui_check_yes_yes",
                     guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
                     actions: &[
-                        ActionStep { verb: "DL-UNIT-DATA Indication", kind: ActionKind::SignalUpper },
+                        ActionStep { verb: "DL_UNIT_DATA_indication", kind: ActionKind::SignalUpper },
                     ],
                     notes: "",
                     references: &[],
@@ -333,7 +333,7 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                     id: "t01_clear_exception_conditions",
                     guard: "",
                     actions: &[
-                        ActionStep { verb: "Clear Peer Receiver Busy", kind: ActionKind::Processing },
+                        ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
                         ActionStep { verb: "Clear Own Receiver Busy", kind: ActionKind::Processing },
                         ActionStep { verb: "Clear Reject Condition", kind: ActionKind::Processing },
                         ActionStep { verb: "Clear Sreject Condition", kind: ActionKind::Processing },

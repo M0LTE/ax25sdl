@@ -51,7 +51,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
           id: "t02_ui_check_yes_yes",
           guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
           actions: [
-            { verb: "DL-UNIT-DATA Indication", kind: "signal_upper" },
+            { verb: "DL_UNIT_DATA_indication", kind: "signal_upper" },
           ],
           notes: "",
           references: [],
@@ -331,7 +331,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
           id: "t01_clear_exception_conditions",
           guard: "",
           actions: [
-            { verb: "Clear Peer Receiver Busy", kind: "processing" },
+            { verb: "clear_peer_receiver_busy", kind: "processing" },
             { verb: "Clear Own Receiver Busy", kind: "processing" },
             { verb: "Clear Reject Condition", kind: "processing" },
             { verb: "Clear Sreject Condition", kind: "processing" },

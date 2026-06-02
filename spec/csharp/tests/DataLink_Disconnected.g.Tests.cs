@@ -22,7 +22,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("DL_DISCONNECT_request");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-DISCONNECT Confirm");
+        t.Actions[0].Verb.Should().Be("DL_DISCONNECT_confirm");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -118,7 +118,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (C,D)");
+        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_C_D");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -194,7 +194,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
         t.Actions[6].Verb.Should().Be("V(r) := 0");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("DL Connect Indication");
+        t.Actions[7].Verb.Should().Be("DL_CONNECT_indication");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[8].Verb.Should().Be("SRT := Initial Default");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
@@ -240,7 +240,7 @@ public class DataLink_Disconnected_GeneratedTests
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
         t.Actions[6].Verb.Should().Be("V(r) := 0");
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[7].Verb.Should().Be("DL Connect Indication");
+        t.Actions[7].Verb.Should().Be("DL_CONNECT_indication");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[8].Verb.Should().Be("SRT := Initial Default");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);

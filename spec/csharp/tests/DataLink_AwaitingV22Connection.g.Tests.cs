@@ -158,7 +158,7 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be("DL-DISCONNECT Indication");
+        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[2].Verb.Should().Be("Stop T1");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
@@ -171,7 +171,7 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Next.Should().Be("AwaitingV22Connection");
         t.Guard.Should().Be("not F_eq_1");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("DL-ERROR Indication (D)");
+        t.Actions[0].Verb.Should().Be("DL_ERROR_indication_D");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
     }
 
@@ -182,7 +182,7 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("F_eq_1 and layer_3_initiated");
         t.Actions.Count.Should().Be(8);
-        t.Actions[0].Verb.Should().Be("DL-CONNECT Confirm");
+        t.Actions[0].Verb.Should().Be("DL_CONNECT_confirm");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[1].Verb.Should().Be("Stop T1");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
@@ -213,7 +213,7 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("Start T3");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[3].Verb.Should().Be("DL-CONNECT Confirm");
+        t.Actions[3].Verb.Should().Be("DL_CONNECT_confirm");
         t.Actions[3].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[4].Verb.Should().Be("Stop T1");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
@@ -265,7 +265,7 @@ public class DataLink_AwaitingV22Connection_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("DL-ERROR Indication (G)");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[2].Verb.Should().Be("DL-DISCONNECT Indication");
+        t.Actions[2].Verb.Should().Be("DL_DISCONNECT_indication");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalUpper);
     }
 

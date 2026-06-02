@@ -16,7 +16,7 @@
       "guard": "",
       "actions": [
         {
-          "verb": "DL-DISCONNECT Confirm",
+          "verb": "DL_DISCONNECT_confirm",
           "kind": "signal_upper"
         }
       ],
@@ -171,7 +171,7 @@
       "guard": "",
       "actions": [
         {
-          "verb": "DL-ERROR Indication (C,D)",
+          "verb": "DL_ERROR_indication_C_D",
           "kind": "signal_upper"
         }
       ],
@@ -295,7 +295,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL Connect Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -375,7 +375,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL Connect Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {

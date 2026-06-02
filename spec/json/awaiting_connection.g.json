@@ -51,7 +51,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DISCONNECT indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -82,7 +82,7 @@
       "guard": "not F_eq_1",
       "actions": [
         {
-          "verb": "DL-ERROR indication (D)",
+          "verb": "DL_ERROR_indication_D",
           "kind": "signal_upper"
         }
       ],
@@ -98,7 +98,7 @@
       "guard": "F_eq_1 and layer_3_initiated",
       "actions": [
         {
-          "verb": "DL-CONNECT Confirm",
+          "verb": "DL_CONNECT_confirm",
           "kind": "signal_upper"
         },
         {
@@ -186,7 +186,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-CONNECT Confirm",
+          "verb": "DL_CONNECT_confirm",
           "kind": "signal_upper"
         },
         {
@@ -234,7 +234,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         }
       ],
@@ -325,7 +325,7 @@
       "guard": "layer_3_initiated",
       "actions": [
         {
-          "verb": "Push Frame on Queue",
+          "verb": "push_frame_on_queue",
           "kind": "internal_out"
         }
       ],
@@ -352,7 +352,7 @@
       "guard": "layer_3_initiated",
       "actions": [
         {
-          "verb": "Push Frame on Queue",
+          "verb": "push_frame_on_queue",
           "kind": "internal_out"
         }
       ],

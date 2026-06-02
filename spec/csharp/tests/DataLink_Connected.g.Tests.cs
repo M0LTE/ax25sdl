@@ -77,7 +77,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("N(r) := V(r)");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("p := 0");
+        t.Actions[2].Verb.Should().Be("P := 0");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
         t.Actions[3].Verb.Should().Be("I Command");
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
@@ -102,7 +102,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("N(r) := V(r)");
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[2].Verb.Should().Be("p := 0");
+        t.Actions[2].Verb.Should().Be("P := 0");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
         t.Actions[3].Verb.Should().Be("I Command");
         t.Actions[3].Kind.Should().Be(ActionKind.SignalLower);
@@ -403,7 +403,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL-CONNECT Indication");
+        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[7].Verb.Should().Be("Stop T1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -469,7 +469,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL-CONNECT Indication");
+        t.Actions[6].Verb.Should().Be("DL_CONNECT_indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[7].Verb.Should().Be("Stop T1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -581,7 +581,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be("UA");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
-        t.Actions[3].Verb.Should().Be("DL-DISCONNECT Indication");
+        t.Actions[3].Verb.Should().Be("DL_DISCONNECT_indication");
         t.Actions[3].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[4].Verb.Should().Be("Stop T3");
         t.Actions[4].Kind.Should().Be(ActionKind.Processing);
@@ -597,7 +597,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions.Count.Should().Be(5);
         t.Actions[0].Verb.Should().Be("DL-ERROR Indication (E)");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
-        t.Actions[1].Verb.Should().Be("DL-DISCONNECT Indication");
+        t.Actions[1].Verb.Should().Be("DL_DISCONNECT_indication");
         t.Actions[1].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[2].Verb.Should().Be("discard_I_frame_queue");
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
@@ -618,7 +618,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Check I Frame Acknowledged");
+        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -663,7 +663,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("Check Need For Response");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("Check I Frame Acknowledged");
+        t.Actions[2].Verb.Should().Be("Check_I_Frame_Acknowledged");
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
     }
 
@@ -708,7 +708,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be("Enquiry Response (F = 0)");
         t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[2].Verb.Should().Be("LM-RELEASE Request");
+        t.Actions[2].Verb.Should().Be("LM_release_request");
         t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -719,7 +719,7 @@ public class DataLink_Connected_GeneratedTests
         t.Next.Should().Be("Connected");
         t.Guard.Should().Be("not ack_pending");
         t.Actions.Count.Should().Be(1);
-        t.Actions[0].Verb.Should().Be("LM-RELEASE Request");
+        t.Actions[0].Verb.Should().Be("LM_release_request");
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
     }
 
@@ -744,7 +744,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[5].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[6].Verb.Should().Be("Push Old I Frame N(r) on Queue");
         t.Actions[6].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[7].Verb.Should().Be("LM-DATA Request");
+        t.Actions[7].Verb.Should().Be("LM_data_request");
         t.Actions[7].Kind.Should().Be(ActionKind.SignalLower);
         t.Actions[8].Verb.Should().Be("Stop T3");
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
@@ -773,7 +773,7 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
         t.Actions[5].Verb.Should().Be("Push Old I Frame N(r) on Queue");
         t.Actions[5].Kind.Should().Be(ActionKind.InternalOut);
-        t.Actions[6].Verb.Should().Be("LM-DATA Request");
+        t.Actions[6].Verb.Should().Be("LM_data_request");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
         t.Actions[7].Verb.Should().Be("Stop T3");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -935,15 +935,15 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
         t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be("LM-SEIZE Request");
+        t.Actions[8].Verb.Should().Be("LM_seize_request");
         t.Actions[8].Kind.Should().Be(ActionKind.SignalLower);
         t.Actions[9].Verb.Should().Be("set_acknowledge_pending");
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
@@ -964,11 +964,11 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
         t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
@@ -989,11 +989,11 @@ public class DataLink_Connected_GeneratedTests
         t.Actions[2].Kind.Should().Be(ActionKind.Processing);
         t.Actions[3].Verb.Should().Be("Decrement Sreject Exception if > 0");
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[4].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[4].Verb.Should().Be("DL_DATA_indication");
         t.Actions[4].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[5].Verb.Should().Be("Retrieve Stored V(r) I Frame");
         t.Actions[5].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[6].Verb.Should().Be("DL-DATA Indication");
+        t.Actions[6].Verb.Should().Be("DL_DATA_indication");
         t.Actions[6].Kind.Should().Be(ActionKind.SignalUpper);
         t.Actions[7].Verb.Should().Be("V(r) := V(r) + 1");
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);

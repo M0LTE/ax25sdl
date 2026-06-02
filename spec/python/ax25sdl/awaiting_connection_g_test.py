@@ -51,7 +51,7 @@ def test_t03_dm_received_yes() -> None:
     assert len(t.actions) == 3
     assert t.actions[0].verb == "discard_frame_queue"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "DL-DISCONNECT indication"
+    assert t.actions[1].verb == "DL_DISCONNECT_indication"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[2].verb == "Stop T1"
     assert t.actions[2].kind == ActionKind.PROCESSING
@@ -79,7 +79,7 @@ def test_t04_ua_received_no() -> None:
     assert t.next == "AwaitingConnection"
     assert t.guard == "not F_eq_1"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "DL-ERROR indication (D)"
+    assert t.actions[0].verb == "DL_ERROR_indication_D"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -93,7 +93,7 @@ def test_t04_ua_received_yes_yes() -> None:
     assert t.next == "Connected"
     assert t.guard == "F_eq_1 and layer_3_initiated"
     assert len(t.actions) == 7
-    assert t.actions[0].verb == "DL-CONNECT Confirm"
+    assert t.actions[0].verb == "DL_CONNECT_confirm"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
@@ -149,7 +149,7 @@ def test_t04_ua_received_yes_no_no() -> None:
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Start T1"
     assert t.actions[2].kind == ActionKind.PROCESSING
-    assert t.actions[3].verb == "DL-CONNECT Confirm"
+    assert t.actions[3].verb == "DL_CONNECT_confirm"
     assert t.actions[3].kind == ActionKind.SIGNAL_UPPER
     assert t.actions[4].verb == "Stop T1"
     assert t.actions[4].kind == ActionKind.PROCESSING
@@ -179,7 +179,7 @@ def test_t05_t1_expiry_yes() -> None:
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "DL-ERROR Indication (G)"
     assert t.actions[1].kind == ActionKind.SIGNAL_UPPER
-    assert t.actions[2].verb == "DL-DISCONNECT Indication"
+    assert t.actions[2].verb == "DL_DISCONNECT_indication"
     assert t.actions[2].kind == ActionKind.SIGNAL_UPPER
 
 
@@ -252,7 +252,7 @@ def test_t09_dl_data_request_yes() -> None:
     assert t.next == "AwaitingConnection"
     assert t.guard == "layer_3_initiated"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "Push Frame on Queue"
+    assert t.actions[0].verb == "push_frame_on_queue"
     assert t.actions[0].kind == ActionKind.INTERNAL_OUT
 
 
@@ -278,7 +278,7 @@ def test_t10_i_frame_pops_off_queue_yes() -> None:
     assert t.next == "AwaitingConnection"
     assert t.guard == "layer_3_initiated"
     assert len(t.actions) == 1
-    assert t.actions[0].verb == "Push Frame on Queue"
+    assert t.actions[0].verb == "push_frame_on_queue"
     assert t.actions[0].kind == ActionKind.INTERNAL_OUT
 
 

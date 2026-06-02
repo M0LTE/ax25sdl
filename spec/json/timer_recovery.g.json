@@ -100,7 +100,7 @@
           "kind": "processing"
         },
         {
-          "verb": "N(R) := V(r)",
+          "verb": "N(r) := V(r)",
           "kind": "processing"
         },
         {
@@ -136,7 +136,7 @@
           "kind": "processing"
         },
         {
-          "verb": "N(R) := V(r)",
+          "verb": "N(r) := V(r)",
           "kind": "processing"
         },
         {
@@ -430,7 +430,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -482,7 +482,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-CONNECT Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -574,7 +574,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-CONNECT Indication",
+          "verb": "DL_CONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -718,7 +718,7 @@
           "kind": "signal_lower"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -938,7 +938,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Set Acknowledge Pending",
+          "verb": "set_acknowledge_pending",
           "kind": "processing"
         }
       ],
@@ -1186,7 +1186,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Set Acknowledge Pending",
+          "verb": "set_acknowledge_pending",
           "kind": "processing"
         }
       ],
@@ -1246,7 +1246,7 @@
           "kind": "subroutine"
         },
         {
-          "verb": "LM_RELEASE Request",
+          "verb": "LM_release_request",
           "kind": "signal_lower"
         }
       ],
@@ -1262,7 +1262,7 @@
       "guard": "not ACK_pending",
       "actions": [
         {
-          "verb": "LM_RELEASE Request",
+          "verb": "LM_release_request",
           "kind": "signal_lower"
         }
       ],
@@ -1302,7 +1302,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -1330,7 +1330,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -1358,7 +1358,7 @@
           "kind": "signal_upper"
         },
         {
-          "verb": "DL-DISCONNECT Indication",
+          "verb": "DL_DISCONNECT_indication",
           "kind": "signal_upper"
         },
         {
@@ -1514,7 +1514,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1522,7 +1522,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1581,7 +1581,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1589,7 +1589,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1597,11 +1597,11 @@
           "kind": "processing"
         },
         {
-          "verb": "Set Acknowledge Pending",
+          "verb": "set_acknowledge_pending",
           "kind": "processing"
         },
         {
-          "verb": "LM-SIEZE Request",
+          "verb": "LM_seize_request",
           "kind": "signal_lower"
         }
       ],
@@ -1640,7 +1640,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1648,7 +1648,7 @@
           "kind": "processing"
         },
         {
-          "verb": "DL-DATA Indication",
+          "verb": "DL_DATA_indication",
           "kind": "signal_upper"
         },
         {
@@ -1755,7 +1755,7 @@
           "kind": "signal_lower"
         },
         {
-          "verb": "Set Acknowledge Pending",
+          "verb": "set_acknowledge_pending",
           "kind": "processing"
         }
       ],
@@ -1799,7 +1799,7 @@
           "kind": "signal_lower"
         },
         {
-          "verb": "Set Acknowledge Pending",
+          "verb": "set_acknowledge_pending",
           "kind": "processing"
         }
       ],
@@ -2239,7 +2239,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         }
       ],
@@ -2263,7 +2263,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         },
         {
@@ -2431,7 +2431,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         },
         {
@@ -2471,7 +2471,7 @@
           "kind": "processing"
         },
         {
-          "verb": "Check I Frame Acknowledged",
+          "verb": "Check_I_Frame_Acknowledged",
           "kind": "subroutine"
         },
         {
@@ -2479,7 +2479,7 @@
           "kind": "internal_out"
         },
         {
-          "verb": "LM-DATA Request",
+          "verb": "LM_data_request",
           "kind": "signal_lower"
         },
         {
@@ -2559,7 +2559,7 @@
           "kind": "internal_out"
         },
         {
-          "verb": "LM-DATA Request",
+          "verb": "LM_data_request",
           "kind": "signal_lower"
         },
         {
