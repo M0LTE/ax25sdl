@@ -14,6 +14,10 @@ pub mod awaiting_v22_connection;
 pub mod connected;
 #[path = "disconnected.g.rs"]
 pub mod disconnected;
+#[path = "negotiating.g.rs"]
+pub mod negotiating;
+#[path = "ready.g.rs"]
+pub mod ready;
 #[path = "subroutines.g.rs"]
 pub mod subroutines;
 #[path = "timer_recovery.g.rs"]
@@ -24,5 +28,7 @@ pub use awaiting_release::*;
 pub use awaiting_v22_connection::*;
 pub use connected::*;
 pub use disconnected::*;
+pub use negotiating::*;
+pub use ready::*;
 pub use subroutines::*;
 pub use timer_recovery::*;

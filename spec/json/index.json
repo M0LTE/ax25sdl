@@ -38,6 +38,20 @@
       "figure": "figc4.1"
     },
     {
+      "file": "negotiating.g.json",
+      "kind": "state",
+      "machine": "management_data_link",
+      "state": "Negotiating",
+      "figure": "figc5.2"
+    },
+    {
+      "file": "ready.g.json",
+      "kind": "state",
+      "machine": "management_data_link",
+      "state": "Ready",
+      "figure": "figc5.1"
+    },
+    {
       "file": "subroutines.g.json",
       "kind": "subroutines",
       "machine": "data_link",

@@ -11,6 +11,8 @@ namespace Packet.Ax25.Sdl;
 /// </summary>
 public enum Ax25ActionVerb
 {
+    /// <summary><c>Apply Negotiated Parameters</c></summary>
+    ApplyNegotiatedParameters,
     /// <summary><c>Backtrack</c></summary>
     Backtrack,
     /// <summary><c>Check Need For Response</c></summary>
@@ -127,6 +129,14 @@ public enum Ax25ActionVerb
     LMSeizeRequest,
     /// <summary><c>MDL-NEGOTIATE Request</c></summary>
     MDLNEGOTIATERequest,
+    /// <summary><c>MDL_ERROR_indicate_B</c></summary>
+    MDLERRORIndicateB,
+    /// <summary><c>MDL_ERROR_indicate_C</c></summary>
+    MDLERRORIndicateC,
+    /// <summary><c>MDL_ERROR_indicate_D</c></summary>
+    MDLERRORIndicateD,
+    /// <summary><c>MDL_NEGOTIATE_confirm</c></summary>
+    MDLNEGOTIATEConfirm,
     /// <summary><c>Modulo := 128</c></summary>
     ModuloAssign128,
     /// <summary><c>Modulo := 8</c></summary>
@@ -227,10 +237,14 @@ public enum Ax25ActionVerb
     StartT1,
     /// <summary><c>Start T3</c></summary>
     StartT3,
+    /// <summary><c>Start TM201</c></summary>
+    StartTM201,
     /// <summary><c>Stop T1</c></summary>
     StopT1,
     /// <summary><c>Stop T3</c></summary>
     StopT3,
+    /// <summary><c>Stop TM201</c></summary>
+    StopTM201,
     /// <summary><c>T1V := 2 * SRT</c></summary>
     T1VAssign2TimesSRT,
     /// <summary><c>T2 := 3000</c></summary>
@@ -263,6 +277,8 @@ public enum Ax25ActionVerb
     VSAssignVSPlus1,
     /// <summary><c>X := V(s)</c></summary>
     XAssignVS,
+    /// <summary><c>XID_command</c></summary>
+    XIDCommand,
     /// <summary><c>clear_peer_receiver_busy</c></summary>
     ClearPeerReceiverBusy,
     /// <summary><c>discard_I_frame_queue</c></summary>
