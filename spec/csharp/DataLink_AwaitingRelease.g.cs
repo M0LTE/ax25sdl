@@ -21,7 +21,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t01_dl_disconnect_request",
             From: "AwaitingRelease",
-            On: "DL_DISCONNECT_request",
+            On: Ax25Event.DLDISCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ExpeditedDM, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -33,7 +33,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t02_t1_expiry_yes",
             From: "AwaitingRelease",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationG, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -45,7 +45,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t02_t1_expiry_no",
             From: "AwaitingRelease",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssignRCPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DISCPEq1, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "AwaitingRelease",
@@ -57,7 +57,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t03_ua_received_yes",
             From: "AwaitingRelease",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLDISCONNECTConfirm, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing) },
             Next: "Disconnected",
@@ -69,7 +69,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t03_ua_received_no",
             From: "AwaitingRelease",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationD, ActionKind.SignalUpper) },
             Next: "AwaitingRelease",
@@ -81,7 +81,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t04_all_other_primitives__from_lower_layer",
             From: "AwaitingRelease",
-            On: "all_other_primitives__from_lower_layer",
+            On: Ax25Event.AllOtherPrimitivesFromLowerLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",
@@ -93,7 +93,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t05_dl_unit_data_request",
             From: "AwaitingRelease",
-            On: "DL_UNIT_DATA_request",
+            On: Ax25Event.DLUNITDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICommand, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -105,7 +105,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t06_all_other_primitives__from_upper_layer",
             From: "AwaitingRelease",
-            On: "all_other_primitives__from_upper_layer",
+            On: Ax25Event.AllOtherPrimitivesFromUpperLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",
@@ -117,7 +117,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t07_control_field_error",
             From: "AwaitingRelease",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper) },
             Next: "AwaitingRelease",
@@ -129,7 +129,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t08_info_not_permitted_in_frame",
             From: "AwaitingRelease",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper) },
             Next: "AwaitingRelease",
@@ -141,7 +141,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t09_u_or_s_frame_length_error",
             From: "AwaitingRelease",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper) },
             Next: "AwaitingRelease",
@@ -153,7 +153,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t10_sabm_received",
             From: "AwaitingRelease",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ExpeditedDM, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -165,7 +165,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t11_sabme_received",
             From: "AwaitingRelease",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ExpeditedDM, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -177,7 +177,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t12_disc_received",
             From: "AwaitingRelease",
-            On: "DISC_received",
+            On: Ax25Event.DISCReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ExpeditedUA, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -189,7 +189,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t13_dm_received_yes",
             From: "AwaitingRelease",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLDISCONNECTConfirm, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing) },
             Next: "Disconnected",
@@ -201,7 +201,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t13_dm_received_no",
             From: "AwaitingRelease",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) },
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",
@@ -213,7 +213,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t14_ui_received_yes",
             From: "AwaitingRelease",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DMFEq1, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -225,7 +225,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t14_ui_received_no",
             From: "AwaitingRelease",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine) },
             Next: "AwaitingRelease",
@@ -237,7 +237,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t15_i_or_s_command_received_yes",
             From: "AwaitingRelease",
-            On: "i_or_s_command_received",
+            On: Ax25Event.IOrSCommandReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DMFEq1, ActionKind.SignalLower) },
             Next: "AwaitingRelease",
@@ -249,7 +249,7 @@ public static class DataLink_AwaitingRelease
         new TransitionSpec(
             Id: "t15_i_or_s_command_received_no",
             From: "AwaitingRelease",
-            On: "i_or_s_command_received",
+            On: Ax25Event.IOrSCommandReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] {  },
             Next: "AwaitingRelease",

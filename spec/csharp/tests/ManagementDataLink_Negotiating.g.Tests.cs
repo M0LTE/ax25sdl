@@ -19,7 +19,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
     [Fact] public void t01_xid_response_received_yes()
     {
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t01_xid_response_received_yes");
-        t.On.Should().Be("XID_response_received");
+        t.On.Should().Be(Ax25Event.XIDResponseReceived);
         t.Next.Should().Be("Ready");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) });
         t.Actions.Count.Should().Be(3);
@@ -34,7 +34,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
     [Fact] public void t01_xid_response_received_no()
     {
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t01_xid_response_received_no");
-        t.On.Should().Be("XID_response_received");
+        t.On.Should().Be(Ax25Event.XIDResponseReceived);
         t.Next.Should().Be("Negotiating");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) });
         t.Actions.Count.Should().Be(1);
@@ -45,7 +45,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
     [Fact] public void t02_frmr_received()
     {
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t02_frmr_received");
-        t.On.Should().Be("FRMR_received");
+        t.On.Should().Be(Ax25Event.FRMRReceived);
         t.Next.Should().Be("Ready");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SetVersion20);
@@ -59,7 +59,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
     [Fact] public void t03_tm201_expiry_yes()
     {
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t03_tm201_expiry_yes");
-        t.On.Should().Be("TM201_expiry");
+        t.On.Should().Be(Ax25Event.TM201Expiry);
         t.Next.Should().Be("Ready");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, false) });
         t.Actions.Count.Should().Be(1);
@@ -70,7 +70,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
     [Fact] public void t03_tm201_expiry_no()
     {
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t03_tm201_expiry_no");
-        t.On.Should().Be("TM201_expiry");
+        t.On.Should().Be(Ax25Event.TM201Expiry);
         t.Next.Should().Be("Negotiating");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, true) });
         t.Actions.Count.Should().Be(3);
