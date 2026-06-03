@@ -19,7 +19,7 @@ describe("ManagementDataLinkNegotiating", () => {
     if (!t) return;
     expect(t.on).toBe("XID_response_received");
     expect(t.next).toBe("Ready");
-    expect(t.guard).toBe("F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("Apply Negotiated Parameters");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -35,7 +35,7 @@ describe("ManagementDataLinkNegotiating", () => {
     if (!t) return;
     expect(t.on).toBe("XID_response_received");
     expect(t.next).toBe("Negotiating");
-    expect(t.guard).toBe("not F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("MDL_ERROR_indicate_D");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -62,7 +62,7 @@ describe("ManagementDataLinkNegotiating", () => {
     if (!t) return;
     expect(t.on).toBe("TM201_expiry");
     expect(t.next).toBe("Ready");
-    expect(t.guard).toBe("RC_eq_NM201");
+    expect(t.guard).toEqual([{ atom: "RC_eq_NM201", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("MDL_ERROR_indicate_C");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -74,7 +74,7 @@ describe("ManagementDataLinkNegotiating", () => {
     if (!t) return;
     expect(t.on).toBe("TM201_expiry");
     expect(t.next).toBe("Negotiating");
-    expect(t.guard).toBe("not RC_eq_NM201");
+    expect(t.guard).toEqual([{ atom: "RC_eq_NM201", negate: true }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("RC := RC + 1");
     expect(t.actions[0].kind).toBe("processing");

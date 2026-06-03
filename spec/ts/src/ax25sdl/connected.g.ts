@@ -16,7 +16,7 @@ export const DataLinkConnected: StatePage = {
       id: "t01_dl_disconnect_request",
       from: "Connected",
       on: "DL_DISCONNECT_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
         { verb: "RC := 0", kind: "processing" },
@@ -33,7 +33,7 @@ export const DataLinkConnected: StatePage = {
       id: "t02_dl_data_request",
       from: "Connected",
       on: "DL_DATA_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "Push on I Frame Queue (note: word order?)", kind: "internal_out" },
       ],
@@ -46,7 +46,7 @@ export const DataLinkConnected: StatePage = {
       id: "t03_i_frame_pops_off_queue_yes",
       from: "Connected",
       on: "I_frame_pops_off_queue",
-      guard: "peer_receiver_busy",
+      guard: [{ atom: "peer_receiver_busy", negate: false }],
       actions: [
         { verb: "Push on I Frame Queue", kind: "internal_out" },
       ],
@@ -59,7 +59,7 @@ export const DataLinkConnected: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_yes",
       from: "Connected",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and vs_eq_va_plus_k",
+      guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: false }],
       actions: [
         { verb: "Push on I Frame Queue", kind: "internal_out" },
       ],
@@ -72,7 +72,7 @@ export const DataLinkConnected: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_no_no",
       from: "Connected",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
+      guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: true }, { atom: "T1_running", negate: true }],
       actions: [
         { verb: "N(s) := V(s)", kind: "processing" },
         { verb: "N(r) := V(r)", kind: "processing" },
@@ -92,7 +92,7 @@ export const DataLinkConnected: StatePage = {
       id: "t03_i_frame_pops_off_queue_no_no_yes",
       from: "Connected",
       on: "I_frame_pops_off_queue",
-      guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
+      guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: true }, { atom: "T1_running", negate: false }],
       actions: [
         { verb: "N(s) := V(s)", kind: "processing" },
         { verb: "N(r) := V(r)", kind: "processing" },
@@ -110,7 +110,7 @@ export const DataLinkConnected: StatePage = {
       id: "t04_dl_unit_data_request",
       from: "Connected",
       on: "DL_UNIT_DATA_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "UI Command", kind: "signal_lower" },
       ],
@@ -123,7 +123,7 @@ export const DataLinkConnected: StatePage = {
       id: "t05_dl_flow_off_request_yes",
       from: "Connected",
       on: "DL_FLOW_OFF_request",
-      guard: "own_receiver_busy",
+      guard: [{ atom: "own_receiver_busy", negate: false }],
       actions: [
         { verb: "Set Own Receiver Busy", kind: "processing" },
         { verb: "RNR Response", kind: "signal_lower" },
@@ -138,7 +138,7 @@ export const DataLinkConnected: StatePage = {
       id: "t05_dl_flow_off_request_no",
       from: "Connected",
       on: "DL_FLOW_OFF_request",
-      guard: "not own_receiver_busy",
+      guard: [{ atom: "own_receiver_busy", negate: true }],
       actions: [],
       next: "Connected",
       notes: "",
@@ -149,7 +149,7 @@ export const DataLinkConnected: StatePage = {
       id: "t06_dl_flow_on_request_no",
       from: "Connected",
       on: "DL_FLOW_ON_request",
-      guard: "not own_receiver_busy",
+      guard: [{ atom: "own_receiver_busy", negate: true }],
       actions: [],
       next: "Connected",
       notes: "",
@@ -160,7 +160,7 @@ export const DataLinkConnected: StatePage = {
       id: "t06_dl_flow_on_request_yes_yes",
       from: "Connected",
       on: "DL_FLOW_ON_request",
-      guard: "own_receiver_busy and T1_running",
+      guard: [{ atom: "own_receiver_busy", negate: false }, { atom: "T1_running", negate: false }],
       actions: [
         { verb: "Clear Own Receiver Busy", kind: "processing" },
         { verb: "RR Command", kind: "signal_lower" },
@@ -175,7 +175,7 @@ export const DataLinkConnected: StatePage = {
       id: "t06_dl_flow_on_request_yes_no",
       from: "Connected",
       on: "DL_FLOW_ON_request",
-      guard: "own_receiver_busy and not T1_running",
+      guard: [{ atom: "own_receiver_busy", negate: false }, { atom: "T1_running", negate: true }],
       actions: [
         { verb: "Clear Own Receiver Busy", kind: "processing" },
         { verb: "RR Command", kind: "signal_lower" },
@@ -192,7 +192,7 @@ export const DataLinkConnected: StatePage = {
       id: "t07_dl_connect_request_no",
       from: "Connected",
       on: "DL_CONNECT_request",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -207,7 +207,7 @@ export const DataLinkConnected: StatePage = {
       id: "t07_dl_connect_request_yes",
       from: "Connected",
       on: "DL_CONNECT_request",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -222,7 +222,7 @@ export const DataLinkConnected: StatePage = {
       id: "t08_all_other_primitives__from_upper_layer",
       from: "Connected",
       on: "all_other_primitives__from_upper_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "Connected",
       notes: "",
@@ -233,7 +233,7 @@ export const DataLinkConnected: StatePage = {
       id: "t09_control_field_error_no",
       from: "Connected",
       on: "control_field_error",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (L)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -249,7 +249,7 @@ export const DataLinkConnected: StatePage = {
       id: "t09_control_field_error_yes",
       from: "Connected",
       on: "control_field_error",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (L)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -265,7 +265,7 @@ export const DataLinkConnected: StatePage = {
       id: "t10_info_not_permitted_in_frame_no",
       from: "Connected",
       on: "info_not_permitted_in_frame",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -281,7 +281,7 @@ export const DataLinkConnected: StatePage = {
       id: "t10_info_not_permitted_in_frame_yes",
       from: "Connected",
       on: "info_not_permitted_in_frame",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -297,7 +297,7 @@ export const DataLinkConnected: StatePage = {
       id: "t11_u_or_s_frame_length_error_no",
       from: "Connected",
       on: "u_or_s_frame_length_error",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (N)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -313,7 +313,7 @@ export const DataLinkConnected: StatePage = {
       id: "t11_u_or_s_frame_length_error_yes",
       from: "Connected",
       on: "u_or_s_frame_length_error",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (N)", kind: "signal_upper" },
         { verb: "discard_I_frame_queue", kind: "processing" },
@@ -329,7 +329,7 @@ export const DataLinkConnected: StatePage = {
       id: "t12_t1_expiry",
       from: "Connected",
       on: "T1_expiry",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "RC := 1", kind: "processing" },
         { verb: "Transmit Enquery", kind: "subroutine" },
@@ -343,7 +343,7 @@ export const DataLinkConnected: StatePage = {
       id: "t13_t3_expiry",
       from: "Connected",
       on: "T3_expiry",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "RC := 1", kind: "processing" },
         { verb: "Transmit Enquery", kind: "subroutine" },
@@ -357,7 +357,7 @@ export const DataLinkConnected: StatePage = {
       id: "t14_sabm_received_yes",
       from: "Connected",
       on: "SABM_received",
-      guard: "vs_eq_va",
+      guard: [{ atom: "vs_eq_va", negate: false }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "set_version_2_0", kind: "processing" },
@@ -380,7 +380,7 @@ export const DataLinkConnected: StatePage = {
       id: "t14_sabm_received_no",
       from: "Connected",
       on: "SABM_received",
-      guard: "not vs_eq_va",
+      guard: [{ atom: "vs_eq_va", negate: true }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "set_version_2_0", kind: "processing" },
@@ -405,7 +405,7 @@ export const DataLinkConnected: StatePage = {
       id: "t15_sabme_received_yes",
       from: "Connected",
       on: "SABME_received",
-      guard: "vs_eq_va",
+      guard: [{ atom: "vs_eq_va", negate: false }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Set Version 2.2", kind: "processing" },
@@ -428,7 +428,7 @@ export const DataLinkConnected: StatePage = {
       id: "t15_sabme_received_no",
       from: "Connected",
       on: "SABME_received",
-      guard: "not vs_eq_va",
+      guard: [{ atom: "vs_eq_va", negate: true }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Set Version 2.2", kind: "processing" },
@@ -453,7 +453,7 @@ export const DataLinkConnected: StatePage = {
       id: "t16_frmr_received_no",
       from: "Connected",
       on: "FRMR_received",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (K)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -468,7 +468,7 @@ export const DataLinkConnected: StatePage = {
       id: "t16_frmr_received_yes",
       from: "Connected",
       on: "FRMR_received",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (K)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -483,7 +483,7 @@ export const DataLinkConnected: StatePage = {
       id: "t17_ua_received_no",
       from: "Connected",
       on: "UA_received",
-      guard: "not version_2_2",
+      guard: [{ atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (K)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -498,7 +498,7 @@ export const DataLinkConnected: StatePage = {
       id: "t17_ua_received_yes",
       from: "Connected",
       on: "UA_received",
-      guard: "version_2_2",
+      guard: [{ atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (K)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -513,7 +513,7 @@ export const DataLinkConnected: StatePage = {
       id: "t18_ui_received_yes",
       from: "Connected",
       on: "UI_received",
-      guard: "P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
         { verb: "Enquiry_Response_F_1", kind: "subroutine" },
@@ -527,7 +527,7 @@ export const DataLinkConnected: StatePage = {
       id: "t18_ui_received_no",
       from: "Connected",
       on: "UI_received",
-      guard: "not P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
       ],
@@ -540,7 +540,7 @@ export const DataLinkConnected: StatePage = {
       id: "t19_disc_received",
       from: "Connected",
       on: "DISC_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
         { verb: "F := P", kind: "processing" },
@@ -558,7 +558,7 @@ export const DataLinkConnected: StatePage = {
       id: "t20_dm_received",
       from: "Connected",
       on: "DM_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (E)", kind: "signal_upper" },
         { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
@@ -575,7 +575,7 @@ export const DataLinkConnected: StatePage = {
       id: "t21_rr_received_yes",
       from: "Connected",
       on: "RR_received",
-      guard: "va_le_nr_le_vs",
+      guard: [{ atom: "va_le_nr_le_vs", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -590,7 +590,7 @@ export const DataLinkConnected: StatePage = {
       id: "t21_rr_received_no_no",
       from: "Connected",
       on: "RR_received",
-      guard: "not va_le_nr_le_vs and not version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -605,7 +605,7 @@ export const DataLinkConnected: StatePage = {
       id: "t21_rr_received_no_yes",
       from: "Connected",
       on: "RR_received",
-      guard: "not va_le_nr_le_vs and version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -620,7 +620,7 @@ export const DataLinkConnected: StatePage = {
       id: "t22_rnr_received_yes",
       from: "Connected",
       on: "RNR_received",
-      guard: "va_le_nr_le_vs",
+      guard: [{ atom: "va_le_nr_le_vs", negate: false }],
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -635,7 +635,7 @@ export const DataLinkConnected: StatePage = {
       id: "t22_rnr_received_no_no",
       from: "Connected",
       on: "RNR_received",
-      guard: "not va_le_nr_le_vs and not version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -650,7 +650,7 @@ export const DataLinkConnected: StatePage = {
       id: "t22_rnr_received_no_yes",
       from: "Connected",
       on: "RNR_received",
-      guard: "not va_le_nr_le_vs and version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "set_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -665,7 +665,7 @@ export const DataLinkConnected: StatePage = {
       id: "t23_lm_seize_confirm_yes",
       from: "Connected",
       on: "LM_SEIZE_confirm",
-      guard: "ack_pending",
+      guard: [{ atom: "ack_pending", negate: false }],
       actions: [
         { verb: "Clear Acknowledge Pending", kind: "processing" },
         { verb: "Enquiry Response (F = 0)", kind: "subroutine" },
@@ -680,7 +680,7 @@ export const DataLinkConnected: StatePage = {
       id: "t23_lm_seize_confirm_no",
       from: "Connected",
       on: "LM_SEIZE_confirm",
-      guard: "not ack_pending",
+      guard: [{ atom: "ack_pending", negate: true }],
       actions: [
         { verb: "LM_release_request", kind: "signal_lower" },
       ],
@@ -693,7 +693,7 @@ export const DataLinkConnected: StatePage = {
       id: "t24_srej_received_yes_yes",
       from: "Connected",
       on: "SREJ_received",
-      guard: "va_le_nr_le_vs and P_or_F_eq_1",
+      guard: [{ atom: "va_le_nr_le_vs", negate: false }, { atom: "P_or_F_eq_1", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -716,7 +716,7 @@ export const DataLinkConnected: StatePage = {
       id: "t24_srej_received_yes_no",
       from: "Connected",
       on: "SREJ_received",
-      guard: "va_le_nr_le_vs and not P_or_F_eq_1",
+      guard: [{ atom: "va_le_nr_le_vs", negate: false }, { atom: "P_or_F_eq_1", negate: true }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -738,7 +738,7 @@ export const DataLinkConnected: StatePage = {
       id: "t24_srej_received_no_no",
       from: "Connected",
       on: "SREJ_received",
-      guard: "not va_le_nr_le_vs and not version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -753,7 +753,7 @@ export const DataLinkConnected: StatePage = {
       id: "t24_srej_received_no_yes",
       from: "Connected",
       on: "SREJ_received",
-      guard: "not va_le_nr_le_vs and version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -768,7 +768,7 @@ export const DataLinkConnected: StatePage = {
       id: "t25_rej_received_no_no",
       from: "Connected",
       on: "REJ_received",
-      guard: "not va_le_nr_le_vs and not version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -783,7 +783,7 @@ export const DataLinkConnected: StatePage = {
       id: "t25_rej_received_no_yes",
       from: "Connected",
       on: "REJ_received",
-      guard: "not va_le_nr_le_vs and version_2_2",
+      guard: [{ atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -798,7 +798,7 @@ export const DataLinkConnected: StatePage = {
       id: "t25_rej_received_yes",
       from: "Connected",
       on: "REJ_received",
-      guard: "va_le_nr_le_vs",
+      guard: [{ atom: "va_le_nr_le_vs", negate: false }],
       actions: [
         { verb: "clear_peer_receiver_busy", kind: "processing" },
         { verb: "Check Need For Response", kind: "subroutine" },
@@ -818,7 +818,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_no_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned and not version_2_2",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (O)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -833,7 +833,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_no_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned and version_2_2",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (O)", kind: "signal_upper" },
         { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -848,7 +848,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_no_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and not version_2_2",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }],
       actions: [
         { verb: "N(r) Error Recovery", kind: "subroutine" },
       ],
@@ -861,7 +861,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_no_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs and version_2_2",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }],
       actions: [
         { verb: "N(r) Error Recovery", kind: "subroutine" },
       ],
@@ -874,7 +874,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_yes_no_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "ack_pending", negate: true }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -891,14 +891,14 @@ export const DataLinkConnected: StatePage = {
       notes: "",
       references: [],
       loops: [
-        { start: 5, length: 3, predicate: "vr_I_frame_stored", testAtEnd: false },
+        { start: 5, length: 3, predicate: { atom: "vr_I_frame_stored", negate: false }, testAtEnd: false },
       ],
     },
     {
       id: "t26_i_received_yes_yes_yes_no_yes_no_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "ack_pending", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -913,14 +913,14 @@ export const DataLinkConnected: StatePage = {
       notes: "",
       references: [],
       loops: [
-        { start: 5, length: 3, predicate: "vr_I_frame_stored", testAtEnd: false },
+        { start: 5, length: 3, predicate: { atom: "vr_I_frame_stored", negate: false }, testAtEnd: false },
       ],
     },
     {
       id: "t26_i_received_yes_yes_yes_no_yes_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "V(r) := V(r) + 1", kind: "processing" },
@@ -939,14 +939,14 @@ export const DataLinkConnected: StatePage = {
       notes: "",
       references: [],
       loops: [
-        { start: 5, length: 3, predicate: "vr_I_frame_stored", testAtEnd: false },
+        { start: 5, length: 3, predicate: { atom: "vr_I_frame_stored", negate: false }, testAtEnd: false },
       ],
     },
     {
       id: "t26_i_received_yes_yes_yes_no_no_yes_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: false }, { atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -964,7 +964,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_no_yes_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: false }, { atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -978,7 +978,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_no_no_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: true }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -997,7 +997,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_no_no_yes_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -1015,7 +1015,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: true }, { atom: "ns_gt_vr_plus_1", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -1035,7 +1035,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: true }, { atom: "ns_gt_vr_plus_1", negate: true }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Save Contents of I Frame", kind: "processing" },
@@ -1053,7 +1053,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_yes_yes",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: false }, { atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -1071,7 +1071,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_yes_yes_yes_yes_no",
       from: "Connected",
       on: "I_received",
-      guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
+      guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: false }, { atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "Check_I_Frame_Acknowledged", kind: "subroutine" },
         { verb: "Discard Contents of I Frame", kind: "processing" },
@@ -1085,7 +1085,7 @@ export const DataLinkConnected: StatePage = {
       id: "t26_i_received_no",
       from: "Connected",
       on: "I_received",
-      guard: "not command",
+      guard: [{ atom: "command", negate: true }],
       actions: [
         { verb: "DL-ERROR Indication (O)", kind: "signal_upper" },
         { verb: "Discard I Frame", kind: "processing" },

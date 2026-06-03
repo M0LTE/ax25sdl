@@ -43,7 +43,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("DL_DATA_request");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("layer_3_initiated");
+    expect(t.guard).toEqual([{ atom: "layer_3_initiated", negate: false }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -53,7 +53,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("DL_DATA_request");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not layer_3_initiated");
+    expect(t.guard).toEqual([{ atom: "layer_3_initiated", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
@@ -65,7 +65,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("layer_3_initiated");
+    expect(t.guard).toEqual([{ atom: "layer_3_initiated", negate: false }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -75,7 +75,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not layer_3_initiated");
+    expect(t.guard).toEqual([{ atom: "layer_3_initiated", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("push_frame_on_queue");
     expect(t.actions[0].kind).toBe("internal_out");
@@ -129,7 +129,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -143,7 +143,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -155,7 +155,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -165,7 +165,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_I_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
@@ -181,7 +181,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -193,7 +193,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("F_eq_1 and layer_3_initiated");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: false }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("DL_CONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -219,7 +219,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: true }, { atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(11);
     expect(t.actions[0].verb).toBe("SRT := Initial Default");
     expect(t.actions[0].kind).toBe("processing");
@@ -251,7 +251,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("F_eq_1 and not layer_3_initiated and vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: true }, { atom: "vs_eq_va", negate: false }]);
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("Stop T1");
     expect(t.actions[0].kind).toBe("processing");
@@ -275,7 +275,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("RC_eq_N2");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("discard_frame_queue");
     expect(t.actions[0].kind).toBe("processing");
@@ -291,7 +291,7 @@ describe("DataLinkAwaitingV22Connection", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not RC_eq_N2");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("RC := RC + 1");
     expect(t.actions[0].kind).toBe("processing");

@@ -16,7 +16,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t01_dl_disconnect_request",
       from: "Disconnected",
       on: "DL_DISCONNECT_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL_DISCONNECT_confirm", kind: "signal_upper" },
       ],
@@ -29,7 +29,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t02_dl_unit_data_request",
       from: "Disconnected",
       on: "DL_UNIT_DATA_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "UI Command", kind: "signal_lower" },
       ],
@@ -42,7 +42,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t03_dl_connect_request",
       from: "Disconnected",
       on: "DL_CONNECT_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "SRT := Initial Default", kind: "processing" },
         { verb: "T1V := 2 * SRT", kind: "processing" },
@@ -58,7 +58,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t04_all_other_primitives__from_upper_layer",
       from: "Disconnected",
       on: "all_other_primitives__from_upper_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "Disconnected",
       notes: "",
@@ -69,7 +69,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t05_all_other_commands",
       from: "Disconnected",
       on: "all_other_commands",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "DM", kind: "signal_lower" },
@@ -83,7 +83,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t06_all_other_primitives__from_lower_layer",
       from: "Disconnected",
       on: "all_other_primitives__from_lower_layer",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "Discard Primitive", kind: "processing" },
       ],
@@ -96,7 +96,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t07_control_field_error",
       from: "Disconnected",
       on: "control_field_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (L)", kind: "signal_upper" },
       ],
@@ -109,7 +109,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t08_info_not_permitted_in_frame",
       from: "Disconnected",
       on: "info_not_permitted_in_frame",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },
       ],
@@ -122,7 +122,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t09_u_or_s_frame_length_error",
       from: "Disconnected",
       on: "u_or_s_frame_length_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (N)", kind: "signal_upper" },
       ],
@@ -135,7 +135,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t10_ua_received",
       from: "Disconnected",
       on: "UA_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL_ERROR_indication_C_D", kind: "signal_upper" },
       ],
@@ -148,7 +148,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t11_ui_received_no",
       from: "Disconnected",
       on: "UI_received",
-      guard: "not P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
       ],
@@ -161,7 +161,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t11_ui_received_yes",
       from: "Disconnected",
       on: "UI_received",
-      guard: "P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
         { verb: "F := 1", kind: "processing" },
@@ -176,7 +176,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t12_disc_received",
       from: "Disconnected",
       on: "DISC_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "DM", kind: "signal_lower" },
@@ -190,7 +190,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t13_sabm_received_no",
       from: "Disconnected",
       on: "SABM_received",
-      guard: "not able_to_establish",
+      guard: [{ atom: "able_to_establish", negate: true }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "DM", kind: "signal_lower" },
@@ -204,7 +204,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t13_sabm_received_yes",
       from: "Disconnected",
       on: "SABM_received",
-      guard: "able_to_establish",
+      guard: [{ atom: "able_to_establish", negate: false }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "set_version_2_0", kind: "processing" },
@@ -228,7 +228,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t14_sabme_received_no",
       from: "Disconnected",
       on: "SABME_received",
-      guard: "not able_to_establish",
+      guard: [{ atom: "able_to_establish", negate: true }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "DM", kind: "signal_lower" },
@@ -242,7 +242,7 @@ export const DataLinkDisconnected: StatePage = {
       id: "t14_sabme_received_yes",
       from: "Disconnected",
       on: "SABME_received",
-      guard: "able_to_establish",
+      guard: [{ atom: "able_to_establish", negate: false }],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Set Version 2.2", kind: "processing" },

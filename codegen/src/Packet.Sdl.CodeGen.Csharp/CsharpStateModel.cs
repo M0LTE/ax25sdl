@@ -69,7 +69,7 @@ public sealed class CsharpTransitionModel
         OnLabel              = t.OnLabel,
         OnLabelLiteral       = string.IsNullOrEmpty(t.OnLabel) ? "null" : CsharpEmitter.CSharpStringLiteral(t.OnLabel),
         Guard                = t.Guard,
-        GuardLiteral         = t.Guard is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Guard),
+        GuardLiteral         = CsharpEmitter.GuardExprLiteral(t.Guard),
         Next                 = t.Next,
         Notes                = t.Notes,
         NotesLiteral         = t.Notes is null ? "null" : CsharpEmitter.CSharpStringLiteral(t.Notes),
@@ -87,7 +87,7 @@ public sealed class CsharpTransitionModel
         var entries = branches.Select(b =>
             $"new UndefinedSpecBranch({CsharpEmitter.CSharpStringLiteral(b.DecisionId)}, " +
             $"{CsharpEmitter.CSharpStringLiteral(b.Question)}, " +
-            $"{CsharpEmitter.CSharpStringLiteral(b.Predicate)})");
+            $"{CsharpEmitter.GuardEnumLiteral(b.Predicate)})");
         return "new UndefinedSpecBranch[] { " + string.Join(", ", entries) + " }";
     }
 }

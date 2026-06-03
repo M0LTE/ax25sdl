@@ -16,7 +16,7 @@ export const ManagementDataLinkNegotiating: StatePage = {
       id: "t01_xid_response_received_yes",
       from: "Negotiating",
       on: "XID_response_received",
-      guard: "F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: false }],
       actions: [
         { verb: "Apply Negotiated Parameters", kind: "subroutine" },
         { verb: "Stop TM201", kind: "processing" },
@@ -35,7 +35,7 @@ export const ManagementDataLinkNegotiating: StatePage = {
       id: "t01_xid_response_received_no",
       from: "Negotiating",
       on: "XID_response_received",
-      guard: "not F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: true }],
       actions: [
         { verb: "MDL_ERROR_indicate_D", kind: "signal_upper" },
       ],
@@ -50,7 +50,7 @@ export const ManagementDataLinkNegotiating: StatePage = {
       id: "t02_frmr_received",
       from: "Negotiating",
       on: "FRMR_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "set_version_2_0", kind: "processing" },
         { verb: "Stop TM201", kind: "processing" },
@@ -68,7 +68,7 @@ export const ManagementDataLinkNegotiating: StatePage = {
       id: "t03_tm201_expiry_yes",
       from: "Negotiating",
       on: "TM201_expiry",
-      guard: "RC_eq_NM201",
+      guard: [{ atom: "RC_eq_NM201", negate: false }],
       actions: [
         { verb: "MDL_ERROR_indicate_C", kind: "signal_upper" },
       ],
@@ -84,7 +84,7 @@ export const ManagementDataLinkNegotiating: StatePage = {
       id: "t03_tm201_expiry_no",
       from: "Negotiating",
       on: "TM201_expiry",
-      guard: "not RC_eq_NM201",
+      guard: [{ atom: "RC_eq_NM201", negate: true }],
       actions: [
         { verb: "RC := RC + 1", kind: "processing" },
         { verb: "XID_command", kind: "signal_lower" },

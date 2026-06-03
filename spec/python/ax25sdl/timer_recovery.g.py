@@ -723,7 +723,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t20_lm_seize_confirm_yes",
             from_="TimerRecovery",
             on="LM_SEIZE_confirm",
-            guard="ACK_pending",
+            guard="ack_pending",
             actions=(
                 ActionStep(verb="Clear Acknowledge Pending", kind=ActionKind.PROCESSING),
                 ActionStep(verb="Enquiry Response (F = 0)", kind=ActionKind.SUBROUTINE),
@@ -738,7 +738,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t20_lm_seize_confirm_no",
             from_="TimerRecovery",
             on="LM_SEIZE_confirm",
-            guard="not ACK_pending",
+            guard="not ack_pending",
             actions=(
                 ActionStep(verb="LM_release_request", kind=ActionKind.SIGNAL_LOWER),
             ),
@@ -765,7 +765,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t21_t1_expiry_yes_yes_yes",
             from_="TimerRecovery",
             on="T1_expiry",
-            guard="RC_eq_N2 and vs_eq_va and peer_busy",
+            guard="RC_eq_N2 and vs_eq_va and peer_receiver_busy",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (U)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="DL_DISCONNECT_indication", kind=ActionKind.SIGNAL_UPPER),
@@ -781,7 +781,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t21_t1_expiry_yes_yes_no",
             from_="TimerRecovery",
             on="T1_expiry",
-            guard="RC_eq_N2 and vs_eq_va and not peer_busy",
+            guard="RC_eq_N2 and vs_eq_va and not peer_receiver_busy",
             actions=(
                 ActionStep(verb="DL-ERROR Indication (T)", kind=ActionKind.SIGNAL_UPPER),
                 ActionStep(verb="DL_DISCONNECT_indication", kind=ActionKind.SIGNAL_UPPER),
@@ -855,7 +855,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_yes_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Discard Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -873,7 +873,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_yes_no",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Discard Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -887,7 +887,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_yes_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="V(r) := V(r) + 1", kind=ActionKind.PROCESSING),
@@ -913,7 +913,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_yes_no_no",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="V(r) := V(r) + 1", kind=ActionKind.PROCESSING),
@@ -937,7 +937,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_yes_no_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="V(r) := V(r) + 1", kind=ActionKind.PROCESSING),
@@ -959,7 +959,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_yes_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Discard Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -977,7 +977,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_yes_no",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Discard Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -991,7 +991,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_no_no",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Discard Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -1010,7 +1010,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Save Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -1030,7 +1030,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_no_yes_no_no",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Save Contents of I Frame", kind=ActionKind.PROCESSING),
@@ -1048,7 +1048,7 @@ DATA_LINK_TIMER_RECOVERY = StatePage(
             id="t22_i_received_yes_yes_yes_no_no_no_yes_yes",
             from_="TimerRecovery",
             on="I_received",
-            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
+            guard="command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
             actions=(
                 ActionStep(verb="Check_I_Frame_Acknowledged", kind=ActionKind.SUBROUTINE),
                 ActionStep(verb="Save Contents of I Frame", kind=ActionKind.PROCESSING),

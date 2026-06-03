@@ -21,7 +21,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t01_xid_response_received_yes");
         t.On.Should().Be("XID_response_received");
         t.Next.Should().Be("Ready");
-        t.Guard.Should().Be("F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) });
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ApplyNegotiatedParameters);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
@@ -36,7 +36,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t01_xid_response_received_no");
         t.On.Should().Be("XID_response_received");
         t.Next.Should().Be("Negotiating");
-        t.Guard.Should().Be("not F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.MDLERRORIndicateD);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -61,7 +61,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t03_tm201_expiry_yes");
         t.On.Should().Be("TM201_expiry");
         t.Next.Should().Be("Ready");
-        t.Guard.Should().Be("RC_eq_NM201");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, false) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.MDLERRORIndicateC);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -72,7 +72,7 @@ public class ManagementDataLink_Negotiating_GeneratedTests
         var t = ManagementDataLink_Negotiating.Transitions.Single(x => x.Id == "t03_tm201_expiry_no");
         t.On.Should().Be("TM201_expiry");
         t.Next.Should().Be("Negotiating");
-        t.Guard.Should().Be("not RC_eq_NM201");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, true) });
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.RCAssignRCPlus1);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);

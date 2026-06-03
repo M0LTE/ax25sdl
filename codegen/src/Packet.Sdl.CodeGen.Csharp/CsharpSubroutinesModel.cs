@@ -72,7 +72,7 @@ public sealed class CsharpSubroutinePathModel
     {
         Id            = p.Id,
         Guard         = p.Guard,
-        GuardLiteral  = p.Guard is null ? "null" : CsharpEmitter.CSharpStringLiteral(p.Guard),
+        GuardLiteral  = CsharpEmitter.GuardExprLiteral(p.Guard),
         Notes         = p.Notes,
         NotesLiteral  = p.Notes is null ? "null" : CsharpEmitter.CSharpStringLiteral(p.Notes),
         ActionsCsv    = CsharpEmitter.FormatActionsCsv(p.Actions),

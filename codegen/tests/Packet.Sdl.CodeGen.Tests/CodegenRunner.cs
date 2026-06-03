@@ -63,6 +63,10 @@ internal sealed class CodegenRunner : IDisposable
     public void WriteActionsCatalog(string yaml)
         => File.WriteAllText(Path.Combine(SpecDir, "actions.yaml"), yaml);
 
+    /// <summary>Drop a predicates.yaml at the SpecDir root (optional; soft passthrough when absent — but once present, every decision predicate must resolve to it).</summary>
+    public void WritePredicatesCatalog(string yaml)
+        => File.WriteAllText(Path.Combine(SpecDir, "predicates.yaml"), yaml);
+
     /// <summary>
     /// Drop a lint-targets.yaml at the SpecDir root. Configures the
     /// runtime-specific lints' per-target bindings / dispatcher /

@@ -16,7 +16,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t01_dl_disconnect_request",
       from: "AwaitingRelease",
       on: "DL_DISCONNECT_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "Expedited DM", kind: "signal_lower" },
       ],
@@ -29,7 +29,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t02_t1_expiry_yes",
       from: "AwaitingRelease",
       on: "T1_expiry",
-      guard: "RC_eq_N2",
+      guard: [{ atom: "RC_eq_N2", negate: false }],
       actions: [
         { verb: "DL-ERROR Indication (G)", kind: "signal_upper" },
         { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
@@ -43,7 +43,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t02_t1_expiry_no",
       from: "AwaitingRelease",
       on: "T1_expiry",
-      guard: "not RC_eq_N2",
+      guard: [{ atom: "RC_eq_N2", negate: true }],
       actions: [
         { verb: "RC := RC + 1", kind: "processing" },
         { verb: "DISC (P = 1)", kind: "signal_lower" },
@@ -59,7 +59,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t03_ua_received_yes",
       from: "AwaitingRelease",
       on: "UA_received",
-      guard: "F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: false }],
       actions: [
         { verb: "DL_DISCONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
@@ -73,7 +73,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t03_ua_received_no",
       from: "AwaitingRelease",
       on: "UA_received",
-      guard: "not F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: true }],
       actions: [
         { verb: "DL_ERROR_indication_D", kind: "signal_upper" },
       ],
@@ -86,7 +86,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t04_all_other_primitives__from_lower_layer",
       from: "AwaitingRelease",
       on: "all_other_primitives__from_lower_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "AwaitingRelease",
       notes: "",
@@ -97,7 +97,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t05_dl_unit_data_request",
       from: "AwaitingRelease",
       on: "DL_UNIT_DATA_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "UI Command", kind: "signal_lower" },
       ],
@@ -110,7 +110,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t06_all_other_primitives__from_upper_layer",
       from: "AwaitingRelease",
       on: "all_other_primitives__from_upper_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "AwaitingRelease",
       notes: "",
@@ -121,7 +121,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t07_control_field_error",
       from: "AwaitingRelease",
       on: "control_field_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (L)", kind: "signal_upper" },
       ],
@@ -134,7 +134,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t08_info_not_permitted_in_frame",
       from: "AwaitingRelease",
       on: "info_not_permitted_in_frame",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },
       ],
@@ -147,7 +147,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t09_u_or_s_frame_length_error",
       from: "AwaitingRelease",
       on: "u_or_s_frame_length_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (N)", kind: "signal_upper" },
       ],
@@ -160,7 +160,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t10_sabm_received",
       from: "AwaitingRelease",
       on: "SABM_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Expedited DM", kind: "signal_lower" },
@@ -174,7 +174,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t11_sabme_received",
       from: "AwaitingRelease",
       on: "SABME_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Expedited DM", kind: "signal_lower" },
@@ -188,7 +188,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t12_disc_received",
       from: "AwaitingRelease",
       on: "DISC_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "Expedited UA", kind: "signal_lower" },
@@ -202,7 +202,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t13_dm_received_yes",
       from: "AwaitingRelease",
       on: "DM_received",
-      guard: "F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: false }],
       actions: [
         { verb: "DL_DISCONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
@@ -216,7 +216,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t13_dm_received_no",
       from: "AwaitingRelease",
       on: "DM_received",
-      guard: "not F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: true }],
       actions: [],
       next: "AwaitingRelease",
       notes: "",
@@ -227,7 +227,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t14_ui_received_yes",
       from: "AwaitingRelease",
       on: "UI_received",
-      guard: "P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
         { verb: "DM (F = 1)", kind: "signal_lower" },
@@ -241,7 +241,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t14_ui_received_no",
       from: "AwaitingRelease",
       on: "UI_received",
-      guard: "not P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
       ],
@@ -254,7 +254,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t15_i_or_s_command_received_yes",
       from: "AwaitingRelease",
       on: "i_or_s_command_received",
-      guard: "P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "DM (F = 1)", kind: "signal_lower" },
       ],
@@ -267,7 +267,7 @@ export const DataLinkAwaitingRelease: StatePage = {
       id: "t15_i_or_s_command_received_no",
       from: "AwaitingRelease",
       on: "i_or_s_command_received",
-      guard: "not P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: true }],
       actions: [],
       next: "AwaitingRelease",
       notes: "",

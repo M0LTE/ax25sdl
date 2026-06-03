@@ -31,7 +31,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t02_t1_expiry_yes");
         t.On.Should().Be("T1_expiry");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("RC_eq_N2");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationG);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -44,7 +44,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t02_t1_expiry_no");
         t.On.Should().Be("T1_expiry");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("not RC_eq_N2");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, true) });
         t.Actions.Count.Should().Be(4);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.RCAssignRCPlus1);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -61,7 +61,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t03_ua_received_yes");
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTConfirm);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -74,7 +74,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t03_ua_received_no");
         t.On.Should().Be("UA_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("not F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationD);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -177,7 +177,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t13_dm_received_yes");
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTConfirm);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalUpper);
@@ -190,7 +190,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t13_dm_received_no");
         t.On.Should().Be("DM_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("not F_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) });
         t.Actions.Count.Should().Be(0);
     }
 
@@ -199,7 +199,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t14_ui_received_yes");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
@@ -212,7 +212,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t14_ui_received_no");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("not P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
@@ -223,7 +223,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t15_i_or_s_command_received_yes");
         t.On.Should().Be("i_or_s_command_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DMFEq1);
         t.Actions[0].Kind.Should().Be(ActionKind.SignalLower);
@@ -234,7 +234,7 @@ public class DataLink_AwaitingRelease_GeneratedTests
         var t = DataLink_AwaitingRelease.Transitions.Single(x => x.Id == "t15_i_or_s_command_received_no");
         t.On.Should().Be("i_or_s_command_received");
         t.Next.Should().Be("AwaitingRelease");
-        t.Guard.Should().Be("not P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) });
         t.Actions.Count.Should().Be(0);
     }
 

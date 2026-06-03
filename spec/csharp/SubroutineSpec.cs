@@ -33,15 +33,16 @@ public sealed record SubroutineSpec(
 /// those choices.
 /// </summary>
 /// <remarks>
-/// The guard expression mirrors <see cref="TransitionSpec.Guard"/> in
-/// shape: a canonical boolean expression over predicate names, e.g.
-/// <c>mod_128</c> or <c>!own_receiver_busy &amp;&amp; srej_enabled</c>.
-/// Combined-AND form because all decision outcomes on a path must
-/// hold simultaneously for the path to be taken.
+/// The guard mirrors <see cref="TransitionSpec.Guard"/> in shape: a
+/// conjunction of <see cref="GuardTerm"/>s (each a typed
+/// <see cref="Ax25Guard"/> atom, optionally negated) — e.g.
+/// <c>mod_128</c>, or <c>!own_receiver_busy &amp;&amp; srej_enabled</c>.
+/// Combined-AND form because all decision outcomes on a path must hold
+/// simultaneously for the path to be taken; null / empty means no guard.
 /// </remarks>
 public sealed record SubroutinePath(
     string Id,
-    string? Guard,
+    IReadOnlyList<GuardTerm>? Guard,
     IReadOnlyList<ActionStep> Actions,
     string? Notes,
     IReadOnlyList<ImplementationReference> References,

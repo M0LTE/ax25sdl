@@ -6,17 +6,17 @@ namespace Packet.Ax25.Sdl;
 /// in order and move to <see cref="Next"/>.
 /// </summary>
 /// <remarks>
-/// Guard and action strings are opaque to the codegen — they describe spec
-/// intent. The orchestrator in Packet.Ax25 maps each <see cref="ActionStep.Verb"/>
-/// to concrete C# behaviour at runtime. <see cref="ActionStep.Kind"/> is
-/// metadata recording which figc1.1 shape class produced the action, so the
+/// The orchestrator in Packet.Ax25 maps each <see cref="ActionStep.Verb"/> to
+/// concrete C# behaviour at runtime, and evaluates each <see cref="GuardTerm"/>
+/// of <see cref="Guard"/> against session state. <see cref="ActionStep.Kind"/>
+/// is metadata recording which figc1.1 shape class produced the action, so the
 /// figure can be redrawn from the YAML alone.
 /// </remarks>
 public sealed record TransitionSpec(
     string Id,
     string From,
     string On,
-    string? Guard,
+    IReadOnlyList<GuardTerm>? Guard,
     IReadOnlyList<ActionStep> Actions,
     string Next,
     string? Notes,
@@ -26,6 +26,17 @@ public sealed record TransitionSpec(
     string? OnLabel = null);
 
 /// <summary>
+/// One conjunct of a transition's (or subroutine path's) guard: a typed
+/// <see cref="Ax25Guard"/> atom plus whether it is negated. A guard holds when
+/// every term holds; an empty / null guard list means the transition is
+/// unguarded (always fires). Carrying the atom as the generated
+/// <see cref="Ax25Guard"/> closed-set member (rather than a raw string) lets a
+/// guard evaluator bind every atom exhaustively — a renamed or typo'd atom is a
+/// compile error, not an "unbound identifier" thrown at runtime.
+/// </summary>
+public sealed record GuardTerm(Ax25Guard Atom, bool Negate);
+
+/// <summary>
 /// One decision in this transition's path whose outgoing edge was labelled
 /// <c>undefined</c> in the source SDL — the spec authors deliberately didn't
 /// say what happens on that branch. The orchestrator must throw with details
@@ -33,7 +44,7 @@ public sealed record TransitionSpec(
 /// when dispatching a transition whose <see cref="TransitionSpec.UndefinedBranches"/>
 /// is non-empty.
 /// </summary>
-public sealed record UndefinedSpecBranch(string DecisionId, string Question, string Predicate);
+public sealed record UndefinedSpecBranch(string DecisionId, string Question, Ax25Guard Predicate);
 
 /// <summary>
 /// One cross-reference citation for a transition — either a pointer into
@@ -71,7 +82,8 @@ public sealed record ActionStep(Ax25ActionVerb Verb, ActionKind Kind);
 /// behaviour. Loop-aware consumers iterate while <see cref="Predicate"/> holds.
 /// <para>
 /// <see cref="Predicate"/> is the <em>continue</em> condition (already negated
-/// where the figure's continuing edge is the decision's No branch).
+/// where the figure's continuing edge is the decision's No branch — the
+/// negation is carried by the <see cref="GuardTerm"/>).
 /// <see cref="TestAtEnd"/> selects the loop topology: <c>false</c> = test-at-head
 /// (while; predicate checked before each iteration, body may run zero times);
 /// <c>true</c> = test-at-tail (do-while; predicate checked after each iteration,
@@ -80,7 +92,7 @@ public sealed record ActionStep(Ax25ActionVerb Verb, ActionKind Kind);
 /// gated by the predicate even on the first pass.
 /// </para>
 /// </remarks>
-public sealed record LoopRange(int Start, int Length, string Predicate, bool TestAtEnd);
+public sealed record LoopRange(int Start, int Length, GuardTerm Predicate, bool TestAtEnd);
 
 /// <summary>
 /// The five SDL action shape-classes from figc1.1 that produce entries in a

@@ -16,7 +16,7 @@ export const ManagementDataLinkReady: StatePage = {
       id: "t01_mdl_negotiate_request",
       from: "Ready",
       on: "MDL_NEGOTIATE_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "RC := 0", kind: "processing" },
         { verb: "XID_command", kind: "signal_lower" },
@@ -35,7 +35,7 @@ export const ManagementDataLinkReady: StatePage = {
       id: "t02_xid_response_received",
       from: "Ready",
       on: "XID_response_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "MDL_ERROR_indicate_B", kind: "signal_upper" },
       ],

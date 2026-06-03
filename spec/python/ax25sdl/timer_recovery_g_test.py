@@ -886,7 +886,7 @@ def test_t20_lm_seize_confirm_yes() -> None:
     assert t is not None, "transition t20_lm_seize_confirm_yes not found"
     assert t.on == "LM_SEIZE_confirm"
     assert t.next == "TimerRecovery"
-    assert t.guard == "ACK_pending"
+    assert t.guard == "ack_pending"
     assert len(t.actions) == 3
     assert t.actions[0].verb == "Clear Acknowledge Pending"
     assert t.actions[0].kind == ActionKind.PROCESSING
@@ -904,7 +904,7 @@ def test_t20_lm_seize_confirm_no() -> None:
     assert t is not None, "transition t20_lm_seize_confirm_no not found"
     assert t.on == "LM_SEIZE_confirm"
     assert t.next == "TimerRecovery"
-    assert t.guard == "not ACK_pending"
+    assert t.guard == "not ack_pending"
     assert len(t.actions) == 1
     assert t.actions[0].verb == "LM_release_request"
     assert t.actions[0].kind == ActionKind.SIGNAL_LOWER
@@ -934,7 +934,7 @@ def test_t21_t1_expiry_yes_yes_yes() -> None:
     assert t is not None, "transition t21_t1_expiry_yes_yes_yes not found"
     assert t.on == "T1_expiry"
     assert t.next == "Disconnected"
-    assert t.guard == "RC_eq_N2 and vs_eq_va and peer_busy"
+    assert t.guard == "RC_eq_N2 and vs_eq_va and peer_receiver_busy"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (U)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -954,7 +954,7 @@ def test_t21_t1_expiry_yes_yes_no() -> None:
     assert t is not None, "transition t21_t1_expiry_yes_yes_no not found"
     assert t.on == "T1_expiry"
     assert t.next == "Disconnected"
-    assert t.guard == "RC_eq_N2 and vs_eq_va and not peer_busy"
+    assert t.guard == "RC_eq_N2 and vs_eq_va and not peer_receiver_busy"
     assert len(t.actions) == 4
     assert t.actions[0].verb == "DL-ERROR Indication (T)"
     assert t.actions[0].kind == ActionKind.SIGNAL_UPPER
@@ -1042,7 +1042,7 @@ def test_t22_i_received_yes_yes_yes_yes_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1066,7 +1066,7 @@ def test_t22_i_received_yes_yes_yes_yes_no() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_yes_no not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1082,7 +1082,7 @@ def test_t22_i_received_yes_yes_yes_no_yes_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1"
     assert len(t.actions) == 12
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1118,7 +1118,7 @@ def test_t22_i_received_yes_yes_yes_no_yes_no_no() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending"
     assert len(t.actions) == 10
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1150,7 +1150,7 @@ def test_t22_i_received_yes_yes_yes_no_yes_no_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1178,7 +1178,7 @@ def test_t22_i_received_yes_yes_yes_no_no_yes_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1202,7 +1202,7 @@ def test_t22_i_received_yes_yes_yes_no_no_yes_no() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_yes_no not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1"
     assert len(t.actions) == 2
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1218,7 +1218,7 @@ def test_t22_i_received_yes_yes_yes_no_no_no_no() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_no_no not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled"
     assert len(t.actions) == 7
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1244,7 +1244,7 @@ def test_t22_i_received_yes_yes_yes_no_no_no_yes_no_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1"
     assert len(t.actions) == 8
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1272,7 +1272,7 @@ def test_t22_i_received_yes_yes_yes_no_no_no_yes_no_no() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE
@@ -1296,7 +1296,7 @@ def test_t22_i_received_yes_yes_yes_no_no_no_yes_yes() -> None:
     assert t is not None, "transition t22_i_received_yes_yes_yes_no_no_no_yes_yes not found"
     assert t.on == "I_received"
     assert t.next == "TimerRecovery"
-    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0"
+    assert t.guard == "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0"
     assert len(t.actions) == 6
     assert t.actions[0].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[0].kind == ActionKind.SUBROUTINE

@@ -22,7 +22,7 @@ public class {{ page.class_name }}_GeneratedTests
         t.On.Should().Be("{{ t.on }}");
         t.Next.Should().Be("{{ t.next }}");
 {{- if t.guard }}
-        t.Guard.Should().Be({{ t.guard_literal }});
+        t.Guard.Should().Equal({{ t.guard_literal }});
 {{- end }}
         t.Actions.Count.Should().Be({{ t.actions.size }});
 {{- for a in t.actions }}
