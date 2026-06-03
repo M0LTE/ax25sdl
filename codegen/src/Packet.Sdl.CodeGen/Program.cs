@@ -95,8 +95,9 @@ internal static class Program
             Directory.CreateDirectory(plan.PythonOut);
         }
 
-        var events  = EventCatalog.Load(Path.Combine(plan.InDir, "events.yaml"));
-        var actions = ActionCatalog.Load(Path.Combine(plan.InDir, "actions.yaml"));
+        var events     = EventCatalog.Load(Path.Combine(plan.InDir, "events.yaml"));
+        var actions    = ActionCatalog.Load(Path.Combine(plan.InDir, "actions.yaml"));
+        var predicates = PredicateCatalog.Load(Path.Combine(plan.InDir, "predicates.yaml"));
 
         // Split YAML files into state-machine pages (sdl-machine schema)
         // and subroutine pages (sdl-subroutines schema). Both share the
@@ -120,11 +121,13 @@ internal static class Program
         foreach (var page in pages)
         {
             Validation.NormaliseActionVerbs(page, actions, errors);
+            Validation.NormaliseDecisionPredicates(page, predicates, errors);
             Validation.ValidatePage(page, events, errors);
         }
         foreach (var subPage in subroutinePages)
         {
             Validation.NormaliseSubroutineActionVerbs(subPage, actions, errors);
+            Validation.NormaliseSubroutineDecisionPredicates(subPage, predicates, errors);
             Validation.ValidateSubroutinePage(subPage, errors);
         }
 
@@ -139,6 +142,20 @@ internal static class Program
                     $"spec-sdl/actions.yaml: alias `{alias}` (→ `{actions.CanonicalLookup[alias]}`) " +
                     "is declared but never referenced by any *.sdl.yaml verb. Remove the alias or update " +
                     "a YAML page to use it.");
+            }
+        }
+
+        // Unused-predicate-alias lint — the guard analogue of the above.
+        // Every alias declared in predicates.yaml must be referenced by at
+        // least one *.sdl.yaml decision predicate, or it's dead weight.
+        foreach (var alias in predicates.DeclaredAliases)
+        {
+            if (!predicates.SeenAliases.Contains(alias))
+            {
+                errors.Add(
+                    $"spec-sdl/predicates.yaml: alias `{alias}` (→ `{predicates.CanonicalLookup[alias]}`) " +
+                    "is declared but never referenced by any *.sdl.yaml decision predicate. Remove the " +
+                    "alias or update a YAML page to use it.");
             }
         }
 
@@ -159,7 +176,7 @@ internal static class Program
         // surface BEFORE the live RF test exposes them. Errors are
         // prefixed `[<language>]` so a CI failure attributes the gap
         // to the specific runtime.
-        LintPredicateBindings(pages, subroutinePages, lintTargets, errors);
+        LintPredicateBindings(pages, subroutinePages, predicates, lintTargets, errors);
 
         // Action-verb-completeness lint: every action verb the YAML
         // emits — after actions.yaml alias resolution — must have a
@@ -444,12 +461,38 @@ internal static class Program
                     .SelectMany(p => p.Subroutines).SelectMany(s => s.Paths).SelectMany(path => path.Actions).Select(a => a.Verb))
                 .ToList();
 
+            // Generated closed guard set (SP-010 step for guards): every
+            // canonical guard atom across all pages + subroutines, gathered from
+            // the resolved IR so it includes atoms the Resolver synthesises that
+            // never appear as a raw decision `predicate:` (e.g. the stale-read
+            // substitution's `vs_eq_nr`; ax25sdl#53). A transition guard is a
+            // conjunction of these atoms, so we parse each composed guard /
+            // predicate string back into its atoms. Lets a guard evaluator bind
+            // every atom exhaustively (a new/renamed atom is a compile error, not
+            // an "unbound identifier" thrown at runtime).
+            var allGuardAtoms = resolvedPages
+                .SelectMany(p => p.Transitions)
+                .SelectMany(t => GuardExpression.Atoms(t.Guard)
+                    .Concat(t.Loops.Select(l => GuardExpression.ParseSingle(l.Predicate).Atom))
+                    .Concat(t.UndefinedBranches.Select(u => u.Predicate)))
+                .Concat(resolvedSubPages
+                    .SelectMany(p => p.Subroutines).SelectMany(s => s.Paths)
+                    .SelectMany(path => GuardExpression.Atoms(path.Guard)
+                        .Concat(path.Loops.Select(l => GuardExpression.ParseSingle(l.Predicate).Atom))))
+                .Where(a => !string.IsNullOrWhiteSpace(a))
+                .ToList();
+
             if (plan.EmitCsharp)
             {
                 var verbEnumPath = Path.Combine(plan.CsharpOut, "Ax25ActionVerb.g.cs");
                 WriteIfChanged(verbEnumPath, CsharpEmitter.EmitActionVerbEnum(allVerbs));
                 writtenCsharpCode.Add(Path.GetFullPath(verbEnumPath));
                 Console.WriteLine("  ok  (all pages + subroutines)  →  Ax25ActionVerb.g.cs");
+
+                var guardEnumPath = Path.Combine(plan.CsharpOut, "Ax25Guard.g.cs");
+                WriteIfChanged(guardEnumPath, CsharpEmitter.EmitGuardEnum(allGuardAtoms));
+                writtenCsharpCode.Add(Path.GetFullPath(guardEnumPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  Ax25Guard.g.cs");
             }
             if (plan.EmitTs)
             {
@@ -457,6 +500,11 @@ internal static class Program
                 WriteIfChanged(verbUnionPath, TsEmitter.EmitActionVerbUnion(allVerbs));
                 writtenTs.Add(Path.GetFullPath(verbUnionPath));
                 Console.WriteLine("  ok  (all pages + subroutines)  →  ax25-action-verb.g.ts");
+
+                var guardUnionPath = Path.Combine(plan.TsOut, "ax25-guard.g.ts");
+                WriteIfChanged(guardUnionPath, TsEmitter.EmitGuardUnion(allGuardAtoms));
+                writtenTs.Add(Path.GetFullPath(guardUnionPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  ax25-guard.g.ts");
             }
         }
 
@@ -745,24 +793,36 @@ internal static class Program
     private static readonly char[] PredicateTokenSeparators = { ' ', '\t' };
 
     /// <summary>
-    /// Cross-reference every predicate identifier the YAML's decisions
-    /// reference against the bindings each configured runtime declares.
-    /// Missing bindings become codegen errors prefixed with the runtime
-    /// label, the precise predicate name, and the YAML location of its
-    /// first use. The same predicate gap can fire once per runtime —
-    /// intentional, so a CI failure attributes the gap to a specific
-    /// language port and the fix lands in the right file.
+    /// Two checks over the predicate identifiers the YAML's decisions
+    /// reference:
+    /// <list type="number">
+    /// <item><b>Catalog completeness</b> (runtime-agnostic, always runs when a
+    /// <c>predicates.yaml</c> is present): every predicate atom must resolve
+    /// to a <c>predicates.yaml</c> canonical — the guard analogue of how every
+    /// action verb must resolve to an <c>actions.yaml</c> entry. Catches a
+    /// typo'd or uncatalogued predicate at codegen time, and is what lets the
+    /// emitted <c>Ax25Guard</c> closed set stay authoritative.</item>
+    /// <item><b>Per-runtime binding coverage</b> (the original check): every
+    /// atom must have a binding in each configured runtime's bindings file.
+    /// Targets whose bindings file isn't on disk skip silently — keeping the
+    /// codegen useful as a standalone generator without every runtime's source
+    /// tree available (the normal case in this repo's own CI).</item>
+    /// </list>
+    /// Both fire with the precise predicate name and the YAML location of its
+    /// first use; the per-runtime check is prefixed with the runtime label so a
+    /// CI failure attributes the gap to a specific language port.
     /// </summary>
     /// <remarks>
-    /// Bindings are extracted by regex-scanning each target's bindings
-    /// file using the per-target regex from <c>spec-sdl/lint-targets.yaml</c>.
-    /// Targets whose bindings file isn't on disk skip silently — keeping
-    /// the codegen tool useful as a standalone library generator without
-    /// every runtime's source tree available.
+    /// Bindings are extracted by regex-scanning each target's bindings file
+    /// using the per-target regex from <c>spec-sdl/lint-targets.yaml</c>.
+    /// Decision predicates have already been canonicalised against
+    /// <c>predicates.yaml</c> before this runs, so the atoms checked here are
+    /// the canonical spellings the generated tables carry.
     /// </remarks>
     private static void LintPredicateBindings(
         List<SdlPage> pages,
         List<SubroutinePage> subroutinePages,
+        PredicateCatalog predicates,
         LintTargetsConfig lintTargets,
         List<string> errors)
     {
@@ -786,6 +846,27 @@ internal static class Program
                 foreach (var d in sub.Decisions)
                 {
                     CollectIdents(d.Predicate, $"{page.SourcePath}: subroutine `{sub.Name}` decision `{d.Id}`", firstSeen);
+                }
+            }
+        }
+
+        // Catalog-completeness: when a predicates.yaml is present, every atom
+        // must be one of its canonical names. (Aliases were already rewritten
+        // to canonical by NormaliseDecisionPredicates, so a surviving
+        // unrecognised atom is genuinely uncatalogued.) Mirrors the way verbs
+        // are validated against actions.yaml; without it an emitted guard atom
+        // could drift out of the Ax25Guard closed set the consumers bind to.
+        if (predicates.Canonicals.Count > 0)
+        {
+            foreach (var (ident, loc) in firstSeen.OrderBy(kvp => kvp.Key, StringComparer.Ordinal))
+            {
+                if (!predicates.Canonicals.Contains(ident))
+                {
+                    errors.Add(
+                        $"{loc}: predicate `{ident}` is not in spec-sdl/predicates.yaml. Add it as a canonical " +
+                        "atom (or as an alias of an existing canonical if it's an alternate figure spelling). " +
+                        "Every decision predicate must resolve to a catalog entry so the generated Ax25Guard " +
+                        "closed set stays authoritative.");
                 }
             }
         }

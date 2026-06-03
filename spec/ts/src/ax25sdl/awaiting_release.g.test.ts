@@ -30,7 +30,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("RC_eq_N2");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (G)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -44,7 +44,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("not RC_eq_N2");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("RC := RC + 1");
     expect(t.actions[0].kind).toBe("processing");
@@ -62,7 +62,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -76,7 +76,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("UA_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("not F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("DL_ERROR_indication_D");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -189,7 +189,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL_DISCONNECT_confirm");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -203,7 +203,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("DM_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("not F_eq_1");
+    expect(t.guard).toEqual([{ atom: "F_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -213,7 +213,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -227,7 +227,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -239,7 +239,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("i_or_s_command_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("DM (F = 1)");
     expect(t.actions[0].kind).toBe("signal_lower");
@@ -251,7 +251,7 @@ describe("DataLinkAwaitingRelease", () => {
     if (!t) return;
     expect(t.on).toBe("i_or_s_command_received");
     expect(t.next).toBe("AwaitingRelease");
-    expect(t.guard).toBe("not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(0);
   });
 

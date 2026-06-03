@@ -16,7 +16,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t02_dl_connect_request",
       from: "AwaitingV22Connection",
       on: "DL_CONNECT_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "Discard Queue", kind: "processing" },
         { verb: "Set Layer 3 Initiated", kind: "processing" },
@@ -30,7 +30,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t03_dl_unit_data_request",
       from: "AwaitingV22Connection",
       on: "DL_UNIT_DATA_request",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "UI Command", kind: "signal_lower" },
       ],
@@ -43,7 +43,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t04_dl_data_request_yes",
       from: "AwaitingV22Connection",
       on: "DL_DATA_request",
-      guard: "layer_3_initiated",
+      guard: [{ atom: "layer_3_initiated", negate: false }],
       actions: [],
       next: "AwaitingV22Connection",
       notes: "",
@@ -54,7 +54,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t04_dl_data_request_no",
       from: "AwaitingV22Connection",
       on: "DL_DATA_request",
-      guard: "not layer_3_initiated",
+      guard: [{ atom: "layer_3_initiated", negate: true }],
       actions: [
         { verb: "push_frame_on_queue", kind: "internal_out" },
       ],
@@ -67,7 +67,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t05_i_frame_pops_off_queue_yes",
       from: "AwaitingV22Connection",
       on: "I_frame_pops_off_queue",
-      guard: "layer_3_initiated",
+      guard: [{ atom: "layer_3_initiated", negate: false }],
       actions: [],
       next: "AwaitingV22Connection",
       notes: "",
@@ -78,7 +78,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t05_i_frame_pops_off_queue_no",
       from: "AwaitingV22Connection",
       on: "I_frame_pops_off_queue",
-      guard: "not layer_3_initiated",
+      guard: [{ atom: "layer_3_initiated", negate: true }],
       actions: [
         { verb: "push_frame_on_queue", kind: "internal_out" },
       ],
@@ -91,7 +91,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t06_all_other_primitives__from_upper_layer",
       from: "AwaitingV22Connection",
       on: "all_other_primitives__from_upper_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "AwaitingV22Connection",
       notes: "",
@@ -102,7 +102,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t07_control_field_error",
       from: "AwaitingV22Connection",
       on: "control_field_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (L)", kind: "signal_upper" },
       ],
@@ -115,7 +115,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t08_info_not_permitted_in_frame",
       from: "AwaitingV22Connection",
       on: "info_not_permitted_in_frame",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (M)", kind: "signal_upper" },
       ],
@@ -128,7 +128,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t09_u_or_s_frame_length_error",
       from: "AwaitingV22Connection",
       on: "u_or_s_frame_length_error",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "DL-ERROR Indication (N)", kind: "signal_upper" },
       ],
@@ -141,7 +141,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t10_ui_received_no",
       from: "AwaitingV22Connection",
       on: "UI_received",
-      guard: "not P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: true }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
         { verb: "DM (F = 1)", kind: "signal_lower" },
@@ -155,7 +155,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t10_ui_received_yes",
       from: "AwaitingV22Connection",
       on: "UI_received",
-      guard: "P_eq_1",
+      guard: [{ atom: "P_eq_1", negate: false }],
       actions: [
         { verb: "UI Check", kind: "subroutine" },
       ],
@@ -168,7 +168,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t11_dm_received_no",
       from: "AwaitingV22Connection",
       on: "DM_received",
-      guard: "not F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: true }],
       actions: [],
       next: "AwaitingConnection",
       notes: "",
@@ -179,7 +179,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t11_dm_received_yes",
       from: "AwaitingV22Connection",
       on: "DM_received",
-      guard: "F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: false }],
       actions: [
         { verb: "discard_I_frame_queue", kind: "processing" },
         { verb: "DL_DISCONNECT_indication", kind: "signal_upper" },
@@ -194,7 +194,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t12_ua_received_no",
       from: "AwaitingV22Connection",
       on: "UA_received",
-      guard: "not F_eq_1",
+      guard: [{ atom: "F_eq_1", negate: true }],
       actions: [
         { verb: "DL_ERROR_indication_D", kind: "signal_upper" },
       ],
@@ -207,7 +207,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t12_ua_received_yes_yes",
       from: "AwaitingV22Connection",
       on: "UA_received",
-      guard: "F_eq_1 and layer_3_initiated",
+      guard: [{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: false }],
       actions: [
         { verb: "DL_CONNECT_confirm", kind: "signal_upper" },
         { verb: "Stop T1", kind: "processing" },
@@ -227,7 +227,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t12_ua_received_yes_no_no",
       from: "AwaitingV22Connection",
       on: "UA_received",
-      guard: "F_eq_1 and not layer_3_initiated and not vs_eq_va",
+      guard: [{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: true }, { atom: "vs_eq_va", negate: true }],
       actions: [
         { verb: "SRT := Initial Default", kind: "processing" },
         { verb: "T1V := 2 * SRT", kind: "processing" },
@@ -250,7 +250,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t12_ua_received_yes_no_yes",
       from: "AwaitingV22Connection",
       on: "UA_received",
-      guard: "F_eq_1 and not layer_3_initiated and vs_eq_va",
+      guard: [{ atom: "F_eq_1", negate: false }, { atom: "layer_3_initiated", negate: true }, { atom: "vs_eq_va", negate: false }],
       actions: [
         { verb: "Stop T1", kind: "processing" },
         { verb: "Start T3", kind: "processing" },
@@ -269,7 +269,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t13_t1_expiry_yes",
       from: "AwaitingV22Connection",
       on: "T1_expiry",
-      guard: "RC_eq_N2",
+      guard: [{ atom: "RC_eq_N2", negate: false }],
       actions: [
         { verb: "discard_frame_queue", kind: "processing" },
         { verb: "DL-ERROR Indication (G)", kind: "signal_upper" },
@@ -284,7 +284,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t13_t1_expiry_no",
       from: "AwaitingV22Connection",
       on: "T1_expiry",
-      guard: "not RC_eq_N2",
+      guard: [{ atom: "RC_eq_N2", negate: true }],
       actions: [
         { verb: "RC := RC + 1", kind: "processing" },
         { verb: "SABME (P = 1)", kind: "signal_lower" },
@@ -300,7 +300,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t14_frmr_received",
       from: "AwaitingV22Connection",
       on: "FRMR_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "SRT := Initial Default", kind: "processing" },
         { verb: "T1V := 2 * SRT", kind: "processing" },
@@ -317,7 +317,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t15_sabme_received",
       from: "AwaitingV22Connection",
       on: "SABME_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "UA", kind: "signal_lower" },
@@ -331,7 +331,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t16_sabm_received",
       from: "AwaitingV22Connection",
       on: "SABM_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "UA", kind: "signal_lower" },
@@ -346,7 +346,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t17_disc_received",
       from: "AwaitingV22Connection",
       on: "DISC_received",
-      guard: "",
+      guard: [],
       actions: [
         { verb: "F := P", kind: "processing" },
         { verb: "DM", kind: "signal_lower" },
@@ -360,7 +360,7 @@ export const DataLinkAwaitingV22Connection: StatePage = {
       id: "t18_all_other_primitives__from_lower_layer",
       from: "AwaitingV22Connection",
       on: "all_other_primitives__from_lower_layer",
-      guard: "",
+      guard: [],
       actions: [],
       next: "AwaitingV22Connection",
       notes: "",

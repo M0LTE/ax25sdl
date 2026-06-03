@@ -16,7 +16,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_set_version_2_2",
-          guard: "",
+          guard: [],
           actions: [
             { verb: "Set Half Duplex", kind: "processing" },
             { verb: "Set Selective Reject", kind: "processing" },
@@ -39,7 +39,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_ui_check_no",
-          guard: "not command",
+          guard: [{ atom: "command", negate: true }],
           actions: [
             { verb: "DL-ERROR Indication (Q)", kind: "signal_upper" },
           ],
@@ -49,7 +49,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_ui_check_yes_yes",
-          guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
+          guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }],
           actions: [
             { verb: "DL_UNIT_DATA_indication", kind: "signal_upper" },
           ],
@@ -59,7 +59,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t03_ui_check_yes_no",
-          guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned",
+          guard: [{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: true }],
           actions: [
             { verb: "DL-ERROR Indication (K)", kind: "signal_upper" },
           ],
@@ -76,7 +76,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_select_t1_yes",
-          guard: "RC_eq_0",
+          guard: [{ atom: "RC_eq_0", negate: false }],
           actions: [
             { verb: "SRT := 7(SRT)/8 + (T1)/8 - (Remaining Time on T1 When Last Stopped)/8", kind: "processing" },
             { verb: "Next T1 := 2 * SRT", kind: "processing" },
@@ -87,7 +87,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_select_t1_no_no",
-          guard: "not RC_eq_0 and not T1_expired",
+          guard: [{ atom: "RC_eq_0", negate: true }, { atom: "T1_expired", negate: true }],
           actions: [],
           notes: "",
           references: [],
@@ -95,7 +95,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t03_select_t1_no_yes",
-          guard: "not RC_eq_0 and T1_expired",
+          guard: [{ atom: "RC_eq_0", negate: true }, { atom: "T1_expired", negate: false }],
           actions: [
             { verb: "Next T1 := (RC*0.25)+SRT*2", kind: "processing" },
           ],
@@ -112,7 +112,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_set_version_2_0",
-          guard: "",
+          guard: [],
           actions: [
             { verb: "Set Half Duplex", kind: "processing" },
             { verb: "Set Implicit Reject", kind: "processing" },
@@ -135,7 +135,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_check_need_for_response_yes",
-          guard: "command_and_P_eq_1",
+          guard: [{ atom: "command_and_P_eq_1", negate: false }],
           actions: [
             { verb: "Enquiry_Response_F_1", kind: "subroutine" },
           ],
@@ -145,7 +145,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_check_need_for_response_no_no",
-          guard: "not command_and_P_eq_1 and not response_and_F_eq_1",
+          guard: [{ atom: "command_and_P_eq_1", negate: true }, { atom: "response_and_F_eq_1", negate: true }],
           actions: [],
           notes: "",
           references: [],
@@ -153,7 +153,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t03_check_need_for_response_no_yes",
-          guard: "not command_and_P_eq_1 and response_and_F_eq_1",
+          guard: [{ atom: "command_and_P_eq_1", negate: true }, { atom: "response_and_F_eq_1", negate: false }],
           actions: [
             { verb: "DL-ERROR Indication (A)", kind: "signal_upper" },
           ],
@@ -170,7 +170,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_establish_extended_data_link_no",
-          guard: "not mod_128",
+          guard: [{ atom: "mod_128", negate: true }],
           actions: [
             { verb: "Clear Exception Conditions", kind: "processing" },
             { verb: "RC := 1", kind: "processing" },
@@ -185,7 +185,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_establish_extended_data_link_yes",
-          guard: "mod_128",
+          guard: [{ atom: "mod_128", negate: false }],
           actions: [
             { verb: "Clear Exception Conditions", kind: "processing" },
             { verb: "RC := 1", kind: "processing" },
@@ -207,7 +207,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_establish_data_link_no",
-          guard: "not mod_128",
+          guard: [{ atom: "mod_128", negate: true }],
           actions: [
             { verb: "Clear Exception Conditions", kind: "processing" },
             { verb: "RC := 1", kind: "processing" },
@@ -222,7 +222,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_establish_data_link_yes",
-          guard: "mod_128",
+          guard: [{ atom: "mod_128", negate: false }],
           actions: [
             { verb: "Clear Exception Conditions", kind: "processing" },
             { verb: "RC := 1", kind: "processing" },
@@ -244,7 +244,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_invoke_retransmission",
-          guard: "",
+          guard: [],
           actions: [
             { verb: "Backtrack", kind: "processing" },
             { verb: "X := V(s)", kind: "processing" },
@@ -255,7 +255,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
           notes: "",
           references: [],
           loops: [
-            { start: 3, length: 2, predicate: "not vs_eq_X", testAtEnd: true },
+            { start: 3, length: 2, predicate: { atom: "vs_eq_X", negate: true }, testAtEnd: true },
           ],
         },
       ],
@@ -267,7 +267,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_check_i_frame_acknowledged_yes_yes",
-          guard: "peer_receiver_busy and T1_running",
+          guard: [{ atom: "peer_receiver_busy", negate: false }, { atom: "T1_running", negate: false }],
           actions: [
             { verb: "V(a) := N(r)", kind: "processing" },
             { verb: "Stop T3", kind: "processing" },
@@ -278,7 +278,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_check_i_frame_acknowledged_yes_no",
-          guard: "peer_receiver_busy and not T1_running",
+          guard: [{ atom: "peer_receiver_busy", negate: false }, { atom: "T1_running", negate: true }],
           actions: [
             { verb: "V(a) := N(r)", kind: "processing" },
             { verb: "Stop T3", kind: "processing" },
@@ -290,7 +290,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t03_check_i_frame_acknowledged_no_yes",
-          guard: "not peer_receiver_busy and nr_eq_vs",
+          guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "nr_eq_vs", negate: false }],
           actions: [
             { verb: "V(a) := N(r)", kind: "processing" },
             { verb: "Stop T1", kind: "processing" },
@@ -303,7 +303,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t04_check_i_frame_acknowledged_no_no_yes",
-          guard: "not peer_receiver_busy and not nr_eq_vs and nr_eq_va",
+          guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "nr_eq_vs", negate: true }, { atom: "nr_eq_va", negate: false }],
           actions: [],
           notes: "",
           references: [],
@@ -311,7 +311,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t05_check_i_frame_acknowledged_no_no_no",
-          guard: "not peer_receiver_busy and not nr_eq_vs and not nr_eq_va",
+          guard: [{ atom: "peer_receiver_busy", negate: true }, { atom: "nr_eq_vs", negate: true }, { atom: "nr_eq_va", negate: true }],
           actions: [
             { verb: "V(a) := N(r)", kind: "processing" },
             { verb: "Start T1", kind: "processing" },
@@ -329,7 +329,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_clear_exception_conditions",
-          guard: "",
+          guard: [],
           actions: [
             { verb: "clear_peer_receiver_busy", kind: "processing" },
             { verb: "Clear Own Receiver Busy", kind: "processing" },
@@ -351,7 +351,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_n_r_error_recovery",
-          guard: "",
+          guard: [],
           actions: [
             { verb: "DL-ERROR Indication (J)", kind: "signal_upper" },
             { verb: "Establish_Data_Link", kind: "subroutine" },
@@ -370,7 +370,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_transmit_enquiry_no",
-          guard: "not own_receiver_busy",
+          guard: [{ atom: "own_receiver_busy", negate: true }],
           actions: [
             { verb: "P := 1", kind: "processing" },
             { verb: "N(r) := V(r)", kind: "processing" },
@@ -384,7 +384,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_transmit_enquiry_yes",
-          guard: "own_receiver_busy",
+          guard: [{ atom: "own_receiver_busy", negate: false }],
           actions: [
             { verb: "P := 1", kind: "processing" },
             { verb: "N(r) := V(r)", kind: "processing" },
@@ -405,7 +405,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
       paths: [
         {
           id: "t01_enquiry_response_yes_yes",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and own_receiver_busy",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: false }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "RNR Response", kind: "signal_lower" },
@@ -417,7 +417,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t02_enquiry_response_yes_no_yes_yes_yes",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "mod_8", negate: false }, { atom: "out_of_sequence_frames_in_receive_buffer", negate: false }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "DL-ERROR Indication (add)", kind: "signal_upper" },
@@ -431,7 +431,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t03_enquiry_response_yes_no_yes_yes_no",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "mod_8", negate: false }, { atom: "out_of_sequence_frames_in_receive_buffer", negate: true }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "DL-ERROR Indication (add)", kind: "signal_upper" },
@@ -444,7 +444,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t04_enquiry_response_yes_no_yes_no_yes",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "mod_8", negate: true }, { atom: "out_of_sequence_frames_in_receive_buffer", negate: false }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "SREJ", kind: "signal_lower" },
@@ -457,7 +457,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t05_enquiry_response_yes_no_yes_no_no",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "mod_8", negate: true }, { atom: "out_of_sequence_frames_in_receive_buffer", negate: true }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "RR Response", kind: "signal_lower" },
@@ -469,7 +469,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t06_enquiry_response_yes_no_no",
-          guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and not SREJ_enabled",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "SREJ_enabled", negate: true }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "RR Response", kind: "signal_lower" },
@@ -481,7 +481,7 @@ export const DataLinkSubroutines: SubroutinesPage = {
         },
         {
           id: "t07_enquiry_response_no",
-          guard: "not F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I",
+          guard: [{ atom: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I", negate: true }],
           actions: [
             { verb: "N(r) := V(r)", kind: "processing" },
             { verb: "RR Response", kind: "signal_lower" },

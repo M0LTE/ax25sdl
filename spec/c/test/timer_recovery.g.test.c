@@ -1212,7 +1212,7 @@ static int test_t20_lm_seize_confirm_yes(void) {
   ASSERT(t != NULL, "t20_lm_seize_confirm_yes not found");
   ASSERT_STREQ(t->on, "LM_SEIZE_confirm", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard, "ACK_pending", "guard");
+  ASSERT_STREQ(t->guard, "ack_pending", "guard");
   ASSERT(t->actions_len == 3, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Clear Acknowledge Pending",
                "actions[0].verb");
@@ -1237,7 +1237,7 @@ static int test_t20_lm_seize_confirm_no(void) {
   ASSERT(t != NULL, "t20_lm_seize_confirm_no not found");
   ASSERT_STREQ(t->on, "LM_SEIZE_confirm", "on");
   ASSERT_STREQ(t->next, "TimerRecovery", "next");
-  ASSERT_STREQ(t->guard, "not ACK_pending", "guard");
+  ASSERT_STREQ(t->guard, "not ack_pending", "guard");
   ASSERT(t->actions_len == 1, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "LM_release_request", "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[0].kind");
@@ -1277,7 +1277,8 @@ static int test_t21_t1_expiry_yes_yes_yes(void) {
   ASSERT(t != NULL, "t21_t1_expiry_yes_yes_yes not found");
   ASSERT_STREQ(t->on, "T1_expiry", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
-  ASSERT_STREQ(t->guard, "RC_eq_N2 and vs_eq_va and peer_busy", "guard");
+  ASSERT_STREQ(t->guard, "RC_eq_N2 and vs_eq_va and peer_receiver_busy",
+               "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (U)",
                "actions[0].verb");
@@ -1304,7 +1305,8 @@ static int test_t21_t1_expiry_yes_yes_no(void) {
   ASSERT(t != NULL, "t21_t1_expiry_yes_yes_no not found");
   ASSERT_STREQ(t->on, "T1_expiry", "on");
   ASSERT_STREQ(t->next, "Disconnected", "next");
-  ASSERT_STREQ(t->guard, "RC_eq_N2 and vs_eq_va and not peer_busy", "guard");
+  ASSERT_STREQ(t->guard, "RC_eq_N2 and vs_eq_va and not peer_receiver_busy",
+               "guard");
   ASSERT(t->actions_len == 4, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "DL-ERROR Indication (T)",
                "actions[0].verb");
@@ -1434,7 +1436,7 @@ static int test_t22_i_received_yes_yes_yes_yes_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and own_receive_busy and P_eq_1",
+      "va_le_nr_le_vs and own_receiver_busy and P_eq_1",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1470,7 +1472,7 @@ static int test_t22_i_received_yes_yes_yes_yes_no(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+      "va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
       "guard");
   ASSERT(t->actions_len == 2, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1497,7 +1499,7 @@ static int test_t22_i_received_yes_yes_yes_no_yes_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1",
+      "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
       "guard");
   ASSERT(t->actions_len == 12, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1546,8 +1548,8 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_no(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
-      "not ack_pending",
+      "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 "
+      "and not ack_pending",
       "guard");
   ASSERT(t->actions_len == 10, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1592,8 +1594,8 @@ static int test_t22_i_received_yes_yes_yes_no_yes_no_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and "
-      "ack_pending",
+      "va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 "
+      "and ack_pending",
       "guard");
   ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "Check_I_Frame_Acknowledged",
@@ -1633,7 +1635,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_yes_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
       "reject_exception and P_eq_1",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");
@@ -1670,7 +1672,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_yes_no(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
       "reject_exception and not P_eq_1",
       "guard");
   ASSERT(t->actions_len == 2, "actions count");
@@ -1698,7 +1700,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_no(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and not SREJ_enabled",
       "guard");
   ASSERT(t->actions_len == 7, "actions count");
@@ -1737,7 +1739,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_yes_no_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
       "ns_gt_vr_plus_1",
       "guard");
@@ -1780,7 +1782,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_yes_no_no(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and SREJ_enabled and not sreject_exception_gt_0 and "
       "not ns_gt_vr_plus_1",
       "guard");
@@ -1817,7 +1819,7 @@ static int test_t22_i_received_yes_yes_yes_no_no_no_yes_yes(void) {
   ASSERT_STREQ(
       t->guard,
       "command and info_field_length_le_N1_and_content_is_octet_aligned and "
-      "va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not "
+      "va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not "
       "reject_exception and SREJ_enabled and sreject_exception_gt_0",
       "guard");
   ASSERT(t->actions_len == 6, "actions count");

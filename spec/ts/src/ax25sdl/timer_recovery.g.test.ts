@@ -49,7 +49,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("peer_receiver_busy");
+    expect(t.guard).toEqual([{ atom: "peer_receiver_busy", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("Push I Frame on I Queue");
     expect(t.actions[0].kind).toBe("internal_out");
@@ -61,7 +61,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not peer_receiver_busy and vs_eq_va_plus_k");
+    expect(t.guard).toEqual([{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("Push I Frame on I Queue");
     expect(t.actions[0].kind).toBe("internal_out");
@@ -73,7 +73,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_plus_k and T1_running");
+    expect(t.guard).toEqual([{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: true }, { atom: "T1_running", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
@@ -95,7 +95,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_frame_pops_off_queue");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running");
+    expect(t.guard).toEqual([{ atom: "peer_receiver_busy", negate: true }, { atom: "vs_eq_va_plus_k", negate: true }, { atom: "T1_running", negate: true }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("N(s) := V(s)");
     expect(t.actions[0].kind).toBe("processing");
@@ -132,7 +132,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("DL_FLOW_OFF_request");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("own_receiver_busy");
+    expect(t.guard).toEqual([{ atom: "own_receiver_busy", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("Set Own Receiver Busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -148,7 +148,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("DL_FLOW_OFF_request");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not own_receiver_busy");
+    expect(t.guard).toEqual([{ atom: "own_receiver_busy", negate: true }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -158,7 +158,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("DL_FLOW_ON_request");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("own_receiver_busy and not T1_running");
+    expect(t.guard).toEqual([{ atom: "own_receiver_busy", negate: false }, { atom: "T1_running", negate: true }]);
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("Clear Own Receiver Busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -178,7 +178,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("DL_FLOW_ON_request");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("own_receiver_busy and T1_running");
+    expect(t.guard).toEqual([{ atom: "own_receiver_busy", negate: false }, { atom: "T1_running", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("Clear Own Receiver Busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -194,7 +194,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("DL_FLOW_ON_request");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not own_receiver_busy");
+    expect(t.guard).toEqual([{ atom: "own_receiver_busy", negate: true }]);
     expect(t.actions).toHaveLength(0);
   });
 
@@ -304,7 +304,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -338,7 +338,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "vs_eq_va", negate: false }]);
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -358,7 +358,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -392,7 +392,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "vs_eq_va", negate: false }]);
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -429,7 +429,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -443,7 +443,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -476,7 +476,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -492,7 +492,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -508,7 +508,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -524,7 +524,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -538,7 +538,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -552,7 +552,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -570,7 +570,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -588,7 +588,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -614,7 +614,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RR_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -636,7 +636,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -652,7 +652,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -668,7 +668,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -684,7 +684,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -698,7 +698,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -712,7 +712,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -730,7 +730,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -748,7 +748,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -774,7 +774,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("RNR_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("set_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -796,7 +796,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("LM_SEIZE_confirm");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("ACK_pending");
+    expect(t.guard).toEqual([{ atom: "ack_pending", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("Clear Acknowledge Pending");
     expect(t.actions[0].kind).toBe("processing");
@@ -812,7 +812,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("LM_SEIZE_confirm");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not ACK_pending");
+    expect(t.guard).toEqual([{ atom: "ack_pending", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("LM_release_request");
     expect(t.actions[0].kind).toBe("signal_lower");
@@ -824,7 +824,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not RC_eq_N2");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("Transmit Enquiry");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -838,7 +838,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("RC_eq_N2 and vs_eq_va and peer_busy");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: false }, { atom: "vs_eq_va", negate: false }, { atom: "peer_receiver_busy", negate: false }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (U)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -856,7 +856,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("RC_eq_N2 and vs_eq_va and not peer_busy");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: false }, { atom: "vs_eq_va", negate: false }, { atom: "peer_receiver_busy", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (T)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -874,7 +874,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("T1_expiry");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("RC_eq_N2 and not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "RC_eq_N2", negate: false }, { atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (I)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -892,7 +892,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("not command");
+    expect(t.guard).toEqual([{ atom: "command", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -906,7 +906,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("command and not info_field_length_le_N1_and_content_is_octet_aligned");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: true }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("DL-ERROR Indication (O)");
     expect(t.actions[0].kind).toBe("signal_upper");
@@ -922,7 +922,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("N(r) Recovery");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -934,7 +934,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and P_eq_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: false }, { atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -956,7 +956,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receive_busy and not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: false }, { atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -970,7 +970,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and P_eq_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1004,7 +1004,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "ack_pending", negate: true }]);
     expect(t.actions).toHaveLength(10);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1034,7 +1034,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "ack_pending", negate: false }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1060,7 +1060,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and P_eq_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: false }, { atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1082,7 +1082,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: false }, { atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1096,7 +1096,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: true }]);
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1120,7 +1120,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: true }, { atom: "ns_gt_vr_plus_1", negate: false }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1146,7 +1146,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: true }, { atom: "ns_gt_vr_plus_1", negate: true }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1168,7 +1168,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("I_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+    expect(t.guard).toEqual([{ atom: "command", negate: false }, { atom: "info_field_length_le_N1_and_content_is_octet_aligned", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "own_receiver_busy", negate: true }, { atom: "ns_eq_vr", negate: true }, { atom: "reject_exception", negate: true }, { atom: "SREJ_enabled", negate: false }, { atom: "sreject_exception_gt_0", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -1190,7 +1190,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1206,7 +1206,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1230,7 +1230,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1246,7 +1246,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1262,7 +1262,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1276,7 +1276,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1298,7 +1298,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1312,7 +1312,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: true }, { atom: "command_and_P_eq_1", negate: true }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1326,7 +1326,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1344,7 +1344,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1362,7 +1362,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1384,7 +1384,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("REJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response_and_F_eq_1", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1410,7 +1410,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1426,7 +1426,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1444,7 +1444,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "vs_eq_va", negate: false }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1456,7 +1456,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1470,7 +1470,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("not response and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1484,7 +1484,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("not response and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1498,7 +1498,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingConnection");
-    expect(t.guard).toBe("response and not va_le_nr_le_vs and not version_2_2");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: true }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1516,7 +1516,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("AwaitingV22Connection");
-    expect(t.guard).toBe("response and not va_le_nr_le_vs and version_2_2");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: true }, { atom: "version_2_2", negate: false }]);
     expect(t.actions).toHaveLength(4);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1534,7 +1534,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: false }, { atom: "vs_eq_nr", negate: false }]);
     expect(t.actions).toHaveLength(7);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1558,7 +1558,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: false }, { atom: "vs_eq_nr", negate: true }]);
     expect(t.actions).toHaveLength(11);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1590,7 +1590,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: true }, { atom: "vs_eq_va", negate: false }]);
     expect(t.actions).toHaveLength(5);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
@@ -1610,7 +1610,7 @@ describe("DataLinkTimerRecovery", () => {
     if (!t) return;
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
-    expect(t.guard).toBe("response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va");
+    expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: true }, { atom: "vs_eq_va", negate: true }]);
     expect(t.actions).toHaveLength(9);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");

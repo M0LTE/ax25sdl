@@ -1425,7 +1425,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t20_lm_seize_confirm_yes",
         .from = "TimerRecovery",
         .on = "LM_SEIZE_confirm",
-        .guard = "ACK_pending",
+        .guard = "ack_pending",
         .actions = data_link_timer_recovery_t20_lm_seize_confirm_yes_actions,
         .actions_len = 3,
         .next = "TimerRecovery",
@@ -1439,7 +1439,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t20_lm_seize_confirm_no",
         .from = "TimerRecovery",
         .on = "LM_SEIZE_confirm",
-        .guard = "not ACK_pending",
+        .guard = "not ack_pending",
         .actions = data_link_timer_recovery_t20_lm_seize_confirm_no_actions,
         .actions_len = 1,
         .next = "TimerRecovery",
@@ -1467,7 +1467,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t21_t1_expiry_yes_yes_yes",
         .from = "TimerRecovery",
         .on = "T1_expiry",
-        .guard = "RC_eq_N2 and vs_eq_va and peer_busy",
+        .guard = "RC_eq_N2 and vs_eq_va and peer_receiver_busy",
         .actions = data_link_timer_recovery_t21_t1_expiry_yes_yes_yes_actions,
         .actions_len = 4,
         .next = "Disconnected",
@@ -1481,7 +1481,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .id = "t21_t1_expiry_yes_yes_no",
         .from = "TimerRecovery",
         .on = "T1_expiry",
-        .guard = "RC_eq_N2 and vs_eq_va and not peer_busy",
+        .guard = "RC_eq_N2 and vs_eq_va and not peer_receiver_busy",
         .actions = data_link_timer_recovery_t21_t1_expiry_yes_yes_no_actions,
         .actions_len = 4,
         .next = "Disconnected",
@@ -1556,7 +1556,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and own_receive_busy and P_eq_1",
+            "and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_yes_yes_actions,
         .actions_len = 6,
@@ -1573,7 +1573,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and own_receive_busy and not P_eq_1",
+            "and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_yes_no_actions,
         .actions_len = 2,
@@ -1590,7 +1590,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and "
             "P_eq_1",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_yes_actions,
@@ -1609,7 +1609,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not "
             "P_eq_1 and not ack_pending",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_no_actions,
@@ -1628,7 +1628,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and ns_eq_vr and not "
+            "and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not "
             "P_eq_1 and ack_pending",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_yes_no_yes_actions,
@@ -1647,7 +1647,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "reject_exception and P_eq_1",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_no_yes_yes_actions,
@@ -1665,7 +1665,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "reject_exception and not P_eq_1",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_no_yes_no_actions,
@@ -1683,7 +1683,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "not reject_exception and not SREJ_enabled",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_no_no_no_actions,
@@ -1701,7 +1701,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "not reject_exception and SREJ_enabled and not "
             "sreject_exception_gt_0 and ns_gt_vr_plus_1",
         .actions =
@@ -1720,7 +1720,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "not reject_exception and SREJ_enabled and not "
             "sreject_exception_gt_0 and not ns_gt_vr_plus_1",
         .actions =
@@ -1739,7 +1739,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .on = "I_received",
         .guard =
             "command and info_field_length_le_N1_and_content_is_octet_aligned "
-            "and va_le_nr_le_vs and not own_receive_busy and not ns_eq_vr and "
+            "and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and "
             "not reject_exception and SREJ_enabled and sreject_exception_gt_0",
         .actions =
             data_link_timer_recovery_t22_i_received_yes_yes_yes_no_no_no_yes_yes_actions,

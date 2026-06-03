@@ -135,7 +135,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("not P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: true }]);
     expect(t.actions).toHaveLength(1);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -147,7 +147,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("UI_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("P_eq_1");
+    expect(t.guard).toEqual([{ atom: "P_eq_1", negate: false }]);
     expect(t.actions).toHaveLength(3);
     expect(t.actions[0].verb).toBe("UI Check");
     expect(t.actions[0].kind).toBe("subroutine");
@@ -176,7 +176,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("not able_to_establish");
+    expect(t.guard).toEqual([{ atom: "able_to_establish", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -190,7 +190,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("SABM_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("able_to_establish");
+    expect(t.guard).toEqual([{ atom: "able_to_establish", negate: false }]);
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -224,7 +224,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Disconnected");
-    expect(t.guard).toBe("not able_to_establish");
+    expect(t.guard).toEqual([{ atom: "able_to_establish", negate: true }]);
     expect(t.actions).toHaveLength(2);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");
@@ -238,7 +238,7 @@ describe("DataLinkDisconnected", () => {
     if (!t) return;
     expect(t.on).toBe("SABME_received");
     expect(t.next).toBe("Connected");
-    expect(t.guard).toBe("able_to_establish");
+    expect(t.guard).toEqual([{ atom: "able_to_establish", negate: false }]);
     expect(t.actions).toHaveLength(12);
     expect(t.actions[0].verb).toBe("F := P");
     expect(t.actions[0].kind).toBe("processing");

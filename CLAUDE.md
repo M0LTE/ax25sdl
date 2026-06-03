@@ -13,6 +13,7 @@ Extracted from `m0lte/packet.net` on 2026-05-17 to give the spec its own release
 - [`docs/sdl-primer.md`](docs/sdl-primer.md) — SDL shape reference. Mandatory before touching `/spec-sdl/`.
 - [`docs/sdl-transcription-runbook.md`](docs/sdl-transcription-runbook.md) — end-to-end per-figure workflow (graphml → transcription PR → validation PR). Read this when starting a new SDL page.
 - [`docs/sdl-verb-catalogue.md`](docs/sdl-verb-catalogue.md) — how `spec-sdl/actions.yaml` normalises figure-verbatim action spellings to canonical verbs at codegen time.
+- [`docs/sdl-guard-and-event-catalogue.md`](docs/sdl-guard-and-event-catalogue.md) — the guard/event counterpart: `spec-sdl/predicates.yaml` → typed `Ax25Guard`, and `spec-sdl/events.yaml` → typed `Ax25Event`.
 - [`docs/adr/0001-sdl-dsl.md`](docs/adr/0001-sdl-dsl.md) — why the SDL YAML DSL + codegen exists.
 
 ## Hard rules

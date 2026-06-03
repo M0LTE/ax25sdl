@@ -27,6 +27,23 @@ export type ActionKind =
 export type { Ax25ActionVerb } from "./ax25-action-verb.g.js";
 import type { Ax25ActionVerb } from "./ax25-action-verb.g.js";
 
+// The closed set of canonical guard atoms (generated from spec-sdl/predicates.yaml).
+export type { Ax25Guard } from "./ax25-guard.g.js";
+import type { Ax25Guard } from "./ax25-guard.g.js";
+
+/**
+ * One conjunct of a guard: a typed Ax25Guard atom plus whether it is
+ * negated. A guard holds when every term holds; an empty guard array
+ * means the transition is unguarded (always fires). Carrying the atom as
+ * the generated Ax25Guard union member (not a raw string) lets a guard
+ * evaluator bind every atom exhaustively — a renamed or typo'd atom is a
+ * compile error, not an unbound-identifier throw at runtime.
+ */
+export interface GuardTerm {
+  readonly atom: Ax25Guard;
+  readonly negate: boolean;
+}
+
 /** Identifies which figure of which specification a page was transcribed from. */
 export interface SdlSource {
   readonly spec: string;
@@ -49,14 +66,15 @@ export interface ActionStep {
  * Records a loop_while construct as a slice over the flat actions
  * list. start/length describe the body; predicate is the continue
  * condition (already negated where the figure's continuing edge is the
- * decision's No branch). testAtEnd selects the loop topology: false =
- * test-at-head (while; body may run zero times), true = test-at-tail
- * (do-while; body runs at least once).
+ * decision's No branch — the negation is carried by the GuardTerm).
+ * testAtEnd selects the loop topology: false = test-at-head (while; body
+ * may run zero times), true = test-at-tail (do-while; body runs at least
+ * once).
  */
 export interface LoopRange {
   readonly start: number;
   readonly length: number;
-  readonly predicate: string;
+  readonly predicate: GuardTerm;
   readonly testAtEnd: boolean;
 }
 
@@ -82,8 +100,8 @@ export interface TransitionSpec {
   readonly id: string;
   readonly from: string;
   readonly on: string;
-  /** Empty when unguarded. */
-  readonly guard: string;
+  /** Conjunction of guard terms; empty when unguarded. */
+  readonly guard: readonly GuardTerm[];
   readonly actions: readonly ActionStep[];
   readonly next: string;
   readonly notes: string;
@@ -97,7 +115,8 @@ export interface TransitionSpec {
  */
 export interface SubroutinePath {
   readonly id: string;
-  readonly guard: string;
+  /** Conjunction of guard terms; empty when unguarded. */
+  readonly guard: readonly GuardTerm[];
   readonly actions: readonly ActionStep[];
   readonly notes: string;
   readonly references: readonly ImplementationReference[];

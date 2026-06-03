@@ -127,7 +127,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_no");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("not P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) });
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
@@ -138,7 +138,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_yes");
         t.On.Should().Be("UI_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("P_eq_1");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) });
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICheck);
         t.Actions[0].Kind.Should().Be(ActionKind.Subroutine);
@@ -165,7 +165,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_no");
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("not able_to_establish");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -178,7 +178,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_yes");
         t.On.Should().Be("SABM_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("able_to_establish");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) });
         t.Actions.Count.Should().Be(12);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -211,7 +211,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_no");
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Disconnected");
-        t.Guard.Should().Be("not able_to_establish");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) });
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
@@ -224,7 +224,7 @@ public class DataLink_Disconnected_GeneratedTests
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_yes");
         t.On.Should().Be("SABME_received");
         t.Next.Should().Be("Connected");
-        t.Guard.Should().Be("able_to_establish");
+        t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) });
         t.Actions.Count.Should().Be(12);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);

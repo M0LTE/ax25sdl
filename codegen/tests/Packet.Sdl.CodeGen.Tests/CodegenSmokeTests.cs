@@ -203,9 +203,10 @@ public class CodegenSmokeTests
         // Action retrieve_one (after the implicit decision skipping the
         // gate which doesn't appear in Actions), [1] deliver_one,
         // [2] cleanup. The loop range covers indices 0..1 (length 2).
-        // 4-arg form: default branch (Yes) keeps the predicate un-negated;
-        // default test position (head/while) ⇒ TestAtEnd = false.
-        gen.Should().Contain("new LoopRange(0, 2, \"more_available\", false)");
+        // 4-arg form: the predicate is a typed GuardTerm (default branch
+        // Yes keeps it un-negated; the atom is the generated Ax25Guard
+        // member); default test position (head/while) ⇒ TestAtEnd = false.
+        gen.Should().Contain("new LoopRange(0, 2, new GuardTerm(Ax25Guard.MoreAvailable, false), false)");
     }
 
     [Fact]
@@ -437,6 +438,153 @@ public class CodegenSmokeTests
         result.ExitCode.Should().NotBe(0);
         result.Stderr.Should().Contain("not_pinned_anywhere");
         result.Stderr.Should().Contain("pinned_refs");
+    }
+
+    // ─── predicates.yaml catalog + typed Ax25Guard emission ──────────────
+
+    [Fact]
+    public void Predicate_alias_is_canonicalised_and_emitted_as_typed_guard()
+    {
+        // The guard analogue of the actions.yaml alias collapse: a YAML
+        // decision spells the predicate one way (`peer_busy`); the catalog
+        // canonicalises it (`peer_receiver_busy`) and the generated guard
+        // carries the typed Ax25Guard member, never the alias spelling.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePredicatesCatalog("""
+            flags:
+              - name: peer_receiver_busy
+                aliases:
+                  - peer_busy
+            """);
+        r.WritePage("data-link/connected.sdl.yaml", """
+            machine: data_link
+            state: Connected
+            coverage: partial
+            source: { spec: test, figure: f }
+            decisions:
+              - id: peer_busy_q
+                question: "Peer busy?"
+                predicate: peer_busy
+            transitions:
+              - id: t01_yes
+                on: I_received
+                path:
+                  - { decision: peer_busy_q, branch: "Yes" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+              - id: t02_no
+                on: I_received
+                path:
+                  - { decision: peer_busy_q, branch: "No" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+            """);
+
+        var result = r.Run();
+
+        result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
+
+        // The generated Ax25Guard closed set carries the canonical atom.
+        var guardEnum = r.ReadGenerated("Ax25Guard.g.cs");
+        guardEnum.Should().Contain("public enum Ax25Guard");
+        guardEnum.Should().Contain("PeerReceiverBusy");
+
+        // The transition guard is the typed (atom, negate) form; the alias
+        // spelling `peer_busy` never appears anywhere in the output.
+        var gen = r.ReadGenerated("DataLink_Connected.g.cs");
+        gen.Should().Contain("new GuardTerm(Ax25Guard.PeerReceiverBusy, false)");
+        gen.Should().Contain("new GuardTerm(Ax25Guard.PeerReceiverBusy, true)");
+        gen.Should().NotContain("peer_busy");
+        gen.Should().NotContain("\"peer_receiver_busy\"");
+    }
+
+    [Fact]
+    public void Predicate_not_in_catalog_is_rejected()
+    {
+        // Catalog-completeness lint (the guard analogue of validating verbs
+        // against actions.yaml): once a predicates.yaml is present, a
+        // decision predicate that isn't a canonical (or alias) is an error.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePredicatesCatalog("""
+            flags:
+              - name: peer_receiver_busy
+            """);
+        r.WritePage("data-link/connected.sdl.yaml", """
+            machine: data_link
+            state: Connected
+            coverage: partial
+            source: { spec: test, figure: f }
+            decisions:
+              - id: q
+                question: "Mystery?"
+                predicate: not_in_the_catalog
+            transitions:
+              - id: t01_yes
+                on: I_received
+                path:
+                  - { decision: q, branch: "Yes" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+              - id: t02_no
+                on: I_received
+                path:
+                  - { decision: q, branch: "No" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+            """);
+
+        var result = r.Run();
+
+        result.ExitCode.Should().NotBe(0);
+        result.Stderr.Should().Contain("not_in_the_catalog");
+        result.Stderr.Should().Contain("predicates.yaml");
+    }
+
+    [Fact]
+    public void Unused_predicate_alias_is_rejected()
+    {
+        // The guard analogue of the unused-action-alias lint: a declared
+        // alias no YAML decision references is dead weight.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePredicatesCatalog("""
+            flags:
+              - name: peer_receiver_busy
+                aliases:
+                  - peer_busy
+                  - never_referenced_alias
+            """);
+        r.WritePage("data-link/connected.sdl.yaml", """
+            machine: data_link
+            state: Connected
+            coverage: partial
+            source: { spec: test, figure: f }
+            decisions:
+              - id: q
+                question: "Peer busy?"
+                predicate: peer_busy
+            transitions:
+              - id: t01_yes
+                on: I_received
+                path:
+                  - { decision: q, branch: "Yes" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+              - id: t02_no
+                on: I_received
+                path:
+                  - { decision: q, branch: "No" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+            """);
+
+        var result = r.Run();
+
+        result.ExitCode.Should().NotBe(0);
+        result.Stderr.Should().Contain("never_referenced_alias");
+        result.Stderr.Should().Contain("predicates.yaml");
     }
 
     // ─── lint-targets.yaml behaviour ─────────────────────────────────────

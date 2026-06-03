@@ -82,6 +82,52 @@ public static class Validation
         }
     }
 
+    /// <summary>
+    /// Walks a page's decisions and substitutes every alias-spelling
+    /// predicate atom with its canonical name. No-op when the catalog is
+    /// empty (passthrough mode — no predicates.yaml present). Must run
+    /// before validation / lints / resolution so they all observe the
+    /// canonical atom (e.g. the guard-overlap disjointness lint compares
+    /// atoms literally). The guard analogue of <see cref="NormaliseActionVerbs"/>.
+    /// </summary>
+    /// <remarks>
+    /// A decision <c>predicate:</c> is a single atom, so unlike the action
+    /// path-step walk there are no nested bodies to recurse into and no
+    /// boolean operators to skip — the whole field is one catalog lookup.
+    /// </remarks>
+    public static void NormaliseDecisionPredicates(SdlPage page, PredicateCatalog catalog, List<string> errors)
+    {
+        if (catalog.CanonicalLookup.Count == 0) return;
+        foreach (var d in page.Decisions)
+        {
+            NormaliseDecisionPredicate(d, catalog);
+        }
+    }
+
+    /// <summary>Alias-normalisation for subroutine-page decisions. Same semantics as <see cref="NormaliseDecisionPredicates"/>.</summary>
+    public static void NormaliseSubroutineDecisionPredicates(SubroutinePage page, PredicateCatalog catalog, List<string> errors)
+    {
+        if (catalog.CanonicalLookup.Count == 0) return;
+        foreach (var sub in page.Subroutines)
+        {
+            foreach (var d in sub.Decisions)
+            {
+                NormaliseDecisionPredicate(d, catalog);
+            }
+        }
+    }
+
+    private static void NormaliseDecisionPredicate(SdlDecision d, PredicateCatalog catalog)
+    {
+        if (string.IsNullOrWhiteSpace(d.Predicate)) return;
+        if (!catalog.CanonicalLookup.TryGetValue(d.Predicate, out var canonical)) return;
+        if (!string.Equals(d.Predicate, canonical, StringComparison.Ordinal))
+        {
+            catalog.SeenAliases.Add(d.Predicate);
+        }
+        d.Predicate = canonical;
+    }
+
     // ─── Page validation ──────────────────────────────────────────────
 
     /// <summary>
