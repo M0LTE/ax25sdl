@@ -19,7 +19,7 @@ public class ManagementDataLink_Ready_GeneratedTests
     [Fact] public void t01_mdl_negotiate_request()
     {
         var t = ManagementDataLink_Ready.Transitions.Single(x => x.Id == "t01_mdl_negotiate_request");
-        t.On.Should().Be("MDL_NEGOTIATE_request");
+        t.On.Should().Be(Ax25Event.MDLNEGOTIATERequest);
         t.Next.Should().Be("Negotiating");
         t.Actions.Count.Should().Be(3);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.RCAssign0);
@@ -33,7 +33,7 @@ public class ManagementDataLink_Ready_GeneratedTests
     [Fact] public void t02_xid_response_received()
     {
         var t = ManagementDataLink_Ready.Transitions.Single(x => x.Id == "t02_xid_response_received");
-        t.On.Should().Be("XID_response_received");
+        t.On.Should().Be(Ax25Event.XIDResponseReceived);
         t.Next.Should().Be("Ready");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.MDLERRORIndicateB);

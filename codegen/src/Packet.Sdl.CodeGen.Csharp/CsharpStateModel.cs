@@ -44,6 +44,7 @@ public sealed class CsharpTransitionModel
 {
     public string Id { get; init; } = "";
     public string On { get; init; } = "";
+    public string OnEnum { get; init; } = "";
     public string OnLabel { get; init; } = "";
     public string OnLabelLiteral { get; init; } = "null";
     public string? Guard { get; init; }
@@ -66,6 +67,7 @@ public sealed class CsharpTransitionModel
     {
         Id                   = t.Id,
         On                   = t.On,
+        OnEnum               = CsharpEmitter.EventEnumLiteral(t.On),
         OnLabel              = t.OnLabel,
         OnLabelLiteral       = string.IsNullOrEmpty(t.OnLabel) ? "null" : CsharpEmitter.CSharpStringLiteral(t.OnLabel),
         Guard                = t.Guard,

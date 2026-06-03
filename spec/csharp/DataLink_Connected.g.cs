@@ -21,7 +21,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t01_dl_disconnect_request",
             From: "Connected",
-            On: "DL_DISCONNECT_request",
+            On: Ax25Event.DLDISCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DISCPEq1, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "AwaitingRelease",
@@ -33,7 +33,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t02_dl_data_request",
             From: "Connected",
-            On: "DL_DATA_request",
+            On: Ax25Event.DLDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushOnIFrameQueueNoteWordOrder, ActionKind.InternalOut) },
             Next: "Connected",
@@ -45,7 +45,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_yes",
             From: "Connected",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushOnIFrameQueue, ActionKind.InternalOut) },
             Next: "Connected",
@@ -57,7 +57,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_yes",
             From: "Connected",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushOnIFrameQueue, ActionKind.InternalOut) },
             Next: "Connected",
@@ -69,7 +69,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_no",
             From: "Connected",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, true), new GuardTerm(Ax25Guard.T1Running, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NSAssignVS, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.PAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ICommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.VSAssignVSPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "Connected",
@@ -81,7 +81,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_yes",
             From: "Connected",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, true), new GuardTerm(Ax25Guard.T1Running, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NSAssignVS, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.PAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ICommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.VSAssignVSPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -93,7 +93,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t04_dl_unit_data_request",
             From: "Connected",
-            On: "DL_UNIT_DATA_request",
+            On: Ax25Event.DLUNITDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICommand, ActionKind.SignalLower) },
             Next: "Connected",
@@ -105,7 +105,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t05_dl_flow_off_request_yes",
             From: "Connected",
-            On: "DL_FLOW_OFF_request",
+            On: Ax25Event.DLFLOWOFFRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RNRResponse, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -117,7 +117,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t05_dl_flow_off_request_no",
             From: "Connected",
-            On: "DL_FLOW_OFF_request",
+            On: Ax25Event.DLFLOWOFFRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, true) },
             Actions: new ActionStep[] {  },
             Next: "Connected",
@@ -129,7 +129,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_no",
             From: "Connected",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, true) },
             Actions: new ActionStep[] {  },
             Next: "Connected",
@@ -141,7 +141,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_yes_yes",
             From: "Connected",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.T1Running, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RRCommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -153,7 +153,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_yes_no",
             From: "Connected",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.T1Running, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RRCommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "Connected",
@@ -165,7 +165,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t07_dl_connect_request_no",
             From: "Connected",
-            On: "DL_CONNECT_request",
+            On: Ax25Event.DLCONNECTRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -177,7 +177,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t07_dl_connect_request_yes",
             From: "Connected",
-            On: "DL_CONNECT_request",
+            On: Ax25Event.DLCONNECTRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -189,7 +189,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t08_all_other_primitives__from_upper_layer",
             From: "Connected",
-            On: "all_other_primitives__from_upper_layer",
+            On: Ax25Event.AllOtherPrimitivesFromUpperLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "Connected",
@@ -201,7 +201,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t09_control_field_error_no",
             From: "Connected",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -213,7 +213,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t09_control_field_error_yes",
             From: "Connected",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -225,7 +225,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t10_info_not_permitted_in_frame_no",
             From: "Connected",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -237,7 +237,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t10_info_not_permitted_in_frame_yes",
             From: "Connected",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -249,7 +249,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t11_u_or_s_frame_length_error_no",
             From: "Connected",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -261,7 +261,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t11_u_or_s_frame_length_error_yes",
             From: "Connected",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -273,7 +273,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t12_t1_expiry",
             From: "Connected",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.TransmitEnquery, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -285,7 +285,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t13_t3_expiry",
             From: "Connected",
-            On: "T3_expiry",
+            On: Ax25Event.T3Expiry,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.TransmitEnquery, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -297,7 +297,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t14_sabm_received_yes",
             From: "Connected",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -309,7 +309,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t14_sabm_received_no",
             From: "Connected",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -321,7 +321,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t15_sabme_received_yes",
             From: "Connected",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion22, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -333,7 +333,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t15_sabme_received_no",
             From: "Connected",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion22, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -345,7 +345,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t16_frmr_received_no",
             From: "Connected",
-            On: "FRMR_received",
+            On: Ax25Event.FRMRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationK, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -357,7 +357,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t16_frmr_received_yes",
             From: "Connected",
-            On: "FRMR_received",
+            On: Ax25Event.FRMRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationK, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -369,7 +369,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t17_ua_received_no",
             From: "Connected",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationK, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -381,7 +381,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t17_ua_received_yes",
             From: "Connected",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationK, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -393,7 +393,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t18_ui_received_yes",
             From: "Connected",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine) },
             Next: "Connected",
@@ -405,7 +405,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t18_ui_received_no",
             From: "Connected",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine) },
             Next: "Connected",
@@ -417,7 +417,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t19_disc_received",
             From: "Connected",
-            On: "DISC_received",
+            On: Ax25Event.DISCReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "Disconnected",
@@ -429,7 +429,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t20_dm_received",
             From: "Connected",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationE, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing) },
             Next: "Disconnected",
@@ -441,7 +441,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t21_rr_received_yes",
             From: "Connected",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine) },
             Next: "Connected",
@@ -453,7 +453,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t21_rr_received_no_no",
             From: "Connected",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -465,7 +465,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t21_rr_received_no_yes",
             From: "Connected",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -477,7 +477,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t22_rnr_received_yes",
             From: "Connected",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine) },
             Next: "Connected",
@@ -489,7 +489,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t22_rnr_received_no_no",
             From: "Connected",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -501,7 +501,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t22_rnr_received_no_yes",
             From: "Connected",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -513,7 +513,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t23_lm_seize_confirm_yes",
             From: "Connected",
-            On: "LM_SEIZE_confirm",
+            On: Ax25Event.LMSEIZEConfirm,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AckPending, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseFEq0, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.LMReleaseRequest, ActionKind.SignalLower) },
             Next: "Connected",
@@ -525,7 +525,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t23_lm_seize_confirm_no",
             From: "Connected",
-            On: "LM_SEIZE_confirm",
+            On: Ax25Event.LMSEIZEConfirm,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AckPending, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.LMReleaseRequest, ActionKind.SignalLower) },
             Next: "Connected",
@@ -537,7 +537,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t24_srej_received_yes_yes",
             From: "Connected",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.POrFEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.PushOldIFrameNROnQueue, ActionKind.InternalOut), new ActionStep(Ax25ActionVerb.LMDataRequest, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -549,7 +549,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t24_srej_received_yes_no",
             From: "Connected",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.POrFEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.PushOldIFrameNROnQueue, ActionKind.InternalOut), new ActionStep(Ax25ActionVerb.LMDataRequest, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -561,7 +561,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t24_srej_received_no_no",
             From: "Connected",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -573,7 +573,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t24_srej_received_no_yes",
             From: "Connected",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -585,7 +585,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t25_rej_received_no_no",
             From: "Connected",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -597,7 +597,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t25_rej_received_no_yes",
             From: "Connected",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -609,7 +609,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t25_rej_received_yes",
             From: "Connected",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckNeedForResponse, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine) },
             Next: "Connected",
@@ -621,7 +621,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_no_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationO, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -633,7 +633,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_no_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationO, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -645,7 +645,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_no_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -657,7 +657,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_no_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NRErrorRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -669,7 +669,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_yes_no_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.AckPending, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.LMSeizeRequest, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -681,7 +681,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_yes_no_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.AckPending, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing) },
             Next: "Connected",
@@ -693,7 +693,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_yes_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -705,7 +705,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_yes_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -717,7 +717,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_yes_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, false), new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing) },
             Next: "Connected",
@@ -729,7 +729,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_no_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.REJ, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -741,7 +741,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_no_yes_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignNS, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.IncrementSrejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SREJ, ActionKind.SignalLower) },
             Next: "Connected",
@@ -753,7 +753,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, true), new GuardTerm(Ax25Guard.NsGtVrPlus1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.REJ, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -765,7 +765,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_no_no_no_yes_no_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, true), new GuardTerm(Ax25Guard.NsGtVrPlus1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.IncrementSrejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SREJ, ActionKind.SignalLower) },
             Next: "Connected",
@@ -777,7 +777,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_yes_yes",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "Connected",
@@ -789,7 +789,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_yes_yes_yes_yes_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing) },
             Next: "Connected",
@@ -801,7 +801,7 @@ public static class DataLink_Connected
         new TransitionSpec(
             Id: "t26_i_received_no",
             From: "Connected",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationO, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrame, ActionKind.Processing) },
             Next: "Connected",

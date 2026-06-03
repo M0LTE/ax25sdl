@@ -31,6 +31,10 @@ import type { Ax25ActionVerb } from "./ax25-action-verb.g.js";
 export type { Ax25Guard } from "./ax25-guard.g.js";
 import type { Ax25Guard } from "./ax25-guard.g.js";
 
+// The closed set of AX.25 SDL events (generated from spec-sdl/events.yaml).
+export type { Ax25Event } from "./ax25-event.g.js";
+import type { Ax25Event } from "./ax25-event.g.js";
+
 /**
  * One conjunct of a guard: a typed Ax25Guard atom plus whether it is
  * negated. A guard holds when every term holds; an empty guard array
@@ -99,7 +103,7 @@ export interface ImplementationReference {
 export interface TransitionSpec {
   readonly id: string;
   readonly from: string;
-  readonly on: string;
+  readonly on: Ax25Event;
   /** Conjunction of guard terms; empty when unguarded. */
   readonly guard: readonly GuardTerm[];
   readonly actions: readonly ActionStep[];

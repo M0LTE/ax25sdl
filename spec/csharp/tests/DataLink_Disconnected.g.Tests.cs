@@ -19,7 +19,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t01_dl_disconnect_request()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t01_dl_disconnect_request");
-        t.On.Should().Be("DL_DISCONNECT_request");
+        t.On.Should().Be(Ax25Event.DLDISCONNECTRequest);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLDISCONNECTConfirm);
@@ -29,7 +29,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t02_dl_unit_data_request()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t02_dl_unit_data_request");
-        t.On.Should().Be("DL_UNIT_DATA_request");
+        t.On.Should().Be(Ax25Event.DLUNITDATARequest);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.UICommand);
@@ -39,7 +39,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t03_dl_connect_request()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t03_dl_connect_request");
-        t.On.Should().Be("DL_CONNECT_request");
+        t.On.Should().Be(Ax25Event.DLCONNECTRequest);
         t.Next.Should().Be("AwaitingConnection");
         t.Actions.Count.Should().Be(4);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.SRTAssignInitialDefault);
@@ -55,7 +55,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t04_all_other_primitives__from_upper_layer()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t04_all_other_primitives__from_upper_layer");
-        t.On.Should().Be("all_other_primitives__from_upper_layer");
+        t.On.Should().Be(Ax25Event.AllOtherPrimitivesFromUpperLayer);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(0);
     }
@@ -63,7 +63,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t05_all_other_commands()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t05_all_other_commands");
-        t.On.Should().Be("all_other_commands");
+        t.On.Should().Be(Ax25Event.AllOtherCommands);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
@@ -75,7 +75,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t06_all_other_primitives__from_lower_layer()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t06_all_other_primitives__from_lower_layer");
-        t.On.Should().Be("all_other_primitives__from_lower_layer");
+        t.On.Should().Be(Ax25Event.AllOtherPrimitivesFromLowerLayer);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DiscardPrimitive);
@@ -85,7 +85,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t07_control_field_error()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t07_control_field_error");
-        t.On.Should().Be("control_field_error");
+        t.On.Should().Be(Ax25Event.ControlFieldError);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationL);
@@ -95,7 +95,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t08_info_not_permitted_in_frame()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t08_info_not_permitted_in_frame");
-        t.On.Should().Be("info_not_permitted_in_frame");
+        t.On.Should().Be(Ax25Event.InfoNotPermittedInFrame);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationM);
@@ -105,7 +105,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t09_u_or_s_frame_length_error()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t09_u_or_s_frame_length_error");
-        t.On.Should().Be("u_or_s_frame_length_error");
+        t.On.Should().Be(Ax25Event.UOrSFrameLengthError);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationN);
@@ -115,7 +115,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t10_ua_received()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t10_ua_received");
-        t.On.Should().Be("UA_received");
+        t.On.Should().Be(Ax25Event.UAReceived);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(1);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.DLERRORIndicationCD);
@@ -125,7 +125,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t11_ui_received_no()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_no");
-        t.On.Should().Be("UI_received");
+        t.On.Should().Be(Ax25Event.UIReceived);
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) });
         t.Actions.Count.Should().Be(1);
@@ -136,7 +136,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t11_ui_received_yes()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t11_ui_received_yes");
-        t.On.Should().Be("UI_received");
+        t.On.Should().Be(Ax25Event.UIReceived);
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) });
         t.Actions.Count.Should().Be(3);
@@ -151,7 +151,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t12_disc_received()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t12_disc_received");
-        t.On.Should().Be("DISC_received");
+        t.On.Should().Be(Ax25Event.DISCReceived);
         t.Next.Should().Be("Disconnected");
         t.Actions.Count.Should().Be(2);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.FAssignP);
@@ -163,7 +163,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t13_sabm_received_no()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_no");
-        t.On.Should().Be("SABM_received");
+        t.On.Should().Be(Ax25Event.SABMReceived);
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) });
         t.Actions.Count.Should().Be(2);
@@ -176,7 +176,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t13_sabm_received_yes()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t13_sabm_received_yes");
-        t.On.Should().Be("SABM_received");
+        t.On.Should().Be(Ax25Event.SABMReceived);
         t.Next.Should().Be("Connected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) });
         t.Actions.Count.Should().Be(12);
@@ -209,7 +209,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t14_sabme_received_no()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_no");
-        t.On.Should().Be("SABME_received");
+        t.On.Should().Be(Ax25Event.SABMEReceived);
         t.Next.Should().Be("Disconnected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) });
         t.Actions.Count.Should().Be(2);
@@ -222,7 +222,7 @@ public class DataLink_Disconnected_GeneratedTests
     [Fact] public void t14_sabme_received_yes()
     {
         var t = DataLink_Disconnected.Transitions.Single(x => x.Id == "t14_sabme_received_yes");
-        t.On.Should().Be("SABME_received");
+        t.On.Should().Be(Ax25Event.SABMEReceived);
         t.Next.Should().Be("Connected");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) });
         t.Actions.Count.Should().Be(12);
