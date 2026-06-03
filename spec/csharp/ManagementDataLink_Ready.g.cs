@@ -21,7 +21,7 @@ public static class ManagementDataLink_Ready
         new TransitionSpec(
             Id: "t01_mdl_negotiate_request",
             From: "Ready",
-            On: "MDL_NEGOTIATE_request",
+            On: Ax25Event.MDLNEGOTIATERequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.XIDCommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StartTM201, ActionKind.Processing) },
             Next: "Negotiating",
@@ -33,7 +33,7 @@ public static class ManagementDataLink_Ready
         new TransitionSpec(
             Id: "t02_xid_response_received",
             From: "Ready",
-            On: "XID_response_received",
+            On: Ax25Event.XIDResponseReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.MDLERRORIndicateB, ActionKind.SignalUpper) },
             Next: "Ready",

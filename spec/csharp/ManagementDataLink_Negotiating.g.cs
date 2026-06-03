@@ -21,7 +21,7 @@ public static class ManagementDataLink_Negotiating
         new TransitionSpec(
             Id: "t01_xid_response_received_yes",
             From: "Negotiating",
-            On: "XID_response_received",
+            On: Ax25Event.XIDResponseReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ApplyNegotiatedParameters, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopTM201, ActionKind.Processing), new ActionStep(Ax25ActionVerb.MDLNEGOTIATEConfirm, ActionKind.SignalUpper) },
             Next: "Ready",
@@ -33,7 +33,7 @@ public static class ManagementDataLink_Negotiating
         new TransitionSpec(
             Id: "t01_xid_response_received_no",
             From: "Negotiating",
-            On: "XID_response_received",
+            On: Ax25Event.XIDResponseReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.MDLERRORIndicateD, ActionKind.SignalUpper) },
             Next: "Negotiating",
@@ -45,7 +45,7 @@ public static class ManagementDataLink_Negotiating
         new TransitionSpec(
             Id: "t02_frmr_received",
             From: "Negotiating",
-            On: "FRMR_received",
+            On: Ax25Event.FRMRReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopTM201, ActionKind.Processing), new ActionStep(Ax25ActionVerb.MDLNEGOTIATEConfirm, ActionKind.SignalUpper) },
             Next: "Ready",
@@ -57,7 +57,7 @@ public static class ManagementDataLink_Negotiating
         new TransitionSpec(
             Id: "t03_tm201_expiry_yes",
             From: "Negotiating",
-            On: "TM201_expiry",
+            On: Ax25Event.TM201Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.MDLERRORIndicateC, ActionKind.SignalUpper) },
             Next: "Ready",
@@ -69,7 +69,7 @@ public static class ManagementDataLink_Negotiating
         new TransitionSpec(
             Id: "t03_tm201_expiry_no",
             From: "Negotiating",
-            On: "TM201_expiry",
+            On: Ax25Event.TM201Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqNM201, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssignRCPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.XIDCommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StartTM201, ActionKind.Processing) },
             Next: "Negotiating",

@@ -15,7 +15,7 @@ namespace Packet.Ax25.Sdl;
 public sealed record TransitionSpec(
     string Id,
     string From,
-    string On,
+    Ax25Event On,
     IReadOnlyList<GuardTerm>? Guard,
     IReadOnlyList<ActionStep> Actions,
     string Next,

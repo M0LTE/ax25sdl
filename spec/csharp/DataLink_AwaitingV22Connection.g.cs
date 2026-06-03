@@ -21,7 +21,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t02_dl_connect_request",
             From: "AwaitingV22Connection",
-            On: "DL_CONNECT_request",
+            On: Ax25Event.DLCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -33,7 +33,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t03_dl_unit_data_request",
             From: "AwaitingV22Connection",
-            On: "DL_UNIT_DATA_request",
+            On: Ax25Event.DLUNITDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICommand, ActionKind.SignalLower) },
             Next: "AwaitingV22Connection",
@@ -45,7 +45,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t04_dl_data_request_yes",
             From: "AwaitingV22Connection",
-            On: "DL_DATA_request",
+            On: Ax25Event.DLDATARequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Layer3Initiated, false) },
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",
@@ -57,7 +57,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t04_dl_data_request_no",
             From: "AwaitingV22Connection",
-            On: "DL_DATA_request",
+            On: Ax25Event.DLDATARequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Layer3Initiated, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushFrameOnQueue, ActionKind.InternalOut) },
             Next: "AwaitingV22Connection",
@@ -69,7 +69,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t05_i_frame_pops_off_queue_yes",
             From: "AwaitingV22Connection",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Layer3Initiated, false) },
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",
@@ -81,7 +81,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t05_i_frame_pops_off_queue_no",
             From: "AwaitingV22Connection",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Layer3Initiated, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushFrameOnQueue, ActionKind.InternalOut) },
             Next: "AwaitingV22Connection",
@@ -93,7 +93,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t06_all_other_primitives__from_upper_layer",
             From: "AwaitingV22Connection",
-            On: "all_other_primitives__from_upper_layer",
+            On: Ax25Event.AllOtherPrimitivesFromUpperLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",
@@ -105,7 +105,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t07_control_field_error",
             From: "AwaitingV22Connection",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper) },
             Next: "AwaitingV22Connection",
@@ -117,7 +117,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t08_info_not_permitted_in_frame",
             From: "AwaitingV22Connection",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper) },
             Next: "AwaitingV22Connection",
@@ -129,7 +129,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t09_u_or_s_frame_length_error",
             From: "AwaitingV22Connection",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper) },
             Next: "AwaitingV22Connection",
@@ -141,7 +141,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t10_ui_received_no",
             From: "AwaitingV22Connection",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DMFEq1, ActionKind.SignalLower) },
             Next: "AwaitingV22Connection",
@@ -153,7 +153,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t10_ui_received_yes",
             From: "AwaitingV22Connection",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -165,7 +165,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t11_dm_received_no",
             From: "AwaitingV22Connection",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) },
             Actions: new ActionStep[] {  },
             Next: "AwaitingConnection",
@@ -177,7 +177,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t11_dm_received_yes",
             From: "AwaitingV22Connection",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing) },
             Next: "Disconnected",
@@ -189,7 +189,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t12_ua_received_no",
             From: "AwaitingV22Connection",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationD, ActionKind.SignalUpper) },
             Next: "AwaitingV22Connection",
@@ -201,7 +201,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t12_ua_received_yes_yes",
             From: "AwaitingV22Connection",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.Layer3Initiated, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLCONNECTConfirm, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.MDLNEGOTIATERequest, ActionKind.InternalOut) },
             Next: "Connected",
@@ -213,7 +213,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t12_ua_received_yes_no_no",
             From: "AwaitingV22Connection",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.Layer3Initiated, true), new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SRTAssignInitialDefault, ActionKind.Processing), new ActionStep(Ax25ActionVerb.T1VAssign2TimesSRT, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTConfirm, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.MDLNEGOTIATERequest, ActionKind.InternalOut) },
             Next: "Connected",
@@ -225,7 +225,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t12_ua_received_yes_no_yes",
             From: "AwaitingV22Connection",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.Layer3Initiated, true), new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.MDLNEGOTIATERequest, ActionKind.InternalOut) },
             Next: "Connected",
@@ -237,7 +237,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t13_t1_expiry_yes",
             From: "AwaitingV22Connection",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLERRORIndicationG, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -249,7 +249,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t13_t1_expiry_no",
             From: "AwaitingV22Connection",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.RCAssignRCPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SABMEPEq1, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "AwaitingV22Connection",
@@ -261,7 +261,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t14_frmr_received",
             From: "AwaitingV22Connection",
-            On: "FRMR_received",
+            On: Ax25Event.FRMRReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SRTAssignInitialDefault, ActionKind.Processing), new ActionStep(Ax25ActionVerb.T1VAssign2TimesSRT, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -273,7 +273,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t15_sabme_received",
             From: "AwaitingV22Connection",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower) },
             Next: "AwaitingV22Connection",
@@ -285,7 +285,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t16_sabm_received",
             From: "AwaitingV22Connection",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -297,7 +297,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t17_disc_received",
             From: "AwaitingV22Connection",
-            On: "DISC_received",
+            On: Ax25Event.DISCReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "AwaitingV22Connection",
@@ -309,7 +309,7 @@ public static class DataLink_AwaitingV22Connection
         new TransitionSpec(
             Id: "t18_all_other_primitives__from_lower_layer",
             From: "AwaitingV22Connection",
-            On: "all_other_primitives__from_lower_layer",
+            On: Ax25Event.AllOtherPrimitivesFromLowerLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "AwaitingV22Connection",

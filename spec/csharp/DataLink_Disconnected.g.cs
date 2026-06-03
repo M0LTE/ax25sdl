@@ -21,7 +21,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t01_dl_disconnect_request",
             From: "Disconnected",
-            On: "DL_DISCONNECT_request",
+            On: Ax25Event.DLDISCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLDISCONNECTConfirm, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -33,7 +33,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t02_dl_unit_data_request",
             From: "Disconnected",
-            On: "DL_UNIT_DATA_request",
+            On: Ax25Event.DLUNITDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICommand, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -45,7 +45,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t03_dl_connect_request",
             From: "Disconnected",
-            On: "DL_CONNECT_request",
+            On: Ax25Event.DLCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SRTAssignInitialDefault, ActionKind.Processing), new ActionStep(Ax25ActionVerb.T1VAssign2TimesSRT, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -57,7 +57,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t04_all_other_primitives__from_upper_layer",
             From: "Disconnected",
-            On: "all_other_primitives__from_upper_layer",
+            On: Ax25Event.AllOtherPrimitivesFromUpperLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "Disconnected",
@@ -69,7 +69,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t05_all_other_commands",
             From: "Disconnected",
-            On: "all_other_commands",
+            On: Ax25Event.AllOtherCommands,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -81,7 +81,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t06_all_other_primitives__from_lower_layer",
             From: "Disconnected",
-            On: "all_other_primitives__from_lower_layer",
+            On: Ax25Event.AllOtherPrimitivesFromLowerLayer,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardPrimitive, ActionKind.Processing) },
             Next: "Disconnected",
@@ -93,7 +93,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t07_control_field_error",
             From: "Disconnected",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -105,7 +105,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t08_info_not_permitted_in_frame",
             From: "Disconnected",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -117,7 +117,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t09_u_or_s_frame_length_error",
             From: "Disconnected",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -129,7 +129,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t10_ua_received",
             From: "Disconnected",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationCD, ActionKind.SignalUpper) },
             Next: "Disconnected",
@@ -141,7 +141,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t11_ui_received_no",
             From: "Disconnected",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine) },
             Next: "Disconnected",
@@ -153,7 +153,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t11_ui_received_yes",
             From: "Disconnected",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -165,7 +165,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t12_disc_received",
             From: "Disconnected",
-            On: "DISC_received",
+            On: Ax25Event.DISCReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -177,7 +177,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t13_sabm_received_no",
             From: "Disconnected",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -189,7 +189,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t13_sabm_received_yes",
             From: "Disconnected",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.SRTAssignInitialDefault, ActionKind.Processing), new ActionStep(Ax25ActionVerb.T1VAssign2TimesSRT, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -201,7 +201,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t14_sabme_received_no",
             From: "Disconnected",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DM, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -213,7 +213,7 @@ public static class DataLink_Disconnected
         new TransitionSpec(
             Id: "t14_sabme_received_yes",
             From: "Disconnected",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AbleToEstablish, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion22, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.SRTAssignInitialDefault, ActionKind.Processing), new ActionStep(Ax25ActionVerb.T1VAssign2TimesSRT, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",

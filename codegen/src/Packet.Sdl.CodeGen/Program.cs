@@ -493,6 +493,11 @@ internal static class Program
                 WriteIfChanged(guardEnumPath, CsharpEmitter.EmitGuardEnum(allGuardAtoms));
                 writtenCsharpCode.Add(Path.GetFullPath(guardEnumPath));
                 Console.WriteLine("  ok  (all pages + subroutines)  →  Ax25Guard.g.cs");
+
+                var eventEnumPath = Path.Combine(plan.CsharpOut, "Ax25Event.g.cs");
+                WriteIfChanged(eventEnumPath, CsharpEmitter.EmitEventEnum(events));
+                writtenCsharpCode.Add(Path.GetFullPath(eventEnumPath));
+                Console.WriteLine("  ok  (events.yaml)  →  Ax25Event.g.cs");
             }
             if (plan.EmitTs)
             {
@@ -505,6 +510,11 @@ internal static class Program
                 WriteIfChanged(guardUnionPath, TsEmitter.EmitGuardUnion(allGuardAtoms));
                 writtenTs.Add(Path.GetFullPath(guardUnionPath));
                 Console.WriteLine("  ok  (all pages + subroutines)  →  ax25-guard.g.ts");
+
+                var eventUnionPath = Path.Combine(plan.TsOut, "ax25-event.g.ts");
+                WriteIfChanged(eventUnionPath, TsEmitter.EmitEventUnion(events));
+                writtenTs.Add(Path.GetFullPath(eventUnionPath));
+                Console.WriteLine("  ok  (events.yaml)  →  ax25-event.g.ts");
             }
         }
 

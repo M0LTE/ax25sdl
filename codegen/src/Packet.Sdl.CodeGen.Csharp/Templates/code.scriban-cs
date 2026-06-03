@@ -22,7 +22,7 @@ public static class {{ page.class_name }}
         new TransitionSpec(
             Id: "{{ t.id }}",
             From: "{{ page.state }}",
-            On: "{{ t.on }}",
+            On: {{ t.on_enum }},
             Guard: {{ t.guard_literal }},
             Actions: new ActionStep[] { {{ t.actions_csv }} },
             Next: "{{ t.next }}",

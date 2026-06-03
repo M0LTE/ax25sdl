@@ -19,7 +19,7 @@ public class {{ page.class_name }}_GeneratedTests
     [Fact] public void {{ t.id }}()
     {
         var t = {{ page.class_name }}.Transitions.Single(x => x.Id == "{{ t.id }}");
-        t.On.Should().Be("{{ t.on }}");
+        t.On.Should().Be({{ t.on_enum }});
         t.Next.Should().Be("{{ t.next }}");
 {{- if t.guard }}
         t.Guard.Should().Equal({{ t.guard_literal }});

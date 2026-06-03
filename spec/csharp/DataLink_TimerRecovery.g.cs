@@ -21,7 +21,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t01_dl_disconnect_request",
             From: "TimerRecovery",
-            On: "DL_DISCONNECT_request",
+            On: Ax25Event.DLDISCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DISCPEq1, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "AwaitingRelease",
@@ -33,7 +33,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t02_dl_data_request",
             From: "TimerRecovery",
-            On: "DL_DATA_request",
+            On: Ax25Event.DLDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushOnIFrameQueue, ActionKind.InternalOut) },
             Next: "TimerRecovery",
@@ -45,7 +45,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_yes",
             From: "TimerRecovery",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushIFrameOnIQueue, ActionKind.InternalOut) },
             Next: "TimerRecovery",
@@ -57,7 +57,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_yes",
             From: "TimerRecovery",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.PushIFrameOnIQueue, ActionKind.InternalOut) },
             Next: "TimerRecovery",
@@ -69,7 +69,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_yes",
             From: "TimerRecovery",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, true), new GuardTerm(Ax25Guard.T1Running, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NSAssignVS, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.PAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ICommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.VSAssignVSPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -81,7 +81,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t03_i_frame_pops_off_queue_no_no_no",
             From: "TimerRecovery",
-            On: "I_frame_pops_off_queue",
+            On: Ax25Event.IFramePopsOffQueue,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PeerReceiverBusy, true), new GuardTerm(Ax25Guard.VsEqVaPlusK, true), new GuardTerm(Ax25Guard.T1Running, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NSAssignVS, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.PAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ICommand, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.VSAssignVSPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -93,7 +93,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t04_dl_unit_data_request",
             From: "TimerRecovery",
-            On: "DL_UNIT_DATA_request",
+            On: Ax25Event.DLUNITDATARequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICommand, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -105,7 +105,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t05_dl_flow_off_request_yes",
             From: "TimerRecovery",
-            On: "DL_FLOW_OFF_request",
+            On: Ax25Event.DLFLOWOFFRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RNRResponseFEq0, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -117,7 +117,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t05_dl_flow_off_request_no",
             From: "TimerRecovery",
-            On: "DL_FLOW_OFF_request",
+            On: Ax25Event.DLFLOWOFFRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, true) },
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",
@@ -129,7 +129,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_yes_no",
             From: "TimerRecovery",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.T1Running, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RRCommandPEq0, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -141,7 +141,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_yes_yes",
             From: "TimerRecovery",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.T1Running, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearOwnReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RRCommandPEq0, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -153,7 +153,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t06_dl_flow_on_request_no",
             From: "TimerRecovery",
-            On: "DL_FLOW_ON_request",
+            On: Ax25Event.DLFLOWONRequest,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.OwnReceiverBusy, true) },
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",
@@ -165,7 +165,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t07_dl_connect_request",
             From: "TimerRecovery",
-            On: "DL_CONNECT_request",
+            On: Ax25Event.DLCONNECTRequest,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -177,7 +177,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t08_control_field_error",
             From: "TimerRecovery",
-            On: "control_field_error",
+            On: Ax25Event.ControlFieldError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationL, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -189,7 +189,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t09_info_not_permitted_in_frame",
             From: "TimerRecovery",
-            On: "info_not_permitted_in_frame",
+            On: Ax25Event.InfoNotPermittedInFrame,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationM, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -201,7 +201,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t10_u_or_s_frame_length_error",
             From: "TimerRecovery",
-            On: "u_or_s_frame_length_error",
+            On: Ax25Event.UOrSFrameLengthError,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SetLayer3Initiated, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -213,7 +213,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t11_ua_received",
             From: "TimerRecovery",
-            On: "UA_received",
+            On: Ax25Event.UAReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationN, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -225,7 +225,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t12_dm_received",
             From: "TimerRecovery",
-            On: "DM_received",
+            On: Ax25Event.DMReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationE, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing) },
             Next: "Disconnected",
@@ -237,7 +237,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t13_sabm_received_no",
             From: "TimerRecovery",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -249,7 +249,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t13_sabm_received_yes",
             From: "TimerRecovery",
-            On: "SABM_received",
+            On: Ax25Event.SABMReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper) },
             Next: "Connected",
@@ -261,7 +261,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t14_sabme_received_no",
             From: "TimerRecovery",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion22, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VSAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VRAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -273,7 +273,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t14_sabme_received_yes",
             From: "TimerRecovery",
-            On: "SABME_received",
+            On: Ax25Event.SABMEReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetVersion22, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearExceptionConditions, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DLERRORIndicationF, ActionKind.SignalUpper) },
             Next: "Connected",
@@ -285,7 +285,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t15_frmr_received",
             From: "TimerRecovery",
-            On: "FRMR_received",
+            On: Ax25Event.FRMRReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationK, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.SetVersion20, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -297,7 +297,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t16_ui_received_yes",
             From: "TimerRecovery",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -309,7 +309,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t16_ui_received_no",
             From: "TimerRecovery",
-            On: "UI_received",
+            On: Ax25Event.UIReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.UICheck, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -321,7 +321,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t17_disc_received",
             From: "TimerRecovery",
-            On: "DISC_received",
+            On: Ax25Event.DISCReceived,
             Guard: null,
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.UA, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing) },
             Next: "Disconnected",
@@ -333,7 +333,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_no_yes_yes",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -345,7 +345,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_no_yes_no_no",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -357,7 +357,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -369,7 +369,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_no_no_yes",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -381,7 +381,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_no_no_no",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -393,7 +393,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_yes_no_no",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -405,7 +405,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_yes_no_yes",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -417,7 +417,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_yes_yes_no",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -429,7 +429,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t18_rr_received_yes_yes_yes",
             From: "TimerRecovery",
-            On: "RR_received",
+            On: Ax25Event.RRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -441,7 +441,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_no_yes_yes",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -453,7 +453,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_no_yes_no_no",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -465,7 +465,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -477,7 +477,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_no_no_yes",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -489,7 +489,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_no_no_no",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -501,7 +501,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_yes_no_no",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -513,7 +513,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_yes_no_yes",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -525,7 +525,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_yes_yes_no",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -537,7 +537,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t19_rnr_received_yes_yes_yes",
             From: "TimerRecovery",
-            On: "RNR_received",
+            On: Ax25Event.RNRReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.SetPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -549,7 +549,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t20_lm_seize_confirm_yes",
             From: "TimerRecovery",
-            On: "LM_SEIZE_confirm",
+            On: Ax25Event.LMSEIZEConfirm,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AckPending, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseFEq0, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.LMReleaseRequest, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -561,7 +561,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t20_lm_seize_confirm_no",
             From: "TimerRecovery",
-            On: "LM_SEIZE_confirm",
+            On: Ax25Event.LMSEIZEConfirm,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.AckPending, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.LMReleaseRequest, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -573,7 +573,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t21_t1_expiry_no",
             From: "TimerRecovery",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.TransmitEnquiry, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.RCAssignRCPlus1, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -585,7 +585,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t21_t1_expiry_yes_yes_yes",
             From: "TimerRecovery",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false), new GuardTerm(Ax25Guard.VsEqVa, false), new GuardTerm(Ax25Guard.PeerReceiverBusy, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationU, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DMResponseFEq0, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -597,7 +597,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t21_t1_expiry_yes_yes_no",
             From: "TimerRecovery",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false), new GuardTerm(Ax25Guard.VsEqVa, false), new GuardTerm(Ax25Guard.PeerReceiverBusy, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationT, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DMResponseFEq0, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -609,7 +609,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t21_t1_expiry_yes_no",
             From: "TimerRecovery",
-            On: "T1_expiry",
+            On: Ax25Event.T1Expiry,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.RCEqN2, false), new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationI, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DLDISCONNECTIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrameQueue, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DMResponseFEq0, ActionKind.SignalLower) },
             Next: "Disconnected",
@@ -621,7 +621,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationO, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.DiscardIFrame, ActionKind.Processing) },
             Next: "Connected",
@@ -633,7 +633,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.DLERRORIndicationO, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.EstablishDataLink, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.ClearLayer3Initiated, ActionKind.Processing) },
             Next: "AwaitingConnection",
@@ -645,7 +645,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -657,7 +657,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_yes_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RNR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -669,7 +669,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_yes_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, false), new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -681,7 +681,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_yes_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVR1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -693,7 +693,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_yes_no_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.AckPending, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVR1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.LMSeizeRequest, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -705,7 +705,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.AckPending, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VRAssignVRPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DecrementSrejectExceptionIf0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.RetrieveStoredVRIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DLDATAIndication, ActionKind.SignalUpper), new ActionStep(Ax25ActionVerb.VRAssignVR1, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -717,7 +717,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_yes_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, false), new GuardTerm(Ax25Guard.PEq1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RR, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -729,7 +729,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_yes_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, false), new GuardTerm(Ax25Guard.PEq1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -741,7 +741,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_no_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.REJ, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -753,7 +753,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, true), new GuardTerm(Ax25Guard.NsGtVrPlus1, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.DiscardContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SetRejectException, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssignP, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.REJ, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.SetAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -765,7 +765,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_no",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, true), new GuardTerm(Ax25Guard.NsGtVrPlus1, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SrejectAssignSrejectPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SREJ, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -777,7 +777,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t22_i_received_yes_yes_yes_no_no_no_yes_yes",
             From: "TimerRecovery",
-            On: "I_received",
+            On: Ax25Event.IReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Command, false), new GuardTerm(Ax25Guard.InfoFieldLengthLeN1AndContentIsOctetAligned, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.OwnReceiverBusy, true), new GuardTerm(Ax25Guard.NsEqVr, true), new GuardTerm(Ax25Guard.RejectException, true), new GuardTerm(Ax25Guard.SREJEnabled, false), new GuardTerm(Ax25Guard.SrejectExceptionGt0, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.SaveContentsOfIFrame, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRAssignVR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.FAssign0, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SrejectAssignSrejectPlus1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SREJ, ActionKind.SignalLower) },
             Next: "TimerRecovery",
@@ -789,7 +789,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_yes_yes_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -801,7 +801,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_yes_yes_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -813,7 +813,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -825,7 +825,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_yes_no_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.EnquiryResponseF1, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -837,7 +837,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_no_yes_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -849,7 +849,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_no_yes_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -861,7 +861,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_no_no_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -873,7 +873,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_no_no_no_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, true), new GuardTerm(Ax25Guard.CommandAndPEq1, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -885,7 +885,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_yes_no_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -897,7 +897,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_yes_no_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -909,7 +909,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_yes_yes_yes",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -921,7 +921,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t23_rej_received_yes_yes_no",
             From: "TimerRecovery",
-            On: "REJ_received",
+            On: Ax25Event.REJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.ResponseAndFEq1, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -933,7 +933,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_yes_yes_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -945,7 +945,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_yes_yes_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -957,7 +957,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_yes_no_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing) },
             Next: "TimerRecovery",
@@ -969,7 +969,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_yes_no_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -981,7 +981,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_no_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -993,7 +993,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_no_no_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -1005,7 +1005,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_no_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingConnection",
@@ -1017,7 +1017,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_no_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, true), new GuardTerm(Ax25Guard.Version22, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.NRRecovery, ActionKind.Subroutine) },
             Next: "AwaitingV22Connection",
@@ -1029,7 +1029,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_yes_yes_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.VsEqNr, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -1041,7 +1041,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_yes_yes_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.VsEqNr, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.VAAssignNR, ActionKind.Processing), new ActionStep(Ax25ActionVerb.CheckIFrameAcknowledged, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.PushFrameOnQueue, ActionKind.InternalOut), new ActionStep(Ax25ActionVerb.LMDataRequest, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -1053,7 +1053,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_yes_no_yes",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, true), new GuardTerm(Ax25Guard.VsEqVa, false) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.StartT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.RCAssign0, ActionKind.Processing) },
             Next: "Connected",
@@ -1065,7 +1065,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t24_srej_received_yes_yes_no_no",
             From: "TimerRecovery",
-            On: "SREJ_received",
+            On: Ax25Event.SREJReceived,
             Guard: new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, true), new GuardTerm(Ax25Guard.VsEqVa, true) },
             Actions: new ActionStep[] { new ActionStep(Ax25ActionVerb.ClearPeerReceiverBusy, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StopT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.SelectT1Value, ActionKind.Subroutine), new ActionStep(Ax25ActionVerb.PushFrameOnQueue, ActionKind.InternalOut), new ActionStep(Ax25ActionVerb.LMDataRequest, ActionKind.SignalLower), new ActionStep(Ax25ActionVerb.StopT3, ActionKind.Processing), new ActionStep(Ax25ActionVerb.StartT1, ActionKind.Processing), new ActionStep(Ax25ActionVerb.ClearAcknowledgePending, ActionKind.Processing), new ActionStep(Ax25ActionVerb.InvokeRetransmission, ActionKind.Subroutine) },
             Next: "TimerRecovery",
@@ -1077,7 +1077,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t25_all_other_primitives__from_lower_layer",
             From: "TimerRecovery",
-            On: "all_other_primitives__from_lower_layer",
+            On: Ax25Event.AllOtherPrimitivesFromLowerLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",
@@ -1089,7 +1089,7 @@ public static class DataLink_TimerRecovery
         new TransitionSpec(
             Id: "t26_all_other_primitives__from_upper_layer",
             From: "TimerRecovery",
-            On: "all_other_primitives__from_upper_layer",
+            On: Ax25Event.AllOtherPrimitivesFromUpperLayer,
             Guard: null,
             Actions: new ActionStep[] {  },
             Next: "TimerRecovery",
