@@ -17,12 +17,14 @@ pub static MANAGEMENT_DATA_LINK_NEGOTIATING: StatePage = StatePage {
         TransitionSpec {
             id: "t01_xid_response_received_yes",
             from: "Negotiating",
-            on: "XID_response_received",
-            guard: "F_eq_1",
+            on: Ax25Event::XIDResponseReceived,
+            guard: &[
+                GuardTerm { atom: Ax25Guard::FEq1, negate: false },
+            ],
             actions: &[
-                ActionStep { verb: "Apply Negotiated Parameters", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop TM201", kind: ActionKind::Processing },
-                ActionStep { verb: "MDL_NEGOTIATE_confirm", kind: ActionKind::SignalUpper },
+                ActionStep { verb: Ax25ActionVerb::ApplyNegotiatedParameters, kind: ActionKind::Subroutine },
+                ActionStep { verb: Ax25ActionVerb::StopTM201, kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::MDLNEGOTIATEConfirm, kind: ActionKind::SignalUpper },
             ],
             next: "Ready",
             notes: "verification_pending (prose-derived bootstrap; figc5.2 graphml redraw pending — see backfill task). Derived from §C5.3 ¶3 (\"If the other station is using version 2.2 or better, it will respond with an XID response\") + §6.3.2 (\"Both TNCs set up based on the values used in the XID response\") + the §C5.3 MDL-NEGOTIATE Confirm primitive. The F==1 split is inferred from error code D (\"XID response without F=1\") — the diamond's presence/placement is NOT figure-verified. `Apply Negotiated Parameters` is a placeholder for the figc5.3–figc5.8 per-parameter \"reverts to\" subroutines (Classes of Procedures → half-duplex; Optional Functions → lesser of REJ/SREJ and modulo 8/128; Ack Timer & Retries → greater; N1 & k → notification/min), which are NOT decomposed here. Whether the figure stops T1 (a data-link timer) in addition to TM201 is UNKNOWN: the §C5.3 timer list names only TM201 for this machine, so only TM201 is stopped here; the task brief's mention of \"stop T1/TM201\" is flagged as figc5.2-dependent and unverified.",
@@ -36,10 +38,12 @@ pub static MANAGEMENT_DATA_LINK_NEGOTIATING: StatePage = StatePage {
         TransitionSpec {
             id: "t01_xid_response_received_no",
             from: "Negotiating",
-            on: "XID_response_received",
-            guard: "not F_eq_1",
+            on: Ax25Event::XIDResponseReceived,
+            guard: &[
+                GuardTerm { atom: Ax25Guard::FEq1, negate: true },
+            ],
             actions: &[
-                ActionStep { verb: "MDL_ERROR_indicate_D", kind: ActionKind::SignalUpper },
+                ActionStep { verb: Ax25ActionVerb::MDLERRORIndicateD, kind: ActionKind::SignalUpper },
             ],
             next: "Negotiating",
             notes: "verification_pending (prose-derived bootstrap; figc5.2 graphml redraw pending — see backfill task). The error-D condition (\"XID response without F=1\", §C5.3 Error Codes) is prose-clear. The destination state after error D (here: stay in Negotiating, TM201 still running) and whether any frame is emitted are NOT figure-verified — this is the most defensible reading of the error-code list.",
@@ -51,12 +55,12 @@ pub static MANAGEMENT_DATA_LINK_NEGOTIATING: StatePage = StatePage {
         TransitionSpec {
             id: "t02_frmr_received",
             from: "Negotiating",
-            on: "FRMR_received",
-            guard: "",
+            on: Ax25Event::FRMRReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop TM201", kind: ActionKind::Processing },
-                ActionStep { verb: "MDL_NEGOTIATE_confirm", kind: ActionKind::SignalUpper },
+                ActionStep { verb: Ax25ActionVerb::SetVersion20, kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::StopTM201, kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::MDLNEGOTIATEConfirm, kind: ActionKind::SignalUpper },
             ],
             next: "Ready",
             notes: "verification_pending (prose-derived bootstrap; figc5.2 graphml redraw pending — see backfill task). Derived from §6.3.2 ¶1 (\"Implementations of AX.25 prior to version 2.2 respond to an XID command frame with a FRMR response frame. The TNC receiving the FRMR uses a default set of parameters compatible with previous versions of AX.25 and a version 2.0 connection is made\") and §C5.3 ¶3. `Set Version 2.0` stands in for installing the §6.3.2 version-2.0 default parameter set (half duplex; implicit reject, modulo 8; N1=2048 bits; k=7; T1=3000 ms; retries=10). The exact action set/order (does the figure draw a distinct \"load v2.0 defaults\" box vs reuse the data-link `Set Version 2.0` verb? does it stop TM201 before or after confirming?) is figc5.2 detail and unverified. The `Set Version 2.0` verb is shared with the data-link figc4.6 FRMR path.",
@@ -69,10 +73,12 @@ pub static MANAGEMENT_DATA_LINK_NEGOTIATING: StatePage = StatePage {
         TransitionSpec {
             id: "t03_tm201_expiry_yes",
             from: "Negotiating",
-            on: "TM201_expiry",
-            guard: "RC_eq_NM201",
+            on: Ax25Event::TM201Expiry,
+            guard: &[
+                GuardTerm { atom: Ax25Guard::RCEqNM201, negate: false },
+            ],
             actions: &[
-                ActionStep { verb: "MDL_ERROR_indicate_C", kind: ActionKind::SignalUpper },
+                ActionStep { verb: Ax25ActionVerb::MDLERRORIndicateC, kind: ActionKind::SignalUpper },
             ],
             next: "Ready",
             notes: "verification_pending (prose-derived bootstrap; figc5.2 graphml redraw pending — see backfill task). Derived from §C5.3 Error Codes (\"C — Management retry limit exceeded\"), the §C5.3 Variables (RC, NM201) and Timer (TM201). The retry-limit FSM shape (compare RC to the maximum, give up vs retransmit) is the standard AX.25 retransmit pattern drawn for T1/N2 in the data-link figures (figc4.3 t02, figc4.6 t13); it is reconstructed here for the management timer by analogy and is NOT figure-verified for figc5.2. The destination state on give-up (Ready) and the exact RC comparison sense (== vs >=) are unverified figure detail.",
@@ -85,12 +91,14 @@ pub static MANAGEMENT_DATA_LINK_NEGOTIATING: StatePage = StatePage {
         TransitionSpec {
             id: "t03_tm201_expiry_no",
             from: "Negotiating",
-            on: "TM201_expiry",
-            guard: "not RC_eq_NM201",
+            on: Ax25Event::TM201Expiry,
+            guard: &[
+                GuardTerm { atom: Ax25Guard::RCEqNM201, negate: true },
+            ],
             actions: &[
-                ActionStep { verb: "RC := RC + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "XID_command", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Start TM201", kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::RCAssignRCPlus1, kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::XIDCommand, kind: ActionKind::SignalLower },
+                ActionStep { verb: Ax25ActionVerb::StartTM201, kind: ActionKind::Processing },
             ],
             next: "Negotiating",
             notes: "verification_pending (prose-derived bootstrap; figc5.2 graphml redraw pending — see backfill task). Derived from the §C5.3 Variables (RC, NM201) and Timer (TM201) plus the §6.3.1 link-establishment retry analogue (\"If the distant TNC doesn't respond before T1 times out, the originating TNC resends ... and starts T1 running again. The originating TNC tries to establish a connection until it has tried unsuccessfully N2 times\"). The action set/order (RC:=RC+1, resend XID, restart TM201) mirrors the data-link figc4.3/figc4.6 T1-expiry retransmit column; it is reconstructed by analogy and NOT figure-verified for figc5.2. The resent XID command's P-bit is unverified (see Ready t01 note re error A / P=1).",
@@ -124,15 +132,24 @@ mod tests {
             .iter()
             .find(|x| x.id == "t01_xid_response_received_yes")
             .expect("transition t01_xid_response_received_yes not found");
-        assert_eq!(tx.on, "XID_response_received");
+        assert_eq!(tx.on, Ax25Event::XIDResponseReceived);
         assert_eq!(tx.next, "Ready");
-        assert_eq!(tx.guard, "F_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "Apply Negotiated Parameters");
+        assert_eq!(
+            tx.actions[0].verb,
+            Ax25ActionVerb::ApplyNegotiatedParameters
+        );
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Stop TM201");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopTM201);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "MDL_NEGOTIATE_confirm");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::MDLNEGOTIATEConfirm);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalUpper);
     }
 
@@ -143,11 +160,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t01_xid_response_received_no")
             .expect("transition t01_xid_response_received_no not found");
-        assert_eq!(tx.on, "XID_response_received");
+        assert_eq!(tx.on, Ax25Event::XIDResponseReceived);
         assert_eq!(tx.next, "Negotiating");
-        assert_eq!(tx.guard, "not F_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "MDL_ERROR_indicate_D");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::MDLERRORIndicateD);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -158,14 +181,14 @@ mod tests {
             .iter()
             .find(|x| x.id == "t02_frmr_received")
             .expect("transition t02_frmr_received not found");
-        assert_eq!(tx.on, "FRMR_received");
+        assert_eq!(tx.on, Ax25Event::FRMRReceived);
         assert_eq!(tx.next, "Ready");
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "set_version_2_0");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop TM201");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopTM201);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "MDL_NEGOTIATE_confirm");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::MDLNEGOTIATEConfirm);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalUpper);
     }
 
@@ -176,11 +199,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_tm201_expiry_yes")
             .expect("transition t03_tm201_expiry_yes not found");
-        assert_eq!(tx.on, "TM201_expiry");
+        assert_eq!(tx.on, Ax25Event::TM201Expiry);
         assert_eq!(tx.next, "Ready");
-        assert_eq!(tx.guard, "RC_eq_NM201");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::RCEqNM201,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "MDL_ERROR_indicate_C");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::MDLERRORIndicateC);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -191,15 +220,21 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_tm201_expiry_no")
             .expect("transition t03_tm201_expiry_no not found");
-        assert_eq!(tx.on, "TM201_expiry");
+        assert_eq!(tx.on, Ax25Event::TM201Expiry);
         assert_eq!(tx.next, "Negotiating");
-        assert_eq!(tx.guard, "not RC_eq_NM201");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::RCEqNM201,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "RC := RC + 1");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::RCAssignRCPlus1);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "XID_command");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::XIDCommand);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Start TM201");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::StartTM201);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 }

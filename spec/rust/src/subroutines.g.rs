@@ -18,15 +18,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_set_version_2_2",
-                    guard: "",
+                    guard: &[],
                     actions: &[
-                        ActionStep { verb: "Set Half Duplex", kind: ActionKind::Processing },
-                        ActionStep { verb: "Set Selective Reject", kind: ActionKind::Processing },
-                        ActionStep { verb: "Modulo := 128", kind: ActionKind::Processing },
-                        ActionStep { verb: "N1 := 2048", kind: ActionKind::Processing },
-                        ActionStep { verb: "k := 32", kind: ActionKind::Processing },
-                        ActionStep { verb: "T2 := 3000", kind: ActionKind::Processing },
-                        ActionStep { verb: "N2 := 10", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SetHalfDuplex, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SetSelectiveReject, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ModuloAssign128, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::N1Assign2048, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::KAssign32, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::T2Assign3000, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::N2Assign10, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -41,9 +41,11 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_ui_check_no",
-                    guard: "not command",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Command, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "DL-ERROR Indication (Q)", kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationQ, kind: ActionKind::SignalUpper },
                     ],
                     notes: "",
                     references: &[],
@@ -51,9 +53,12 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_ui_check_yes_yes",
-                    guard: "command and info_field_length_le_N1_and_content_is_octet_aligned",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Command, negate: false },
+                        GuardTerm { atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "DL_UNIT_DATA_indication", kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::DLUNITDATAIndication, kind: ActionKind::SignalUpper },
                     ],
                     notes: "",
                     references: &[],
@@ -61,9 +66,12 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t03_ui_check_yes_no",
-                    guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Command, negate: false },
+                        GuardTerm { atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationK, kind: ActionKind::SignalUpper },
                     ],
                     notes: "",
                     references: &[],
@@ -78,10 +86,12 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_select_t1_yes",
-                    guard: "RC_eq_0",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::RCEq0, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "SRT := 7(SRT)/8 + (T1)/8 - (Remaining Time on T1 When Last Stopped)/8", kind: ActionKind::Processing },
-                        ActionStep { verb: "Next T1 := 2 * SRT", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SRTAssign7SRT8PlusT18RemainingTimeOnT1WhenLastStopped8, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NextT1Assign2TimesSRT, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -89,7 +99,10 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_select_t1_no_no",
-                    guard: "not RC_eq_0 and not T1_expired",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::RCEq0, negate: true },
+                        GuardTerm { atom: Ax25Guard::T1Expired, negate: true },
+                    ],
                     actions: &[],
                     notes: "",
                     references: &[],
@@ -97,9 +110,12 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t03_select_t1_no_yes",
-                    guard: "not RC_eq_0 and T1_expired",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::RCEq0, negate: true },
+                        GuardTerm { atom: Ax25Guard::T1Expired, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Next T1 := (RC*0.25)+SRT*2", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NextT1AssignRCTimes025PlusSRTTimes2, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -114,15 +130,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_set_version_2_0",
-                    guard: "",
+                    guard: &[],
                     actions: &[
-                        ActionStep { verb: "Set Half Duplex", kind: ActionKind::Processing },
-                        ActionStep { verb: "Set Implicit Reject", kind: ActionKind::Processing },
-                        ActionStep { verb: "Modulo := 8", kind: ActionKind::Processing },
-                        ActionStep { verb: "N1 := 2048", kind: ActionKind::Processing },
-                        ActionStep { verb: "k := 8", kind: ActionKind::Processing },
-                        ActionStep { verb: "T2 := 3000", kind: ActionKind::Processing },
-                        ActionStep { verb: "N2 := 10", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SetHalfDuplex, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SetImplicitReject, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ModuloAssign8, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::N1Assign2048, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::KAssign8, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::T2Assign3000, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::N2Assign10, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -137,9 +153,11 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_check_need_for_response_yes",
-                    guard: "command_and_P_eq_1",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::CommandAndPEq1, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
+                        ActionStep { verb: Ax25ActionVerb::EnquiryResponseF1, kind: ActionKind::Subroutine },
                     ],
                     notes: "",
                     references: &[],
@@ -147,7 +165,10 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_check_need_for_response_no_no",
-                    guard: "not command_and_P_eq_1 and not response_and_F_eq_1",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::CommandAndPEq1, negate: true },
+                        GuardTerm { atom: Ax25Guard::ResponseAndFEq1, negate: true },
+                    ],
                     actions: &[],
                     notes: "",
                     references: &[],
@@ -155,9 +176,12 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t03_check_need_for_response_no_yes",
-                    guard: "not command_and_P_eq_1 and response_and_F_eq_1",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::CommandAndPEq1, negate: true },
+                        GuardTerm { atom: Ax25Guard::ResponseAndFEq1, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "DL-ERROR Indication (A)", kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationA, kind: ActionKind::SignalUpper },
                     ],
                     notes: "",
                     references: &[],
@@ -172,14 +196,16 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_establish_extended_data_link_no",
-                    guard: "not mod_128",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Mod128, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
-                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "SABM", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearExceptionConditions, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RCAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SABM, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -187,14 +213,16 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_establish_extended_data_link_yes",
-                    guard: "mod_128",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Mod128, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
-                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "SABME", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearExceptionConditions, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RCAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SABME, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -209,14 +237,16 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_establish_data_link_no",
-                    guard: "not mod_128",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Mod128, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
-                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "SABM", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearExceptionConditions, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RCAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SABM, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -224,14 +254,16 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_establish_data_link_yes",
-                    guard: "mod_128",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::Mod128, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Processing },
-                        ActionStep { verb: "RC := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "SABME", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearExceptionConditions, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RCAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SABME, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -246,18 +278,18 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_invoke_retransmission",
-                    guard: "",
+                    guard: &[],
                     actions: &[
-                        ActionStep { verb: "Backtrack", kind: ActionKind::Processing },
-                        ActionStep { verb: "X := V(s)", kind: ActionKind::Processing },
-                        ActionStep { verb: "V(s) := N(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "Push Old I Frame onto Queue", kind: ActionKind::InternalOut },
-                        ActionStep { verb: "V(s) := V(s) + 1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::Backtrack, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::XAssignVS, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::VSAssignNR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PushOldIFrameOntoQueue, kind: ActionKind::InternalOut },
+                        ActionStep { verb: Ax25ActionVerb::VSAssignVSPlus1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
                     loops: &[
-                        LoopRange { start: 3, length: 2, predicate: "not vs_eq_X", test_at_end: true },
+                        LoopRange { start: 3, length: 2, predicate: GuardTerm { atom: Ax25Guard::VsEqX, negate: true }, test_at_end: true },
                     ],
                 },
             ],
@@ -269,10 +301,13 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_check_i_frame_acknowledged_yes_yes",
-                    guard: "peer_receiver_busy and T1_running",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: false },
+                        GuardTerm { atom: Ax25Guard::T1Running, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::VAAssignNR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -280,11 +315,14 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_check_i_frame_acknowledged_yes_no",
-                    guard: "peer_receiver_busy and not T1_running",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: false },
+                        GuardTerm { atom: Ax25Guard::T1Running, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::VAAssignNR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StopT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -292,12 +330,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t03_check_i_frame_acknowledged_no_yes",
-                    guard: "not peer_receiver_busy and nr_eq_vs",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::NrEqVs, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                        ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
+                        ActionStep { verb: Ax25ActionVerb::VAAssignNR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StopT1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT3, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SelectT1Value, kind: ActionKind::Subroutine },
                     ],
                     notes: "",
                     references: &[],
@@ -305,7 +346,11 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t04_check_i_frame_acknowledged_no_no_yes",
-                    guard: "not peer_receiver_busy and not nr_eq_vs and nr_eq_va",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::NrEqVs, negate: true },
+                        GuardTerm { atom: Ax25Guard::NrEqVa, negate: false },
+                    ],
                     actions: &[],
                     notes: "",
                     references: &[],
@@ -313,10 +358,14 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t05_check_i_frame_acknowledged_no_no_no",
-                    guard: "not peer_receiver_busy and not nr_eq_vs and not nr_eq_va",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::NrEqVs, negate: true },
+                        GuardTerm { atom: Ax25Guard::NrEqVa, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::VAAssignNR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -331,14 +380,14 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_clear_exception_conditions",
-                    guard: "",
+                    guard: &[],
                     actions: &[
-                        ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                        ActionStep { verb: "Clear Own Receiver Busy", kind: ActionKind::Processing },
-                        ActionStep { verb: "Clear Reject Condition", kind: ActionKind::Processing },
-                        ActionStep { verb: "Clear Sreject Condition", kind: ActionKind::Processing },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                        ActionStep { verb: "Discard I Queue Entries", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearPeerReceiverBusy, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearOwnReceiverBusy, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearRejectCondition, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearSrejectCondition, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::DiscardIQueueEntries, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -353,11 +402,11 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_n_r_error_recovery",
-                    guard: "",
+                    guard: &[],
                     actions: &[
-                        ActionStep { verb: "DL-ERROR Indication (J)", kind: ActionKind::SignalUpper },
-                        ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                        ActionStep { verb: "Clear Layer 3 Initiated", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationJ, kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::EstablishDataLink, kind: ActionKind::Subroutine },
+                        ActionStep { verb: Ax25ActionVerb::ClearLayer3Initiated, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -372,13 +421,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_transmit_enquiry_no",
-                    guard: "not own_receiver_busy",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RR Command", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RRCommand, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -386,13 +437,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_transmit_enquiry_yes",
-                    guard: "own_receiver_busy",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "P := 1", kind: ActionKind::Processing },
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RNR Command", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                        ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::PAssign1, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RNRCommand, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::StartT1, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -407,11 +460,14 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
             paths: &[
                 SubroutinePath {
                     id: "t01_enquiry_response_yes_yes",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and own_receiver_busy",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RNR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RNRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -419,13 +475,19 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t02_enquiry_response_yes_no_yes_yes_yes",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and out_of_sequence_frames_in_receive_buffer",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::SREJEnabled, negate: false },
+                        GuardTerm { atom: Ax25Guard::Mod8, negate: false },
+                        GuardTerm { atom: Ax25Guard::OutOfSequenceFramesInReceiveBuffer, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "DL-ERROR Indication (add)", kind: ActionKind::SignalUpper },
-                        ActionStep { verb: "SREJ", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationAdd, kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::SREJ, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -433,12 +495,18 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t03_enquiry_response_yes_no_yes_yes_no",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and mod_8 and not out_of_sequence_frames_in_receive_buffer",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::SREJEnabled, negate: false },
+                        GuardTerm { atom: Ax25Guard::Mod8, negate: false },
+                        GuardTerm { atom: Ax25Guard::OutOfSequenceFramesInReceiveBuffer, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "DL-ERROR Indication (add)", kind: ActionKind::SignalUpper },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::DLERRORIndicationAdd, kind: ActionKind::SignalUpper },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -446,12 +514,18 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t04_enquiry_response_yes_no_yes_no_yes",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and out_of_sequence_frames_in_receive_buffer",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::SREJEnabled, negate: false },
+                        GuardTerm { atom: Ax25Guard::Mod8, negate: true },
+                        GuardTerm { atom: Ax25Guard::OutOfSequenceFramesInReceiveBuffer, negate: false },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "SREJ", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::SREJ, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -459,11 +533,17 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t05_enquiry_response_yes_no_yes_no_no",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and SREJ_enabled and not mod_8 and not out_of_sequence_frames_in_receive_buffer",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::SREJEnabled, negate: false },
+                        GuardTerm { atom: Ax25Guard::Mod8, negate: true },
+                        GuardTerm { atom: Ax25Guard::OutOfSequenceFramesInReceiveBuffer, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -471,11 +551,15 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t06_enquiry_response_yes_no_no",
-                    guard: "F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I and not own_receiver_busy and not SREJ_enabled",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: false },
+                        GuardTerm { atom: Ax25Guard::OwnReceiverBusy, negate: true },
+                        GuardTerm { atom: Ax25Guard::SREJEnabled, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],
@@ -483,11 +567,13 @@ pub static DATA_LINK_SUBROUTINES: SubroutinesPage = SubroutinesPage {
                 },
                 SubroutinePath {
                     id: "t07_enquiry_response_no",
-                    guard: "not F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I",
+                    guard: &[
+                        GuardTerm { atom: Ax25Guard::FEq1AndFrameEqRROrFrameEqRNROrFrameEqI, negate: true },
+                    ],
                     actions: &[
-                        ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                        ActionStep { verb: "RR Response", kind: ActionKind::SignalLower },
-                        ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::NRAssignVR, kind: ActionKind::Processing },
+                        ActionStep { verb: Ax25ActionVerb::RRResponse, kind: ActionKind::SignalLower },
+                        ActionStep { verb: Ax25ActionVerb::ClearAcknowledgePending, kind: ActionKind::Processing },
                     ],
                     notes: "",
                     references: &[],

@@ -22,7 +22,8 @@
 | C# library | NuGet | [`Packet.Ax25.Sdl`](https://www.nuget.org/packages/Packet.Ax25.Sdl) | [`spec/csharp/`](spec/csharp/) |
 | TypeScript library | npm | [`ax25sdl`](https://www.npmjs.com/package/ax25sdl) | [`spec/ts/`](spec/ts/) |
 | Go module | git | `github.com/m0lte/ax25sdl/spec/go` | [`spec/go/`](spec/go/) |
-| Rust / C / Python / JSON | _not externally packaged_ | codegen output for in-tree consumers | per-backend dirs |
+| Rust crate | crates.io (publishable; not yet published) | `ax25sdl` (`no_std`-capable) | [`spec/rust/`](spec/rust/) |
+| C / Python / JSON | _not externally packaged_ | codegen output for in-tree consumers | per-backend dirs |
 
 Tagging `v*` on `main` fires [`.github/workflows/publish.yml`](.github/workflows/publish.yml) — NuGet + npm publish from the same tag, version taken from the tag stripped of its leading `v`.
 

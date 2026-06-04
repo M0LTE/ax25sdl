@@ -451,9 +451,11 @@ internal static class Program
         // Generated closed verb set (SP-010 / packet.net#260): every canonical
         // action verb across all pages + subroutines, so a runtime dispatcher can
         // switch exhaustively (a new/renamed verb becomes a compile error rather
-        // than an "unknown SDL action" thrown at runtime). Emitted as a C# enum
-        // and a TS string-literal union; the other backends keep the string verb.
-        if (plan.EmitCsharp || plan.EmitTs)
+        // than an "unknown SDL action" thrown at runtime). Emitted as a C# enum,
+        // a TS string-literal union, and a Rust enum (ADR-0002 extended to Rust
+        // so a no_std embedded consumer can `match` exhaustively); Go / C /
+        // Python / JSON keep the string verb.
+        if (plan.EmitCsharp || plan.EmitTs || plan.EmitRust)
         {
             var allVerbs = resolvedPages
                 .SelectMany(p => p.Transitions).SelectMany(t => t.Actions).Select(a => a.Verb)
@@ -515,6 +517,23 @@ internal static class Program
                 WriteIfChanged(eventUnionPath, TsEmitter.EmitEventUnion(events));
                 writtenTs.Add(Path.GetFullPath(eventUnionPath));
                 Console.WriteLine("  ok  (events.yaml)  →  ax25-event.g.ts");
+            }
+            if (plan.EmitRust)
+            {
+                var verbEnumPath = Path.Combine(plan.RustOut, "ax25_action_verb.g.rs");
+                WriteIfChanged(verbEnumPath, RustEmitter.EmitActionVerbEnum(allVerbs));
+                writtenRust.Add(Path.GetFullPath(verbEnumPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  ax25_action_verb.g.rs");
+
+                var guardEnumPath = Path.Combine(plan.RustOut, "ax25_guard.g.rs");
+                WriteIfChanged(guardEnumPath, RustEmitter.EmitGuardEnum(allGuardAtoms));
+                writtenRust.Add(Path.GetFullPath(guardEnumPath));
+                Console.WriteLine("  ok  (all pages + subroutines)  →  ax25_guard.g.rs");
+
+                var eventEnumPath = Path.Combine(plan.RustOut, "ax25_event.g.rs");
+                WriteIfChanged(eventEnumPath, RustEmitter.EmitEventEnum(events));
+                writtenRust.Add(Path.GetFullPath(eventEnumPath));
+                Console.WriteLine("  ok  (events.yaml)  →  ax25_event.g.rs");
             }
         }
 

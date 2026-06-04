@@ -79,9 +79,10 @@ typed terms — a hand-written `GuardTerm(Ax25Guard Atom, bool Negate)`:
 - `LoopRange.Predicate` → a single `GuardTerm` (carries the loop's `not`).
 - `UndefinedSpecBranch.Predicate` → `Ax25Guard` (bare atom).
 
-Only C# and TS get the typed closed set + tightened field types (mirroring how
-SP-010 emitted `Ax25ActionVerb` for C#/TS only); Go/Rust/C/Python/JSON keep the
-canonical guard string.
+C#, TS, **and Rust** get the typed closed set + tightened field types
+(`Ax25Guard` enum/union + `GuardTerm`); Rust was brought to parity in
+[ADR-0003](adr/0003-rust-typed-closed-sets-and-no-std.md) for an embedded
+(`no_std`) consumer. Go/C/Python/JSON keep the canonical guard string.
 
 The composed guard string is parsed back into terms by `GuardExpression` (in
 `Packet.Sdl.IR`). It accepts only a conjunction of optionally-negated atoms and

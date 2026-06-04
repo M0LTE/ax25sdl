@@ -155,6 +155,9 @@ jobs:
       - name: cargo build
         working-directory: spec/rust
         run: cargo build
+      - name: cargo build --no-default-features (no_std)
+        working-directory: spec/rust
+        run: cargo build --no-default-features
       - name: cargo test
         working-directory: spec/rust
         run: cargo test
