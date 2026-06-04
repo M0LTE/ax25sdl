@@ -17,14 +17,29 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t01_dl_disconnect_request",
             from: "TimerRecovery",
-            on: "DL_DISCONNECT_request",
-            guard: "",
+            on: Ax25Event::DLDISCONNECTRequest,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DISC (P = 1)", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DISCPEq1,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingRelease",
             notes: "",
@@ -34,11 +49,12 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t02_dl_data_request",
             from: "TimerRecovery",
-            on: "DL_DATA_request",
-            guard: "",
-            actions: &[
-                ActionStep { verb: "Push on I Frame Queue", kind: ActionKind::InternalOut },
-            ],
+            on: Ax25Event::DLDATARequest,
+            guard: &[],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::PushOnIFrameQueue,
+                kind: ActionKind::InternalOut,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -47,11 +63,15 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t03_i_frame_pops_off_queue_yes",
             from: "TimerRecovery",
-            on: "I_frame_pops_off_queue",
-            guard: "peer_receiver_busy",
-            actions: &[
-                ActionStep { verb: "Push I Frame on I Queue", kind: ActionKind::InternalOut },
-            ],
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::PeerReceiverBusy,
+                negate: false,
+            }],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::PushIFrameOnIQueue,
+                kind: ActionKind::InternalOut,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -60,11 +80,21 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t03_i_frame_pops_off_queue_no_yes",
             from: "TimerRecovery",
-            on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and vs_eq_va_plus_k",
-            actions: &[
-                ActionStep { verb: "Push I Frame on I Queue", kind: ActionKind::InternalOut },
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: false,
+                },
             ],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::PushIFrameOnIQueue,
+                kind: ActionKind::InternalOut,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -73,15 +103,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t03_i_frame_pops_off_queue_no_no_yes",
             from: "TimerRecovery",
-            on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running",
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "P := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "I Command", kind: ActionKind::SignalLower },
-                ActionStep { verb: "V(s) := V(s) + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::NSAssignVS,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::PAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ICommand,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VSAssignVSPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -91,17 +152,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t03_i_frame_pops_off_queue_no_no_no",
             from: "TimerRecovery",
-            on: "I_frame_pops_off_queue",
-            guard: "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running",
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "N(s) := V(s)", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "P := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "I Command", kind: ActionKind::SignalLower },
-                ActionStep { verb: "V(s) := V(s) + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::NSAssignVS,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::PAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ICommand,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VSAssignVSPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -111,11 +209,12 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t04_dl_unit_data_request",
             from: "TimerRecovery",
-            on: "DL_UNIT_DATA_request",
-            guard: "",
-            actions: &[
-                ActionStep { verb: "UI Command", kind: ActionKind::SignalLower },
-            ],
+            on: Ax25Event::DLUNITDATARequest,
+            guard: &[],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::UICommand,
+                kind: ActionKind::SignalLower,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -124,12 +223,24 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t05_dl_flow_off_request_yes",
             from: "TimerRecovery",
-            on: "DL_FLOW_OFF_request",
-            guard: "own_receiver_busy",
+            on: Ax25Event::DLFLOWOFFRequest,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: false,
+            }],
             actions: &[
-                ActionStep { verb: "Set Own Receiver Busy", kind: ActionKind::Processing },
-                ActionStep { verb: "RNR Response (F = 0)", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetOwnReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RNRResponseFEq0,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -139,8 +250,11 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t05_dl_flow_off_request_no",
             from: "TimerRecovery",
-            on: "DL_FLOW_OFF_request",
-            guard: "not own_receiver_busy",
+            on: Ax25Event::DLFLOWOFFRequest,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: true,
+            }],
             actions: &[],
             next: "TimerRecovery",
             notes: "",
@@ -150,14 +264,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t06_dl_flow_on_request_yes_no",
             from: "TimerRecovery",
-            on: "DL_FLOW_ON_request",
-            guard: "own_receiver_busy and not T1_running",
+            on: Ax25Event::DLFLOWONRequest,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Clear Own Receiver Busy", kind: ActionKind::Processing },
-                ActionStep { verb: "RR Command (P = 0)", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearOwnReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RRCommandPEq0,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -167,12 +305,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t06_dl_flow_on_request_yes_yes",
             from: "TimerRecovery",
-            on: "DL_FLOW_ON_request",
-            guard: "own_receiver_busy and T1_running",
+            on: Ax25Event::DLFLOWONRequest,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Clear Own Receiver Busy", kind: ActionKind::Processing },
-                ActionStep { verb: "RR Command (P = 0)", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearOwnReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RRCommandPEq0,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -182,8 +338,11 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t06_dl_flow_on_request_no",
             from: "TimerRecovery",
-            on: "DL_FLOW_ON_request",
-            guard: "not own_receiver_busy",
+            on: Ax25Event::DLFLOWONRequest,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: true,
+            }],
             actions: &[],
             next: "TimerRecovery",
             notes: "",
@@ -193,12 +352,21 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t07_dl_connect_request",
             from: "TimerRecovery",
-            on: "DL_CONNECT_request",
-            guard: "",
+            on: Ax25Event::DLCONNECTRequest,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -208,13 +376,25 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t08_control_field_error",
             from: "TimerRecovery",
-            on: "control_field_error",
-            guard: "",
+            on: Ax25Event::ControlFieldError,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (L)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationL,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -224,13 +404,25 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t09_info_not_permitted_in_frame",
             from: "TimerRecovery",
-            on: "info_not_permitted_in_frame",
-            guard: "",
+            on: Ax25Event::InfoNotPermittedInFrame,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (M)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationM,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -240,13 +432,25 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t10_u_or_s_frame_length_error",
             from: "TimerRecovery",
-            on: "u_or_s_frame_length_error",
-            guard: "",
+            on: Ax25Event::UOrSFrameLengthError,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Set Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationN,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -256,12 +460,21 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t11_ua_received",
             from: "TimerRecovery",
-            on: "UA_received",
-            guard: "",
+            on: Ax25Event::UAReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (N)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Clear Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationN,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -271,14 +484,29 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t12_dm_received",
             from: "TimerRecovery",
-            on: "DM_received",
-            guard: "",
+            on: Ax25Event::DMReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (E)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationE,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -288,21 +516,60 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t13_sabm_received_no",
             from: "TimerRecovery",
-            on: "SABM_received",
-            guard: "not vs_eq_va",
+            on: Ax25Event::SABMReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: true,
+            }],
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
-                ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_CONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetVersion20,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::UA,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearExceptionConditions,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationF,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VSAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -312,14 +579,32 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t13_sabm_received_yes",
             from: "TimerRecovery",
-            on: "SABM_received",
-            guard: "vs_eq_va",
+            on: Ax25Event::SABMReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: false,
+            }],
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
-                ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetVersion20,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::UA,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearExceptionConditions,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationF,
+                    kind: ActionKind::SignalUpper,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -329,21 +614,60 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t14_sabme_received_no",
             from: "TimerRecovery",
-            on: "SABME_received",
-            guard: "not vs_eq_va",
+            on: Ax25Event::SABMEReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: true,
+            }],
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Version 2.2", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
-                ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_CONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "V(s) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "V(r) := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetVersion22,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::UA,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearExceptionConditions,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationF,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VSAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -353,14 +677,32 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t14_sabme_received_yes",
             from: "TimerRecovery",
-            on: "SABME_received",
-            guard: "vs_eq_va",
+            on: Ax25Event::SABMEReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: false,
+            }],
             actions: &[
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Version 2.2", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Exception Conditions", kind: ActionKind::Subroutine },
-                ActionStep { verb: "DL-ERROR Indication (F)", kind: ActionKind::SignalUpper },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetVersion22,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::UA,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearExceptionConditions,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationF,
+                    kind: ActionKind::SignalUpper,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -370,13 +712,25 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t15_frmr_received",
             from: "TimerRecovery",
-            on: "FRMR_received",
-            guard: "",
+            on: Ax25Event::FRMRReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (K)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "set_version_2_0", kind: ActionKind::Processing },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Clear Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationK,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetVersion20,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -386,11 +740,20 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t16_ui_received_yes",
             from: "TimerRecovery",
-            on: "UI_received",
-            guard: "P_eq_1",
+            on: Ax25Event::UIReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: false,
+            }],
             actions: &[
-                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::UICheck,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -400,11 +763,15 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t16_ui_received_no",
             from: "TimerRecovery",
-            on: "UI_received",
-            guard: "not P_eq_1",
-            actions: &[
-                ActionStep { verb: "UI Check", kind: ActionKind::Subroutine },
-            ],
+            on: Ax25Event::UIReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: true,
+            }],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::UICheck,
+                kind: ActionKind::Subroutine,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -413,15 +780,33 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t17_disc_received",
             from: "TimerRecovery",
-            on: "DISC_received",
-            guard: "",
+            on: Ax25Event::DISCReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "UA", kind: ActionKind::SignalLower },
-                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::UA,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -431,12 +816,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_no_yes_yes",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -446,12 +853,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_no_yes_no_no",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -461,12 +894,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -476,11 +935,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_no_no_yes",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -490,11 +968,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_no_no_no",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -504,13 +1001,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_yes_no_no",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -520,13 +1042,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_yes_no_yes",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -536,17 +1083,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_yes_yes_no",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -556,15 +1140,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t18_rr_received_yes_yes_yes",
             from: "TimerRecovery",
-            on: "RR_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
+            on: Ax25Event::RRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -574,12 +1189,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_no_yes_yes",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -589,12 +1226,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_no_yes_no_no",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -604,12 +1267,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -619,11 +1308,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_no_no_yes",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -633,11 +1341,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_no_no_no",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -647,13 +1374,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_yes_no_no",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -663,13 +1415,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_yes_no_yes",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -679,17 +1456,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_yes_yes_no",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -699,15 +1513,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t19_rnr_received_yes_yes_yes",
             from: "TimerRecovery",
-            on: "RNR_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
+            on: Ax25Event::RNRReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "set_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -717,12 +1562,24 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t20_lm_seize_confirm_yes",
             from: "TimerRecovery",
-            on: "LM_SEIZE_confirm",
-            guard: "ack_pending",
+            on: Ax25Event::LMSEIZEConfirm,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::AckPending,
+                negate: false,
+            }],
             actions: &[
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry Response (F = 0)", kind: ActionKind::Subroutine },
-                ActionStep { verb: "LM_release_request", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseFEq0,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMReleaseRequest,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -732,11 +1589,15 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t20_lm_seize_confirm_no",
             from: "TimerRecovery",
-            on: "LM_SEIZE_confirm",
-            guard: "not ack_pending",
-            actions: &[
-                ActionStep { verb: "LM_release_request", kind: ActionKind::SignalLower },
-            ],
+            on: Ax25Event::LMSEIZEConfirm,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::AckPending,
+                negate: true,
+            }],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::LMReleaseRequest,
+                kind: ActionKind::SignalLower,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -745,11 +1606,20 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t21_t1_expiry_no",
             from: "TimerRecovery",
-            on: "T1_expiry",
-            guard: "not RC_eq_N2",
+            on: Ax25Event::T1Expiry,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: true,
+            }],
             actions: &[
-                ActionStep { verb: "Transmit Enquiry", kind: ActionKind::Subroutine },
-                ActionStep { verb: "RC := RC + 1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::TransmitEnquiry,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssignRCPlus1,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -759,13 +1629,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t21_t1_expiry_yes_yes_yes",
             from: "TimerRecovery",
-            on: "T1_expiry",
-            guard: "RC_eq_N2 and vs_eq_va and peer_receiver_busy",
+            on: Ax25Event::T1Expiry,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (U)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationU,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DMResponseFEq0,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -775,13 +1670,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t21_t1_expiry_yes_yes_no",
             from: "TimerRecovery",
-            on: "T1_expiry",
-            guard: "RC_eq_N2 and vs_eq_va and not peer_receiver_busy",
+            on: Ax25Event::T1Expiry,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (T)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationT,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DMResponseFEq0,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -791,13 +1711,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t21_t1_expiry_yes_no",
             from: "TimerRecovery",
-            on: "T1_expiry",
-            guard: "RC_eq_N2 and not vs_eq_va",
+            on: Ax25Event::T1Expiry,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (I)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "DL_DISCONNECT_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "discard_I_frame_queue", kind: ActionKind::Processing },
-                ActionStep { verb: "DM Response (F = 0)", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationI,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DMResponseFEq0,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "Disconnected",
             notes: "",
@@ -807,11 +1748,20 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "not command",
+            on: Ax25Event::IReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::Command,
+                negate: true,
+            }],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Discard I Frame", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationO,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardIFrame,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -821,12 +1771,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and not info_field_length_le_N1_and_content_is_octet_aligned",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "DL-ERROR Indication (O)", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Establish_Data_Link", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Clear Layer 3 Initiated", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLERRORIndicationO,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EstablishDataLink,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearLayer3Initiated,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -836,11 +1804,25 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs",
-            actions: &[
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
             ],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::NRRecovery,
+                kind: ActionKind::Subroutine,
+            }],
             next: "AwaitingConnection",
             notes: "",
             references: &[],
@@ -849,15 +1831,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_yes_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "F := 1", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "RNR", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssign1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RNR,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -867,11 +1888,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_yes_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -881,87 +1929,325 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_yes_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
-                ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
-                ActionStep { verb: "F := 1", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "RR", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVRPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearRejectException,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DecrementSrejectExceptionIf0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RetrieveStoredVRIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVR1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssign1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RR,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[
-                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
-            ],
+            loops: &[LoopRange {
+                start: 5,
+                length: 3,
+                predicate: GuardTerm {
+                    atom: Ax25Guard::VrIFrameStored,
+                    negate: false,
+                },
+                test_at_end: false,
+            }],
         },
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_yes_no_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::AckPending,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
-                ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
-                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
-                ActionStep { verb: "LM_seize_request", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVRPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearRejectException,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DecrementSrejectExceptionIf0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RetrieveStoredVRIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVR1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMSeizeRequest,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[
-                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
-            ],
+            loops: &[LoopRange {
+                start: 5,
+                length: 3,
+                predicate: GuardTerm {
+                    atom: Ax25Guard::VrIFrameStored,
+                    negate: false,
+                },
+                test_at_end: false,
+            }],
         },
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::AckPending,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(r) := V(r) + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Reject Exception", kind: ActionKind::Processing },
-                ActionStep { verb: "Decrement Sreject Exception if > 0", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "Retrieve Stored V(r) I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "DL_DATA_indication", kind: ActionKind::SignalUpper },
-                ActionStep { verb: "V(r) := V(r) - 1", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVRPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearRejectException,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DecrementSrejectExceptionIf0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RetrieveStoredVRIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DLDATAIndication,
+                    kind: ActionKind::SignalUpper,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VRAssignVR1,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
             references: &[],
-            loops: &[
-                LoopRange { start: 5, length: 3, predicate: "vr_I_frame_stored", test_at_end: false },
-            ],
+            loops: &[LoopRange {
+                start: 5,
+                length: 3,
+                predicate: GuardTerm {
+                    atom: Ax25Guard::VrIFrameStored,
+                    negate: false,
+                },
+                test_at_end: false,
+            }],
         },
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_yes_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "F := 1", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "RR", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssign1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RR,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -971,11 +2257,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_yes_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -985,16 +2306,66 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_no_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Reject Exception", kind: ActionKind::Processing },
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "REJ", kind: ActionKind::SignalLower },
-                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetRejectException,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::REJ,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1004,17 +2375,78 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsGtVrPlus1,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "Discard Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "Set Reject Exception", kind: ActionKind::Processing },
-                ActionStep { verb: "F := P", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "REJ", kind: ActionKind::SignalLower },
-                ActionStep { verb: "set_acknowledge_pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SaveContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::DiscardContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetRejectException,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssignP,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::REJ,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SetAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1024,15 +2456,70 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_no_yes_no_no",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsGtVrPlus1,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "F := 1", kind: ActionKind::Processing },
-                ActionStep { verb: "Sreject := Sreject + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "SREJ", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SaveContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssign1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SrejectAssignSrejectPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SREJ,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1042,15 +2529,66 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t22_i_received_yes_yes_yes_no_no_no_yes_yes",
             from: "TimerRecovery",
-            on: "I_received",
-            guard: "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0",
+            on: Ax25Event::IReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Save Contents of I Frame", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) := V(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "F := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "Sreject := Sreject + 1", kind: ActionKind::Processing },
-                ActionStep { verb: "SREJ", kind: ActionKind::SignalLower },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SaveContentsOfIFrame,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRAssignVR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::FAssign0,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SrejectAssignSrejectPlus1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SREJ,
+                    kind: ActionKind::SignalLower,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1060,12 +2598,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_yes_yes_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1075,16 +2639,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_yes_yes_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1094,12 +2696,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -1109,12 +2737,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_yes_no_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Enquiry_Response_F_1", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::EnquiryResponseF1,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -1124,11 +2778,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_no_yes_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1138,15 +2815,50 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_no_yes_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1156,11 +2868,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_no_no_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -1170,11 +2905,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_no_no_no_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -1184,13 +2942,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_yes_no_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -1200,13 +2983,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_yes_no_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -1216,15 +3024,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_yes_yes_yes",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -1234,17 +3073,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t23_rej_received_yes_yes_no",
             from: "TimerRecovery",
-            on: "REJ_received",
-            guard: "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr",
+            on: Ax25Event::REJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1254,12 +3130,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_yes_yes_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1269,13 +3171,42 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_yes_yes_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1285,11 +3216,29 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_yes_no_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va",
-            actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false,
+                },
             ],
+            actions: &[ActionStep {
+                verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                kind: ActionKind::Processing,
+            }],
             next: "TimerRecovery",
             notes: "",
             references: &[],
@@ -1298,11 +3247,34 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_yes_no_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1312,11 +3284,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_no_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -1326,11 +3317,30 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_no_no_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "not response and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -1340,13 +3350,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_no_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and not va_le_nr_le_vs and not version_2_2",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingConnection",
             notes: "",
@@ -1356,13 +3391,38 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_no_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and not va_le_nr_le_vs and version_2_2",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "N(r) Recovery", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::NRRecovery,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "AwaitingV22Connection",
             notes: "",
@@ -1372,16 +3432,54 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_yes_yes_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -1391,20 +3489,70 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_yes_yes_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "V(a) := N(r)", kind: ActionKind::Processing },
-                ActionStep { verb: "Check_I_Frame_Acknowledged", kind: ActionKind::Subroutine },
-                ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-                ActionStep { verb: "LM_data_request", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::VAAssignNR,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::CheckIFrameAcknowledged,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::PushFrameOnQueue,
+                    kind: ActionKind::InternalOut,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMDataRequest,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1414,14 +3562,46 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_yes_no_yes",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "Start T3", kind: ActionKind::Processing },
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::RCAssign0,
+                    kind: ActionKind::Processing,
+                },
             ],
             next: "Connected",
             notes: "",
@@ -1431,18 +3611,62 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t24_srej_received_yes_yes_no_no",
             from: "TimerRecovery",
-            on: "SREJ_received",
-            guard: "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va",
+            on: Ax25Event::SREJReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true,
+                },
+            ],
             actions: &[
-                ActionStep { verb: "clear_peer_receiver_busy", kind: ActionKind::Processing },
-                ActionStep { verb: "Stop T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Select_T1_Value", kind: ActionKind::Subroutine },
-                ActionStep { verb: "push_frame_on_queue", kind: ActionKind::InternalOut },
-                ActionStep { verb: "LM_data_request", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Stop T3", kind: ActionKind::Processing },
-                ActionStep { verb: "Start T1", kind: ActionKind::Processing },
-                ActionStep { verb: "Clear Acknowledge Pending", kind: ActionKind::Processing },
-                ActionStep { verb: "Invoke Retransmission", kind: ActionKind::Subroutine },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearPeerReceiverBusy,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::SelectT1Value,
+                    kind: ActionKind::Subroutine,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::PushFrameOnQueue,
+                    kind: ActionKind::InternalOut,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMDataRequest,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::InvokeRetransmission,
+                    kind: ActionKind::Subroutine,
+                },
             ],
             next: "TimerRecovery",
             notes: "",
@@ -1452,8 +3676,8 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t25_all_other_primitives__from_lower_layer",
             from: "TimerRecovery",
-            on: "all_other_primitives__from_lower_layer",
-            guard: "",
+            on: Ax25Event::AllOtherPrimitivesFromLowerLayer,
+            guard: &[],
             actions: &[],
             next: "TimerRecovery",
             notes: "",
@@ -1463,8 +3687,8 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
         TransitionSpec {
             id: "t26_all_other_primitives__from_upper_layer",
             from: "TimerRecovery",
-            on: "all_other_primitives__from_upper_layer",
-            guard: "",
+            on: Ax25Event::AllOtherPrimitivesFromUpperLayer,
+            guard: &[],
             actions: &[],
             next: "TimerRecovery",
             notes: "",
@@ -1495,18 +3719,18 @@ mod tests {
             .iter()
             .find(|x| x.id == "t01_dl_disconnect_request")
             .expect("transition t01_dl_disconnect_request not found");
-        assert_eq!(tx.on, "DL_DISCONNECT_request");
+        assert_eq!(tx.on, Ax25Event::DLDISCONNECTRequest);
         assert_eq!(tx.next, "AwaitingRelease");
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "RC := 0");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "DISC (P = 1)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DISCPEq1);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "Stop T3");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
     }
 
@@ -1517,10 +3741,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t02_dl_data_request")
             .expect("transition t02_dl_data_request not found");
-        assert_eq!(tx.on, "DL_DATA_request");
+        assert_eq!(tx.on, Ax25Event::DLDATARequest);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "Push on I Frame Queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::PushOnIFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
@@ -1531,11 +3755,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_yes")
             .expect("transition t03_i_frame_pops_off_queue_yes not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "peer_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::PeerReceiverBusy,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "Push I Frame on I Queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::PushIFrameOnIQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
@@ -1546,11 +3776,23 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_yes not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not peer_receiver_busy and vs_eq_va_plus_k");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "Push I Frame on I Queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::PushIFrameOnIQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
@@ -1561,24 +3803,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_yes")
             .expect("transition t03_i_frame_pops_off_queue_no_no_yes not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_plus_k and T1_running"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::NSAssignVS);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "P := 0");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::PAssign0);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "I Command");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ICommand);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[4].verb, "V(s) := V(s) + 1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::VSAssignVSPlus1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -1589,28 +3844,41 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_i_frame_pops_off_queue_no_no_no")
             .expect("transition t03_i_frame_pops_off_queue_no_no_no not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVaPlusK,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "N(s) := V(s)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::NSAssignVS);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "P := 0");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::PAssign0);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "I Command");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ICommand);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[4].verb, "V(s) := V(s) + 1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::VSAssignVSPlus1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Stop T3");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "Start T1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -1621,10 +3889,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t04_dl_unit_data_request")
             .expect("transition t04_dl_unit_data_request not found");
-        assert_eq!(tx.on, "DL_UNIT_DATA_request");
+        assert_eq!(tx.on, Ax25Event::DLUNITDATARequest);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "UI Command");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICommand);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalLower);
     }
 
@@ -1635,15 +3903,21 @@ mod tests {
             .iter()
             .find(|x| x.id == "t05_dl_flow_off_request_yes")
             .expect("transition t05_dl_flow_off_request_yes not found");
-        assert_eq!(tx.on, "DL_FLOW_OFF_request");
+        assert_eq!(tx.on, Ax25Event::DLFLOWOFFRequest);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "own_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "Set Own Receiver Busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetOwnReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "RNR Response (F = 0)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::RNRResponseFEq0);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -1654,9 +3928,15 @@ mod tests {
             .iter()
             .find(|x| x.id == "t05_dl_flow_off_request_no")
             .expect("transition t05_dl_flow_off_request_no not found");
-        assert_eq!(tx.on, "DL_FLOW_OFF_request");
+        assert_eq!(tx.on, Ax25Event::DLFLOWOFFRequest);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not own_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 0);
     }
 
@@ -1667,19 +3947,31 @@ mod tests {
             .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_no")
             .expect("transition t06_dl_flow_on_request_yes_no not found");
-        assert_eq!(tx.on, "DL_FLOW_ON_request");
+        assert_eq!(tx.on, Ax25Event::DLFLOWONRequest);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "own_receiver_busy and not T1_running");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "Clear Own Receiver Busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearOwnReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "RR Command (P = 0)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::RRCommandPEq0);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Stop T3");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
     }
 
@@ -1690,15 +3982,27 @@ mod tests {
             .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_yes_yes")
             .expect("transition t06_dl_flow_on_request_yes_yes not found");
-        assert_eq!(tx.on, "DL_FLOW_ON_request");
+        assert_eq!(tx.on, Ax25Event::DLFLOWONRequest);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "own_receiver_busy and T1_running");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::T1Running,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "Clear Own Receiver Busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearOwnReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "RR Command (P = 0)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::RRCommandPEq0);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -1709,9 +4013,15 @@ mod tests {
             .iter()
             .find(|x| x.id == "t06_dl_flow_on_request_no")
             .expect("transition t06_dl_flow_on_request_no not found");
-        assert_eq!(tx.on, "DL_FLOW_ON_request");
+        assert_eq!(tx.on, Ax25Event::DLFLOWONRequest);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not own_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::OwnReceiverBusy,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 0);
     }
 
@@ -1722,14 +4032,14 @@ mod tests {
             .iter()
             .find(|x| x.id == "t07_dl_connect_request")
             .expect("transition t07_dl_connect_request not found");
-        assert_eq!(tx.on, "DL_CONNECT_request");
+        assert_eq!(tx.on, Ax25Event::DLCONNECTRequest);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -1740,16 +4050,16 @@ mod tests {
             .iter()
             .find(|x| x.id == "t08_control_field_error")
             .expect("transition t08_control_field_error not found");
-        assert_eq!(tx.on, "control_field_error");
+        assert_eq!(tx.on, Ax25Event::ControlFieldError);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (L)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationL);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
     }
 
@@ -1760,16 +4070,16 @@ mod tests {
             .iter()
             .find(|x| x.id == "t09_info_not_permitted_in_frame")
             .expect("transition t09_info_not_permitted_in_frame not found");
-        assert_eq!(tx.on, "info_not_permitted_in_frame");
+        assert_eq!(tx.on, Ax25Event::InfoNotPermittedInFrame);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (M)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationM);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
     }
 
@@ -1780,16 +4090,16 @@ mod tests {
             .iter()
             .find(|x| x.id == "t10_u_or_s_frame_length_error")
             .expect("transition t10_u_or_s_frame_length_error not found");
-        assert_eq!(tx.on, "u_or_s_frame_length_error");
+        assert_eq!(tx.on, Ax25Event::UOrSFrameLengthError);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (N)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationN);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
     }
 
@@ -1800,14 +4110,14 @@ mod tests {
             .iter()
             .find(|x| x.id == "t11_ua_received")
             .expect("transition t11_ua_received not found");
-        assert_eq!(tx.on, "UA_received");
+        assert_eq!(tx.on, Ax25Event::UAReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (N)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationN);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "Clear Layer 3 Initiated");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearLayer3Initiated);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -1818,18 +4128,18 @@ mod tests {
             .iter()
             .find(|x| x.id == "t12_dm_received")
             .expect("transition t12_dm_received not found");
-        assert_eq!(tx.on, "DM_received");
+        assert_eq!(tx.on, Ax25Event::DMReceived);
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (E)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationE);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Stop T1");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Stop T3");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
     }
 
@@ -1840,33 +4150,39 @@ mod tests {
             .iter()
             .find(|x| x.id == "t13_sabm_received_no")
             .expect("transition t13_sabm_received_no not found");
-        assert_eq!(tx.on, "SABM_received");
+        assert_eq!(tx.on, Ax25Event::SABMReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 12);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "set_version_2_0");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "UA");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "Clear Exception Conditions");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ClearExceptionConditions);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[4].verb, "DL-ERROR Indication (F)");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLERRORIndicationF);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL_CONNECT_indication");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::DLCONNECTIndication);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[7].verb, "Stop T1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "Stop T3");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "V(s) := 0");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::VSAssign0);
         assert_eq!(tx.actions[9].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[10].verb, "V(a) := 0");
+        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::VAAssign0);
         assert_eq!(tx.actions[10].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[11].verb, "V(r) := 0");
+        assert_eq!(tx.actions[11].verb, Ax25ActionVerb::VRAssign0);
         assert_eq!(tx.actions[11].kind, ActionKind::Processing);
     }
 
@@ -1877,19 +4193,25 @@ mod tests {
             .iter()
             .find(|x| x.id == "t13_sabm_received_yes")
             .expect("transition t13_sabm_received_yes not found");
-        assert_eq!(tx.on, "SABM_received");
+        assert_eq!(tx.on, Ax25Event::SABMReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "set_version_2_0");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "UA");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "Clear Exception Conditions");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ClearExceptionConditions);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[4].verb, "DL-ERROR Indication (F)");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLERRORIndicationF);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
     }
 
@@ -1900,33 +4222,39 @@ mod tests {
             .iter()
             .find(|x| x.id == "t14_sabme_received_no")
             .expect("transition t14_sabme_received_no not found");
-        assert_eq!(tx.on, "SABME_received");
+        assert_eq!(tx.on, Ax25Event::SABMEReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 12);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Set Version 2.2");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetVersion22);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "UA");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "Clear Exception Conditions");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ClearExceptionConditions);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[4].verb, "DL-ERROR Indication (F)");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLERRORIndicationF);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL_CONNECT_indication");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::DLCONNECTIndication);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[7].verb, "Stop T1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "Stop T3");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "V(s) := 0");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::VSAssign0);
         assert_eq!(tx.actions[9].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[10].verb, "V(a) := 0");
+        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::VAAssign0);
         assert_eq!(tx.actions[10].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[11].verb, "V(r) := 0");
+        assert_eq!(tx.actions[11].verb, Ax25ActionVerb::VRAssign0);
         assert_eq!(tx.actions[11].kind, ActionKind::Processing);
     }
 
@@ -1937,19 +4265,25 @@ mod tests {
             .iter()
             .find(|x| x.id == "t14_sabme_received_yes")
             .expect("transition t14_sabme_received_yes not found");
-        assert_eq!(tx.on, "SABME_received");
+        assert_eq!(tx.on, Ax25Event::SABMEReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::VsEqVa,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Set Version 2.2");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetVersion22);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "UA");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "Clear Exception Conditions");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ClearExceptionConditions);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[4].verb, "DL-ERROR Indication (F)");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLERRORIndicationF);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
     }
 
@@ -1960,16 +4294,16 @@ mod tests {
             .iter()
             .find(|x| x.id == "t15_frmr_received")
             .expect("transition t15_frmr_received not found");
-        assert_eq!(tx.on, "FRMR_received");
+        assert_eq!(tx.on, Ax25Event::FRMRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (K)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationK);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "set_version_2_0");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Clear Layer 3 Initiated");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::ClearLayer3Initiated);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
     }
 
@@ -1980,13 +4314,19 @@ mod tests {
             .iter()
             .find(|x| x.id == "t16_ui_received_yes")
             .expect("transition t16_ui_received_yes not found");
-        assert_eq!(tx.on, "UI_received");
+        assert_eq!(tx.on, Ax25Event::UIReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "UI Check");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICheck);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -1997,11 +4337,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t16_ui_received_no")
             .expect("transition t16_ui_received_no not found");
-        assert_eq!(tx.on, "UI_received");
+        assert_eq!(tx.on, Ax25Event::UIReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "UI Check");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICheck);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
@@ -2012,20 +4358,20 @@ mod tests {
             .iter()
             .find(|x| x.id == "t17_disc_received")
             .expect("transition t17_disc_received not found");
-        assert_eq!(tx.on, "DISC_received");
+        assert_eq!(tx.on, Ax25Event::DISCReceived);
         assert_eq!(tx.next, "Disconnected");
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "F := P");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "UA");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[3].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[4].verb, "Stop T1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Stop T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -2036,18 +4382,31 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_no_yes_yes")
             .expect("transition t18_rr_received_no_yes_yes not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -2058,15 +4417,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_no_yes_no_no")
             .expect("transition t18_rr_received_no_yes_no_no not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2077,18 +4456,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_no_yes_no_yes")
             .expect("transition t18_rr_received_no_yes_no_yes not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2099,16 +4495,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_no_no_yes")
             .expect("transition t18_rr_received_no_no_yes not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2119,16 +4528,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_no_no_no")
             .expect("transition t18_rr_received_no_no_no not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -2139,20 +4561,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_yes_no_no")
             .expect("transition t18_rr_received_yes_no_no not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2163,20 +4598,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_yes_no_yes")
             .expect("transition t18_rr_received_yes_no_yes not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2187,28 +4635,41 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_yes_yes_no")
             .expect("transition t18_rr_received_yes_yes_no not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, "Stop T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Start T1");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::SetAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2219,24 +4680,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_rr_received_yes_yes_yes")
             .expect("transition t18_rr_received_yes_yes_yes not found");
-        assert_eq!(tx.on, "RR_received");
+        assert_eq!(tx.on, Ax25Event::RRReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T3");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "RC := 0");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -2247,18 +4721,31 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_yes")
             .expect("transition t19_rnr_received_no_yes_yes not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -2269,15 +4756,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_no_no")
             .expect("transition t19_rnr_received_no_yes_no_no not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2288,18 +4795,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_no_yes_no_yes")
             .expect("transition t19_rnr_received_no_yes_no_yes not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2310,16 +4834,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_no_no_yes")
             .expect("transition t19_rnr_received_no_no_yes not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2330,16 +4867,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_no_no_no")
             .expect("transition t19_rnr_received_no_no_no not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -2350,20 +4900,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_yes_no_no")
             .expect("transition t19_rnr_received_yes_no_no not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2374,20 +4937,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_yes_no_yes")
             .expect("transition t19_rnr_received_yes_no_yes not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -2398,28 +4974,41 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_yes_yes_no")
             .expect("transition t19_rnr_received_yes_yes_no not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, "Stop T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Start T1");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::SetAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2430,24 +5019,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t19_rnr_received_yes_yes_yes")
             .expect("transition t19_rnr_received_yes_yes_yes not found");
-        assert_eq!(tx.on, "RNR_received");
+        assert_eq!(tx.on, Ax25Event::RNRReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "set_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SetPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T3");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "RC := 0");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -2458,15 +5060,21 @@ mod tests {
             .iter()
             .find(|x| x.id == "t20_lm_seize_confirm_yes")
             .expect("transition t20_lm_seize_confirm_yes not found");
-        assert_eq!(tx.on, "LM_SEIZE_confirm");
+        assert_eq!(tx.on, Ax25Event::LMSEIZEConfirm);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "ack_pending");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::AckPending,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry Response (F = 0)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseFEq0);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "LM_release_request");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::LMReleaseRequest);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
     }
 
@@ -2477,11 +5085,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t20_lm_seize_confirm_no")
             .expect("transition t20_lm_seize_confirm_no not found");
-        assert_eq!(tx.on, "LM_SEIZE_confirm");
+        assert_eq!(tx.on, Ax25Event::LMSEIZEConfirm);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not ack_pending");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::AckPending,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "LM_release_request");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::LMReleaseRequest);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalLower);
     }
 
@@ -2492,13 +5106,19 @@ mod tests {
             .iter()
             .find(|x| x.id == "t21_t1_expiry_no")
             .expect("transition t21_t1_expiry_no not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not RC_eq_N2");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "Transmit Enquiry");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::TransmitEnquiry);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "RC := RC + 1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::RCAssignRCPlus1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2509,17 +5129,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t21_t1_expiry_yes_yes_yes")
             .expect("transition t21_t1_expiry_yes_yes_yes not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "Disconnected");
-        assert_eq!(tx.guard, "RC_eq_N2 and vs_eq_va and peer_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (U)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationU);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "DM Response (F = 0)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::DMResponseFEq0);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalLower);
     }
 
@@ -2530,17 +5166,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t21_t1_expiry_yes_yes_no")
             .expect("transition t21_t1_expiry_yes_yes_no not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "Disconnected");
-        assert_eq!(tx.guard, "RC_eq_N2 and vs_eq_va and not peer_receiver_busy");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PeerReceiverBusy,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (T)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationT);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "DM Response (F = 0)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::DMResponseFEq0);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalLower);
     }
 
@@ -2551,17 +5203,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t21_t1_expiry_yes_no")
             .expect("transition t21_t1_expiry_yes_no not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "Disconnected");
-        assert_eq!(tx.guard, "RC_eq_N2 and not vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::RCEqN2,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (I)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationI);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "DM Response (F = 0)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::DMResponseFEq0);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalLower);
     }
 
@@ -2572,13 +5236,19 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_no")
             .expect("transition t22_i_received_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "not command");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::Command,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationO);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "Discard I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2589,18 +5259,27 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_no")
             .expect("transition t22_i_received_yes_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "command and not info_field_length_le_N1_and_content_is_octet_aligned"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (O)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationO);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "Clear Layer 3 Initiated");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearLayer3Initiated);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -2611,11 +5290,27 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_no")
             .expect("transition t22_i_received_yes_yes_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and not va_le_nr_le_vs");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
@@ -2626,21 +5321,45 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_yes_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "F := 1");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::FAssign1);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "RNR");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::RNR);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[5].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -2651,13 +5370,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_yes_no")
             .expect("transition t22_i_received_yes_yes_yes_yes_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and own_receiver_busy and not P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2668,33 +5411,64 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 12);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VRAssignVRPlus1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearRejectException);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
+        assert_eq!(
+            tx.actions[3].verb,
+            Ax25ActionVerb::DecrementSrejectExceptionIf0
+        );
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RetrieveStoredVRIFrame);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::VRAssignVR1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "F := 1");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::FAssign1);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[9].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[10].verb, "RR");
+        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::RR);
         assert_eq!(tx.actions[10].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[11].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[11].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[11].kind, ActionKind::Processing);
     }
 
@@ -2705,29 +5479,64 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and not ack_pending");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::AckPending,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 10);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VRAssignVRPlus1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearRejectException);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
+        assert_eq!(
+            tx.actions[3].verb,
+            Ax25ActionVerb::DecrementSrejectExceptionIf0
+        );
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RetrieveStoredVRIFrame);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::VRAssignVR1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "set_acknowledge_pending");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::SetAcknowledgePending);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "LM_seize_request");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::LMSeizeRequest);
         assert_eq!(tx.actions[9].kind, ActionKind::SignalLower);
     }
 
@@ -2738,25 +5547,60 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_yes_no_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_yes_no_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and ns_eq_vr and not P_eq_1 and ack_pending");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::AckPending,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "V(r) := V(r) + 1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VRAssignVRPlus1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Clear Reject Exception");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::ClearRejectException);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Decrement Sreject Exception if > 0");
+        assert_eq!(
+            tx.actions[3].verb,
+            Ax25ActionVerb::DecrementSrejectExceptionIf0
+        );
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[5].verb, "Retrieve Stored V(r) I Frame");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RetrieveStoredVRIFrame);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "DL_DATA_indication");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::DLDATAIndication);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[7].verb, "V(r) := V(r) - 1");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::VRAssignVR1);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2767,21 +5611,53 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_yes_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "F := 1");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::FAssign1);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "RR");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::RR);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[5].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -2792,13 +5668,45 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_yes_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_yes_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and reject_exception and not P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -2809,23 +5717,55 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and not SREJ_enabled");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 7);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Set Reject Exception");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SetRejectException);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "F := P");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "REJ");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::REJ);
         assert_eq!(tx.actions[5].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[6].verb, "set_acknowledge_pending");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::SetAcknowledgePending);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
     }
 
@@ -2836,25 +5776,65 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and ns_gt_vr_plus_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsGtVrPlus1,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Save Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SaveContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Discard Contents of I Frame");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DiscardContentsOfIFrame);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Set Reject Exception");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::SetRejectException);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "F := P");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "REJ");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::REJ);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[7].verb, "set_acknowledge_pending");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::SetAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -2865,21 +5845,64 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_no_no")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_no_no not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and not sreject_exception_gt_0 and not ns_gt_vr_plus_1");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsGtVrPlus1,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Save Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SaveContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "F := 1");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::FAssign1);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Sreject := Sreject + 1");
+        assert_eq!(
+            tx.actions[4].verb,
+            Ax25ActionVerb::SrejectAssignSrejectPlus1
+        );
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "SREJ");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::SREJ);
         assert_eq!(tx.actions[5].kind, ActionKind::SignalLower);
     }
 
@@ -2890,21 +5913,60 @@ mod tests {
             .iter()
             .find(|x| x.id == "t22_i_received_yes_yes_yes_no_no_no_yes_yes")
             .expect("transition t22_i_received_yes_yes_yes_no_no_no_yes_yes not found");
-        assert_eq!(tx.on, "I_received");
+        assert_eq!(tx.on, Ax25Event::IReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "command and info_field_length_le_N1_and_content_is_octet_aligned and va_le_nr_le_vs and not own_receiver_busy and not ns_eq_vr and not reject_exception and SREJ_enabled and sreject_exception_gt_0");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Command,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::InfoFieldLengthLeN1AndContentIsOctetAligned,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::OwnReceiverBusy,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::NsEqVr,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::RejectException,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SREJEnabled,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::SrejectExceptionGt0,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "Save Contents of I Frame");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SaveContentsOfIFrame);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "N(r) := V(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRAssignVR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "F := 0");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::FAssign0);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Sreject := Sreject + 1");
+        assert_eq!(
+            tx.actions[4].verb,
+            Ax25ActionVerb::SrejectAssignSrejectPlus1
+        );
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "SREJ");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::SREJ);
         assert_eq!(tx.actions[5].kind, ActionKind::SignalLower);
     }
 
@@ -2915,18 +5977,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_yes_yes_yes")
             .expect("transition t23_rej_received_no_yes_yes_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -2937,26 +6016,43 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_yes_yes_no")
             .expect("transition t23_rej_received_no_yes_yes_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 7);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[4].verb, "Stop T3");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Start T1");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
     }
 
@@ -2967,18 +6063,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_yes_no_yes")
             .expect("transition t23_rej_received_no_yes_no_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -2989,15 +6102,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_yes_no_no")
             .expect("transition t23_rej_received_no_yes_no_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Enquiry_Response_F_1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::EnquiryResponseF1);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[2].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -3008,16 +6141,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_no_yes_yes")
             .expect("transition t23_rej_received_no_no_yes_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -3028,21 +6178,41 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_no_yes_no")
             .expect("transition t23_rej_received_no_no_yes_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "TimerRecovery");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and va_le_nr_le_vs and not vs_eq_nr");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Stop T3");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -3053,13 +6223,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_no_no_yes")
             .expect("transition t23_rej_received_no_no_no_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -3070,13 +6260,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_no_no_no_no")
             .expect("transition t23_rej_received_no_no_no_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not response_and_F_eq_1 and not command_and_P_eq_1 and not va_le_nr_le_vs and not version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::CommandAndPEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -3087,20 +6297,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_yes_no_yes")
             .expect("transition t23_rej_received_yes_no_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -3111,20 +6334,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_yes_no_no")
             .expect("transition t23_rej_received_yes_no_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and not va_le_nr_le_vs and not version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -3135,24 +6371,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_yes_yes_yes")
             .expect("transition t23_rej_received_yes_yes_yes not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 6);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Start T3");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "RC := 0");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
@@ -3163,28 +6412,41 @@ mod tests {
             .iter()
             .find(|x| x.id == "t23_rej_received_yes_yes_no")
             .expect("transition t23_rej_received_yes_yes_no not found");
-        assert_eq!(tx.on, "REJ_received");
+        assert_eq!(tx.on, Ax25Event::REJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response_and_F_eq_1 and va_le_nr_le_vs and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::ResponseAndFEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, "Stop T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Start T1");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
@@ -3195,18 +6457,35 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_yes_yes_yes")
             .expect("transition t24_srej_received_no_yes_yes_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response and va_le_nr_le_vs and P_eq_1 and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
     }
 
@@ -3217,20 +6496,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_yes_yes_no")
             .expect("transition t24_srej_received_no_yes_yes_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -3241,14 +6537,31 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_yes_no_yes")
             .expect("transition t24_srej_received_no_yes_no_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response and va_le_nr_le_vs and not P_eq_1 and vs_eq_va"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
     }
 
@@ -3259,16 +6572,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_yes_no_no")
             .expect("transition t24_srej_received_no_yes_no_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::PEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -3279,16 +6609,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_no_no")
             .expect("transition t24_srej_received_no_no_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "not response and not va_le_nr_le_vs and not version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -3299,16 +6642,29 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_no_no_yes")
             .expect("transition t24_srej_received_no_no_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(
             tx.guard,
-            "not response and not va_le_nr_le_vs and version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
     }
 
@@ -3319,20 +6675,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_no_no")
             .expect("transition t24_srej_received_yes_no_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(
             tx.guard,
-            "response and not va_le_nr_le_vs and not version_2_2"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -3343,17 +6712,33 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_no_yes")
             .expect("transition t24_srej_received_yes_no_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "response and not va_le_nr_le_vs and version_2_2");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Version22,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "N(r) Recovery");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::NRRecovery);
         assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
     }
 
@@ -3364,26 +6749,43 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_yes_yes")
             .expect("transition t24_srej_received_yes_yes_yes_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response and va_le_nr_le_vs and F_eq_1 and vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 7);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, "Start T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "RC := 0");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
     }
 
@@ -3394,34 +6796,51 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_yes_no")
             .expect("transition t24_srej_received_yes_yes_yes_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqNr,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 11);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "V(a) := N(r)");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "Check_I_Frame_Acknowledged");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, "push_frame_on_queue");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::PushFrameOnQueue);
         assert_eq!(tx.actions[5].kind, ActionKind::InternalOut);
-        assert_eq!(tx.actions[6].verb, "LM_data_request");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::LMDataRequest);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[7].verb, "Stop T3");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "Start T1");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[9].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[10].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[10].kind, ActionKind::Subroutine);
     }
 
@@ -3432,22 +6851,39 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_no_yes")
             .expect("transition t24_srej_received_yes_yes_no_yes not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "response and va_le_nr_le_vs and not F_eq_1 and vs_eq_va"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Start T3");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "RC := 0");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
     }
 
@@ -3458,30 +6894,47 @@ mod tests {
             .iter()
             .find(|x| x.id == "t24_srej_received_yes_yes_no_no")
             .expect("transition t24_srej_received_yes_yes_no_no not found");
-        assert_eq!(tx.on, "SREJ_received");
+        assert_eq!(tx.on, Ax25Event::SREJReceived);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(
             tx.guard,
-            "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::Response,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VaLeNrLeVs,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 9);
-        assert_eq!(tx.actions[0].verb, "clear_peer_receiver_busy");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "push_frame_on_queue");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::PushFrameOnQueue);
         assert_eq!(tx.actions[3].kind, ActionKind::InternalOut);
-        assert_eq!(tx.actions[4].verb, "LM_data_request");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::LMDataRequest);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[5].verb, "Stop T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Start T1");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "Clear Acknowledge Pending");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "Invoke Retransmission");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::InvokeRetransmission);
         assert_eq!(tx.actions[8].kind, ActionKind::Subroutine);
     }
 
@@ -3492,7 +6945,7 @@ mod tests {
             .iter()
             .find(|x| x.id == "t25_all_other_primitives__from_lower_layer")
             .expect("transition t25_all_other_primitives__from_lower_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+        assert_eq!(tx.on, Ax25Event::AllOtherPrimitivesFromLowerLayer);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 0);
     }
@@ -3504,7 +6957,7 @@ mod tests {
             .iter()
             .find(|x| x.id == "t26_all_other_primitives__from_upper_layer")
             .expect("transition t26_all_other_primitives__from_upper_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+        assert_eq!(tx.on, Ax25Event::AllOtherPrimitivesFromUpperLayer);
         assert_eq!(tx.next, "TimerRecovery");
         assert_eq!(tx.actions.len(), 0);
     }

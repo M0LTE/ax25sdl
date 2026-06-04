@@ -17,15 +17,15 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t02_dl_connect_request",
             from: "AwaitingV22Connection",
-            on: "DL_CONNECT_request",
-            guard: "",
+            on: Ax25Event::DLCONNECTRequest,
+            guard: &[],
             actions: &[
                 ActionStep {
-                    verb: "Discard Queue",
+                    verb: Ax25ActionVerb::DiscardQueue,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Set Layer 3 Initiated",
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
                     kind: ActionKind::Processing,
                 },
             ],
@@ -37,10 +37,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t03_dl_unit_data_request",
             from: "AwaitingV22Connection",
-            on: "DL_UNIT_DATA_request",
-            guard: "",
+            on: Ax25Event::DLUNITDATARequest,
+            guard: &[],
             actions: &[ActionStep {
-                verb: "UI Command",
+                verb: Ax25ActionVerb::UICommand,
                 kind: ActionKind::SignalLower,
             }],
             next: "AwaitingV22Connection",
@@ -51,8 +51,11 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t04_dl_data_request_yes",
             from: "AwaitingV22Connection",
-            on: "DL_DATA_request",
-            guard: "layer_3_initiated",
+            on: Ax25Event::DLDATARequest,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: false,
+            }],
             actions: &[],
             next: "AwaitingV22Connection",
             notes: "",
@@ -62,10 +65,13 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t04_dl_data_request_no",
             from: "AwaitingV22Connection",
-            on: "DL_DATA_request",
-            guard: "not layer_3_initiated",
+            on: Ax25Event::DLDATARequest,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: true,
+            }],
             actions: &[ActionStep {
-                verb: "push_frame_on_queue",
+                verb: Ax25ActionVerb::PushFrameOnQueue,
                 kind: ActionKind::InternalOut,
             }],
             next: "AwaitingV22Connection",
@@ -76,8 +82,11 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t05_i_frame_pops_off_queue_yes",
             from: "AwaitingV22Connection",
-            on: "I_frame_pops_off_queue",
-            guard: "layer_3_initiated",
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: false,
+            }],
             actions: &[],
             next: "AwaitingV22Connection",
             notes: "",
@@ -87,10 +96,13 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t05_i_frame_pops_off_queue_no",
             from: "AwaitingV22Connection",
-            on: "I_frame_pops_off_queue",
-            guard: "not layer_3_initiated",
+            on: Ax25Event::IFramePopsOffQueue,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: true,
+            }],
             actions: &[ActionStep {
-                verb: "push_frame_on_queue",
+                verb: Ax25ActionVerb::PushFrameOnQueue,
                 kind: ActionKind::InternalOut,
             }],
             next: "AwaitingV22Connection",
@@ -101,8 +113,8 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t06_all_other_primitives__from_upper_layer",
             from: "AwaitingV22Connection",
-            on: "all_other_primitives__from_upper_layer",
-            guard: "",
+            on: Ax25Event::AllOtherPrimitivesFromUpperLayer,
+            guard: &[],
             actions: &[],
             next: "AwaitingV22Connection",
             notes: "",
@@ -112,10 +124,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t07_control_field_error",
             from: "AwaitingV22Connection",
-            on: "control_field_error",
-            guard: "",
+            on: Ax25Event::ControlFieldError,
+            guard: &[],
             actions: &[ActionStep {
-                verb: "DL-ERROR Indication (L)",
+                verb: Ax25ActionVerb::DLERRORIndicationL,
                 kind: ActionKind::SignalUpper,
             }],
             next: "AwaitingV22Connection",
@@ -126,10 +138,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t08_info_not_permitted_in_frame",
             from: "AwaitingV22Connection",
-            on: "info_not_permitted_in_frame",
-            guard: "",
+            on: Ax25Event::InfoNotPermittedInFrame,
+            guard: &[],
             actions: &[ActionStep {
-                verb: "DL-ERROR Indication (M)",
+                verb: Ax25ActionVerb::DLERRORIndicationM,
                 kind: ActionKind::SignalUpper,
             }],
             next: "AwaitingV22Connection",
@@ -140,10 +152,10 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t09_u_or_s_frame_length_error",
             from: "AwaitingV22Connection",
-            on: "u_or_s_frame_length_error",
-            guard: "",
+            on: Ax25Event::UOrSFrameLengthError,
+            guard: &[],
             actions: &[ActionStep {
-                verb: "DL-ERROR Indication (N)",
+                verb: Ax25ActionVerb::DLERRORIndicationN,
                 kind: ActionKind::SignalUpper,
             }],
             next: "AwaitingV22Connection",
@@ -154,15 +166,18 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t10_ui_received_no",
             from: "AwaitingV22Connection",
-            on: "UI_received",
-            guard: "not P_eq_1",
+            on: Ax25Event::UIReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: true,
+            }],
             actions: &[
                 ActionStep {
-                    verb: "UI Check",
+                    verb: Ax25ActionVerb::UICheck,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "DM (F = 1)",
+                    verb: Ax25ActionVerb::DMFEq1,
                     kind: ActionKind::SignalLower,
                 },
             ],
@@ -174,10 +189,13 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t10_ui_received_yes",
             from: "AwaitingV22Connection",
-            on: "UI_received",
-            guard: "P_eq_1",
+            on: Ax25Event::UIReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: false,
+            }],
             actions: &[ActionStep {
-                verb: "UI Check",
+                verb: Ax25ActionVerb::UICheck,
                 kind: ActionKind::Subroutine,
             }],
             next: "AwaitingV22Connection",
@@ -188,8 +206,11 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t11_dm_received_no",
             from: "AwaitingV22Connection",
-            on: "DM_received",
-            guard: "not F_eq_1",
+            on: Ax25Event::DMReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: true,
+            }],
             actions: &[],
             next: "AwaitingConnection",
             notes: "",
@@ -199,19 +220,22 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t11_dm_received_yes",
             from: "AwaitingV22Connection",
-            on: "DM_received",
-            guard: "F_eq_1",
+            on: Ax25Event::DMReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: false,
+            }],
             actions: &[
                 ActionStep {
-                    verb: "discard_I_frame_queue",
+                    verb: Ax25ActionVerb::DiscardIFrameQueue,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "DL_DISCONNECT_indication",
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
-                    verb: "Stop T1",
+                    verb: Ax25ActionVerb::StopT1,
                     kind: ActionKind::Processing,
                 },
             ],
@@ -223,10 +247,13 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t12_ua_received_no",
             from: "AwaitingV22Connection",
-            on: "UA_received",
-            guard: "not F_eq_1",
+            on: Ax25Event::UAReceived,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: true,
+            }],
             actions: &[ActionStep {
-                verb: "DL_ERROR_indication_D",
+                verb: Ax25ActionVerb::DLERRORIndicationD,
                 kind: ActionKind::SignalUpper,
             }],
             next: "AwaitingV22Connection",
@@ -237,39 +264,48 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t12_ua_received_yes_yes",
             from: "AwaitingV22Connection",
-            on: "UA_received",
-            guard: "F_eq_1 and layer_3_initiated",
+            on: Ax25Event::UAReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: false,
+                },
+            ],
             actions: &[
                 ActionStep {
-                    verb: "DL_CONNECT_confirm",
+                    verb: Ax25ActionVerb::DLCONNECTConfirm,
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
-                    verb: "Stop T1",
+                    verb: Ax25ActionVerb::StopT1,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Start T3",
+                    verb: Ax25ActionVerb::StartT3,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(s) := 0",
+                    verb: Ax25ActionVerb::VSAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(a) := 0",
+                    verb: Ax25ActionVerb::VAAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(r) := 0",
+                    verb: Ax25ActionVerb::VRAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Select_T1_Value",
+                    verb: Ax25ActionVerb::SelectT1Value,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "MDL-NEGOTIATE Request",
+                    verb: Ax25ActionVerb::MDLNEGOTIATERequest,
                     kind: ActionKind::InternalOut,
                 },
             ],
@@ -281,51 +317,64 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t12_ua_received_yes_no_no",
             from: "AwaitingV22Connection",
-            on: "UA_received",
-            guard: "F_eq_1 and not layer_3_initiated and not vs_eq_va",
+            on: Ax25Event::UAReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true,
+                },
+            ],
             actions: &[
                 ActionStep {
-                    verb: "SRT := Initial Default",
+                    verb: Ax25ActionVerb::SRTAssignInitialDefault,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "T1V := 2 * SRT",
+                    verb: Ax25ActionVerb::T1VAssign2TimesSRT,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Start T3",
+                    verb: Ax25ActionVerb::StartT3,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "DL_CONNECT_confirm",
+                    verb: Ax25ActionVerb::DLCONNECTConfirm,
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
-                    verb: "Stop T1",
+                    verb: Ax25ActionVerb::StopT1,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Start T3",
+                    verb: Ax25ActionVerb::StartT3,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(s) := 0",
+                    verb: Ax25ActionVerb::VSAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(a) := 0",
+                    verb: Ax25ActionVerb::VAAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(r) := 0",
+                    verb: Ax25ActionVerb::VRAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Select_T1_Value",
+                    verb: Ax25ActionVerb::SelectT1Value,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "MDL-NEGOTIATE Request",
+                    verb: Ax25ActionVerb::MDLNEGOTIATERequest,
                     kind: ActionKind::InternalOut,
                 },
             ],
@@ -337,35 +386,48 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t12_ua_received_yes_no_yes",
             from: "AwaitingV22Connection",
-            on: "UA_received",
-            guard: "F_eq_1 and not layer_3_initiated and vs_eq_va",
+            on: Ax25Event::UAReceived,
+            guard: &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: true,
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false,
+                },
+            ],
             actions: &[
                 ActionStep {
-                    verb: "Stop T1",
+                    verb: Ax25ActionVerb::StopT1,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Start T3",
+                    verb: Ax25ActionVerb::StartT3,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(s) := 0",
+                    verb: Ax25ActionVerb::VSAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(a) := 0",
+                    verb: Ax25ActionVerb::VAAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "V(r) := 0",
+                    verb: Ax25ActionVerb::VRAssign0,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Select_T1_Value",
+                    verb: Ax25ActionVerb::SelectT1Value,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "MDL-NEGOTIATE Request",
+                    verb: Ax25ActionVerb::MDLNEGOTIATERequest,
                     kind: ActionKind::InternalOut,
                 },
             ],
@@ -377,19 +439,22 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t13_t1_expiry_yes",
             from: "AwaitingV22Connection",
-            on: "T1_expiry",
-            guard: "RC_eq_N2",
+            on: Ax25Event::T1Expiry,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: false,
+            }],
             actions: &[
                 ActionStep {
-                    verb: "discard_frame_queue",
+                    verb: Ax25ActionVerb::DiscardFrameQueue,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "DL-ERROR Indication (G)",
+                    verb: Ax25ActionVerb::DLERRORIndicationG,
                     kind: ActionKind::SignalUpper,
                 },
                 ActionStep {
-                    verb: "DL_DISCONNECT_indication",
+                    verb: Ax25ActionVerb::DLDISCONNECTIndication,
                     kind: ActionKind::SignalUpper,
                 },
             ],
@@ -401,23 +466,26 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t13_t1_expiry_no",
             from: "AwaitingV22Connection",
-            on: "T1_expiry",
-            guard: "not RC_eq_N2",
+            on: Ax25Event::T1Expiry,
+            guard: &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: true,
+            }],
             actions: &[
                 ActionStep {
-                    verb: "RC := RC + 1",
+                    verb: Ax25ActionVerb::RCAssignRCPlus1,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "SABME (P = 1)",
+                    verb: Ax25ActionVerb::SABMEPEq1,
                     kind: ActionKind::SignalLower,
                 },
                 ActionStep {
-                    verb: "Select_T1_Value",
+                    verb: Ax25ActionVerb::SelectT1Value,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "Start T1",
+                    verb: Ax25ActionVerb::StartT1,
                     kind: ActionKind::Processing,
                 },
             ],
@@ -429,27 +497,27 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t14_frmr_received",
             from: "AwaitingV22Connection",
-            on: "FRMR_received",
-            guard: "",
+            on: Ax25Event::FRMRReceived,
+            guard: &[],
             actions: &[
                 ActionStep {
-                    verb: "SRT := Initial Default",
+                    verb: Ax25ActionVerb::SRTAssignInitialDefault,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "T1V := 2 * SRT",
+                    verb: Ax25ActionVerb::T1VAssign2TimesSRT,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "Establish_Data_Link",
+                    verb: Ax25ActionVerb::EstablishDataLink,
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: "Set Layer 3 Initiated",
+                    verb: Ax25ActionVerb::SetLayer3Initiated,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "set_version_2_0",
+                    verb: Ax25ActionVerb::SetVersion20,
                     kind: ActionKind::Processing,
                 },
             ],
@@ -461,15 +529,15 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t15_sabme_received",
             from: "AwaitingV22Connection",
-            on: "SABME_received",
-            guard: "",
+            on: Ax25Event::SABMEReceived,
+            guard: &[],
             actions: &[
                 ActionStep {
-                    verb: "F := P",
+                    verb: Ax25ActionVerb::FAssignP,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "UA",
+                    verb: Ax25ActionVerb::UA,
                     kind: ActionKind::SignalLower,
                 },
             ],
@@ -481,19 +549,19 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t16_sabm_received",
             from: "AwaitingV22Connection",
-            on: "SABM_received",
-            guard: "",
+            on: Ax25Event::SABMReceived,
+            guard: &[],
             actions: &[
                 ActionStep {
-                    verb: "F := P",
+                    verb: Ax25ActionVerb::FAssignP,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "UA",
+                    verb: Ax25ActionVerb::UA,
                     kind: ActionKind::SignalLower,
                 },
                 ActionStep {
-                    verb: "set_version_2_0",
+                    verb: Ax25ActionVerb::SetVersion20,
                     kind: ActionKind::Processing,
                 },
             ],
@@ -505,15 +573,15 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t17_disc_received",
             from: "AwaitingV22Connection",
-            on: "DISC_received",
-            guard: "",
+            on: Ax25Event::DISCReceived,
+            guard: &[],
             actions: &[
                 ActionStep {
-                    verb: "F := P",
+                    verb: Ax25ActionVerb::FAssignP,
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: "DM",
+                    verb: Ax25ActionVerb::DM,
                     kind: ActionKind::SignalLower,
                 },
             ],
@@ -525,8 +593,8 @@ pub static DATA_LINK_AWAITING_V_22_CONNECTION: StatePage = StatePage {
         TransitionSpec {
             id: "t18_all_other_primitives__from_lower_layer",
             from: "AwaitingV22Connection",
-            on: "all_other_primitives__from_lower_layer",
-            guard: "",
+            on: Ax25Event::AllOtherPrimitivesFromLowerLayer,
+            guard: &[],
             actions: &[],
             next: "AwaitingV22Connection",
             notes: "",
@@ -557,12 +625,12 @@ mod tests {
             .iter()
             .find(|x| x.id == "t02_dl_connect_request")
             .expect("transition t02_dl_connect_request not found");
-        assert_eq!(tx.on, "DL_CONNECT_request");
+        assert_eq!(tx.on, Ax25Event::DLCONNECTRequest);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "Discard Queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
     }
 
@@ -573,10 +641,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t03_dl_unit_data_request")
             .expect("transition t03_dl_unit_data_request not found");
-        assert_eq!(tx.on, "DL_UNIT_DATA_request");
+        assert_eq!(tx.on, Ax25Event::DLUNITDATARequest);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "UI Command");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICommand);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalLower);
     }
 
@@ -587,9 +655,15 @@ mod tests {
             .iter()
             .find(|x| x.id == "t04_dl_data_request_yes")
             .expect("transition t04_dl_data_request_yes not found");
-        assert_eq!(tx.on, "DL_DATA_request");
+        assert_eq!(tx.on, Ax25Event::DLDATARequest);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "layer_3_initiated");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 0);
     }
 
@@ -600,11 +674,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t04_dl_data_request_no")
             .expect("transition t04_dl_data_request_no not found");
-        assert_eq!(tx.on, "DL_DATA_request");
+        assert_eq!(tx.on, Ax25Event::DLDATARequest);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not layer_3_initiated");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "push_frame_on_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::PushFrameOnQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
@@ -615,9 +695,15 @@ mod tests {
             .iter()
             .find(|x| x.id == "t05_i_frame_pops_off_queue_yes")
             .expect("transition t05_i_frame_pops_off_queue_yes not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "layer_3_initiated");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 0);
     }
 
@@ -628,11 +714,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t05_i_frame_pops_off_queue_no")
             .expect("transition t05_i_frame_pops_off_queue_no not found");
-        assert_eq!(tx.on, "I_frame_pops_off_queue");
+        assert_eq!(tx.on, Ax25Event::IFramePopsOffQueue);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not layer_3_initiated");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::Layer3Initiated,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "push_frame_on_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::PushFrameOnQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::InternalOut);
     }
 
@@ -643,7 +735,7 @@ mod tests {
             .iter()
             .find(|x| x.id == "t06_all_other_primitives__from_upper_layer")
             .expect("transition t06_all_other_primitives__from_upper_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_upper_layer");
+        assert_eq!(tx.on, Ax25Event::AllOtherPrimitivesFromUpperLayer);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 0);
     }
@@ -655,10 +747,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t07_control_field_error")
             .expect("transition t07_control_field_error not found");
-        assert_eq!(tx.on, "control_field_error");
+        assert_eq!(tx.on, Ax25Event::ControlFieldError);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (L)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationL);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -669,10 +761,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t08_info_not_permitted_in_frame")
             .expect("transition t08_info_not_permitted_in_frame not found");
-        assert_eq!(tx.on, "info_not_permitted_in_frame");
+        assert_eq!(tx.on, Ax25Event::InfoNotPermittedInFrame);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (M)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationM);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -683,10 +775,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t09_u_or_s_frame_length_error")
             .expect("transition t09_u_or_s_frame_length_error not found");
-        assert_eq!(tx.on, "u_or_s_frame_length_error");
+        assert_eq!(tx.on, Ax25Event::UOrSFrameLengthError);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "DL-ERROR Indication (N)");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationN);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -697,13 +789,19 @@ mod tests {
             .iter()
             .find(|x| x.id == "t10_ui_received_no")
             .expect("transition t10_ui_received_no not found");
-        assert_eq!(tx.on, "UI_received");
+        assert_eq!(tx.on, Ax25Event::UIReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "UI Check");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICheck);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[1].verb, "DM (F = 1)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DMFEq1);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
     }
 
@@ -714,11 +812,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t10_ui_received_yes")
             .expect("transition t10_ui_received_yes not found");
-        assert_eq!(tx.on, "UI_received");
+        assert_eq!(tx.on, Ax25Event::UIReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "P_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::PEq1,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "UI Check");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::UICheck);
         assert_eq!(tx.actions[0].kind, ActionKind::Subroutine);
     }
 
@@ -729,9 +833,15 @@ mod tests {
             .iter()
             .find(|x| x.id == "t11_dm_received_no")
             .expect("transition t11_dm_received_no not found");
-        assert_eq!(tx.on, "DM_received");
+        assert_eq!(tx.on, Ax25Event::DMReceived);
         assert_eq!(tx.next, "AwaitingConnection");
-        assert_eq!(tx.guard, "not F_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 0);
     }
 
@@ -742,15 +852,21 @@ mod tests {
             .iter()
             .find(|x| x.id == "t11_dm_received_yes")
             .expect("transition t11_dm_received_yes not found");
-        assert_eq!(tx.on, "DM_received");
+        assert_eq!(tx.on, Ax25Event::DMReceived);
         assert_eq!(tx.next, "Disconnected");
-        assert_eq!(tx.guard, "F_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "discard_I_frame_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardIFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "Stop T1");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -761,11 +877,17 @@ mod tests {
             .iter()
             .find(|x| x.id == "t12_ua_received_no")
             .expect("transition t12_ua_received_no not found");
-        assert_eq!(tx.on, "UA_received");
+        assert_eq!(tx.on, Ax25Event::UAReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not F_eq_1");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::FEq1,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "DL_ERROR_indication_D");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLERRORIndicationD);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 
@@ -776,25 +898,37 @@ mod tests {
             .iter()
             .find(|x| x.id == "t12_ua_received_yes_yes")
             .expect("transition t12_ua_received_yes_yes not found");
-        assert_eq!(tx.on, "UA_received");
+        assert_eq!(tx.on, Ax25Event::UAReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "F_eq_1 and layer_3_initiated");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 8);
-        assert_eq!(tx.actions[0].verb, "DL_CONNECT_confirm");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DLCONNECTConfirm);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[1].verb, "Stop T1");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Start T3");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "V(s) := 0");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VSAssign0);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "V(a) := 0");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::VAAssign0);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "V(r) := 0");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::VRAssign0);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[6].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[7].verb, "MDL-NEGOTIATE Request");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::MDLNEGOTIATERequest);
         assert_eq!(tx.actions[7].kind, ActionKind::InternalOut);
     }
 
@@ -805,34 +939,47 @@ mod tests {
             .iter()
             .find(|x| x.id == "t12_ua_received_yes_no_no")
             .expect("transition t12_ua_received_yes_no_no not found");
-        assert_eq!(tx.on, "UA_received");
+        assert_eq!(tx.on, Ax25Event::UAReceived);
         assert_eq!(tx.next, "Connected");
         assert_eq!(
             tx.guard,
-            "F_eq_1 and not layer_3_initiated and not vs_eq_va"
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: true
+                },
+            ]
         );
         assert_eq!(tx.actions.len(), 11);
-        assert_eq!(tx.actions[0].verb, "SRT := Initial Default");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SRTAssignInitialDefault);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "T1V := 2 * SRT");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::T1VAssign2TimesSRT);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Start T3");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "DL_CONNECT_confirm");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::DLCONNECTConfirm);
         assert_eq!(tx.actions[3].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[4].verb, "Stop T1");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Start T3");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[5].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[6].verb, "V(s) := 0");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::VSAssign0);
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[7].verb, "V(a) := 0");
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::VAAssign0);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, "V(r) := 0");
+        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::VRAssign0);
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[9].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[9].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[9].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[10].verb, "MDL-NEGOTIATE Request");
+        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::MDLNEGOTIATERequest);
         assert_eq!(tx.actions[10].kind, ActionKind::InternalOut);
     }
 
@@ -843,23 +990,39 @@ mod tests {
             .iter()
             .find(|x| x.id == "t12_ua_received_yes_no_yes")
             .expect("transition t12_ua_received_yes_no_yes not found");
-        assert_eq!(tx.on, "UA_received");
+        assert_eq!(tx.on, Ax25Event::UAReceived);
         assert_eq!(tx.next, "Connected");
-        assert_eq!(tx.guard, "F_eq_1 and not layer_3_initiated and vs_eq_va");
+        assert_eq!(
+            tx.guard,
+            &[
+                GuardTerm {
+                    atom: Ax25Guard::FEq1,
+                    negate: false
+                },
+                GuardTerm {
+                    atom: Ax25Guard::Layer3Initiated,
+                    negate: true
+                },
+                GuardTerm {
+                    atom: Ax25Guard::VsEqVa,
+                    negate: false
+                },
+            ]
+        );
         assert_eq!(tx.actions.len(), 7);
-        assert_eq!(tx.actions[0].verb, "Stop T1");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "Start T3");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StartT3);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "V(s) := 0");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::VSAssign0);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[3].verb, "V(a) := 0");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::VAAssign0);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "V(r) := 0");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::VRAssign0);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[5].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[5].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[6].verb, "MDL-NEGOTIATE Request");
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::MDLNEGOTIATERequest);
         assert_eq!(tx.actions[6].kind, ActionKind::InternalOut);
     }
 
@@ -870,15 +1033,21 @@ mod tests {
             .iter()
             .find(|x| x.id == "t13_t1_expiry_yes")
             .expect("transition t13_t1_expiry_yes not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "Disconnected");
-        assert_eq!(tx.guard, "RC_eq_N2");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: false
+            },]
+        );
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "discard_frame_queue");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::DiscardFrameQueue);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "DL-ERROR Indication (G)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DLERRORIndicationG);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalUpper);
-        assert_eq!(tx.actions[2].verb, "DL_DISCONNECT_indication");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::DLDISCONNECTIndication);
         assert_eq!(tx.actions[2].kind, ActionKind::SignalUpper);
     }
 
@@ -889,17 +1058,23 @@ mod tests {
             .iter()
             .find(|x| x.id == "t13_t1_expiry_no")
             .expect("transition t13_t1_expiry_no not found");
-        assert_eq!(tx.on, "T1_expiry");
+        assert_eq!(tx.on, Ax25Event::T1Expiry);
         assert_eq!(tx.next, "AwaitingV22Connection");
-        assert_eq!(tx.guard, "not RC_eq_N2");
+        assert_eq!(
+            tx.guard,
+            &[GuardTerm {
+                atom: Ax25Guard::RCEqN2,
+                negate: true
+            },]
+        );
         assert_eq!(tx.actions.len(), 4);
-        assert_eq!(tx.actions[0].verb, "RC := RC + 1");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::RCAssignRCPlus1);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "SABME (P = 1)");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::SABMEPEq1);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Select_T1_Value");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Start T1");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StartT1);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
     }
 
@@ -910,18 +1085,18 @@ mod tests {
             .iter()
             .find(|x| x.id == "t14_frmr_received")
             .expect("transition t14_frmr_received not found");
-        assert_eq!(tx.on, "FRMR_received");
+        assert_eq!(tx.on, Ax25Event::FRMRReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(tx.actions.len(), 5);
-        assert_eq!(tx.actions[0].verb, "SRT := Initial Default");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::SRTAssignInitialDefault);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "T1V := 2 * SRT");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::T1VAssign2TimesSRT);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[2].verb, "Establish_Data_Link");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::EstablishDataLink);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, "Set Layer 3 Initiated");
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::SetLayer3Initiated);
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[4].verb, "set_version_2_0");
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[4].kind, ActionKind::Processing);
     }
 
@@ -932,12 +1107,12 @@ mod tests {
             .iter()
             .find(|x| x.id == "t15_sabme_received")
             .expect("transition t15_sabme_received not found");
-        assert_eq!(tx.on, "SABME_received");
+        assert_eq!(tx.on, Ax25Event::SABMEReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "UA");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
     }
 
@@ -948,14 +1123,14 @@ mod tests {
             .iter()
             .find(|x| x.id == "t16_sabm_received")
             .expect("transition t16_sabm_received not found");
-        assert_eq!(tx.on, "SABM_received");
+        assert_eq!(tx.on, Ax25Event::SABMReceived);
         assert_eq!(tx.next, "AwaitingConnection");
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "UA");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::UA);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "set_version_2_0");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SetVersion20);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -966,12 +1141,12 @@ mod tests {
             .iter()
             .find(|x| x.id == "t17_disc_received")
             .expect("transition t17_disc_received not found");
-        assert_eq!(tx.on, "DISC_received");
+        assert_eq!(tx.on, Ax25Event::DISCReceived);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 2);
-        assert_eq!(tx.actions[0].verb, "F := P");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::FAssignP);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "DM");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::DM);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
     }
 
@@ -982,7 +1157,7 @@ mod tests {
             .iter()
             .find(|x| x.id == "t18_all_other_primitives__from_lower_layer")
             .expect("transition t18_all_other_primitives__from_lower_layer not found");
-        assert_eq!(tx.on, "all_other_primitives__from_lower_layer");
+        assert_eq!(tx.on, Ax25Event::AllOtherPrimitivesFromLowerLayer);
         assert_eq!(tx.next, "AwaitingV22Connection");
         assert_eq!(tx.actions.len(), 0);
     }

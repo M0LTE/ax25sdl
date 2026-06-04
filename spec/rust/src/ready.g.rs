@@ -17,12 +17,12 @@ pub static MANAGEMENT_DATA_LINK_READY: StatePage = StatePage {
         TransitionSpec {
             id: "t01_mdl_negotiate_request",
             from: "Ready",
-            on: "MDL_NEGOTIATE_request",
-            guard: "",
+            on: Ax25Event::MDLNEGOTIATERequest,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "RC := 0", kind: ActionKind::Processing },
-                ActionStep { verb: "XID_command", kind: ActionKind::SignalLower },
-                ActionStep { verb: "Start TM201", kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::RCAssign0, kind: ActionKind::Processing },
+                ActionStep { verb: Ax25ActionVerb::XIDCommand, kind: ActionKind::SignalLower },
+                ActionStep { verb: Ax25ActionVerb::StartTM201, kind: ActionKind::Processing },
             ],
             next: "Negotiating",
             notes: "verification_pending (prose-derived bootstrap; figc5.1 graphml redraw pending — see backfill task). Derived from Appendix C5.3 ¶3 (\"The station initiating the AX.25 connection will send an XID command after it receives the UA frame\") + C5.3 Variables/Timers (RC, NM201, TM201). The ORDER of the three steps (RC:=0, send XID, start TM201) and the XID command's P=1 bit are NOT stated by the prose — error A (\"XID command without P=1\", C5.3 Error Codes) implies the command carries P=1, but the exact action ordering and the P-bit assignment box are figc5.1 detail and unverified. The DL→MDL handoff that raises this input is the data-link figc4.6 (AwaitingV22Connection) UA-received path, which emits `MDL-NEGOTIATE Request` (internal_out) on a successful v2.2 connect — see spec-sdl/.../data-link/yaml/awaiting_v22_connection.sdl.yaml.",
@@ -36,10 +36,10 @@ pub static MANAGEMENT_DATA_LINK_READY: StatePage = StatePage {
         TransitionSpec {
             id: "t02_xid_response_received",
             from: "Ready",
-            on: "XID_response_received",
-            guard: "",
+            on: Ax25Event::XIDResponseReceived,
+            guard: &[],
             actions: &[
-                ActionStep { verb: "MDL_ERROR_indicate_B", kind: ActionKind::SignalUpper },
+                ActionStep { verb: Ax25ActionVerb::MDLERRORIndicateB, kind: ActionKind::SignalUpper },
             ],
             next: "Ready",
             notes: "verification_pending (prose-derived bootstrap; figc5.1 graphml redraw pending — see backfill task). The EXISTENCE of error B (\"Unexpected XID response\", §C5.3 Error Codes) is prose-clear, and Ready is the defensible state for it (no XID command outstanding). But the figc5.1 column for a received XID response — whether it is drawn at all in Ready, what (if any) frame is emitted, and the precise MDL-ERROR letter wiring — is unverified figure detail. Encoded as the most defensible reading of the error-code list, NOT from a figure.",
@@ -72,14 +72,14 @@ mod tests {
             .iter()
             .find(|x| x.id == "t01_mdl_negotiate_request")
             .expect("transition t01_mdl_negotiate_request not found");
-        assert_eq!(tx.on, "MDL_NEGOTIATE_request");
+        assert_eq!(tx.on, Ax25Event::MDLNEGOTIATERequest);
         assert_eq!(tx.next, "Negotiating");
         assert_eq!(tx.actions.len(), 3);
-        assert_eq!(tx.actions[0].verb, "RC := 0");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::RCAssign0);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, "XID_command");
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::XIDCommand);
         assert_eq!(tx.actions[1].kind, ActionKind::SignalLower);
-        assert_eq!(tx.actions[2].verb, "Start TM201");
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::StartTM201);
         assert_eq!(tx.actions[2].kind, ActionKind::Processing);
     }
 
@@ -90,10 +90,10 @@ mod tests {
             .iter()
             .find(|x| x.id == "t02_xid_response_received")
             .expect("transition t02_xid_response_received not found");
-        assert_eq!(tx.on, "XID_response_received");
+        assert_eq!(tx.on, Ax25Event::XIDResponseReceived);
         assert_eq!(tx.next, "Ready");
         assert_eq!(tx.actions.len(), 1);
-        assert_eq!(tx.actions[0].verb, "MDL_ERROR_indicate_B");
+        assert_eq!(tx.actions[0].verb, Ax25ActionVerb::MDLERRORIndicateB);
         assert_eq!(tx.actions[0].kind, ActionKind::SignalUpper);
     }
 }

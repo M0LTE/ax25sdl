@@ -86,12 +86,17 @@ public class RustEmitterTests
         gen.Should().Contain("#[cfg(test)]");
         gen.Should().Contain("mod tests {");
 
-        // The transition's id, on, and verb all round-trip into the
-        // emitted Rust source.
+        // The transition's id round-trips verbatim; on + verb are the typed
+        // closed-set members (SP-010 / ADR-0002 ported to Rust), not raw
+        // strings. on: DL_DISCONNECT_request → Ax25Event::DLDISCONNECTRequest;
+        // action send_disc → Ax25ActionVerb::SendDisc.
         gen.Should().Contain("id: \"t01_dl_disconnect_request\"");
-        gen.Should().Contain("on: \"DL_DISCONNECT_request\"");
-        gen.Should().Contain("verb: \"send_disc\"");
+        gen.Should().Contain("on: Ax25Event::DLDISCONNECTRequest");
+        gen.Should().Contain("verb: Ax25ActionVerb::SendDisc");
         gen.Should().Contain("kind: ActionKind::SignalLower");
+        // The raw string spellings must NOT leak into the typed fields.
+        gen.Should().NotContain("on: \"DL_DISCONNECT_request\"");
+        gen.Should().NotContain("verb: \"send_disc\"");
     }
 
     [Fact]
@@ -162,5 +167,118 @@ public class RustEmitterTests
         // id verbatim (IDs are already valid Rust identifiers — the
         // schema enforces snake_case starting with a letter).
         gen.Should().Contain("fn t01_dl_disconnect_request()");
+    }
+
+    // ─── Typed closed sets (SP-010 / ADR-0002 ported to Rust) ────────────
+
+    [Fact]
+    public void Rust_run_emits_the_three_typed_closed_set_enums()
+    {
+        // Mirrors how the C#/TS runs emit Ax25ActionVerb / Ax25Guard /
+        // Ax25Event; the Rust backend now does too (so a no_std embedded
+        // consumer can `match` exhaustively). Emitted under a Rust-only
+        // invocation — not gated behind the C#/TS backends.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePage("data-link/connected.sdl.yaml", ValidMinimalPage);
+
+        var result = r.RunRust();
+        result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
+
+        r.RustExists("ax25_action_verb.g.rs").Should().BeTrue();
+        r.RustExists("ax25_guard.g.rs").Should().BeTrue();
+        r.RustExists("ax25_event.g.rs").Should().BeTrue();
+
+        var verb = r.ReadRust("ax25_action_verb.g.rs");
+        verb.Should().Contain("pub enum Ax25ActionVerb {");
+        // send_disc → SendDisc (same fold as the C# emitter).
+        verb.Should().Contain("SendDisc,");
+
+        var evt = r.ReadRust("ax25_event.g.rs");
+        evt.Should().Contain("pub enum Ax25Event {");
+        evt.Should().Contain("DLDISCONNECTRequest,");
+
+        // lib.rs wires the three enum modules in + re-exports them.
+        var lib = r.ReadRust("lib.rs");
+        lib.Should().Contain("#[path = \"ax25_action_verb.g.rs\"]");
+        lib.Should().Contain("pub use ax25_action_verb::*;");
+        lib.Should().Contain("pub use ax25_event::*;");
+        lib.Should().Contain("pub use ax25_guard::*;");
+    }
+
+    [Fact]
+    public void Generated_lib_rs_is_no_std_by_default_with_std_feature_escape()
+    {
+        // The crate is #![no_std] unless the default-on `std` feature is set.
+        // The generated lib.rs carries the cfg_attr; the hand-written
+        // Cargo.toml (outside codegen) declares the feature.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePage("data-link/connected.sdl.yaml", ValidMinimalPage);
+
+        var result = r.RunRust();
+        result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
+
+        var lib = r.ReadRust("lib.rs");
+        lib.Should().Contain("#![cfg_attr(not(feature = \"std\"), no_std)]");
+    }
+
+    [Fact]
+    public void Guard_is_emitted_as_typed_guard_term_slice_not_raw_string()
+    {
+        // A transition guard renders as an &[GuardTerm] conjunction whose
+        // atom is a typed Ax25Guard member — the Rust analogue of the C#
+        // GuardTerm[] / TS GuardTerm[] emission. The alias spelling never
+        // appears; the canonical atom never appears as a raw string.
+        using var r = new CodegenRunner();
+        r.WriteEventsCatalog(MinimalEvents);
+        r.WritePredicatesCatalog("""
+            flags:
+              - name: peer_receiver_busy
+                aliases:
+                  - peer_busy
+            """);
+        r.WritePage("data-link/connected.sdl.yaml", """
+            machine: data_link
+            state: Connected
+            coverage: partial
+            source: { spec: test, figure: f }
+            decisions:
+              - id: peer_busy_q
+                question: "Peer busy?"
+                predicate: peer_busy
+            transitions:
+              - id: t01_yes
+                on: I_received
+                path:
+                  - { decision: peer_busy_q, branch: "Yes" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+              - id: t02_no
+                on: I_received
+                path:
+                  - { decision: peer_busy_q, branch: "No" }
+                  - { action: cleanup, kind: processing }
+                next: Connected
+            """);
+
+        var result = r.RunRust();
+        result.ExitCode.Should().Be(0, $"stderr: {result.Stderr}");
+
+        var guardEnum = r.ReadRust("ax25_guard.g.rs");
+        guardEnum.Should().Contain("pub enum Ax25Guard {");
+        guardEnum.Should().Contain("PeerReceiverBusy,");
+
+        // rustfmt may wrap a GuardTerm across lines depending on the
+        // surrounding indent, so assert on whitespace-collapsed source —
+        // we care that the typed (atom, negate) literal is present, not
+        // about rustfmt's line-wrapping choice.
+        var gen = r.ReadRust("connected.g.rs");
+        var flat = System.Text.RegularExpressions.Regex.Replace(gen, @"\s+", " ");
+        flat.Should().Contain("GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: false }");
+        flat.Should().Contain("GuardTerm { atom: Ax25Guard::PeerReceiverBusy, negate: true }");
+        // Neither the alias nor the canonical leaks as a raw guard string.
+        gen.Should().NotContain("peer_busy");
+        gen.Should().NotContain("guard: \"peer_receiver_busy\"");
     }
 }
