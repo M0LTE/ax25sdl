@@ -1,0 +1,96 @@
+name: publish-crate
+
+# Publishes the `ax25sdl` Rust crate (from spec/rust/) to crates.io on any tag
+# matching `crate-v*`. Version is taken from the tag (strip the `crate-v`
+# prefix), so e.g. tagging `crate-v0.8.0` publishes the crate at 0.8.0.
+#
+# This is DELIBERATELY a separate workflow on a separate tag prefix from
+# publish.yml (npm + nuget on `v*`). The Rust crate has its own release line:
+# its version is MAJOR.MINOR = spec revision (2.2) + PATCH = errata batch, which
+# collides numerically with the long-running npm/nuget `v*` line (already past
+# v0.10.0). Reusing `v*` would couple the crate's version to the npm/nuget line.
+# See docs/adr/0003-rust-typed-closed-sets-and-no-std.md.
+#
+# Gate: the publish step only runs if the `CARGO_REGISTRY_TOKEN` repo secret is
+# set (mirrors the `if: env.<TOKEN> != ''` guard in publish.yml). Without it the
+# job runs the dry-run sanity checks and emits a warning, but uploads nothing.
+
+on:
+  push:
+    tags:
+      - 'crate-v*'
+  workflow_dispatch:
+    # Manual trigger validates the workflow shape from a branch without
+    # publishing — the `if: env.CARGO_REGISTRY_TOKEN != ''` guard on the publish
+    # step skips the upload when the secret is unset, and override_version lets
+    # you exercise the version-resolution path off a non-tag ref.
+    inputs:
+      override_version:
+        description: 'Override version (only used for workflow_dispatch; tag wins for push events)'
+        required: false
+        default: ''
+
+concurrency:
+  group: publish-crate-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish-crate:
+    name: publish ax25sdl to crates.io
+    runs-on: [self-hosted, Linux, X64]
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: resolve version from tag
+        id: parse
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # github.ref is refs/tags/crate-v0.8.0 — strip prefix + leading crate-v.
+            tag="${GITHUB_REF#refs/tags/}"
+            version="${tag#crate-v}"
+          else
+            version="${{ inputs.override_version }}"
+          fi
+          if [ -z "$version" ]; then
+            echo "::error::No version resolved (tag was '${GITHUB_REF}', input was empty)."
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Publishing crate version: ${version}"
+
+      - name: cargo --version
+        run: cargo --version
+
+      - name: assert Cargo.toml version matches the tag
+        working-directory: spec/rust
+        env:
+          VERSION: ${{ steps.parse.outputs.version }}
+        run: |
+          manifest_version="$(cargo metadata --no-deps --format-version 1 \
+            | python3 -c 'import sys,json; print(json.load(sys.stdin)["packages"][0]["version"])')"
+          echo "Cargo.toml version: ${manifest_version}; tag version: ${VERSION}"
+          if [ "${manifest_version}" != "${VERSION}" ]; then
+            echo "::error::spec/rust/Cargo.toml version (${manifest_version}) != tag version (${VERSION}). Bump Cargo.toml and re-tag."
+            exit 1
+          fi
+
+      - name: cargo package (dry-run sanity check — std + no_std build-verify)
+        working-directory: spec/rust
+        run: |
+          cargo package
+          cargo build --no-default-features
+
+      - name: cargo publish
+        if: env.CARGO_REGISTRY_TOKEN != ''
+        working-directory: spec/rust
+        run: cargo publish --token "${CARGO_REGISTRY_TOKEN}"
+
+      - name: warn if CARGO_REGISTRY_TOKEN missing
+        if: env.CARGO_REGISTRY_TOKEN == ''
+        run: |
+          echo "::warning::CARGO_REGISTRY_TOKEN secret is not set — cargo publish was skipped (dry-run only). Add the secret in repo Settings → Secrets → Actions, then re-push the crate-v* tag."
