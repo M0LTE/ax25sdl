@@ -141,6 +141,25 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+      # rustfmt disappeared from the runner around 2026-06-14 (job red on
+      # main since 0a47223): the codegen emitter warns-and-continues without
+      # it, emitting non-canonically-formatted output that fails the drift
+      # check with a misleading 9-file diff. Re-add the rustup toolchain dir,
+      # self-heal via rustup where possible, and otherwise fail fast with an
+      # actionable message.
+      - name: ensure rustfmt on PATH
+        run: |
+          [ -d "$HOME/.cargo/bin" ] && echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.cargo/bin:$PATH"
+          if ! command -v rustfmt >/dev/null 2>&1; then
+            if command -v rustup >/dev/null 2>&1; then
+              rustup component add rustfmt
+            else
+              echo "::error::rustfmt is unavailable and rustup is not installed on this runner. Install the Rust toolchain (with the rustfmt component) on the runner; this job has been red on main since 2026-06-14 because of it."
+              exit 1
+            fi
+          fi
+          rustfmt --version
       - name: regenerate Rust
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --rust
       - name: assert no diff
@@ -168,6 +187,19 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+      # Not every self-hosted runner has a system clang-format (the emitter
+      # warns-and-continues without it, emitting non-canonically-formatted C
+      # that fails the drift check). Self-heal with a pinned pip venv —
+      # 22.1.5 matches the formatting of the committed spec/c corpus.
+      - name: ensure clang-format on PATH
+        run: |
+          if ! command -v clang-format >/dev/null 2>&1; then
+            python3 -m venv "$RUNNER_TEMP/clang-format-venv"
+            "$RUNNER_TEMP/clang-format-venv/bin/pip" install --quiet clang-format==22.1.5
+            echo "$RUNNER_TEMP/clang-format-venv/bin" >> "$GITHUB_PATH"
+            export PATH="$RUNNER_TEMP/clang-format-venv/bin:$PATH"
+          fi
+          clang-format --version
       - name: regenerate C
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --c
       - name: assert no diff
