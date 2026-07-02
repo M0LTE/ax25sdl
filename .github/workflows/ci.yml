@@ -228,3 +228,22 @@ jobs:
             echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i spec-sdl/v2.2-errata/data-link/sdl/ -o spec-sdl/v2.2-errata/data-link/yaml/\` locally and commit the diff."
             exit 1
           fi
+
+  render-drift:
+    name: render drift — graphml → SVG
+    runs-on: [self-hosted, Linux, X64]
+    needs: csharp
+    # The committed SVG renders in spec-sdl/**/svg/ are generated artifacts
+    # (tools/render/render_all.py, Python stdlib only). Keeping them in sync
+    # means every graphml PR carries a reviewable visual diff — GitHub shows
+    # rich image diffs (2-up / swipe / onion-skin) for modified SVGs.
+    steps:
+      - uses: actions/checkout@v6
+      - name: regenerate SVG renders
+        run: python3 tools/render/render_all.py
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- 'spec-sdl/**/svg/'; then
+            echo "::error::Committed SVG renders are out of sync with the graphml sources. Run \`python3 tools/render/render_all.py\` locally and commit the diff."
+            exit 1
+          fi
