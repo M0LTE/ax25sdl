@@ -141,15 +141,25 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
-      # The runner service PATH lost ~/.cargo/bin around 2026-06-14 (job has
-      # been red on main since), so the codegen emitter couldn't find rustfmt
-      # and produced non-canonically-formatted output that failed the drift
-      # check. Re-add the rustup toolchain dir when present.
-      - name: put rustup toolchain on PATH
+      # rustfmt disappeared from the runner around 2026-06-14 (job red on
+      # main since 0a47223): the codegen emitter warns-and-continues without
+      # it, emitting non-canonically-formatted output that fails the drift
+      # check with a misleading 9-file diff. Re-add the rustup toolchain dir,
+      # self-heal via rustup where possible, and otherwise fail fast with an
+      # actionable message.
+      - name: ensure rustfmt on PATH
         run: |
-          if [ -d "$HOME/.cargo/bin" ]; then
-            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          [ -d "$HOME/.cargo/bin" ] && echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.cargo/bin:$PATH"
+          if ! command -v rustfmt >/dev/null 2>&1; then
+            if command -v rustup >/dev/null 2>&1; then
+              rustup component add rustfmt
+            else
+              echo "::error::rustfmt is unavailable and rustup is not installed on this runner. Install the Rust toolchain (with the rustfmt component) on the runner; this job has been red on main since 2026-06-14 because of it."
+              exit 1
+            fi
           fi
+          rustfmt --version
       - name: regenerate Rust
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --rust
       - name: assert no diff
