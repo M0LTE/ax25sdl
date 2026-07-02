@@ -141,6 +141,15 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+      # The runner service PATH lost ~/.cargo/bin around 2026-06-14 (job has
+      # been red on main since), so the codegen emitter couldn't find rustfmt
+      # and produced non-canonically-formatted output that failed the drift
+      # check. Re-add the rustup toolchain dir when present.
+      - name: put rustup toolchain on PATH
+        run: |
+          if [ -d "$HOME/.cargo/bin" ]; then
+            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          fi
       - name: regenerate Rust
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --rust
       - name: assert no diff
