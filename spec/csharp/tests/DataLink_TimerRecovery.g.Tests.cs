@@ -1352,15 +1352,23 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be(Ax25Event.SREJReceived);
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, false), new GuardTerm(Ax25Guard.VsEqNr, true) });
-        t.Actions.Count.Should().Be(4);
+        t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be(Ax25ActionVerb.VAAssignNR);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
-        t.Actions[3].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.PushOldIFrameNROnQueue);
+        t.Actions[3].Kind.Should().Be(ActionKind.InternalOut);
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
+        t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.StopT3);
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[6].Verb.Should().Be(Ax25ActionVerb.StartT1);
+        t.Actions[6].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[7].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
+        t.Actions[7].Kind.Should().Be(ActionKind.Processing);
     }
 
     [Fact] public void t24_srej_received_no_yes_no_yes()
@@ -1380,11 +1388,19 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be(Ax25Event.SREJReceived);
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.Response, true), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.PEq1, true), new GuardTerm(Ax25Guard.VsEqVa, true) });
-        t.Actions.Count.Should().Be(2);
+        t.Actions.Count.Should().Be(6);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
-        t.Actions[1].Kind.Should().Be(ActionKind.Subroutine);
+        t.Actions[1].Verb.Should().Be(Ax25ActionVerb.PushOldIFrameNROnQueue);
+        t.Actions[1].Kind.Should().Be(ActionKind.InternalOut);
+        t.Actions[2].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
+        t.Actions[2].Kind.Should().Be(ActionKind.SignalLower);
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.StopT3);
+        t.Actions[3].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[4].Verb.Should().Be(Ax25ActionVerb.StartT1);
+        t.Actions[4].Kind.Should().Be(ActionKind.Processing);
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
+        t.Actions[5].Kind.Should().Be(ActionKind.Processing);
     }
 
     [Fact] public void t24_srej_received_no_no_no()
@@ -1476,7 +1492,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be(Ax25Event.SREJReceived);
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, false), new GuardTerm(Ax25Guard.VsEqNr, true) });
-        t.Actions.Count.Should().Be(11);
+        t.Actions.Count.Should().Be(10);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
@@ -1487,7 +1503,7 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[3].Kind.Should().Be(ActionKind.Processing);
         t.Actions[4].Verb.Should().Be(Ax25ActionVerb.CheckIFrameAcknowledged);
         t.Actions[4].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
+        t.Actions[5].Verb.Should().Be(Ax25ActionVerb.PushOldIFrameNROnQueue);
         t.Actions[5].Kind.Should().Be(ActionKind.InternalOut);
         t.Actions[6].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
         t.Actions[6].Kind.Should().Be(ActionKind.SignalLower);
@@ -1497,8 +1513,6 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[8].Kind.Should().Be(ActionKind.Processing);
         t.Actions[9].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[9].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[10].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
-        t.Actions[10].Kind.Should().Be(ActionKind.Subroutine);
     }
 
     [Fact] public void t24_srej_received_yes_yes_no_yes()
@@ -1526,14 +1540,14 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.On.Should().Be(Ax25Event.SREJReceived);
         t.Next.Should().Be("TimerRecovery");
         t.Guard.Should().Equal(new GuardTerm[] { new GuardTerm(Ax25Guard.Response, false), new GuardTerm(Ax25Guard.VaLeNrLeVs, false), new GuardTerm(Ax25Guard.FEq1, true), new GuardTerm(Ax25Guard.VsEqVa, true) });
-        t.Actions.Count.Should().Be(9);
+        t.Actions.Count.Should().Be(8);
         t.Actions[0].Verb.Should().Be(Ax25ActionVerb.ClearPeerReceiverBusy);
         t.Actions[0].Kind.Should().Be(ActionKind.Processing);
         t.Actions[1].Verb.Should().Be(Ax25ActionVerb.StopT1);
         t.Actions[1].Kind.Should().Be(ActionKind.Processing);
         t.Actions[2].Verb.Should().Be(Ax25ActionVerb.SelectT1Value);
         t.Actions[2].Kind.Should().Be(ActionKind.Subroutine);
-        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.PushFrameOnQueue);
+        t.Actions[3].Verb.Should().Be(Ax25ActionVerb.PushOldIFrameNROnQueue);
         t.Actions[3].Kind.Should().Be(ActionKind.InternalOut);
         t.Actions[4].Verb.Should().Be(Ax25ActionVerb.LMDataRequest);
         t.Actions[4].Kind.Should().Be(ActionKind.SignalLower);
@@ -1543,8 +1557,6 @@ public class DataLink_TimerRecovery_GeneratedTests
         t.Actions[6].Kind.Should().Be(ActionKind.Processing);
         t.Actions[7].Verb.Should().Be(Ax25ActionVerb.ClearAcknowledgePending);
         t.Actions[7].Kind.Should().Be(ActionKind.Processing);
-        t.Actions[8].Verb.Should().Be(Ax25ActionVerb.InvokeRetransmission);
-        t.Actions[8].Kind.Should().Be(ActionKind.Subroutine);
     }
 
     [Fact] public void t25_all_other_primitives__from_lower_layer()

@@ -3873,8 +3873,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_yes_yes_no(t *testing.T) {
 	if tx.Guard != "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr" {
 		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr")
 	}
-	if got := len(tx.Actions); got != 4 {
-		t.Fatalf("len(Actions) = %d, want 4", got)
+	if got := len(tx.Actions); got != 8 {
+		t.Fatalf("len(Actions) = %d, want 8", got)
 	}
 	if tx.Actions[0].Verb != "clear_peer_receiver_busy" {
 		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "clear_peer_receiver_busy")
@@ -3894,11 +3894,35 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_yes_yes_no(t *testing.T) {
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "Invoke Retransmission" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Invoke Retransmission")
+	if tx.Actions[3].Verb != "Push Old I Frame N(r) on Queue" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Push Old I Frame N(r) on Queue")
 	}
-	if tx.Actions[3].Kind != Subroutine {
-		t.Errorf("Actions[3].Kind = %v, want Subroutine", tx.Actions[3].Kind)
+	if tx.Actions[3].Kind != InternalOut {
+		t.Errorf("Actions[3].Kind = %v, want InternalOut", tx.Actions[3].Kind)
+	}
+	if tx.Actions[4].Verb != "LM_data_request" {
+		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "LM_data_request")
+	}
+	if tx.Actions[4].Kind != SignalLower {
+		t.Errorf("Actions[4].Kind = %v, want SignalLower", tx.Actions[4].Kind)
+	}
+	if tx.Actions[5].Verb != "Stop T3" {
+		t.Errorf("Actions[5].Verb = %q, want %q", tx.Actions[5].Verb, "Stop T3")
+	}
+	if tx.Actions[5].Kind != Processing {
+		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
+	}
+	if tx.Actions[6].Verb != "Start T1" {
+		t.Errorf("Actions[6].Verb = %q, want %q", tx.Actions[6].Verb, "Start T1")
+	}
+	if tx.Actions[6].Kind != Processing {
+		t.Errorf("Actions[6].Kind = %v, want Processing", tx.Actions[6].Kind)
+	}
+	if tx.Actions[7].Verb != "Clear Acknowledge Pending" {
+		t.Errorf("Actions[7].Verb = %q, want %q", tx.Actions[7].Verb, "Clear Acknowledge Pending")
+	}
+	if tx.Actions[7].Kind != Processing {
+		t.Errorf("Actions[7].Kind = %v, want Processing", tx.Actions[7].Kind)
 	}
 }
 
@@ -3953,8 +3977,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_yes_no_no(t *testing.T) {
 	if tx.Guard != "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va" {
 		t.Errorf("Guard = %q, want %q", tx.Guard, "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va")
 	}
-	if got := len(tx.Actions); got != 2 {
-		t.Fatalf("len(Actions) = %d, want 2", got)
+	if got := len(tx.Actions); got != 6 {
+		t.Fatalf("len(Actions) = %d, want 6", got)
 	}
 	if tx.Actions[0].Verb != "clear_peer_receiver_busy" {
 		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "clear_peer_receiver_busy")
@@ -3962,11 +3986,35 @@ func TestDataLinkTimerRecovery_t24_srej_received_no_yes_no_no(t *testing.T) {
 	if tx.Actions[0].Kind != Processing {
 		t.Errorf("Actions[0].Kind = %v, want Processing", tx.Actions[0].Kind)
 	}
-	if tx.Actions[1].Verb != "Invoke Retransmission" {
-		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "Invoke Retransmission")
+	if tx.Actions[1].Verb != "Push Old I Frame N(r) on Queue" {
+		t.Errorf("Actions[1].Verb = %q, want %q", tx.Actions[1].Verb, "Push Old I Frame N(r) on Queue")
 	}
-	if tx.Actions[1].Kind != Subroutine {
-		t.Errorf("Actions[1].Kind = %v, want Subroutine", tx.Actions[1].Kind)
+	if tx.Actions[1].Kind != InternalOut {
+		t.Errorf("Actions[1].Kind = %v, want InternalOut", tx.Actions[1].Kind)
+	}
+	if tx.Actions[2].Verb != "LM_data_request" {
+		t.Errorf("Actions[2].Verb = %q, want %q", tx.Actions[2].Verb, "LM_data_request")
+	}
+	if tx.Actions[2].Kind != SignalLower {
+		t.Errorf("Actions[2].Kind = %v, want SignalLower", tx.Actions[2].Kind)
+	}
+	if tx.Actions[3].Verb != "Stop T3" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Stop T3")
+	}
+	if tx.Actions[3].Kind != Processing {
+		t.Errorf("Actions[3].Kind = %v, want Processing", tx.Actions[3].Kind)
+	}
+	if tx.Actions[4].Verb != "Start T1" {
+		t.Errorf("Actions[4].Verb = %q, want %q", tx.Actions[4].Verb, "Start T1")
+	}
+	if tx.Actions[4].Kind != Processing {
+		t.Errorf("Actions[4].Kind = %v, want Processing", tx.Actions[4].Kind)
+	}
+	if tx.Actions[5].Verb != "Clear Acknowledge Pending" {
+		t.Errorf("Actions[5].Verb = %q, want %q", tx.Actions[5].Verb, "Clear Acknowledge Pending")
+	}
+	if tx.Actions[5].Kind != Processing {
+		t.Errorf("Actions[5].Kind = %v, want Processing", tx.Actions[5].Kind)
 	}
 }
 
@@ -4229,8 +4277,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_yes_no(t *testing.T) {
 	if tx.Guard != "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr" {
 		t.Errorf("Guard = %q, want %q", tx.Guard, "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr")
 	}
-	if got := len(tx.Actions); got != 11 {
-		t.Fatalf("len(Actions) = %d, want 11", got)
+	if got := len(tx.Actions); got != 10 {
+		t.Fatalf("len(Actions) = %d, want 10", got)
 	}
 	if tx.Actions[0].Verb != "clear_peer_receiver_busy" {
 		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "clear_peer_receiver_busy")
@@ -4262,8 +4310,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_yes_no(t *testing.T) {
 	if tx.Actions[4].Kind != Subroutine {
 		t.Errorf("Actions[4].Kind = %v, want Subroutine", tx.Actions[4].Kind)
 	}
-	if tx.Actions[5].Verb != "push_frame_on_queue" {
-		t.Errorf("Actions[5].Verb = %q, want %q", tx.Actions[5].Verb, "push_frame_on_queue")
+	if tx.Actions[5].Verb != "Push Old I Frame N(r) on Queue" {
+		t.Errorf("Actions[5].Verb = %q, want %q", tx.Actions[5].Verb, "Push Old I Frame N(r) on Queue")
 	}
 	if tx.Actions[5].Kind != InternalOut {
 		t.Errorf("Actions[5].Kind = %v, want InternalOut", tx.Actions[5].Kind)
@@ -4291,12 +4339,6 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_yes_no(t *testing.T) {
 	}
 	if tx.Actions[9].Kind != Processing {
 		t.Errorf("Actions[9].Kind = %v, want Processing", tx.Actions[9].Kind)
-	}
-	if tx.Actions[10].Verb != "Invoke Retransmission" {
-		t.Errorf("Actions[10].Verb = %q, want %q", tx.Actions[10].Verb, "Invoke Retransmission")
-	}
-	if tx.Actions[10].Kind != Subroutine {
-		t.Errorf("Actions[10].Kind = %v, want Subroutine", tx.Actions[10].Kind)
 	}
 }
 
@@ -4375,8 +4417,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_no_no(t *testing.T) {
 	if tx.Guard != "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va" {
 		t.Errorf("Guard = %q, want %q", tx.Guard, "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va")
 	}
-	if got := len(tx.Actions); got != 9 {
-		t.Fatalf("len(Actions) = %d, want 9", got)
+	if got := len(tx.Actions); got != 8 {
+		t.Fatalf("len(Actions) = %d, want 8", got)
 	}
 	if tx.Actions[0].Verb != "clear_peer_receiver_busy" {
 		t.Errorf("Actions[0].Verb = %q, want %q", tx.Actions[0].Verb, "clear_peer_receiver_busy")
@@ -4396,8 +4438,8 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_no_no(t *testing.T) {
 	if tx.Actions[2].Kind != Subroutine {
 		t.Errorf("Actions[2].Kind = %v, want Subroutine", tx.Actions[2].Kind)
 	}
-	if tx.Actions[3].Verb != "push_frame_on_queue" {
-		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "push_frame_on_queue")
+	if tx.Actions[3].Verb != "Push Old I Frame N(r) on Queue" {
+		t.Errorf("Actions[3].Verb = %q, want %q", tx.Actions[3].Verb, "Push Old I Frame N(r) on Queue")
 	}
 	if tx.Actions[3].Kind != InternalOut {
 		t.Errorf("Actions[3].Kind = %v, want InternalOut", tx.Actions[3].Kind)
@@ -4425,12 +4467,6 @@ func TestDataLinkTimerRecovery_t24_srej_received_yes_yes_no_no(t *testing.T) {
 	}
 	if tx.Actions[7].Kind != Processing {
 		t.Errorf("Actions[7].Kind = %v, want Processing", tx.Actions[7].Kind)
-	}
-	if tx.Actions[8].Verb != "Invoke Retransmission" {
-		t.Errorf("Actions[8].Verb = %q, want %q", tx.Actions[8].Verb, "Invoke Retransmission")
-	}
-	if tx.Actions[8].Kind != Subroutine {
-		t.Errorf("Actions[8].Kind = %v, want Subroutine", tx.Actions[8].Kind)
 	}
 }
 

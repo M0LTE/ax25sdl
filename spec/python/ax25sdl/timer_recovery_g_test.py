@@ -1583,15 +1583,23 @@ def test_t24_srej_received_no_yes_yes_no() -> None:
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
     assert t.guard == "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr"
-    assert len(t.actions) == 4
+    assert len(t.actions) == 8
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "V(a) := N(r)"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "Invoke Retransmission"
-    assert t.actions[3].kind == ActionKind.SUBROUTINE
+    assert t.actions[3].verb == "Push Old I Frame N(r) on Queue"
+    assert t.actions[3].kind == ActionKind.INTERNAL_OUT
+    assert t.actions[4].verb == "LM_data_request"
+    assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[5].verb == "Stop T3"
+    assert t.actions[5].kind == ActionKind.PROCESSING
+    assert t.actions[6].verb == "Start T1"
+    assert t.actions[6].kind == ActionKind.PROCESSING
+    assert t.actions[7].verb == "Clear Acknowledge Pending"
+    assert t.actions[7].kind == ActionKind.PROCESSING
 
 
 def test_t24_srej_received_no_yes_no_yes() -> None:
@@ -1617,11 +1625,19 @@ def test_t24_srej_received_no_yes_no_no() -> None:
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
     assert t.guard == "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va"
-    assert len(t.actions) == 2
+    assert len(t.actions) == 6
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
-    assert t.actions[1].verb == "Invoke Retransmission"
-    assert t.actions[1].kind == ActionKind.SUBROUTINE
+    assert t.actions[1].verb == "Push Old I Frame N(r) on Queue"
+    assert t.actions[1].kind == ActionKind.INTERNAL_OUT
+    assert t.actions[2].verb == "LM_data_request"
+    assert t.actions[2].kind == ActionKind.SIGNAL_LOWER
+    assert t.actions[3].verb == "Stop T3"
+    assert t.actions[3].kind == ActionKind.PROCESSING
+    assert t.actions[4].verb == "Start T1"
+    assert t.actions[4].kind == ActionKind.PROCESSING
+    assert t.actions[5].verb == "Clear Acknowledge Pending"
+    assert t.actions[5].kind == ActionKind.PROCESSING
 
 
 def test_t24_srej_received_no_no_no() -> None:
@@ -1731,7 +1747,7 @@ def test_t24_srej_received_yes_yes_yes_no() -> None:
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
     assert t.guard == "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr"
-    assert len(t.actions) == 11
+    assert len(t.actions) == 10
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Stop T1"
@@ -1742,7 +1758,7 @@ def test_t24_srej_received_yes_yes_yes_no() -> None:
     assert t.actions[3].kind == ActionKind.PROCESSING
     assert t.actions[4].verb == "Check_I_Frame_Acknowledged"
     assert t.actions[4].kind == ActionKind.SUBROUTINE
-    assert t.actions[5].verb == "push_frame_on_queue"
+    assert t.actions[5].verb == "Push Old I Frame N(r) on Queue"
     assert t.actions[5].kind == ActionKind.INTERNAL_OUT
     assert t.actions[6].verb == "LM_data_request"
     assert t.actions[6].kind == ActionKind.SIGNAL_LOWER
@@ -1752,8 +1768,6 @@ def test_t24_srej_received_yes_yes_yes_no() -> None:
     assert t.actions[8].kind == ActionKind.PROCESSING
     assert t.actions[9].verb == "Clear Acknowledge Pending"
     assert t.actions[9].kind == ActionKind.PROCESSING
-    assert t.actions[10].verb == "Invoke Retransmission"
-    assert t.actions[10].kind == ActionKind.SUBROUTINE
 
 
 def test_t24_srej_received_yes_yes_no_yes() -> None:
@@ -1787,14 +1801,14 @@ def test_t24_srej_received_yes_yes_no_no() -> None:
     assert t.on == "SREJ_received"
     assert t.next == "TimerRecovery"
     assert t.guard == "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va"
-    assert len(t.actions) == 9
+    assert len(t.actions) == 8
     assert t.actions[0].verb == "clear_peer_receiver_busy"
     assert t.actions[0].kind == ActionKind.PROCESSING
     assert t.actions[1].verb == "Stop T1"
     assert t.actions[1].kind == ActionKind.PROCESSING
     assert t.actions[2].verb == "Select_T1_Value"
     assert t.actions[2].kind == ActionKind.SUBROUTINE
-    assert t.actions[3].verb == "push_frame_on_queue"
+    assert t.actions[3].verb == "Push Old I Frame N(r) on Queue"
     assert t.actions[3].kind == ActionKind.INTERNAL_OUT
     assert t.actions[4].verb == "LM_data_request"
     assert t.actions[4].kind == ActionKind.SIGNAL_LOWER
@@ -1804,8 +1818,6 @@ def test_t24_srej_received_yes_yes_no_no() -> None:
     assert t.actions[6].kind == ActionKind.PROCESSING
     assert t.actions[7].verb == "Clear Acknowledge Pending"
     assert t.actions[7].kind == ActionKind.PROCESSING
-    assert t.actions[8].verb == "Invoke Retransmission"
-    assert t.actions[8].kind == ActionKind.SUBROUTINE
 
 
 def test_t25_all_other_primitives__from_lower_layer() -> None:

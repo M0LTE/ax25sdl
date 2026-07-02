@@ -3204,8 +3204,24 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: Ax25ActionVerb::InvokeRetransmission,
-                    kind: ActionKind::Subroutine,
+                    verb: Ax25ActionVerb::PushOldIFrameNROnQueue,
+                    kind: ActionKind::InternalOut,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMDataRequest,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
                 },
             ],
             next: "TimerRecovery",
@@ -3272,8 +3288,24 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                     kind: ActionKind::Processing,
                 },
                 ActionStep {
-                    verb: Ax25ActionVerb::InvokeRetransmission,
-                    kind: ActionKind::Subroutine,
+                    verb: Ax25ActionVerb::PushOldIFrameNROnQueue,
+                    kind: ActionKind::InternalOut,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::LMDataRequest,
+                    kind: ActionKind::SignalLower,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StopT3,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::StartT1,
+                    kind: ActionKind::Processing,
+                },
+                ActionStep {
+                    verb: Ax25ActionVerb::ClearAcknowledgePending,
+                    kind: ActionKind::Processing,
                 },
             ],
             next: "TimerRecovery",
@@ -3530,7 +3562,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: Ax25ActionVerb::PushFrameOnQueue,
+                    verb: Ax25ActionVerb::PushOldIFrameNROnQueue,
                     kind: ActionKind::InternalOut,
                 },
                 ActionStep {
@@ -3548,10 +3580,6 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep {
                     verb: Ax25ActionVerb::ClearAcknowledgePending,
                     kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: Ax25ActionVerb::InvokeRetransmission,
-                    kind: ActionKind::Subroutine,
                 },
             ],
             next: "TimerRecovery",
@@ -3644,7 +3672,7 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                     kind: ActionKind::Subroutine,
                 },
                 ActionStep {
-                    verb: Ax25ActionVerb::PushFrameOnQueue,
+                    verb: Ax25ActionVerb::PushOldIFrameNROnQueue,
                     kind: ActionKind::InternalOut,
                 },
                 ActionStep {
@@ -3662,10 +3690,6 @@ pub static DATA_LINK_TIMER_RECOVERY: StatePage = StatePage {
                 ActionStep {
                     verb: Ax25ActionVerb::ClearAcknowledgePending,
                     kind: ActionKind::Processing,
-                },
-                ActionStep {
-                    verb: Ax25ActionVerb::InvokeRetransmission,
-                    kind: ActionKind::Subroutine,
                 },
             ],
             next: "TimerRecovery",
@@ -6519,15 +6543,23 @@ mod tests {
                 },
             ]
         );
-        assert_eq!(tx.actions.len(), 4);
+        assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, Ax25ActionVerb::VAAssignNR);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::InvokeRetransmission);
-        assert_eq!(tx.actions[3].kind, ActionKind::Subroutine);
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::PushOldIFrameNROnQueue);
+        assert_eq!(tx.actions[3].kind, ActionKind::InternalOut);
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::LMDataRequest);
+        assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::StopT3);
+        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[6].verb, Ax25ActionVerb::StartT1);
+        assert_eq!(tx.actions[6].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[7].verb, Ax25ActionVerb::ClearAcknowledgePending);
+        assert_eq!(tx.actions[7].kind, ActionKind::Processing);
     }
 
     #[test]
@@ -6595,11 +6627,19 @@ mod tests {
                 },
             ]
         );
-        assert_eq!(tx.actions.len(), 2);
+        assert_eq!(tx.actions.len(), 6);
         assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::InvokeRetransmission);
-        assert_eq!(tx.actions[1].kind, ActionKind::Subroutine);
+        assert_eq!(tx.actions[1].verb, Ax25ActionVerb::PushOldIFrameNROnQueue);
+        assert_eq!(tx.actions[1].kind, ActionKind::InternalOut);
+        assert_eq!(tx.actions[2].verb, Ax25ActionVerb::LMDataRequest);
+        assert_eq!(tx.actions[2].kind, ActionKind::SignalLower);
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::StopT3);
+        assert_eq!(tx.actions[3].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[4].verb, Ax25ActionVerb::StartT1);
+        assert_eq!(tx.actions[4].kind, ActionKind::Processing);
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::ClearAcknowledgePending);
+        assert_eq!(tx.actions[5].kind, ActionKind::Processing);
     }
 
     #[test]
@@ -6819,7 +6859,7 @@ mod tests {
                 },
             ]
         );
-        assert_eq!(tx.actions.len(), 11);
+        assert_eq!(tx.actions.len(), 10);
         assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
@@ -6830,7 +6870,7 @@ mod tests {
         assert_eq!(tx.actions[3].kind, ActionKind::Processing);
         assert_eq!(tx.actions[4].verb, Ax25ActionVerb::CheckIFrameAcknowledged);
         assert_eq!(tx.actions[4].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::PushFrameOnQueue);
+        assert_eq!(tx.actions[5].verb, Ax25ActionVerb::PushOldIFrameNROnQueue);
         assert_eq!(tx.actions[5].kind, ActionKind::InternalOut);
         assert_eq!(tx.actions[6].verb, Ax25ActionVerb::LMDataRequest);
         assert_eq!(tx.actions[6].kind, ActionKind::SignalLower);
@@ -6840,8 +6880,6 @@ mod tests {
         assert_eq!(tx.actions[8].kind, ActionKind::Processing);
         assert_eq!(tx.actions[9].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[9].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[10].verb, Ax25ActionVerb::InvokeRetransmission);
-        assert_eq!(tx.actions[10].kind, ActionKind::Subroutine);
     }
 
     #[test]
@@ -6917,14 +6955,14 @@ mod tests {
                 },
             ]
         );
-        assert_eq!(tx.actions.len(), 9);
+        assert_eq!(tx.actions.len(), 8);
         assert_eq!(tx.actions[0].verb, Ax25ActionVerb::ClearPeerReceiverBusy);
         assert_eq!(tx.actions[0].kind, ActionKind::Processing);
         assert_eq!(tx.actions[1].verb, Ax25ActionVerb::StopT1);
         assert_eq!(tx.actions[1].kind, ActionKind::Processing);
         assert_eq!(tx.actions[2].verb, Ax25ActionVerb::SelectT1Value);
         assert_eq!(tx.actions[2].kind, ActionKind::Subroutine);
-        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::PushFrameOnQueue);
+        assert_eq!(tx.actions[3].verb, Ax25ActionVerb::PushOldIFrameNROnQueue);
         assert_eq!(tx.actions[3].kind, ActionKind::InternalOut);
         assert_eq!(tx.actions[4].verb, Ax25ActionVerb::LMDataRequest);
         assert_eq!(tx.actions[4].kind, ActionKind::SignalLower);
@@ -6934,8 +6972,6 @@ mod tests {
         assert_eq!(tx.actions[6].kind, ActionKind::Processing);
         assert_eq!(tx.actions[7].verb, Ax25ActionVerb::ClearAcknowledgePending);
         assert_eq!(tx.actions[7].kind, ActionKind::Processing);
-        assert_eq!(tx.actions[8].verb, Ax25ActionVerb::InvokeRetransmission);
-        assert_eq!(tx.actions[8].kind, ActionKind::Subroutine);
     }
 
     #[test]
