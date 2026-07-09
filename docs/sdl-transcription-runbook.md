@@ -1,5 +1,8 @@
 # SDL transcription runbook
 
+> **Note (2026-07):** the SDL sources (`spec-sdl/`) moved to [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec). The transcription workflow below still applies, but the graphml/yaml/citations PRs land in **that** repo; this repo then bumps its `ax25spec/` submodule pin and regenerates the backends.
+
+
 This is the **step-by-step methodology** for taking one SDL figure from the
 AX.25 spec all the way through to a fully validated, cross-referenced YAML
 transcription in this repo. Refined through figc4.1 (Disconnected) and

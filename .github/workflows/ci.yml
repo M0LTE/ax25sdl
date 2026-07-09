@@ -26,6 +26,10 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - name: dotnet --version
         run: dotnet --version
       - name: build
@@ -41,6 +45,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - name: regenerate C#
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --csharp
       - name: assert no diff
@@ -56,6 +64,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
@@ -88,6 +100,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - uses: actions/setup-go@v6
         with:
           go-version: 'stable'
@@ -126,6 +142,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - name: regenerate JSON
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --json
       - name: assert no diff
@@ -141,6 +161,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       # rustfmt disappeared from the runner around 2026-06-14 (job red on
       # main since 0a47223): the codegen emitter warns-and-continues without
       # it, emitting non-canonically-formatted output that fails the drift
@@ -187,6 +211,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       # Not every self-hosted runner has a system clang-format (the emitter
       # warns-and-continues without it, emitting non-canonically-formatted C
       # that fails the drift check). Self-heal with a pinned pip venv —
@@ -221,6 +249,10 @@ jobs:
     needs: csharp
     steps:
       - uses: actions/checkout@v6
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
       - name: regenerate Python
         run: dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- --python
       - name: assert no diff
@@ -239,43 +271,42 @@ jobs:
           .venv/bin/pytest -q --import-mode=importlib
 
   transcribe-drift:
-    name: transcribe drift — graphml → yaml
+    name: transcribe drift — graphml → yaml (submodule)
     runs-on: [self-hosted, Linux, X64]
     needs: csharp
-    # If the committed *.sdl.yaml files drift from what Packet.Sdl.Transcribe
-    # would currently produce from the *.graphml sources, surface that as a
-    # clear test-suite failure with the exact command to run locally. Pairs
-    # with the YAML-side drift jobs above (which guard yaml → code) to lock
-    # the full graphml → yaml → code pipeline.
+    # The SDL sources live in the packethacking/ax25spec submodule
+    # (spec-sdl -> ax25spec/spec-sdl). Validate — READ-ONLY against the
+    # pinned submodule commit — that the *.sdl.yaml committed there match
+    # what THIS repo's Packet.Sdl.Transcribe walker produces from the
+    # *.graphml sources there. Regeneration goes to a temp dir; nothing
+    # writes into the submodule. A failure means the walker's behaviour
+    # has drifted from the transcriptions at the pin: fix the walker, or
+    # land the regenerated yaml in ax25spec and bump the pin — never edit
+    # the submodule contents from this repo.
+    # (render drift — graphml → SVG — moved to ax25spec's CI along with
+    # tools/render/; the yaml → code drift jobs above stay here.)
     steps:
       - uses: actions/checkout@v6
-      - name: regenerate yaml from graphml
+        with:
+          # spec-sdl is a symlink into the packethacking/ax25spec
+          # submodule — every job that reads the SDL sources needs it.
+          submodules: true
+      - name: regenerate yaml from graphml (out-of-tree)
         run: |
+          out="$RUNNER_TEMP/transcribe-out"
+          rm -rf "$out" && mkdir -p "$out"
+          # The walker preserves out-of-band annotations (notes,
+          # references, pinned_refs) by reading any pre-existing yaml at
+          # the output path — seed the temp dir with the committed yaml
+          # to mirror the in-place regeneration it was designed for.
+          cp spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml "$out/"
           dotnet run --project codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
             -i spec-sdl/v2.2-errata/data-link/sdl/ \
-            -o spec-sdl/v2.2-errata/data-link/yaml/
-      - name: assert no diff
+            -o "$out/"
+      - name: assert no diff vs the pinned submodule
         run: |
-          if ! git diff --exit-code -- spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml; then
-            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i spec-sdl/v2.2-errata/data-link/sdl/ -o spec-sdl/v2.2-errata/data-link/yaml/\` locally and commit the diff."
-            exit 1
-          fi
-
-  render-drift:
-    name: render drift — graphml → SVG
-    runs-on: [self-hosted, Linux, X64]
-    needs: csharp
-    # The committed SVG renders in spec-sdl/**/svg/ are generated artifacts
-    # (tools/render/render_all.py, Python stdlib only). Keeping them in sync
-    # means every graphml PR carries a reviewable visual diff — GitHub shows
-    # rich image diffs (2-up / swipe / onion-skin) for modified SVGs.
-    steps:
-      - uses: actions/checkout@v6
-      - name: regenerate SVG renders
-        run: python3 tools/render/render_all.py
-      - name: assert no diff
-        run: |
-          if ! git diff --exit-code -- 'spec-sdl/**/svg/'; then
-            echo "::error::Committed SVG renders are out of sync with the graphml sources. Run \`python3 tools/render/render_all.py\` locally and commit the diff."
+          if ! diff -ru --exclude='*.citations.yaml' \
+              spec-sdl/v2.2-errata/data-link/yaml/ "$RUNNER_TEMP/transcribe-out/"; then
+            echo "::error::*.sdl.yaml in the ax25spec submodule are out of sync with what this walker produces from their *.graphml sources. Either the walker changed behaviour (fix it or regenerate in packethacking/ax25spec and bump the submodule pin) or the pin points at an internally-inconsistent ax25spec commit (its own transcribe-drift CI should be red)."
             exit 1
           fi

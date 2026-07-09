@@ -1,5 +1,8 @@
 # SDL figure rendering (graphml → SVG)
 
+> **Note (2026-07):** the figures and this renderer moved to [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec) (`spec-sdl/` + `tools/render/` there). Figure PRs and SVG regeneration happen in that repo, drift-locked by its CI; this repo reads the results through the `ax25spec/` submodule. Paths below are as they appear in ax25spec.
+
+
 The `*.graphml` files in `spec-sdl/**/sdl/` are the canonical transcriptions
 of the AX.25 SDL figures, but raw XML is unreviewable: a PR that rewires a
 branch or relabels a box needs a **visual** before/after for a human to
