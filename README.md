@@ -1,18 +1,20 @@
 # ax25sdl
 
-**Canonical AX.25 v2.2 SDL transcriptions, plus a codegen pipeline that turns them into ready-to-consume libraries in seven languages.** The point of this repo is to encode the figc4.x state-machine figures from the AX.25 v2.2 specification *once*, with discipline, and emit that single source of truth as native idiomatic code for C#, Go, TypeScript, JSON, Rust, C, and Python. Downstream runtimes walk the generated tables — they don't have an opinion of their own about what AX.25 says.
+**Tooling + distribution for the AX.25 SDL state tables: a codegen pipeline that turns the normative SDL transcriptions into ready-to-consume libraries in seven languages.** The figc4.x state-machine figures are encoded *once*, with discipline, in [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec) — the community home of everything normative about AX.25, prose and figures — and this repo emits that single source of truth as native idiomatic code for C#, Go, TypeScript, JSON, Rust, C, and Python. Downstream runtimes walk the generated tables — they don't have an opinion of their own about what AX.25 says.
 
-> **Status:** prove-out repo. Whether [`packethacking/ax25spec`](https://github.com/packethacking) becomes the canonical community home for these transcriptions is still to be decided among the group.
+> **Where changes go:** figure/spec changes (graphml, yaml transcriptions, citations, catalogues) are PRs against [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec); a pin-bump PR here then regenerates the language backends. Only tooling (walker/emitters/lint), generated backends and packaging change in this repo.
 
 ## Inputs
 
+The SDL sources live in the [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec) **git submodule** at [`ax25spec/`](ax25spec), pinned to a specific commit (the same pin-bump cadence packet.net uses towards this repo). A `spec-sdl -> ax25spec/spec-sdl` symlink keeps every historical path working. Clone with `git clone --recurse-submodules` (or run `git submodule update --init` after a plain clone).
+
 | Path | What |
 | --- | --- |
-| [`spec-sdl/v2.2-errata/data-link/`](spec-sdl/v2.2-errata/data-link/) | The figc4.1 – figc4.7 data-link state machine (v2.2 + errata), split by artefact kind: [`sdl/`](spec-sdl/v2.2-errata/data-link/sdl/) holds the canonical `*.graphml` yEd sources, [`yaml/`](spec-sdl/v2.2-errata/data-link/yaml/) holds the `*.sdl.yaml` transcriptions (derived) plus the `*.citations.yaml` human-curated sidecars, [`mmd/`](spec-sdl/v2.2-errata/data-link/mmd/) holds the `*.g.mmd` Mermaid renderings (derived). |
-| [`spec-sdl/v2.2/`](spec-sdl/v2.2/) | Clean published v2.2 (black-only, no errata). **Currently empty — backfill pending.** |
-| [`spec-sdl/schema/`](spec-sdl/schema/) | JSON Schema for `*.sdl.yaml` |
-| [`spec-sdl/actions.yaml`](spec-sdl/actions.yaml) | Action-verb normalisation table (figure spellings → canonical verbs) |
-| [`spec-sdl/events.yaml`](spec-sdl/events.yaml) | Canonical event catalog |
+| `spec-sdl/v2.2-errata/data-link/` | The figc4.1 – figc4.7 data-link state machine (v2.2 + errata), split by artefact kind: `sdl/` holds the canonical `*.graphml` yEd sources, `yaml/` holds the `*.sdl.yaml` transcriptions (derived) plus the `*.citations.yaml` human-curated sidecars, `mmd/` holds the `*.g.mmd` Mermaid renderings (derived). |
+| `spec-sdl/v2.2/` | Clean published v2.2 (black-only, no errata). **Currently empty — backfill pending.** |
+| `spec-sdl/schema/` | JSON Schema for `*.sdl.yaml` |
+| `spec-sdl/actions.yaml` | Action-verb normalisation table (figure spellings → canonical verbs) |
+| `spec-sdl/events.yaml` | Canonical event catalog |
 | Upstream | The AX.25 v2.2 specification figures themselves — the source of truth for every transcription |
 
 ## Outputs
@@ -38,16 +40,17 @@ The transcription rules and how to add a new figure live in:
 
 ## Provenance
 
-Extracted from `m0lte/packet.net` on 2026-05-17 — the transcriptions and codegen previously lived alongside the .NET runtime in that monorepo. History preserved via `git filter-repo`.
+Extracted from `packet.net` (then `m0lte/packet.net`) on 2026-05-17 — the transcriptions and codegen previously lived alongside the .NET runtime in that monorepo. The SDL transcriptions moved on again to [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec) in 2026-07, making that repo the single normative home (prose + figures) and this one tooling + distribution. History preserved via `git filter-repo` at both steps.
 
 ## Sibling repos
 
-| Repo | What it consumes from here |
+| Repo | Relationship |
 | --- | --- |
-| [`m0lte/packet.net`](https://github.com/m0lte/packet.net) | `Packet.Ax25.Sdl` (NuGet) |
-| [`m0lte/ax25-ts`](https://github.com/m0lte/ax25-ts) | `ax25sdl` (npm) |
-| [`m0lte/packet-term-tui`](https://github.com/m0lte/packet-term-tui) | transitive: `Packet.Ax25` → `Packet.Ax25.Sdl` |
-| [`m0lte/packet-term-web`](https://github.com/m0lte/packet-term-web) | transitive: `@packet-net/ax25` → `ax25sdl` |
+| [`packethacking/ax25spec`](https://github.com/packethacking/ax25spec) | **upstream** — normative SDL sources, consumed here as a pinned submodule |
+| [`packet-net/packet.net`](https://github.com/packet-net/packet.net) | consumes `Packet.Ax25.Sdl` (NuGet) |
+| [`packet-net/ax25-ts`](https://github.com/packet-net/ax25-ts) | consumes `ax25sdl` (npm) |
+| [`packet-net/packet-term-tui`](https://github.com/packet-net/packet-term-tui) | transitive: `Packet.Ax25` → `Packet.Ax25.Sdl` |
+| [`packet-net/packet-term-web`](https://github.com/packet-net/packet-term-web) | transitive: `@packet-net/ax25` → `ax25sdl` |
 
 ## License
 

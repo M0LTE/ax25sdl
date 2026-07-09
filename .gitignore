@@ -16,7 +16,7 @@ coverage/
 *.coveragexml
 *.trx
 
-# Generated SDL artifacts (regenerated via tools/Packet.Sdl.CodeGen)
+# Generated SDL artifacts (regenerated via codegen/src/Packet.Sdl.CodeGen)
 # We DO check generated *.g.cs in (so reviewers can diff against YAML).
 # Don't ignore them.
 

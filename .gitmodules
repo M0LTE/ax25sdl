@@ -1,0 +1,3 @@
+[submodule "ax25spec"]
+	path = ax25spec
+	url = https://github.com/packethacking/ax25spec.git
