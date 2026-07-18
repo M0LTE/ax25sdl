@@ -47,4 +47,4 @@ Each state page is a `pub static` (e.g. `DATA_LINK_CONNECTED: StatePage`); the f
 
 ## License
 
-[MIT](LICENSE). Spec text and figures derive from the AX.25 v2.2 specification.
+[AGPL-3.0-or-later](LICENSE). Spec text and figures derive from the AX.25 v2.2 specification.
