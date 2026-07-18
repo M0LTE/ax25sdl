@@ -687,7 +687,12 @@ static const ActionStep
         {.verb = "clear_peer_receiver_busy", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Push Old I Frame N(r) on Queue",
+         .kind = AX25SDL_KIND_INTERNAL_OUT},
+        {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
@@ -698,7 +703,12 @@ static const ActionStep
 static const ActionStep
     data_link_timer_recovery_t24_srej_received_no_yes_no_no_actions[] = {
         {.verb = "clear_peer_receiver_busy", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
+        {.verb = "Push Old I Frame N(r) on Queue",
+         .kind = AX25SDL_KIND_INTERNAL_OUT},
+        {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
+        {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
+        {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
 };
 
 static const ActionStep
@@ -747,12 +757,12 @@ static const ActionStep
         {.verb = "Select_T1_Value", .kind = AX25SDL_KIND_SUBROUTINE},
         {.verb = "V(a) := N(r)", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Check_I_Frame_Acknowledged", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "push_frame_on_queue", .kind = AX25SDL_KIND_INTERNAL_OUT},
+        {.verb = "Push Old I Frame N(r) on Queue",
+         .kind = AX25SDL_KIND_INTERNAL_OUT},
         {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
 static const ActionStep
@@ -769,12 +779,12 @@ static const ActionStep
         {.verb = "clear_peer_receiver_busy", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Stop T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Select_T1_Value", .kind = AX25SDL_KIND_SUBROUTINE},
-        {.verb = "push_frame_on_queue", .kind = AX25SDL_KIND_INTERNAL_OUT},
+        {.verb = "Push Old I Frame N(r) on Queue",
+         .kind = AX25SDL_KIND_INTERNAL_OUT},
         {.verb = "LM_data_request", .kind = AX25SDL_KIND_SIGNAL_LOWER},
         {.verb = "Stop T3", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Start T1", .kind = AX25SDL_KIND_PROCESSING},
         {.verb = "Clear Acknowledge Pending", .kind = AX25SDL_KIND_PROCESSING},
-        {.verb = "Invoke Retransmission", .kind = AX25SDL_KIND_SUBROUTINE},
 };
 
 static const TransitionSpec data_link_timer_recovery_transitions[] = {
@@ -1959,7 +1969,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .guard = "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_no_yes_yes_no_actions,
-        .actions_len = 4,
+        .actions_len = 8,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
@@ -1990,7 +2000,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
             "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va",
         .actions =
             data_link_timer_recovery_t24_srej_received_no_yes_no_no_actions,
-        .actions_len = 2,
+        .actions_len = 6,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
@@ -2077,7 +2087,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .guard = "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
         .actions =
             data_link_timer_recovery_t24_srej_received_yes_yes_yes_no_actions,
-        .actions_len = 11,
+        .actions_len = 10,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,
@@ -2107,7 +2117,7 @@ static const TransitionSpec data_link_timer_recovery_transitions[] = {
         .guard = "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va",
         .actions =
             data_link_timer_recovery_t24_srej_received_yes_yes_no_no_actions,
-        .actions_len = 9,
+        .actions_len = 8,
         .next = "TimerRecovery",
         .notes = "",
         .references = NULL,

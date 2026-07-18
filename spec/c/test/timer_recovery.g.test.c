@@ -2232,7 +2232,7 @@ static int test_t24_srej_received_no_yes_yes_no(void) {
   ASSERT_STREQ(t->guard,
                "not response and va_le_nr_le_vs and P_eq_1 and not vs_eq_nr",
                "guard");
-  ASSERT(t->actions_len == 4, "actions count");
+  ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -2241,8 +2241,18 @@ static int test_t24_srej_received_no_yes_yes_no(void) {
   ASSERT_STREQ(t->actions[2].verb, "Check_I_Frame_Acknowledged",
                "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "Invoke Retransmission", "actions[3].verb");
-  ASSERT(t->actions[3].kind == AX25SDL_KIND_SUBROUTINE, "actions[3].kind");
+  ASSERT_STREQ(t->actions[3].verb, "Push Old I Frame N(r) on Queue",
+               "actions[3].verb");
+  ASSERT(t->actions[3].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[3].kind");
+  ASSERT_STREQ(t->actions[4].verb, "LM_data_request", "actions[4].verb");
+  ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[4].kind");
+  ASSERT_STREQ(t->actions[5].verb, "Stop T3", "actions[5].verb");
+  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
+  ASSERT_STREQ(t->actions[6].verb, "Start T1", "actions[6].verb");
+  ASSERT(t->actions[6].kind == AX25SDL_KIND_PROCESSING, "actions[6].kind");
+  ASSERT_STREQ(t->actions[7].verb, "Clear Acknowledge Pending",
+               "actions[7].verb");
+  ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
   return 0;
 }
 
@@ -2284,12 +2294,22 @@ static int test_t24_srej_received_no_yes_no_no(void) {
       t->guard,
       "not response and va_le_nr_le_vs and not P_eq_1 and not vs_eq_va",
       "guard");
-  ASSERT(t->actions_len == 2, "actions count");
+  ASSERT(t->actions_len == 6, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
-  ASSERT_STREQ(t->actions[1].verb, "Invoke Retransmission", "actions[1].verb");
-  ASSERT(t->actions[1].kind == AX25SDL_KIND_SUBROUTINE, "actions[1].kind");
+  ASSERT_STREQ(t->actions[1].verb, "Push Old I Frame N(r) on Queue",
+               "actions[1].verb");
+  ASSERT(t->actions[1].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[1].kind");
+  ASSERT_STREQ(t->actions[2].verb, "LM_data_request", "actions[2].verb");
+  ASSERT(t->actions[2].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[2].kind");
+  ASSERT_STREQ(t->actions[3].verb, "Stop T3", "actions[3].verb");
+  ASSERT(t->actions[3].kind == AX25SDL_KIND_PROCESSING, "actions[3].kind");
+  ASSERT_STREQ(t->actions[4].verb, "Start T1", "actions[4].verb");
+  ASSERT(t->actions[4].kind == AX25SDL_KIND_PROCESSING, "actions[4].kind");
+  ASSERT_STREQ(t->actions[5].verb, "Clear Acknowledge Pending",
+               "actions[5].verb");
+  ASSERT(t->actions[5].kind == AX25SDL_KIND_PROCESSING, "actions[5].kind");
   return 0;
 }
 
@@ -2443,7 +2463,7 @@ static int test_t24_srej_received_yes_yes_yes_no(void) {
   ASSERT_STREQ(t->guard,
                "response and va_le_nr_le_vs and F_eq_1 and not vs_eq_nr",
                "guard");
-  ASSERT(t->actions_len == 11, "actions count");
+  ASSERT(t->actions_len == 10, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -2456,7 +2476,8 @@ static int test_t24_srej_received_yes_yes_yes_no(void) {
   ASSERT_STREQ(t->actions[4].verb, "Check_I_Frame_Acknowledged",
                "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SUBROUTINE, "actions[4].kind");
-  ASSERT_STREQ(t->actions[5].verb, "push_frame_on_queue", "actions[5].verb");
+  ASSERT_STREQ(t->actions[5].verb, "Push Old I Frame N(r) on Queue",
+               "actions[5].verb");
   ASSERT(t->actions[5].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[5].kind");
   ASSERT_STREQ(t->actions[6].verb, "LM_data_request", "actions[6].verb");
   ASSERT(t->actions[6].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[6].kind");
@@ -2467,9 +2488,6 @@ static int test_t24_srej_received_yes_yes_yes_no(void) {
   ASSERT_STREQ(t->actions[9].verb, "Clear Acknowledge Pending",
                "actions[9].verb");
   ASSERT(t->actions[9].kind == AX25SDL_KIND_PROCESSING, "actions[9].kind");
-  ASSERT_STREQ(t->actions[10].verb, "Invoke Retransmission",
-               "actions[10].verb");
-  ASSERT(t->actions[10].kind == AX25SDL_KIND_SUBROUTINE, "actions[10].kind");
   return 0;
 }
 
@@ -2518,7 +2536,7 @@ static int test_t24_srej_received_yes_yes_no_no(void) {
   ASSERT_STREQ(t->guard,
                "response and va_le_nr_le_vs and not F_eq_1 and not vs_eq_va",
                "guard");
-  ASSERT(t->actions_len == 9, "actions count");
+  ASSERT(t->actions_len == 8, "actions count");
   ASSERT_STREQ(t->actions[0].verb, "clear_peer_receiver_busy",
                "actions[0].verb");
   ASSERT(t->actions[0].kind == AX25SDL_KIND_PROCESSING, "actions[0].kind");
@@ -2526,7 +2544,8 @@ static int test_t24_srej_received_yes_yes_no_no(void) {
   ASSERT(t->actions[1].kind == AX25SDL_KIND_PROCESSING, "actions[1].kind");
   ASSERT_STREQ(t->actions[2].verb, "Select_T1_Value", "actions[2].verb");
   ASSERT(t->actions[2].kind == AX25SDL_KIND_SUBROUTINE, "actions[2].kind");
-  ASSERT_STREQ(t->actions[3].verb, "push_frame_on_queue", "actions[3].verb");
+  ASSERT_STREQ(t->actions[3].verb, "Push Old I Frame N(r) on Queue",
+               "actions[3].verb");
   ASSERT(t->actions[3].kind == AX25SDL_KIND_INTERNAL_OUT, "actions[3].kind");
   ASSERT_STREQ(t->actions[4].verb, "LM_data_request", "actions[4].verb");
   ASSERT(t->actions[4].kind == AX25SDL_KIND_SIGNAL_LOWER, "actions[4].kind");
@@ -2537,8 +2556,6 @@ static int test_t24_srej_received_yes_yes_no_no(void) {
   ASSERT_STREQ(t->actions[7].verb, "Clear Acknowledge Pending",
                "actions[7].verb");
   ASSERT(t->actions[7].kind == AX25SDL_KIND_PROCESSING, "actions[7].kind");
-  ASSERT_STREQ(t->actions[8].verb, "Invoke Retransmission", "actions[8].verb");
-  ASSERT(t->actions[8].kind == AX25SDL_KIND_SUBROUTINE, "actions[8].kind");
   return 0;
 }
 
