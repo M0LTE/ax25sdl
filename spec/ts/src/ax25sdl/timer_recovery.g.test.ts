@@ -1427,15 +1427,23 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: false }, { atom: "vs_eq_nr", negate: true }]);
-    expect(t.actions).toHaveLength(4);
+    expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("V(a) := N(r)");
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("Invoke Retransmission");
-    expect(t.actions[3].kind).toBe("subroutine");
+    expect(t.actions[3].verb).toBe("Push Old I Frame N(r) on Queue");
+    expect(t.actions[3].kind).toBe("internal_out");
+    expect(t.actions[4].verb).toBe("LM_data_request");
+    expect(t.actions[4].kind).toBe("signal_lower");
+    expect(t.actions[5].verb).toBe("Stop T3");
+    expect(t.actions[5].kind).toBe("processing");
+    expect(t.actions[6].verb).toBe("Start T1");
+    expect(t.actions[6].kind).toBe("processing");
+    expect(t.actions[7].verb).toBe("Clear Acknowledge Pending");
+    expect(t.actions[7].kind).toBe("processing");
   });
 
   it("t24_srej_received_no_yes_no_yes", () => {
@@ -1457,11 +1465,19 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toEqual([{ atom: "response", negate: true }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "P_eq_1", negate: true }, { atom: "vs_eq_va", negate: true }]);
-    expect(t.actions).toHaveLength(2);
+    expect(t.actions).toHaveLength(6);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
-    expect(t.actions[1].verb).toBe("Invoke Retransmission");
-    expect(t.actions[1].kind).toBe("subroutine");
+    expect(t.actions[1].verb).toBe("Push Old I Frame N(r) on Queue");
+    expect(t.actions[1].kind).toBe("internal_out");
+    expect(t.actions[2].verb).toBe("LM_data_request");
+    expect(t.actions[2].kind).toBe("signal_lower");
+    expect(t.actions[3].verb).toBe("Stop T3");
+    expect(t.actions[3].kind).toBe("processing");
+    expect(t.actions[4].verb).toBe("Start T1");
+    expect(t.actions[4].kind).toBe("processing");
+    expect(t.actions[5].verb).toBe("Clear Acknowledge Pending");
+    expect(t.actions[5].kind).toBe("processing");
   });
 
   it("t24_srej_received_no_no_no", () => {
@@ -1559,7 +1575,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: false }, { atom: "vs_eq_nr", negate: true }]);
-    expect(t.actions).toHaveLength(11);
+    expect(t.actions).toHaveLength(10);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Stop T1");
@@ -1570,7 +1586,7 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[3].kind).toBe("processing");
     expect(t.actions[4].verb).toBe("Check_I_Frame_Acknowledged");
     expect(t.actions[4].kind).toBe("subroutine");
-    expect(t.actions[5].verb).toBe("push_frame_on_queue");
+    expect(t.actions[5].verb).toBe("Push Old I Frame N(r) on Queue");
     expect(t.actions[5].kind).toBe("internal_out");
     expect(t.actions[6].verb).toBe("LM_data_request");
     expect(t.actions[6].kind).toBe("signal_lower");
@@ -1580,8 +1596,6 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[8].kind).toBe("processing");
     expect(t.actions[9].verb).toBe("Clear Acknowledge Pending");
     expect(t.actions[9].kind).toBe("processing");
-    expect(t.actions[10].verb).toBe("Invoke Retransmission");
-    expect(t.actions[10].kind).toBe("subroutine");
   });
 
   it("t24_srej_received_yes_yes_no_yes", () => {
@@ -1611,14 +1625,14 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.on).toBe("SREJ_received");
     expect(t.next).toBe("TimerRecovery");
     expect(t.guard).toEqual([{ atom: "response", negate: false }, { atom: "va_le_nr_le_vs", negate: false }, { atom: "F_eq_1", negate: true }, { atom: "vs_eq_va", negate: true }]);
-    expect(t.actions).toHaveLength(9);
+    expect(t.actions).toHaveLength(8);
     expect(t.actions[0].verb).toBe("clear_peer_receiver_busy");
     expect(t.actions[0].kind).toBe("processing");
     expect(t.actions[1].verb).toBe("Stop T1");
     expect(t.actions[1].kind).toBe("processing");
     expect(t.actions[2].verb).toBe("Select_T1_Value");
     expect(t.actions[2].kind).toBe("subroutine");
-    expect(t.actions[3].verb).toBe("push_frame_on_queue");
+    expect(t.actions[3].verb).toBe("Push Old I Frame N(r) on Queue");
     expect(t.actions[3].kind).toBe("internal_out");
     expect(t.actions[4].verb).toBe("LM_data_request");
     expect(t.actions[4].kind).toBe("signal_lower");
@@ -1628,8 +1642,6 @@ describe("DataLinkTimerRecovery", () => {
     expect(t.actions[6].kind).toBe("processing");
     expect(t.actions[7].verb).toBe("Clear Acknowledge Pending");
     expect(t.actions[7].kind).toBe("processing");
-    expect(t.actions[8].verb).toBe("Invoke Retransmission");
-    expect(t.actions[8].kind).toBe("subroutine");
   });
 
   it("t25_all_other_primitives__from_lower_layer", () => {
