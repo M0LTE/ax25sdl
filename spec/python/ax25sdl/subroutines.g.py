@@ -7,8 +7,8 @@ from .types import (
     LoopRange,
     SdlSource,
     SubroutinePath,
-    SubroutineSpec,
     SubroutinesPage,
+    SubroutineSpec,
 )
 
 DATA_LINK_SUBROUTINES = SubroutinesPage(

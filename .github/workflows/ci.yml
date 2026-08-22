@@ -271,7 +271,10 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --quiet --upgrade pip
-          .venv/bin/pip install --quiet pytest ruff
+          # Pinned for the same reason clang-format is pinned above: an unpinned
+          # linter makes CI depend on whatever version happens to publish, and a
+          # widened default rule set turned this job red on an untouched repo.
+          .venv/bin/pip install --quiet pytest==9.1.1 ruff==0.16.4
           .venv/bin/ruff check .
           .venv/bin/pytest -q --import-mode=importlib
 

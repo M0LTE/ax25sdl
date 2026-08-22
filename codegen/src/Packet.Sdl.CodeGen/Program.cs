@@ -710,8 +710,12 @@ internal static class Program
             });
             if (p is null)
             {
-                Console.Error.WriteLine("::warning::gofmt not found on PATH; emitted Go files may not be canonically formatted.");
-                return;
+                throw new InvalidOperationException(
+                    "gofmt is not available, so the emitted Go files would not be canonically "
+                    + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                    + "output against a formatted corpus, which reports a large and entirely "
+                    + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                    + "Fix the toolchain rather than the corpus: install Go; gofmt ships with the toolchain.");
             }
             p.WaitForExit();
             if (p.ExitCode != 0)
@@ -721,7 +725,12 @@ internal static class Program
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            Console.Error.WriteLine("::warning::gofmt not found on PATH; emitted Go files may not be canonically formatted.");
+            throw new InvalidOperationException(
+                "gofmt is not available, so the emitted Go files would not be canonically "
+                + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                + "output against a formatted corpus, which reports a large and entirely "
+                + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                + "Fix the toolchain rather than the corpus: install Go; gofmt ships with the toolchain.");
         }
     }
 
@@ -733,11 +742,64 @@ internal static class Program
     /// not a failure — the CI discipline job runs <c>cargo fmt --check</c>
     /// separately and will catch any drift.
     /// </summary>
+    /// <summary>
+    /// Verify a formatter is not merely on PATH but actually runnable, and abort if not.
+    /// rustup installs a shim at ~/.cargo/bin/rustfmt that exists even when the rustfmt
+    /// component is not installed for the active toolchain, so a `command -v` style check
+    /// is a false positive: the process starts and then exits non-zero. That is exactly
+    /// how the Rust drift job came to be red from 2026-06-14. Without a usable formatter
+    /// the emitted corpus is not canonical, and the CI drift check reports a large and
+    /// entirely misleading diff, so this is fatal rather than a warning.
+    /// A non-zero exit from the formatting run itself is NOT fatal: it happens
+    /// legitimately when formatting an incomplete tree, such as a fresh output directory
+    /// that has no hand-written types.rs for rustfmt to resolve `mod types` against.
+    /// </summary>
+    private static void EnsureFormatterRunnable(string tool, string language, string hint)
+    {
+        try
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = tool,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+            };
+            psi.ArgumentList.Add("--version");
+            using var probe = System.Diagnostics.Process.Start(psi);
+            if (probe is null)
+            {
+                throw new InvalidOperationException(
+                    $"{tool} could not be started, so the emitted {language} files would not be "
+                    + $"canonically formatted and the CI drift check would report a misleading "
+                    + $"diff. Fix the toolchain rather than the corpus: {hint}.");
+            }
+            probe.WaitForExit();
+            if (probe.ExitCode != 0)
+            {
+                throw new InvalidOperationException(
+                    $"{tool} is on PATH but not runnable (`{tool} --version` exited "
+                    + $"{probe.ExitCode}: {probe.StandardError.ReadToEnd().Trim()}). The emitted "
+                    + $"{language} files would not be canonically formatted and the CI drift check "
+                    + $"would report a misleading diff. Fix the toolchain: {hint}.");
+            }
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            throw new InvalidOperationException(
+                $"{tool} was not found on PATH, so the emitted {language} files would not be "
+                + $"canonically formatted and the CI drift check would report a misleading diff. "
+                + $"Fix the toolchain rather than the corpus: {hint}.");
+        }
+    }
+
     private static void RunRustfmt(string rustDir)
     {
         if (!Directory.Exists(rustDir)) return;
         var rsFiles = Directory.EnumerateFiles(rustDir, "*.rs", SearchOption.TopDirectoryOnly).ToList();
         if (rsFiles.Count == 0) return;
+
+        EnsureFormatterRunnable("rustfmt", "Rust", "rustup component add rustfmt");
 
         try
         {
@@ -755,8 +817,12 @@ internal static class Program
             using var p = System.Diagnostics.Process.Start(psi);
             if (p is null)
             {
-                Console.Error.WriteLine("::warning::rustfmt not found on PATH; emitted Rust files may not be canonically formatted.");
-                return;
+                throw new InvalidOperationException(
+                    "rustfmt is not available, so the emitted Rust files would not be canonically "
+                    + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                    + "output against a formatted corpus, which reports a large and entirely "
+                    + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                    + "Fix the toolchain rather than the corpus: rustup component add rustfmt.");
             }
             p.WaitForExit();
             if (p.ExitCode != 0)
@@ -766,7 +832,12 @@ internal static class Program
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            Console.Error.WriteLine("::warning::rustfmt not found on PATH; emitted Rust files may not be canonically formatted.");
+            throw new InvalidOperationException(
+                "rustfmt is not available, so the emitted Rust files would not be canonically "
+                + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                + "output against a formatted corpus, which reports a large and entirely "
+                + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                + "Fix the toolchain rather than the corpus: rustup component add rustfmt.");
         }
     }
 
@@ -792,6 +863,8 @@ internal static class Program
             .ToArray();
         if (files.Length == 0) return;
 
+        EnsureFormatterRunnable("clang-format", "C", "pip install clang-format==22.1.5");
+
         try
         {
             var psi = new System.Diagnostics.ProcessStartInfo
@@ -807,8 +880,12 @@ internal static class Program
             using var p = System.Diagnostics.Process.Start(psi);
             if (p is null)
             {
-                Console.Error.WriteLine("::warning::clang-format not found on PATH; emitted C files may not be canonically formatted.");
-                return;
+                throw new InvalidOperationException(
+                    "clang-format is not available, so the emitted C files would not be canonically "
+                    + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                    + "output against a formatted corpus, which reports a large and entirely "
+                    + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                    + "Fix the toolchain rather than the corpus: pip install clang-format==22.1.5.");
             }
             p.WaitForExit();
             if (p.ExitCode != 0)
@@ -818,7 +895,12 @@ internal static class Program
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            Console.Error.WriteLine("::warning::clang-format not found on PATH; emitted C files may not be canonically formatted.");
+            throw new InvalidOperationException(
+                "clang-format is not available, so the emitted C files would not be canonically "
+                + "formatted. Continuing would leave the CI drift check comparing unformatted "
+                + "output against a formatted corpus, which reports a large and entirely "
+                + "misleading diff; that is what kept the Rust drift job red from 2026-06-14. "
+                + "Fix the toolchain rather than the corpus: pip install clang-format==22.1.5.");
         }
     }
 
