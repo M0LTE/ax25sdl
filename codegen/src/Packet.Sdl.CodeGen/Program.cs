@@ -58,8 +58,14 @@ internal static class Program
     {
         if (!Directory.Exists(plan.InDir))
         {
-            Console.Error.WriteLine($"::warning::SDL input directory '{plan.InDir}' does not exist; nothing to do.");
-            return 0;
+            // A generator that was asked to emit, and found no input, has failed. It must not
+            // exit 0. Returning success here let CI's `git diff --exit-code` drift guard pass
+            // while generating nothing, silently disabling the guard for every language target
+            // whenever the ax25spec submodule was not checked out.
+            Console.Error.WriteLine($"::error::SDL input directory '{plan.InDir}' does not exist. "
+                + "It is a symlink into the ax25spec submodule; run `git submodule update --init "
+                + "--recursive` locally, or check out with `submodules: true` in CI.");
+            return 1;
         }
 
         if (plan.EmitCsharp)

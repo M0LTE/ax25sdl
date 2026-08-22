@@ -175,7 +175,12 @@ jobs:
         run: |
           [ -d "$HOME/.cargo/bin" ] && echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.cargo/bin:$PATH"
-          if ! command -v rustfmt >/dev/null 2>&1; then
+          # NB: test that rustfmt RUNS, not merely that it is on PATH. rustup
+          # installs a shim at ~/.cargo/bin/rustfmt that exists even when the
+          # rustfmt component is not installed for the active toolchain, so
+          # `command -v rustfmt` is a false positive and this self-heal never
+          # fired. That is why this job stayed red from 2026-06-14.
+          if ! rustfmt --version >/dev/null 2>&1; then
             if command -v rustup >/dev/null 2>&1; then
               rustup component add rustfmt
             else
