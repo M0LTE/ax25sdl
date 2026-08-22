@@ -1,0 +1,23 @@
+# Lint contract for the generated Python corpus.
+#
+# ruff's default rule selection is not stable across releases. 0.9 and 0.12 accepted
+# this corpus unchanged; 0.16 rejected it, because the defaults widened to take in
+# pep8-naming, isort and RUF rules. Nothing in the code had changed. Pinning the ruff
+# version in CI is half the fix; stating the rule set here is the other half, so a
+# future upgrade produces a reviewable diff instead of a surprise red build on an
+# untouched repo.
+#
+# N (pep8-naming) is deliberately not selected. Every file here is generated, and N999
+# objects to the module name implied by the ".g.py" infix, which is the project-wide
+# marker for generated sources (.g.rs, .g.go, .g.ts, .g.c). __init__.py loads those
+# modules by path via importlib precisely because "connected.g" is not a valid Python
+# module name, so the rule is diagnosing the convention rather than a defect.
+[lint]
+select = ["E4", "E7", "E9", "F", "I", "RUF"]
+
+# RUF001 flags "ambiguous" Unicode in string literals. The hits here are en dashes in
+# figure ranges such as "figc5.3-figc5.8", carried verbatim from the AX.25 specification
+# text in the packethacking/ax25spec submodule. Those docstrings are a transcription of
+# someone else's document, so normalising the punctuation would falsify the record
+# rather than tidy our own prose.
+ignore = ["RUF001"]

@@ -179,8 +179,11 @@ public static class PythonEmitter
             "LoopRange", hasLoops,
             "SdlSource", true,
             "SubroutinePath", true,
-            "SubroutineSpec", true,
-            "SubroutinesPage", true);
+            // Case-insensitive, to match ruff's isort (I001): SubroutinesPage
+            // sorts before SubroutineSpec. EmitTypeImports emits in the order
+            // given, so the caller is responsible for that ordering.
+            "SubroutinesPage", true,
+            "SubroutineSpec", true);
         sb.Append("\n");
         sb.Append(constName).Append(" = SubroutinesPage(\n");
         sb.Append("    machine=").Append(PyStringLiteral(page.Machine)).Append(",\n");
@@ -268,8 +271,11 @@ public static class PythonEmitter
         sb.Append("    SdlSource,\n");
         sb.Append("    StatePage,\n");
         sb.Append("    SubroutinePath,\n");
-        sb.Append("    SubroutineSpec,\n");
+        // ruff's isort (I001) orders import members case-insensitively, which puts
+        // SubroutinesPage before SubroutineSpec. RUF022 sorts __all__ ordinally, which
+        // orders those two the other way round. The difference below is deliberate.
         sb.Append("    SubroutinesPage,\n");
+        sb.Append("    SubroutineSpec,\n");
         sb.Append("    TransitionSpec,\n");
         sb.Append(")\n");
         sb.Append("\n");
@@ -290,6 +296,20 @@ public static class PythonEmitter
         }
         sb.Append("\n");
         sb.Append("__all__ = [\n");
+        // RUF022 wants __all__ in isort-style order: SCREAMING_SNAKE_CASE names first,
+        // then CamelCase, each group sorted ordinally. The page constants are emitted
+        // above in spec order because that order is meaningful for _load, so sort a
+        // copy for __all__ rather than reordering the statements themselves.
+        var exported = new List<string>();
+        foreach (var (_, constName) in entries)
+        {
+            exported.Add(constName);
+        }
+        exported.Sort(StringComparer.Ordinal);
+        foreach (var constName in exported)
+        {
+            sb.Append("    \"").Append(constName).Append("\",\n");
+        }
         sb.Append("    \"ActionKind\",\n");
         sb.Append("    \"ActionStep\",\n");
         sb.Append("    \"ImplementationReference\",\n");
@@ -300,10 +320,6 @@ public static class PythonEmitter
         sb.Append("    \"SubroutineSpec\",\n");
         sb.Append("    \"SubroutinesPage\",\n");
         sb.Append("    \"TransitionSpec\",\n");
-        foreach (var (_, name) in entries)
-        {
-            sb.Append("    \"").Append(name).Append("\",\n");
-        }
         sb.Append("]\n");
         return sb.ToString();
     }

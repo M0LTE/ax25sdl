@@ -12,8 +12,8 @@ from .types import (
     SdlSource,
     StatePage,
     SubroutinePath,
-    SubroutineSpec,
     SubroutinesPage,
+    SubroutineSpec,
     TransitionSpec,
 )
 
@@ -38,6 +38,15 @@ MANAGEMENT_DATA_LINK_READY = _load("ready", "MANAGEMENT_DATA_LINK_READY")
 DATA_LINK_SUBROUTINES = _load("subroutines", "DATA_LINK_SUBROUTINES")
 
 __all__ = [
+    "DATA_LINK_AWAITING_CONNECTION",
+    "DATA_LINK_AWAITING_RELEASE",
+    "DATA_LINK_AWAITING_V_22_CONNECTION",
+    "DATA_LINK_CONNECTED",
+    "DATA_LINK_DISCONNECTED",
+    "DATA_LINK_SUBROUTINES",
+    "DATA_LINK_TIMER_RECOVERY",
+    "MANAGEMENT_DATA_LINK_NEGOTIATING",
+    "MANAGEMENT_DATA_LINK_READY",
     "ActionKind",
     "ActionStep",
     "ImplementationReference",
@@ -48,13 +57,4 @@ __all__ = [
     "SubroutineSpec",
     "SubroutinesPage",
     "TransitionSpec",
-    "DATA_LINK_AWAITING_CONNECTION",
-    "DATA_LINK_AWAITING_RELEASE",
-    "DATA_LINK_AWAITING_V_22_CONNECTION",
-    "DATA_LINK_CONNECTED",
-    "DATA_LINK_DISCONNECTED",
-    "DATA_LINK_TIMER_RECOVERY",
-    "MANAGEMENT_DATA_LINK_NEGOTIATING",
-    "MANAGEMENT_DATA_LINK_READY",
-    "DATA_LINK_SUBROUTINES",
 ]
